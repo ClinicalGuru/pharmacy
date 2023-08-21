@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { useContext } from 'react';
 import { FormContext } from "./Form";
-
 export const FormInput = (props) => {
     const {
         label, 
