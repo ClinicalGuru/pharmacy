@@ -1,5 +1,24 @@
-import { StyledFunction } from "styled-components";
+import styled from "styled-components";
 
-export const StyledInput = styled.div`
+export const Input = styled.input.attrs({ 
+    type: 'text'
+  })`
+font-size: 14px;
+border-radius: 6px;
+line-height: 1.5;
+padding: 5px 10px;
+transition: box-shadow 100ms ease-in, border 100ms ease-in, background-color 100ms ease-in;
+border: 2px solid #dee1e2;
+color: rgb(14, 14, 16);
+background: #dee1e2;
 display: block;
-`;
+height: 36px;
+:hover {
+    border-color: #ccc;
+}
+:focus{
+    border-color: #9147ff;
+    background: #fff;
+}
+
+`

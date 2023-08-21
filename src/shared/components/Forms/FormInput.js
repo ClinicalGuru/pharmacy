@@ -2,6 +2,9 @@
 import React, { useState } from "react";
 import { useContext } from 'react';
 import { FormContext } from "./Form";
+
+import { Input } from "./FormInput.styles";
+
 export const FormInput = (props) => {
     const {
         label, 
@@ -15,7 +18,7 @@ export const FormInput = (props) => {
       return (
         <div className="FormInput">
           <label>{label}</label>
-          <input
+          <Input
             type={type}
             name={name}
             value={form[name]}
