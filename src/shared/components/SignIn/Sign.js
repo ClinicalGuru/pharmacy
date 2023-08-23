@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FormInput, Form } from "../Forms/index";
 import GoogleIcon from '@mui/icons-material/Google';
 import { Typography } from '@mui/material';
+
 import {
     Container,
     SigninSection,
@@ -11,11 +12,13 @@ import {
     WelcomeText,
     LeftSection,
     RightSection,
+    IconSection,
+    LogoImg
 } from "./Sign.styles";
 import {
     LOGIN_TEXT,
     WELCOME_BACK_TEXT
-} from "../../constants/index";
+} from "../../Constants/index";
 
 export const SignIn = () => {
     const [message, setMessage] = useState('');
@@ -26,14 +29,22 @@ export const SignIn = () => {
     };
 
     const submit = (form) => {
-        setMessage(`Thanks for signing up, ${form.firstName} ${form.lastName}! We've sent you an email to ${form.emailAddress}.`);
+        console.log(form)
+        // setMessage(`Thanks for signing up, ${form.firstName} ${form.lastName}! We've sent you an email to ${form.emailAddress}.`);
     };
     return (
         <Container>
             <RightSection>
+                <LogoImg src={require('../../../assets/img/logo.png')} />
                 <WelcomeText>
-                    <h2>{WELCOME_BACK_TEXT}</h2>
+                    {WELCOME_BACK_TEXT}
                 </WelcomeText>
+                <Typography
+                fontSize={15}
+                ml={20}
+                mr={30}>There are many variations of passages of Lorem Ipsum available, 
+                        but the majority have suffered alteration in some form, by injected humour,
+                         or randomised words which don't look even slightly believable. </Typography>
                 <Circle />
             </RightSection>
             <LeftSection>
@@ -46,17 +57,29 @@ export const SignIn = () => {
                         sx={{ pt: "25px" }}>
                         {LOGIN_TEXT}
                     </Typography>
-                    <GoogleIcon />
+                    <IconSection>
+                        <GoogleIcon fontSize="small" align="center" />
+                    </IconSection>
+
                     <Form submit={submit} initialValues={initialValues}>
                         <FormInput
-                            label="Email Address"
+                            label="Email"
                             type="email"
-                            name="emailAddress" />
+                            name="emailAddress"
+                            placeholder="example.email@gmail.com" />
                         <FormInput
                             label="Password"
                             type="password"
-                            name="password" />
+                            name="password"
+                            placeholder="Enter atleast 8+ characters" />
                     </Form>
+                    <Typography
+                        variant="h7"
+                        component="p"
+                        align="center"
+                        mb={10}>
+                        Been here before? Log in
+                    </Typography>
                 </SigninSection>
                 <Rectangle />
             </LeftSection>

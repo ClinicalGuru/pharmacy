@@ -4,21 +4,27 @@ export const Container = styled.div`
 background-color: white;
 display: flex;
 width: auto;
-// position: relative
-height: 98vh!important;
+height: 97vh!important;
+`;
+
+export const IconSection = styled.div`
+height: 25px;
+width: 40px;
+background-color: #FEF1F1FF;
+align-items: center;
+justify-content: center;
+color:#C71610FF;
+margin: 20px 11rem;
+border-radius: 25%;
+padding: 5px 0px 2px 15px
 `;
 
 export const SigninSection = styled.div`
-// position: absolute;
-// height: 30rem;
-// width: 25rem;
-// left: 64rem;
-// top: 7rem;
 background-color: white;
 box-shadow: 0px 4px 9px;
 border-radius: 8px;
 z-index: 1;
-width:70%;
+width:65%;
 `;
 
 export const Rectangle = styled.div`
@@ -32,31 +38,32 @@ border-top-left-radius: 4px;
 `;
 
 export const Oval = styled.div`
-position: fixed;
+    position: fixed;
     top: -26%;
     right: -25%;
-    transform: translate(0%, 0);
+    transform: translate(10%, 20%);
     height: 400px;
     width: 800px;
     border-radius: 0px 0px 600px 600px;
-    background-color: rgba(14, 0, 146, 0.5);
+    background-color: #0E0092A6;
 `;
 
 export const Circle = styled.div`
-    position: absolute;
+    position: fixed;
     bottom: 0%;
     left: 10%;
-    transform: translate(-50%, 0%);
-    height: 330px;
-    width: 676px;
+    transform: translate(-40%, 30%);
+    height: 350px;
+    width: 700px;
     border-radius: 600px 600px 0px 0px;
     background-color: #0E009280;
 `;
 
 export const WelcomeText = styled.div`
-// position: absolute;
-// top: 250px;
-// left: 200px
+margin-top:9rem;
+margin-left:15rem;
+font-size: 40px;
+margin-bottom:10px;
 `;
 
 export const RightSection = styled.div`
@@ -68,4 +75,8 @@ flex-basis: 40%;
 display: flex;
 justify-content: center;
 align-items: center;
+`;
+export const LogoImg = styled.img `
+width: 16%;
+margin: 2rem 0 0 5rem;
 `;

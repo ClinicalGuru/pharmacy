@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { SubmitButton } from './Forms.styles';
 
 export const FormContext = React.createContext({
     form: {}
@@ -31,9 +32,9 @@ export const Form = (props) => {
                 {children}
             </FormContext.Provider>
 
-            <button type="button" onClick={() => submit(form)}>
-                Submit
-            </button>
+            <SubmitButton type="button" onClick={() => submit(form)}>
+                Sign in
+            </SubmitButton>
         </form>
     );
 }
