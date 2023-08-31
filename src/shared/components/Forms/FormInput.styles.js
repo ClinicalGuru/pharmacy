@@ -12,9 +12,9 @@ background: #F3F4F6FF;
 display: block;
 height: 22px;
 align: center;
-margin-left: 40px; 
-margin-bottom: 15px;
-width:300px;       
+// margin-left: 40px; 
+width: -webkit-fill-available;
+margin-bottom: 15px;     
 :hover {
     border-color: #F3F4F6FF;
 }

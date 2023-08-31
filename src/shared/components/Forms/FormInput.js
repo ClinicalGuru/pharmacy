@@ -18,11 +18,11 @@ export const FormInput = (props) => {
   const { form, handleFormChange } = formContext;
 
   return (
-    <div className="FormInput">
+    <div style={{width: '100%'}}>
       <Typography
         variant="p"
         component="p"
-        sx={{ ml:"40px", mb: "5px" }}>
+        sx={{ mb: "5px" }}>
         {label}
       </Typography>
       <Input

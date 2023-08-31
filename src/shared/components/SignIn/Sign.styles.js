@@ -7,24 +7,38 @@ width: auto;
 height: 97vh!important;
 `;
 
-export const IconSection = styled.div`
-height: 25px;
-width: 40px;
+export const IconSection = styled.button`
 background-color: #FEF1F1FF;
-align-items: center;
-justify-content: center;
 color:#C71610FF;
 margin: 20px 11rem;
-border-radius: 25%;
-padding: 5px 0px 2px 15px
+border-radius: 4px;
+padding: 0.2rem 1rem;
 `;
-
+export const GoogleSignWrapper = styled.div`
+    text-align: center;
+    margin: 2rem;
+`;
+export const OrText = styled.p`
+    width: 100%; 
+    text-align: center; 
+    border-bottom: 1px solid #eee; 
+    line-height: 0.1em;
+    margin: 10px 0 20px; 
+    margin: 3rem 0rem;
+    & span {
+        padding:0 10px; 
+        background:#fff; 
+        color: rgb(193 184 184);
+    }
+`;
 export const SigninSection = styled.div`
 background-color: white;
 box-shadow: 0px 4px 9px;
 border-radius: 8px;
 z-index: 1;
-width:65%;
+max-width: 80%;
+    min-width: 65%;
+    padding: 1rem;
 `;
 
 export const Rectangle = styled.div`
@@ -59,9 +73,9 @@ export const Circle = styled.div`
     background-color: #0E009280;
 `;
 
-export const WelcomeText = styled.div`
+export const WelcomeText = styled.p`
 margin-top:9rem;
-margin-left:15rem;
+margin-left:10rem;
 font-size: 40px;
 margin-bottom:10px;
 `;
@@ -80,3 +94,9 @@ export const LogoImg = styled.img `
 width: 16%;
 margin: 2rem 0 0 5rem;
 `;
+
+export const InputWrapper = styled.div`
+display: flex;
+flex-direction: column;
+align-items: center;
+`

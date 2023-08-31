@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SubmitButton } from './Forms.styles';
+import { SubmitButton, ButtonWrapper } from './Forms.styles';
 
 export const FormContext = React.createContext({
     form: {}
@@ -31,10 +31,12 @@ export const Form = (props) => {
             }}>
                 {children}
             </FormContext.Provider>
+            <ButtonWrapper>
+                <SubmitButton type="button" onClick={() => submit(form)}>
+                    Sign in
+                </SubmitButton>
+            </ButtonWrapper>
 
-            <SubmitButton type="button" onClick={() => submit(form)}>
-                Sign in
-            </SubmitButton>
         </form>
     );
 }

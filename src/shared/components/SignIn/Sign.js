@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { FormInput, Form } from "../Forms/index";
+import DeleteIcon from '@mui/icons-material/Delete';
 import GoogleIcon from '@mui/icons-material/Google';
 import { Typography } from '@mui/material';
-
+import Button from '@mui/material/Button';
 import {
     Container,
     SigninSection,
@@ -13,7 +14,10 @@ import {
     LeftSection,
     RightSection,
     IconSection,
-    LogoImg
+    OrText,
+    GoogleSignWrapper,
+    LogoImg,
+    InputWrapper
 } from "./Sign.styles";
 import {
     LOGIN_TEXT,
@@ -40,11 +44,11 @@ export const SignIn = () => {
                     {WELCOME_BACK_TEXT}
                 </WelcomeText>
                 <Typography
-                fontSize={15}
-                ml={20}
-                mr={30}>There are many variations of passages of Lorem Ipsum available, 
-                        but the majority have suffered alteration in some form, by injected humour,
-                         or randomised words which don't look even slightly believable. </Typography>
+                    fontSize={15}
+                    ml={20}
+                    mr={30}>There are many variations of passages of Lorem Ipsum available,
+                    but the majority have suffered alteration in some form, by injected humour,
+                    or randomised words which don't look even slightly believable. </Typography>
                 <Circle />
             </RightSection>
             <LeftSection>
@@ -57,21 +61,34 @@ export const SignIn = () => {
                         sx={{ pt: "25px" }}>
                         {LOGIN_TEXT}
                     </Typography>
-                    <IconSection>
+                    <GoogleSignWrapper>
+                        <Button 
+                        variant="outlined" 
+                        startIcon={<GoogleIcon 
+                        sx={{
+                            color: "#C71610FF"
+                        }}
+                        />}>
+                            Log In with google
+                        </Button>
+                    </GoogleSignWrapper>
+                    <OrText><span>Or</span></OrText>
+                    {/* <IconSection>
                         <GoogleIcon fontSize="small" align="center" />
-                    </IconSection>
-
+                    </IconSection> */}
                     <Form submit={submit} initialValues={initialValues}>
-                        <FormInput
-                            label="Email"
-                            type="email"
-                            name="emailAddress"
-                            placeholder="example.email@gmail.com" />
-                        <FormInput
-                            label="Password"
-                            type="password"
-                            name="password"
-                            placeholder="Enter atleast 8+ characters" />
+                        <InputWrapper>
+                            <FormInput
+                                label="Email"
+                                type="email"
+                                name="emailAddress"
+                                placeholder="Email" />
+                            <FormInput
+                                label="Password"
+                                type="password"
+                                name="password"
+                                placeholder="Enter your password" />
+                        </InputWrapper>
                     </Form>
                     <Typography
                         variant="h7"
