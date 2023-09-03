@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import PrivateRoutes from "./privateRoutes";
 import { SignIn } from "./shared/components/SignIn";
-import { Landing } from "./pages/Landing";
-
+import { Landing } from "./pages";
+import "./index.css";
 const App = () => {
     return (
         <Router>
