@@ -56,16 +56,26 @@ export const Sales = () => {
     const handleChange = () => {
 
     }
-    function createData(name, calories, fat, carbs, protein) {
-        return { name, calories, fat, carbs, protein };
-    }
+
+    const [inputArr, setInputArr] = useState([])
+    
+    const [inputData, setInputData] = useState({
+        medicineName : "",
+        pharmacologicalName : "",
+        batchNo : "",
+        hsnCode : "",
+        price : "",
+        quantity : "",
+        mrp : "",
+        total : "",
+        discount : "",
+        amount : "",
+    });
+
+    
 
     const rows = [
-        createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-        createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-        createData('Eclair', 262, 16.0, 24, 6.0),
-        createData('Cupcake', 305, 3.7, 67, 4.3),
-        createData('Gingerbread', 356, 16.0, 49, 3.9),
+        
     ];
 
     return (
@@ -107,16 +117,16 @@ export const Sales = () => {
              }}
              noValidate
              autoComplete="off">
-                <TextField sx={{backgroundColor: "white"}} size="small" type="text" id="outlined-basic" label={FORM_LABELS.MEDICINE_NAME} variant="outlined" />
-                <TextField sx={{backgroundColor: "white"}} size="small" type="text" id="outlined-basic" label={FORM_LABELS.PHARMACOLOGICAL_NAME} variant="outlined" />
-                <TextField sx={{backgroundColor: "white"}} size="small" type="text" id="outlined-basic" label={FORM_LABELS.BATCH_NO} variant="outlined" />
-                <TextField sx={{backgroundColor: "white"}} size="small" type="text" id="outlined-basic" label={FORM_LABELS.HSN_CODE} variant="outlined" />
-                <TextField sx={{backgroundColor: "white"}} size="small" type="number" id="outlined-basic" label={FORM_LABELS.PRICE} variant="outlined" />
-                <TextField sx={{backgroundColor: "white"}} size="small" type="number" id="outlined-basic" label={FORM_LABELS.QUANTITY} variant="outlined" />
-                <TextField sx={{backgroundColor: "white"}} size="small" type="text" id="outlined-basic" label={FORM_LABELS.MRP} variant="outlined" />
-                <TextField sx={{backgroundColor: "white"}} size="small" type="number" id="outlined-basic" label={FORM_LABELS.TOTAL} variant="outlined" />
-                <TextField sx={{backgroundColor: "white"}} size="small" type="number" id="outlined-basic" label={FORM_LABELS.DISCOUNT} variant="outlined" />
-                <TextField sx={{backgroundColor: "white"}} size="small" type="number" id="outlined-basic" label={FORM_LABELS.AMOUNT} variant="outlined" />
+                <TextField sx={{backgroundColor: "white"}}  size="small" type="text" id="outlined-basic" label={FORM_LABELS.MEDICINE_NAME}  variant="outlined" />
+                <TextField sx={{backgroundColor: "white"}} size="small" type="text" id="outlined-basic" label={FORM_LABELS.PHARMACOLOGICAL_NAME}  variant="outlined" />
+                <TextField sx={{backgroundColor: "white"}}  size="small" type="text" id="outlined-basic" label={FORM_LABELS.BATCH_NO}  variant="outlined" />
+                <TextField sx={{backgroundColor: "white"}}  size="small" type="text" id="outlined-basic" label={FORM_LABELS.HSN_CODE}  variant="outlined" />
+                <TextField sx={{backgroundColor: "white"}} size="small" type="number" id="outlined-basic" label={FORM_LABELS.PRICE}  variant="outlined" />
+                <TextField sx={{backgroundColor: "white"}}  size="small" type="number" id="outlined-basic" label={FORM_LABELS.QUANTITY}  variant="outlined" />
+                <TextField sx={{backgroundColor: "white"}}  size="small" type="text" id="outlined-basic" label={FORM_LABELS.MRP}  variant="outlined" />
+                <TextField sx={{backgroundColor: "white"}}  size="small" type="number" id="outlined-basic" label={FORM_LABELS.TOTAL}  variant="outlined" />
+                <TextField sx={{backgroundColor: "white"}}  size="small" type="number" id="outlined-basic" label={FORM_LABELS.DISCOUNT}  variant="outlined" />
+                <TextField sx={{backgroundColor: "white"}}  size="small" type="number" id="outlined-basic" label={FORM_LABELS.AMOUNT}  variant="outlined" />
             </Box>
             <Box 
              component="form"
@@ -145,12 +155,12 @@ export const Sales = () => {
                                 <StyledTableCell align="right">Medicine Name</StyledTableCell>
                                 <StyledTableCell align="right">Pharmalogical Name</StyledTableCell>
                                 <StyledTableCell align="right">Batch</StyledTableCell>
-                                <StyledTableCell align="right">HSN Code&nbsp;(g)</StyledTableCell>
+                                <StyledTableCell align="right">HSN Code  </StyledTableCell>
                                 <StyledTableCell>Price</StyledTableCell>
                                 <StyledTableCell align="right">Quantity</StyledTableCell>
                                 <StyledTableCell align="right">MRP</StyledTableCell>
                                 <StyledTableCell align="right">Total</StyledTableCell>
-                                <StyledTableCell align="right">Disc%&nbsp;(g)</StyledTableCell>
+                                <StyledTableCell align="right">Disc</StyledTableCell>
                                 <StyledTableCell align="right">Amount</StyledTableCell>
                                 <StyledTableCell align="right">Edit</StyledTableCell>
                                 <StyledTableCell align="right">Delete</StyledTableCell>
