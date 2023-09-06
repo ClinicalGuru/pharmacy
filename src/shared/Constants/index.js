@@ -18,5 +18,10 @@ export const FORM_LABELS = {
     BATCH_NO:"Batch No",
     HSN_CODE: "HSN Code",
     PRICE:"Price",
-    AMOUNT:"Amount"
+    AMOUNT:"Amount",
+    GST:"Gst",
+    NET: "Net",
+    ROUND_OFF: "Round Off",
+    BILL_AMOUNT: "Bill Amount",
+    PAID_AMOUNT:"Paid Amount"
 }

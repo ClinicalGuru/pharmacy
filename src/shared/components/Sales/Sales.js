@@ -36,7 +36,7 @@ export const Sales = () => {
         [`&.${tableCellClasses.head}`]: {
             backgroundColor: "#eee",
             color: "black",
-            borderRadius:'none'
+            borderRadius: 'none'
         },
         [`&.${tableCellClasses.body}`]: {
             fontSize: 14,
@@ -69,15 +69,15 @@ export const Sales = () => {
     ];
 
     return (
-        <Box sx={{pl:2, pr:2}}>
-            <Box>
+        <Box sx={{ pl: 2, pr: 2 }}>
+            <Box sx={{mt:3}}>
                 Sales / Billing
             </Box>
             <Box
                 component="form"
                 sx={{
                     '& > :not(style)': { m: 1, width: '25ch' },
-                    mt: 6,
+                    mt: 4,
                 }}
                 noValidate
                 autoComplete="off"
@@ -97,28 +97,83 @@ export const Sales = () => {
                 <TextField size="small" type="text" id="outlined-basic" label={FORM_LABELS.REFERED_DOCTOR} variant="outlined" />
                 <TextField size="small" type="text" id="outlined-basic" label={FORM_LABELS.OTCRX} variant="outlined" />
             </Box>
+            <Box 
+             component="form"
+             sx={{
+                 '& > :not(style)': { m: 1, width: '25ch' },
+                 mt: 4, mb: 6,
+                 pt:3, pb: 3,
+                 backgroundColor : "#F3F4F6FF",
+             }}
+             noValidate
+             autoComplete="off">
+                <TextField sx={{backgroundColor: "white"}} size="small" type="text" id="outlined-basic" label={FORM_LABELS.MEDICINE_NAME} variant="outlined" />
+                <TextField sx={{backgroundColor: "white"}} size="small" type="text" id="outlined-basic" label={FORM_LABELS.PHARMACOLOGICAL_NAME} variant="outlined" />
+                <TextField sx={{backgroundColor: "white"}} size="small" type="text" id="outlined-basic" label={FORM_LABELS.BATCH_NO} variant="outlined" />
+                <TextField sx={{backgroundColor: "white"}} size="small" type="text" id="outlined-basic" label={FORM_LABELS.HSN_CODE} variant="outlined" />
+                <TextField sx={{backgroundColor: "white"}} size="small" type="number" id="outlined-basic" label={FORM_LABELS.PRICE} variant="outlined" />
+                <TextField sx={{backgroundColor: "white"}} size="small" type="number" id="outlined-basic" label={FORM_LABELS.QUANTITY} variant="outlined" />
+                <TextField sx={{backgroundColor: "white"}} size="small" type="text" id="outlined-basic" label={FORM_LABELS.MRP} variant="outlined" />
+                <TextField sx={{backgroundColor: "white"}} size="small" type="number" id="outlined-basic" label={FORM_LABELS.TOTAL} variant="outlined" />
+                <TextField sx={{backgroundColor: "white"}} size="small" type="number" id="outlined-basic" label={FORM_LABELS.DISCOUNT} variant="outlined" />
+                <TextField sx={{backgroundColor: "white"}} size="small" type="number" id="outlined-basic" label={FORM_LABELS.AMOUNT} variant="outlined" />
+            </Box>
+            <Box 
+             component="form"
+             sx={{
+                 '& > :not(style)': { m: 1, width: '25ch' },
+                 mt: 4, mb: 6,
+                 pt:3, pb: 3,
+                 backgroundColor : "white",
+             }}
+             noValidate
+             autoComplete="off">
+                <TextField sx={{backgroundColor: "F3F4F6FF"}} size="small" type="text" id="outlined-basic" label={FORM_LABELS.DISCOUNT} variant="outlined" />
+                <TextField sx={{backgroundColor: "F3F4F6FF"}} size="small" type="text" id="outlined-basic" label={FORM_LABELS.GST} variant="outlined" />
+                <TextField sx={{backgroundColor: "F3F4F6FF"}} size="small" type="text" id="outlined-basic" label={FORM_LABELS.NET} variant="outlined" />
+                <TextField sx={{backgroundColor: "F3F4F6FF"}} size="small" type="text" id="outlined-basic" label={FORM_LABELS.ROUND_OFF} variant="outlined" />
+                <TextField sx={{backgroundColor: "F3F4F6FF"}} size="small" type="number" id="outlined-basic" label={FORM_LABELS.BILL_AMOUNT} variant="outlined" />
+                <TextField sx={{backgroundColor: "F3F4F6FF"}} size="small" type="number" id="outlined-basic" label={FORM_LABELS.PAID_AMOUNT} variant="outlined" />
+                <TextField sx={{backgroundColor: "F3F4F6FF"}} size="small" type="text" id="outlined-basic"  variant="outlined" />
+            </Box>
             <Box>
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 700 }} aria-label="customized table">
                         <TableHead>
                             <TableRow>
-                                <StyledTableCell>Dessert (100g serving)</StyledTableCell>
-                                <StyledTableCell align="right">Calories</StyledTableCell>
-                                <StyledTableCell align="right">Fat&nbsp;(g)</StyledTableCell>
-                                <StyledTableCell align="right">Carbs&nbsp;(g)</StyledTableCell>
-                                <StyledTableCell align="right">Protein&nbsp;(g)</StyledTableCell>
+                                <StyledTableCell>S NO</StyledTableCell>
+                                <StyledTableCell align="right">Medicine Name</StyledTableCell>
+                                <StyledTableCell align="right">Pharmalogical Name</StyledTableCell>
+                                <StyledTableCell align="right">Batch</StyledTableCell>
+                                <StyledTableCell align="right">HSN Code&nbsp;(g)</StyledTableCell>
+                                <StyledTableCell>Price</StyledTableCell>
+                                <StyledTableCell align="right">Quantity</StyledTableCell>
+                                <StyledTableCell align="right">MRP</StyledTableCell>
+                                <StyledTableCell align="right">Total</StyledTableCell>
+                                <StyledTableCell align="right">Disc%&nbsp;(g)</StyledTableCell>
+                                <StyledTableCell align="right">Amount</StyledTableCell>
+                                <StyledTableCell align="right">Edit</StyledTableCell>
+                                <StyledTableCell align="right">Delete</StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {rows.map((row) => (
                                 <StyledTableRow key={row.name}>
                                     <StyledTableCell component="th" scope="row">
-                                        {row.name}
+                                        
                                     </StyledTableCell>
-                                    <StyledTableCell align="right">{row.calories}</StyledTableCell>
-                                    <StyledTableCell align="right">{row.fat}</StyledTableCell>
-                                    <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-                                    <StyledTableCell align="right">{row.protein}</StyledTableCell>
+                                    <StyledTableCell align="right"></StyledTableCell>
+                                    <StyledTableCell align="right"></StyledTableCell>
+                                    <StyledTableCell align="right"></StyledTableCell>
+                                    <StyledTableCell align="right"></StyledTableCell>
+                                    <StyledTableCell align="right"></StyledTableCell>
+                                    <StyledTableCell align="right"></StyledTableCell>
+                                    <StyledTableCell align="right"></StyledTableCell>
+                                    <StyledTableCell align="right"></StyledTableCell>
+                                    <StyledTableCell align="right"></StyledTableCell>
+                                    <StyledTableCell align="right"></StyledTableCell>
+                                    <StyledTableCell align="right"></StyledTableCell>
+                                    <StyledTableCell align="right"></StyledTableCell>
                                 </StyledTableRow>
                             ))}
                         </TableBody>
