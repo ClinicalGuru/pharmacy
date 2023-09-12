@@ -18,3 +18,16 @@ code {
 body {
   font-family: 'Mukta', sans-serif;
 }
+
+input{
+  padding: 10px;
+  margin: 4px;
+  border-radius: 2px;
+  border: none;
+  background-color: #eee;
+}
+
+input::placeholder {
+  opacity: 0.5;
+  color: #c9c9c9
+}
