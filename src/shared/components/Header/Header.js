@@ -145,7 +145,7 @@ export const Header = () => {
               <StyledInputBase
                 sx={{ color: '#BDC1CAFF' }}
                 placeholder="Search…"
-                inputProps={{ 'aria-label': 'search', backgroundColor: "#F3F4F6FF" }}
+                inputProps={{ 'aria-label': 'search', backgroundcolor: "#F3F4F6FF" }}
               />
             </Search>
           </Box>
