@@ -18,3 +18,21 @@ code {
 body {
   font-family: 'Mukta', sans-serif;
 }
+
+input, select{
+  padding: 10px;
+  margin: 4px;
+  border-radius: 2px;
+  border: none;
+  background-color: #eee;
+  display: block;
+}
+
+input::placeholder {
+  opacity: 0.5;
+  color: #c9c9c9
+}
+input[type=submit]{
+  cursor: pointer;
+  background-color: #4CEAFFFF;
+}
