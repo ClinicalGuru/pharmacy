@@ -130,9 +130,10 @@ export const Sales = () => {
                 <form onSubmit={handleMedicineDetails(onSubmitMedicineDetails)}>
                     <Box sx={{
                         display: 'flex',
-                        justifyContent: 'space-between'
+                        flexWrap: "wrap",
+                        justifyContent: "space-between"
                     }}>
-                        <FormWrapper>
+                        <FormWrapper >
                             <label>{FORM_LABELS.PHARMACOLOGICAL_NAME}</label>
                             <input placeholder="name" {...medicineDetails("pharmacologicalName", { required: true })}
                                 aria-invalid={MedicineErrors.pharmacologicalName ? "true" : "false"} />
@@ -188,28 +189,31 @@ export const Sales = () => {
                                 <ErrorMessage role="alert">{FORM_LABELS.TOTAL}  is required</ErrorMessage>
                             )}
                         </FormWrapper>
-                        <FormWrapper>
-                            <label>{FORM_LABELS.DISCOUNT}</label>
-                            <input placeholder="" {...medicineDetails("discount", { required: true })}
-                                aria-invalid={MedicineErrors.discount ? "true" : "false"} />
-                            {MedicineErrors.discount?.type === "required" && (
-                                <ErrorMessage role="alert">{FORM_LABELS.DISCOUNT}  is required</ErrorMessage>
-                            )}
-                        </FormWrapper>
-                        <FormWrapper>
-                            <label>{FORM_LABELS.AMOUNT}</label>
-                            <input placeholder="" {...medicineDetails("amount", { required: true })}
-                                aria-invalid={MedicineErrors.amount ? "true" : "false"} />
-                            {MedicineErrors.amount?.type === "required" && (
-                                <ErrorMessage role="alert">{FORM_LABELS.AMOUNT}  is required</ErrorMessage>
-                            )}
-                        </FormWrapper>
 
                     </Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'end' }}>
-                        <input type="submit" value={`+ Add`} />
-                        <input type="submit" value={`Clear`} />
-
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Box sx={{ display: 'flex'}}>
+                            <FormWrapper>
+                                <label>{FORM_LABELS.DISCOUNT}</label>
+                                <input placeholder="" {...medicineDetails("discount", { required: true })}
+                                    aria-invalid={MedicineErrors.discount ? "true" : "false"} />
+                                {MedicineErrors.discount?.type === "required" && (
+                                    <ErrorMessage role="alert">{FORM_LABELS.DISCOUNT}  is required</ErrorMessage>
+                                )}
+                            </FormWrapper>
+                            <FormWrapper>
+                                <label>{FORM_LABELS.AMOUNT}</label>
+                                <input placeholder="" {...medicineDetails("amount", { required: true })}
+                                    aria-invalid={MedicineErrors.amount ? "true" : "false"} />
+                                {MedicineErrors.amount?.type === "required" && (
+                                    <ErrorMessage role="alert">{FORM_LABELS.AMOUNT}  is required</ErrorMessage>
+                                )}
+                            </FormWrapper>
+                        </Box>
+                        <Box sx = {{display: 'flex'}}>
+                            <input type="submit" value={`+ Add`} />
+                            <input type="reset" value={`Clear`} />
+                        </Box>
                     </Box>
                 </form>
             </Box>
@@ -247,13 +251,15 @@ export const Sales = () => {
                         <FormWrapper>
                             <label>{FORM_LABELS.PAID_AMOUNT}</label>
                             {/* <input placeholder="name" {...totalBillDetails("paintAmount")} /> */}
-                            <select {...totalBillDetails("paymentMode")}>
-                                <option>--select--</option>
-                                <option value={`cash`}>Cash</option>
-                                <option value={`card`}>Card</option>
-                                <option value={`upi`}>UPI</option>
-                            </select>
-                            <input placeholder="name" {...totalBillDetails("paintAmount")} />
+                            <Box sx={{ display: "flex" }}>
+                                <select {...totalBillDetails("paymentMode")}>
+                                    <option>--select--</option>
+                                    <option value={`cash`}>Cash</option>
+                                    <option value={`card`}>Card</option>
+                                    <option value={`upi`}>UPI</option>
+                                </select>
+                                <input placeholder="name" {...totalBillDetails("paintAmount")} />
+                            </Box>
                         </FormWrapper>
 
                     </Box>
@@ -270,33 +276,31 @@ export const Sales = () => {
                         <TableHead>
                             <TableRow>
                                 <StyledTableCell>S No</StyledTableCell>
-                                <StyledTableCell align="right">Medicine Name</StyledTableCell>
-                                <StyledTableCell align="right">Batch</StyledTableCell>
-                                <StyledTableCell align="right">HSN Code</StyledTableCell>
-                                <StyledTableCell align="right">Price</StyledTableCell>
-                                <StyledTableCell>Quantity</StyledTableCell>
-                                <StyledTableCell align="right">Total</StyledTableCell>
-                                <StyledTableCell align="right">Discount</StyledTableCell>
-                                <StyledTableCell align="right">Amount</StyledTableCell>
-                                <StyledTableCell align="right">Action</StyledTableCell>
+                                <StyledTableCell align="center">Medicine Name</StyledTableCell>
+                                <StyledTableCell align="center">Batch</StyledTableCell>
+                                <StyledTableCell align="center">HSN Code</StyledTableCell>
+                                <StyledTableCell align="center">Price</StyledTableCell>
+                                <StyledTableCell align="center">Quantity</StyledTableCell>
+                                <StyledTableCell align="center">Total</StyledTableCell>
+                                <StyledTableCell align="center">Discount</StyledTableCell>
+                                <StyledTableCell align="center">Amount</StyledTableCell>
+                                <StyledTableCell align="center">Action</StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {rows.map((row, index) => (
                                 <StyledTableRow key={row.index}>
                                     <StyledTableCell>
-                                        {index}
+                                        {index + 1}
                                     </StyledTableCell>
-                                    <StyledTableCell align="right">{row.amount}</StyledTableCell>
-                                    <StyledTableCell align="right">{row.pharmacologicalName}</StyledTableCell>
-                                    <StyledTableCell align="right">{row.medicineName}</StyledTableCell>
-                                    <StyledTableCell align="right">{row.batchNumber}</StyledTableCell>
-                                    <StyledTableCell align="right">{row.hsnCode}</StyledTableCell>
-                                    <StyledTableCell align="right">{row.price}</StyledTableCell>
-                                    <StyledTableCell align="right">{row.quantity}</StyledTableCell>
-                                    <StyledTableCell align="right">{row.total}</StyledTableCell>
-                                    <StyledTableCell align="right">{row.discount}</StyledTableCell>
-                                    <StyledTableCell align="right"></StyledTableCell>
+                                    <StyledTableCell align="center">{row.pharmacologicalName},&nbsp;{row.medicineName}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.batchNumber}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.hsnCode}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.price}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.quantity}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.total}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.discount}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.amount}</StyledTableCell>
                                 </StyledTableRow>
                             ))}
                         </TableBody>

@@ -36,3 +36,7 @@ input[type=submit]{
   cursor: pointer;
   background-color: #4CEAFFFF;
 }
+input[type=reset]{
+  cursor: pointer;
+  background-color: #4CEAFFFF;
+}

@@ -19,9 +19,20 @@ export const FORM_LABELS = {
     HSN_CODE: "HSN Code",
     PRICE:"Price",
     AMOUNT:"Amount",
-    GST:"Gst",
+    GST:"GST",
     NET_PRICE: "Net price",
     ROUND_OFF: "Round Off",
     BILL_AMOUNT: "Bill Amount",
-    PAID_AMOUNT:"Paid Amount"
+    PAID_AMOUNT:"Paid Amount",
+    VENDOR_NAME: "Vendor Name",
+    DOSE: "Dose",
+    FORM: "Form",
+    PURCHASE_REQUISITION_ID: "Purchase Requisition Id",
+    QUOTATION_ID: "Quotation Id",
+    PTR:"PTR",
+    PTS:"PTS",
+
 }
+
+
+

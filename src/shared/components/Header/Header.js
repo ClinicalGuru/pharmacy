@@ -16,7 +16,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { SearchIconWrapper, Search, StyledInputBase, TypographyWrapper } from "./Header.styles";
 import { TopMenu, Navbar } from "../TopMenu";
 
-const pages = ['Purchages', 'Inventory', 'Sales', 'Reports'];
+const pages = ['Purchases', 'Inventory', 'Sales', 'Reports'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 export const Header = () => {
