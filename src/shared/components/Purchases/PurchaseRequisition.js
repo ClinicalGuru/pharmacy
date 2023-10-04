@@ -17,6 +17,23 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useState } from "react";
+import * as React from 'react';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+    '& .MuiDialogContent-root': {
+        padding: theme.spacing(2),
+    },
+    '& .MuiDialogActions-root': {
+        padding: theme.spacing(1),
+    },
+}));
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -66,13 +83,22 @@ export const PurchaseRequisition = () => {
         updateRows(rows);
         console.log(rows, "Medicines");
     }
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
+
     return (
         <Box sx={{
             padding: 2,
         }}>
             <Box>
                 <Typography fontSize={"20px"}
-                mb={3}> PURCHASE REQUISITION</Typography>
+                    mb={3}> PURCHASE REQUISITION</Typography>
             </Box>
             <Box sx={{
                 display: "flex",
@@ -83,7 +109,7 @@ export const PurchaseRequisition = () => {
                     <Box sx={{
                         display: 'flex',
                     }}>
-                        <FormWrapper mr= {"20"}>
+                        <FormWrapper mr={"20"}>
                             <label>{FORM_LABELS.VENDOR_NAME}</label>
                             <input placeholder="name" {...vendorDetails("vendor name")} />
                         </FormWrapper>
@@ -92,15 +118,15 @@ export const PurchaseRequisition = () => {
                         }}>
                             <LocalizationProvider dateAdapter={AdapterDayjs} >
                                 <DemoContainer components={['DatePicker']}>
-                                    <DatePicker 
-                                    PopperProps={{
-                                        sx: {
-                                            '& .MuiPaper-root': {
-                                                backgroundColor: 'red',
-                                                border: '1px solid black',
+                                    <DatePicker
+                                        PopperProps={{
+                                            sx: {
+                                                '& .MuiPaper-root': {
+                                                    backgroundColor: 'red',
+                                                    border: '1px solid black',
+                                                }
                                             }
-                                        }
-                                    }} label="Order Date" />
+                                        }} label="Order Date" />
                                 </DemoContainer>
                             </LocalizationProvider>
                         </Box>
@@ -111,7 +137,85 @@ export const PurchaseRequisition = () => {
                 </form>
 
                 <Box>
-                    <input type="submit" value={`+ Add New Vendor`} />
+                    <input type="submit" onClick={handleClickOpen} value={`+ Add New Vendor`} />
+                    <BootstrapDialog
+                        onClose={handleClose}
+                        aria-labelledby="customized-dialog-title"
+                        open={open}
+                    >
+                        <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+                            Add New Vendor
+                        </DialogTitle>
+                        <IconButton
+                            aria-label="close"
+                            onClick={handleClose}
+                            sx={{
+                                position: 'absolute',
+                                right: 8,
+                                top: 8,
+                                color: (theme) => theme.palette.grey[500],
+                            }}
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                        <DialogContent dividers>
+                            <form onSubmit={handleMedicineDetails(onSubmitMedicineDetails)}>
+                                <Box sx={{
+                                    display: 'flex',
+                                    flexWrap: "wrap",
+                                    justifyContent: "space-between"
+                                }}>
+                                    <FormWrapper>
+                                        <label>{FORM_LABELS.VENDOR_NAME}</label>
+                                        <input placeholder="" {...medicineDetails("vendorName", { required: true })}
+                                            aria-invalid={MedicineErrors.vendorName ? "true" : "false"} />
+                                        {MedicineErrors.vendorName?.type === "required" && (
+                                            <ErrorMessage role="alert">{FORM_LABELS.VENDOR_NAME}  is required</ErrorMessage>
+                                        )}
+                                    </FormWrapper>
+                                    <FormWrapper>
+                                        <label>{FORM_LABELS.GST}</label>
+                                        <input placeholder="" {...medicineDetails("gst", { required: true })}
+                                            aria-invalid={MedicineErrors.gst ? "true" : "false"} />
+                                        {MedicineErrors.gst?.type === "required" && (
+                                            <ErrorMessage role="alert">{FORM_LABELS.GST}  is required</ErrorMessage>
+                                        )}
+                                    </FormWrapper>
+                                    <FormWrapper>
+                                        <label>{FORM_LABELS.EMAIL}</label>
+                                        <input placeholder="" {...medicineDetails("email", { required: true })}
+                                            aria-invalid={MedicineErrors.email ? "true" : "false"} />
+                                        {MedicineErrors.email?.type === "required" && (
+                                            <ErrorMessage role="alert">{FORM_LABELS.EMAIL}  is required</ErrorMessage>
+                                        )}
+                                    </FormWrapper>
+                                    <FormWrapper>
+                                        <label>{FORM_LABELS.PHONE}</label>
+                                        <input placeholder="" {...medicineDetails("phone", { required: true })}
+                                            aria-invalid={MedicineErrors.phone ? "true" : "false"} />
+                                        {MedicineErrors.phone?.type === "required" && (
+                                            <ErrorMessage role="alert">{FORM_LABELS.PHONE}  is required</ErrorMessage>
+                                        )}
+                                    </FormWrapper>
+                                    <FormWrapper>
+                                        <label>{FORM_LABELS.ADDRESS}</label>
+                                        <input placeholder="" {...medicineDetails("address", { required: true })}
+                                            aria-invalid={MedicineErrors.address ? "true" : "false"} />
+                                        {MedicineErrors.address?.type === "required" && (
+                                            <ErrorMessage role="alert">{FORM_LABELS.ADDRESS}  is required</ErrorMessage>
+                                        )}
+                                    </FormWrapper>
+                                </Box>
+                            </form>
+
+                        </DialogContent>
+                        <DialogActions>
+                            <Box sx={{ display: 'flex' }}>
+                                <input type="submit" value={`+ Add`} />
+                                <input type="reset" value={`Clear`} />
+                            </Box>
+                        </DialogActions>
+                    </BootstrapDialog>
                 </Box>
             </Box>
             <Box sx={{
@@ -201,6 +305,15 @@ export const PurchaseRequisition = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
+            </Box>
+            <Box sx={{
+                marginTop: '15px',
+                display: 'flex',
+                justifyContent: 'flex-end'
+            }}>
+                <input type="submit" value={`Save`} />
+                <input type="submit" value={`Print`} />
+                <input type="submit" value={'Email'} />
             </Box>
         </Box >
     )
