@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
-import { FORM_LABELS } from "../../Constants/index";
-import { FormWrapper, Form, ErrorMessage, InvalidInput } from "./Sales.styles";
+import { FORM_LABELS } from "../../../Constants/index";
+import { FormWrapper, Form, ErrorMessage, InvalidInput } from "./AllBills.styles";
 
 //material ui
 import { Box } from "@mui/material";
@@ -53,7 +53,7 @@ const rows = [
     // createData('Action', 356, 16.0, 49, 3.9),
 ];
 
-export const Sales = () => {
+export const AllBills = () => {
     const [rows, updateRows] = useState([]);
     const {
         register: patientDetails,

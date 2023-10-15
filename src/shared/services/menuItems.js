@@ -1,23 +1,23 @@
 export const menuItems = [
     {
-        title: 'Purchage',
-        url: '/',
+        title: 'Purchase',
+        url: '',
         submenu: [
             {
                 title: 'Purchase Requisition',
-                url: '',
+                url: 'purchase/requisition',
             },
             {
                 title: 'Quotation',
-                url: 'web-dev',
+                url: 'purchase/quotation',
             },
             {
                 title: 'MasterList',
-                url: 'seo',
+                url: 'purchase/masterList',
             },
             {
                 title: 'Purchase Order',
-                url: 'seo',
+                url: 'purchase/order',
             },
             // {
             //     title: 'Backend',
@@ -40,7 +40,7 @@ export const menuItems = [
         submenu: [
             {
                 title: 'Add Invoice',
-                url: 'web-design',
+                url: '/addInvoice',
             },
             {
                 title: 'Pharmacy inventory',
@@ -62,7 +62,7 @@ export const menuItems = [
             },
             {
                 title: 'List of all Bills',
-                url: 'web-dev',
+                url: 'sales/allBills',
             }
         ]
     },
