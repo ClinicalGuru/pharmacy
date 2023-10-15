@@ -11,6 +11,7 @@ export const FORM_LABELS = {
     OTCRX: "OTC / Rx",
     MEDICINE_NAME: "Medicine Name",
     PHARMACOLOGICAL_NAME: "Pharmacological Name",
+    BRAND_NAME: "Brand Name",
     QUANTITY: "Quantity",
     MRP: "MRP",
     TOTAL: "Total",
@@ -31,7 +32,17 @@ export const FORM_LABELS = {
     QUOTATION_ID: "Quotation Id",
     PTR: "PTR",
     PTS: "PTS",
-    ADDRESS: "Address"
+    ADDRESS: "Address",
+    INVOICE_NUMBER:"Invoice Number",
+    PO_NUMBER:"PO Number",
+    INVOICE_DATE:"Invoice Date",
+    EXPIRY:"Expiry",
+    UNITS_STRIPS:"Units / Strips",
+    NO_OF_STRIPS:"No of Strips",
+    FREE_STRIPS:"Free Strips",
+    MRP_PER_STRIP:"MRP Per Strip",
+    PRICE_PER_STRIP:"Price Per Strip",
+    ADD_REMARKS:"Add Remarks",
 }
 
 

@@ -1,7 +1,7 @@
 export const menuItems = [
     {
         title: 'Purchase',
-        url: '/',
+        url: '',
         submenu: [
             {
                 title: 'Purchase Requisition',
@@ -40,7 +40,7 @@ export const menuItems = [
         submenu: [
             {
                 title: 'Add Invoice',
-                url: 'web-design',
+                url: '/addInvoice',
             },
             {
                 title: 'Pharmacy inventory',
@@ -62,7 +62,7 @@ export const menuItems = [
             },
             {
                 title: 'List of all Bills',
-                url: 'web-dev',
+                url: 'sales/allBills',
             }
         ]
     },

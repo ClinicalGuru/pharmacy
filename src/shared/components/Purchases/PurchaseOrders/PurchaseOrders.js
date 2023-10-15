@@ -18,6 +18,9 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useState } from "react";
 
+import {Header} from '../../Header/index'
+import {Container} from './PurchaseOrders.styles'
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
         backgroundColor: "#DEE1E6FF",
@@ -67,98 +70,102 @@ export const PurchaseOrders = () => {
         console.log(rows, "Medicines");
     }
     return (
-        <Box sx={{
-            padding: 2,
-        }}>
-            <Box>
-                <Typography fontSize={"20px"}
-                    mb={3}> PURCHASE ORDERS</Typography>
-            </Box>
+        <Container>
+            <Header></Header>
             <Box sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center"
+                padding: 2,
             }}>
-                <form onSubmit={handleVendorDetails(onSubmit)}>
-                    <Box sx={{
-                        display: 'flex',
-                    }}>
-                        <FormWrapper mr={"20"}>
-                            <label>{FORM_LABELS.VENDOR_NAME}</label>
-                            <input placeholder="name" {...vendorDetails("vendor name")} />
-                        </FormWrapper>
-                        <Box sx={{
-                            marginLeft: "2rem"
-                        }}>
-                            <LocalizationProvider dateAdapter={AdapterDayjs} >
-                                <DemoContainer components={['DatePicker']}>
-                                    <DatePicker
-                                        PopperProps={{
-                                            sx: {
-                                                '& .MuiPaper-root': {
-                                                    backgroundColor: 'red',
-                                                    border: '1px solid black',
-                                                }
-                                            }
-                                        }} label="Order Date" />
-                                </DemoContainer>
-                            </LocalizationProvider>
-                        </Box>
-
-                    </Box>
-                </form>
-
-                <Box sx={{
-                    display: "flex"
-                }}>
-                    <input type="submit" value={`L1 List`} />
-                    <input type="submit" value={`Total PO`} />
-                    <input type="submit" value={`Total Invoices`} />
-                    <input type="submit" value={`Remarks`} />
-                    <input type="submit" value={`Reorder`} />
+                <Box>
+                    <Typography fontSize={"20px"}
+                        mb={3}> PURCHASE ORDERS</Typography>
                 </Box>
-            </Box>
-            <Box sx={{ marginTop: 3 }}>
-                <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 700 }} aria-label="customized table">
-                        <TableHead>
-                            <TableRow>
-                                <StyledTableCell>S No</StyledTableCell>
-                                <StyledTableCell align="center">Pharmacological Name</StyledTableCell>
-                                <StyledTableCell align="center">Brand Name</StyledTableCell>
-                                <StyledTableCell align="center">Dose</StyledTableCell>
-                                <StyledTableCell align="center">Form</StyledTableCell>
-                                <StyledTableCell align="center">Qty/ Strips</StyledTableCell>
-                                <StyledTableCell align="center">Actions</StyledTableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {rows.map((row, index) => (
-                                <StyledTableRow key={row.index}>
-                                    <StyledTableCell>
-                                        {index + 1}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">{row.pharmacologicalName}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.medicineName}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.dose}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.form}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.quantity}</StyledTableCell>
-                                    {/* <StyledTableCell align="center">{row.quantity}</StyledTableCell> */}
-                                </StyledTableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </Box>
-            <Box sx={{
-                marginTop: '15px',
-                display: 'flex',
-                justifyContent: 'flex-end'
-            }}>
-                <input type="submit" value={`Save Order`} />
-                <input type="submit" value={`Print`} />
-                <input type= "submit" value={'Email'} />
-            </Box>
-        </Box >
+                <Box sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center"
+                }}>
+                    <form onSubmit={handleVendorDetails(onSubmit)}>
+                        <Box sx={{
+                            display: 'flex',
+                        }}>
+                            <FormWrapper mr={"20"}>
+                                <label>{FORM_LABELS.VENDOR_NAME}</label>
+                                <input placeholder="name" {...vendorDetails("vendor name")} />
+                            </FormWrapper>
+                            <Box sx={{
+                                marginLeft: "2rem"
+                            }}>
+                                <LocalizationProvider dateAdapter={AdapterDayjs} >
+                                    <DemoContainer components={['DatePicker']}>
+                                        <DatePicker
+                                            PopperProps={{
+                                                sx: {
+                                                    '& .MuiPaper-root': {
+                                                        backgroundColor: 'red',
+                                                        border: '1px solid black',
+                                                    }
+                                                }
+                                            }} label="Order Date" />
+                                    </DemoContainer>
+                                </LocalizationProvider>
+                            </Box>
+
+                        </Box>
+                    </form>
+
+                    <Box sx={{
+                        display: "flex"
+                    }}>
+                        <input type="submit" value={`L1 List`} />
+                        <input type="submit" value={`Total PO`} />
+                        <input type="submit" value={`Total Invoices`} />
+                        <input type="submit" value={`Remarks`} />
+                        <input type="submit" value={`Reorder`} />
+                    </Box>
+                </Box>
+                <Box sx={{ marginTop: 3 }}>
+                    <TableContainer component={Paper}>
+                        <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                            <TableHead>
+                                <TableRow>
+                                    <StyledTableCell>S No</StyledTableCell>
+                                    <StyledTableCell align="center">Pharmacological Name</StyledTableCell>
+                                    <StyledTableCell align="center">Brand Name</StyledTableCell>
+                                    <StyledTableCell align="center">Dose</StyledTableCell>
+                                    <StyledTableCell align="center">Form</StyledTableCell>
+                                    <StyledTableCell align="center">Qty/ Strips</StyledTableCell>
+                                    <StyledTableCell align="center">Actions</StyledTableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {rows.map((row, index) => (
+                                    <StyledTableRow key={row.index}>
+                                        <StyledTableCell>
+                                            {index + 1}
+                                        </StyledTableCell>
+                                        <StyledTableCell align="center">{row.pharmacologicalName}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.medicineName}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.dose}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.form}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.quantity}</StyledTableCell>
+                                        {/* <StyledTableCell align="center">{row.quantity}</StyledTableCell> */}
+                                    </StyledTableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Box>
+                <Box sx={{
+                    marginTop: '15px',
+                    display: 'flex',
+                    justifyContent: 'flex-end'
+                }}>
+                    <input type="submit" value={`Save Order`} />
+                    <input type="submit" value={`Print`} />
+                    <input type="submit" value={'Email'} />
+                </Box>
+            </Box >
+        </Container>
+
     )
 }

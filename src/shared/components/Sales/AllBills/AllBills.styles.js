@@ -18,7 +18,4 @@ margin: 0 0 0 5px;
 export const InvalidInput = styled.input`
     border: 1px solid red;
     
-`;
-export const Container = styled.div`
-
 `
