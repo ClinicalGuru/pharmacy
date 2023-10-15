@@ -1,23 +1,23 @@
 export const menuItems = [
     {
-        title: 'Purchage',
+        title: 'Purchase',
         url: '/',
         submenu: [
             {
                 title: 'Purchase Requisition',
-                url: '',
+                url: 'purchase/requisition',
             },
             {
                 title: 'Quotation',
-                url: 'web-dev',
+                url: 'purchase/quotation',
             },
             {
                 title: 'MasterList',
-                url: 'seo',
+                url: 'purchase/masterList',
             },
             {
                 title: 'Purchase Order',
-                url: 'seo',
+                url: 'purchase/order',
             },
             // {
             //     title: 'Backend',
