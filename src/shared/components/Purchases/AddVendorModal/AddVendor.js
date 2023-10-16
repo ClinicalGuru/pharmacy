@@ -11,7 +11,7 @@ import { Input } from '@mui/material';
 import { ErrorMessage, } from "./AddVendor.styles";
 
 
-export const AddVendor = ({ showModal }) => {
+export const AddVendor = ({ showModal, action }) => {
     const {
         register: vendorDetails,
         handleSubmit: handleVendorDetails,
