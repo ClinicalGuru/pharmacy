@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
 import { FORM_LABELS } from "../../Constants/index";
-import { FormWrapper, ErrorMessage, } from "./PurchaseRequisition.styles";
+import { ErrorMessage,Container } from "./PurchaseRequisition.styles";
 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -21,7 +21,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import { AddVendor } from "./AddVendorModal";
-import { Container, StyledTableRow, StyledTableCell } from "./PurchaseRequisition.styles";
+import { StyledTableRow, StyledTableCell } from "../../Styles/CommonStyles";
 
 
 export const PurchaseRequisition = () => {
@@ -34,10 +34,10 @@ export const PurchaseRequisition = () => {
         formState: { errors },
     } = useForm();
 
-    const [vendorName, setAge] = useState('');
+    const [vendorName, setVendorName] = useState('');
 
     const handleChange = (event) => {
-        setAge(event.target.value);
+        setVendorName(event.target.value);
     };
 
     const {

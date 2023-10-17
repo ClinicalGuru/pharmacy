@@ -4,11 +4,6 @@ export const FormWrapper = styled.div`
 
 `;
 
-export const Form = styled.form `
-    display: flex;
-    justify-content: space-between;
-`;
-
 export const ErrorMessage = styled.p`
 font-size: 10px;
 color: #db2727;

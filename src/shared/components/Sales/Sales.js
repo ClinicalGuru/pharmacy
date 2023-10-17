@@ -1,57 +1,24 @@
 import { useForm } from "react-hook-form";
 import { FORM_LABELS } from "../../Constants/index";
-import { FormWrapper, Form, ErrorMessage, InvalidInput } from "./Sales.styles";
+import { FormWrapper, ErrorMessage } from "./Sales.styles";
 
 //material ui
 import { Box } from "@mui/material";
-import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
 import { useState } from "react";
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import { StyledTableRow, StyledTableCell } from "../../Styles/CommonStyles";
 
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: "#DEE1E6FF",
-        color: "#171A1FFF",
-    },
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 14,
-    },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-        backgroundColor: theme.palette.action.hover,
-        color: "#171A1FFF"
-    },
-    // hide last border
-    '&:last-child td, &:last-child th': {
-        border: 0,
-    },
-}));
-
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-    // createData('S No', 159, 6.0, 24, 4.0),
-    // createData('Medicine Name', 237, 9.0, 37, 4.3),
-    // createData('Batch', 262, 16.0, 24, 6.0),
-    // createData('HSN Code', 305, 3.7, 67, 4.3),
-    // createData('Price', 356, 16.0, 49, 3.9),
-    // createData('Quantity', 159, 6.0, 24, 4.0),
-    // createData('Total', 237, 9.0, 37, 4.3),
-    // createData('Discount', 262, 16.0, 24, 6.0),
-    // createData('Amount', 305, 3.7, 67, 4.3),
-    // createData('Action', 356, 16.0, 49, 3.9),
-];
 
 export const Sales = () => {
     const [rows, updateRows] = useState([]);
@@ -61,6 +28,31 @@ export const Sales = () => {
         watch,
         formState: { errors },
     } = useForm();
+
+    const [otcrx, setOtcRx] = useState('')
+    const handleChange = (event) => {
+        setOtcRx(event.target.value);
+    };
+
+    const [gender, setGender] = useState('')
+    const handleGender = (e) => {
+        setGender(e.target.value);
+    }
+
+    const [pharmacologicalName, setPharmacologicalName] = useState('')
+    const handlePharmacologicalName = (e) => {
+        setPharmacologicalName(e.target.value)
+    };
+
+    const [medicineName, setMedicineName] = useState('')
+    const handleMedicineName = (e) => {
+        setMedicineName(e.target.value)
+    }
+
+    const [paidAmount, setPaidAmount] = useState('')
+    const handlePaidAmount = (e) => {
+        setPaidAmount(e.target.value)
+    }
 
     const {
         register: medicineDetails,
@@ -75,10 +67,8 @@ export const Sales = () => {
 
     const onSubmit = (data) => console.log(watch);;
     const onSubmitMedicineDetails = (data) => {
-        console.log(data, "Medicines");
         rows.push(data);
         updateRows(rows);
-        console.log(rows, "Medicines");
     }
     return (
         <Box sx={{
@@ -87,42 +77,49 @@ export const Sales = () => {
             <form onSubmit={handlePatientDetails(onSubmit)}>
                 <Box sx={{
                     display: 'flex',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
+                    alignItems: 'baseline'
                 }}>
-                    <FormWrapper>
-                        <label>{FORM_LABELS.PATIENT_NAME}</label>
-                        <input placeholder="name" {...patientDetails("patient name")} />
-                    </FormWrapper>
-                    <FormWrapper>
-                        <label>{FORM_LABELS.GENDER}</label>
-                        <input {...patientDetails("gender")} />
-                    </FormWrapper>
-                    <FormWrapper>
-                        <label>{FORM_LABELS.AGE}</label>
-                        <input placeholder="name" {...patientDetails("age")} />
-                    </FormWrapper>
-                    <FormWrapper>
-                        <label>{FORM_LABELS.PHONE}</label>
-                        <input placeholder="name" {...patientDetails("phone")} />
-                    </FormWrapper>
-                    <FormWrapper>
-                        <label>{FORM_LABELS.EMAIL}</label>
-                        <input placeholder="name" {...patientDetails("email")} />
-                    </FormWrapper>
-                    <FormWrapper>
-                        <label>{FORM_LABELS.REFERED_DOCTOR}</label>
-                        <input placeholder="name" {...patientDetails("referedDoctor")} />
-                    </FormWrapper>
-                    <FormWrapper>
-                        <label>{FORM_LABELS.OTCRX}</label>
-                        <input placeholder="name" {...patientDetails("otc/rx")} />
-                    </FormWrapper>
+                    <TextField id="outlined-basic" label={FORM_LABELS.PATIENT_NAME} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginRight: '15px' }} />
+                    <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
+                        <InputLabel id="demo-select-small-label">{FORM_LABELS.GENDER}</InputLabel>
+                        <Select
+                            size="small"
+                            labelId="demo-select-small-label"
+                            id="demo-select-small"
+                            value={gender}
+                            label={FORM_LABELS.GENDER}
+                            onChange={handleGender}
+                        >
+                            <MenuItem value="male"><em>Male</em></MenuItem>
+                            <MenuItem value="female"><em>Female</em></MenuItem>
+                            <MenuItem value="others"><em>Others</em></MenuItem>
+                        </Select>
+                    </FormControl>
+                    <TextField id="outlined-basic" label={FORM_LABELS.AGE} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginRight: '15px' }} />
+                    <TextField id="outlined-basic" label={FORM_LABELS.PHONE} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginRight: '15px' }} />
+                    <TextField id="outlined-basic" label={FORM_LABELS.EMAIL} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginRight: '15px' }} />
+                    <TextField id="outlined-basic" label={FORM_LABELS.REFERED_DOCTOR} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginRight: '15px' }} />
+                    <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
+                        <InputLabel id="demo-select-small-label">{FORM_LABELS.OTCRX}</InputLabel>
+                        <Select
+                            size="small"
+                            labelId="demo-select-small-label"
+                            id="demo-select-small"
+                            value={otcrx}
+                            label={FORM_LABELS.OTCRX}
+                            onChange={handleChange}
+                        >
+                            <MenuItem value="otc"><em>OTC</em></MenuItem>
+                            <MenuItem value="rx"><em>RX</em></MenuItem>
+                        </Select>
+                    </FormControl>
                 </Box>
 
                 {/* <input type="submit" value="Add"/> */}
             </form>
             <Box sx={{
-                backgroundColor: '#DEE1E6FF',
+                backgroundColor: '#eef0f3',
                 borderRadius: '4px',
                 padding: 2,
                 marginTop: 4
@@ -131,86 +128,78 @@ export const Sales = () => {
                     <Box sx={{
                         display: 'flex',
                         flexWrap: "wrap",
-                        justifyContent: "space-between"
+                        justifyContent: "space-between",
+                        alignItems: 'center'
                     }}>
-                        <FormWrapper >
-                            <label>{FORM_LABELS.PHARMACOLOGICAL_NAME}</label>
-                            <input placeholder="name" {...medicineDetails("pharmacologicalName", { required: true })}
-                                aria-invalid={MedicineErrors.pharmacologicalName ? "true" : "false"} />
-                            {MedicineErrors.pharmacologicalName?.type === "required" && (
-                                <ErrorMessage role="alert">{FORM_LABELS.PHARMACOLOGICAL_NAME}  is required</ErrorMessage>
-                            )}
-                        </FormWrapper>
+                        <FormControl sx={{ m: 1, minWidth: 220, backgroundColor: '#FFFFFFFF' }} size="small">
+                            <InputLabel id="demo-select-small-label">{FORM_LABELS.PHARMACOLOGICAL_NAME}</InputLabel>
+                            <Select
+                                size="small"
+                                labelId="demo-select-small-label"
+                                id="demo-select-small"
+                                value={pharmacologicalName}
+                                label={FORM_LABELS.PHARMACOLOGICAL_NAME}
+                                onChange={handlePharmacologicalName}
+                            >
+                                <MenuItem value="none"><em>None</em></MenuItem>
+                            </Select>
+                        </FormControl>
+                        <FormControl sx={{ m: 1, minWidth: 200, backgroundColor: '#FFFFFFFF' }} size="small">
+                            <InputLabel id="demo-select-small-label">{FORM_LABELS.MEDICINE_NAME}</InputLabel>
+                            <Select
+                                size="small"
+                                labelId="demo-select-small-label"
+                                id="demo-select-small"
+                                value={medicineName}
+                                label={FORM_LABELS.MEDICINE_NAME}
+                                onChange={handleMedicineName}
+                            >
+                                <MenuItem value="none"><em>None</em></MenuItem>
+                            </Select>
+                        </FormControl>
                         <FormWrapper>
-                            <label>{FORM_LABELS.MEDICINE_NAME}</label>
-                            <input {...medicineDetails("medicineName", { required: true })}
-                                aria-invalid={MedicineErrors.medicineName ? "true" : "false"} />
-                            {MedicineErrors.medicineName?.type === "required" && (
-                                <ErrorMessage role="alert">{FORM_LABELS.MEDICINE_NAME}  is required</ErrorMessage>
-                            )}
-                        </FormWrapper>
-                        <FormWrapper>
-                            <label>{FORM_LABELS.BATCH_NO}</label>
-                            <input placeholder="" {...medicineDetails("batchNumber", { required: true })}
-                                aria-invalid={MedicineErrors.batchNumber ? "true" : "false"} />
+                            <TextField id="outlined-basic" label={FORM_LABELS.BATCH_NO} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
                             {MedicineErrors.batchNumber?.type === "required" && (
                                 <ErrorMessage role="alert">{FORM_LABELS.BATCH_NO}  is required</ErrorMessage>
                             )}
                         </FormWrapper>
                         <FormWrapper>
-                            <label>{FORM_LABELS.HSN_CODE}</label>
-                            <input placeholder="" {...medicineDetails("hsnCode", { required: true })}
-                                aria-invalid={MedicineErrors.hsnCode ? "true" : "false"} />
+                            <TextField id="outlined-basic" label={FORM_LABELS.HSN_CODE} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
                             {MedicineErrors.hsnCode?.type === "required" && (
                                 <ErrorMessage role="alert">{FORM_LABELS.HSN_CODE}  is required</ErrorMessage>
                             )}
                         </FormWrapper>
                         <FormWrapper>
-                            <label>{FORM_LABELS.PRICE}</label>
-                            <input placeholder="" {...medicineDetails("price", { required: true })}
-                                aria-invalid={MedicineErrors.price ? "true" : "false"} />
+                            <TextField id="outlined-basic" label={FORM_LABELS.PRICE} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
                             {MedicineErrors.price?.type === "required" && (
                                 <ErrorMessage role="alert">{FORM_LABELS.PRICE}  is required</ErrorMessage>
                             )}
                         </FormWrapper>
                         <FormWrapper>
-                            <label>{FORM_LABELS.QUANTITY}</label>
-                            <input placeholder="" {...medicineDetails("quantity", { required: true })}
-                                aria-invalid={MedicineErrors.price ? "true" : "false"} />
+                            <TextField id="outlined-basic" label={FORM_LABELS.QUANTITY} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
                             {MedicineErrors.quantity?.type === "required" && (
-                                <ErrorMessage role="alert">{FORM_LABELS.PRICE}  is required</ErrorMessage>
+                                <ErrorMessage role="alert">{FORM_LABELS.QUANTITY}  is required</ErrorMessage>
                             )}
                         </FormWrapper>
                         <FormWrapper>
-                            <label>{FORM_LABELS.TOTAL}</label>
-                            <input placeholder="" {...medicineDetails("total", { required: true })}
-                                aria-invalid={MedicineErrors.total ? "true" : "false"} />
+                            <TextField id="outlined-basic" label={FORM_LABELS.TOTAL} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
                             {MedicineErrors.total?.type === "required" && (
                                 <ErrorMessage role="alert">{FORM_LABELS.TOTAL}  is required</ErrorMessage>
                             )}
                         </FormWrapper>
-
-                    </Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Box sx={{ display: 'flex'}}>
-                            <FormWrapper>
-                                <label>{FORM_LABELS.DISCOUNT}</label>
-                                <input placeholder="" {...medicineDetails("discount", { required: true })}
-                                    aria-invalid={MedicineErrors.discount ? "true" : "false"} />
-                                {MedicineErrors.discount?.type === "required" && (
-                                    <ErrorMessage role="alert">{FORM_LABELS.DISCOUNT}  is required</ErrorMessage>
-                                )}
-                            </FormWrapper>
-                            <FormWrapper>
-                                <label>{FORM_LABELS.AMOUNT}</label>
-                                <input placeholder="" {...medicineDetails("amount", { required: true })}
-                                    aria-invalid={MedicineErrors.amount ? "true" : "false"} />
-                                {MedicineErrors.amount?.type === "required" && (
-                                    <ErrorMessage role="alert">{FORM_LABELS.AMOUNT}  is required</ErrorMessage>
-                                )}
-                            </FormWrapper>
-                        </Box>
-                        <Box sx = {{display: 'flex'}}>
+                        <FormWrapper>
+                            <TextField id="outlined-basic" label={FORM_LABELS.DISCOUNT} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
+                            {MedicineErrors.discount?.type === "required" && (
+                                <ErrorMessage role="alert">{FORM_LABELS.DISCOUNT}  is required</ErrorMessage>
+                            )}
+                        </FormWrapper>
+                        <FormWrapper>
+                            <TextField id="outlined-basic" label={FORM_LABELS.AMOUNT} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
+                            {MedicineErrors.amount?.type === "required" && (
+                                <ErrorMessage role="alert">{FORM_LABELS.AMOUNT}  is required</ErrorMessage>
+                            )}
+                        </FormWrapper>
+                        <Box sx={{ display: 'flex' }}>
                             <input type="submit" value={`+ Add`} />
                             <input type="reset" value={`Clear`} />
                         </Box>
@@ -218,7 +207,7 @@ export const Sales = () => {
                 </form>
             </Box>
             <Box sx={{
-                backgroundColor: '#DEE1E6FF',
+                backgroundColor: '#eef0f3',
                 borderRadius: '4px',
                 padding: 2,
                 marginTop: 4
@@ -226,41 +215,43 @@ export const Sales = () => {
                 <form onSubmit={handleTotalBillDetails(onSubmit)}>
                     <Box sx={{
                         display: 'flex',
-                        justifyContent: 'space-between'
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
                     }}>
                         <FormWrapper>
-                            <label>{FORM_LABELS.DISCOUNT}</label>
-                            <input placeholder="name" {...totalBillDetails("discount")} />
+                            <TextField id="outlined-basic" label={FORM_LABELS.DISCOUNT} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginRight: '15px' }} />
                         </FormWrapper>
                         <FormWrapper>
-                            <label>{FORM_LABELS.GST}</label>
-                            <input {...totalBillDetails("gst")} />
+                            <TextField id="outlined-basic" label={FORM_LABELS.GST} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginRight: '15px' }} />
                         </FormWrapper>
                         <FormWrapper>
-                            <label>{FORM_LABELS.NET_PRICE}</label>
-                            <input placeholder="name" {...totalBillDetails("netPrice")} />
+                            <TextField id="outlined-basic" label={FORM_LABELS.NET_PRICE} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginRight: '15px' }} />
                         </FormWrapper>
                         <FormWrapper>
-                            <label>{FORM_LABELS.ROUND_OFF}</label>
-                            <input placeholder="name" {...totalBillDetails("roundOff")} />
+                            <TextField id="outlined-basic" label={FORM_LABELS.ROUND_OFF} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginRight: '15px' }} />
                         </FormWrapper>
                         <FormWrapper>
-                            <label>{FORM_LABELS.BILL_AMOUNT}</label>
-                            <input placeholder="name" {...totalBillDetails("billAount")} />
+                            <TextField id="outlined-basic" label={FORM_LABELS.BILL_AMOUNT} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginRight: '5px' }} />
                         </FormWrapper>
+                        <FormControl sx={{ m: 1, minWidth: 220, backgroundColor: '#FFFFFFFF' }} size="small">
+                            <InputLabel id="demo-select-small-label">{FORM_LABELS.PAID_AMOUNT}</InputLabel>
+                            <Select
+                                size="small"
+                                labelId="demo-select-small-label"
+                                id="demo-select-small"
+                                value={paidAmount}
+                                label={FORM_LABELS.PAID_AMOUNT}
+                                onChange={handlePaidAmount}
+                            >
+                                <MenuItem value="cash"><em>Cash</em></MenuItem>
+                                <MenuItem value="card"><em>Card</em></MenuItem>
+                                <MenuItem value="upi"><em>UPI</em></MenuItem>
+                            </Select>
+                        </FormControl>
                         <FormWrapper>
-                            <label>{FORM_LABELS.PAID_AMOUNT}</label>
-                            {/* <input placeholder="name" {...totalBillDetails("paintAmount")} /> */}
-                            <Box sx={{ display: "flex" }}>
-                                <select {...totalBillDetails("paymentMode")}>
-                                    <option>--select--</option>
-                                    <option value={`cash`}>Cash</option>
-                                    <option value={`card`}>Card</option>
-                                    <option value={`upi`}>UPI</option>
-                                </select>
-                                <input placeholder="name" {...totalBillDetails("paintAmount")} />
-                            </Box>
+                            <TextField id="outlined-basic" label="Remarks" variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginRight: '15px' }} />
                         </FormWrapper>
+
 
                     </Box>
                     <Box sx={{ display: 'flex', justifyContent: 'end' }}>

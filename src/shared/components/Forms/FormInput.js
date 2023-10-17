@@ -42,7 +42,7 @@ export const FormInput = (props) => {
             value={form[name]}
             onChange={handleFormChange}
           >
-            <MenuItem value="">--Select--</MenuItem>
+            <MenuItem value="none">--Select--</MenuItem>
             {
               options.map(item => <MenuItem value={item?.value}>{item?.name}</MenuItem>)
             }

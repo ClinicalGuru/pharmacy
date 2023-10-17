@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
 import { FORM_LABELS } from "../../../Constants/index";
-import { FormWrapper, ErrorMessage, } from "./PurchaseOrders.styles";
 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -18,29 +17,15 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useState } from "react";
 
-import {Header} from '../../Header/index'
-import {Container} from './PurchaseOrders.styles'
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import { StyledTableRow, StyledTableCell } from "../../../Styles/CommonStyles";
+import { Header } from '../../Header/index'
+import { Container } from './PurchaseOrders.styles'
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: "#DEE1E6FF",
-        color: "#171A1FFF",
-    },
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 14,
-    },
-}));
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-        backgroundColor: theme.palette.action.hover,
-        color: "#171A1FFF"
-    },
-    // hide last border
-    '&:last-child td, &:last-child th': {
-        border: 0,
-    },
-}));
 
 export const PurchaseOrders = () => {
     const [rows, updateRows] = useState([]);
@@ -50,25 +35,13 @@ export const PurchaseOrders = () => {
         watch,
         formState: { errors },
     } = useForm();
+    const [vendorName, setVendorName] = useState('');
 
-    const {
-        register: medicineDetails,
-        handleSubmit: handleMedicineDetails,
-        formState: { errors: MedicineErrors },
-    } = useForm();
-
-    const {
-        register: totalBillDetails,
-        handleSubmit: handleTotalBillDetails,
-    } = useForm();
-
+    const handleChange = (event) => {
+        setVendorName(event.target.value);
+    };
     const onSubmit = (data) => console.log(watch);;
-    const onSubmitMedicineDetails = (data) => {
-        console.log(data, "Medicines");
-        rows.push(data);
-        updateRows(rows);
-        console.log(rows, "Medicines");
-    }
+
     return (
         <Container>
             <Header></Header>
@@ -88,24 +61,37 @@ export const PurchaseOrders = () => {
                         <Box sx={{
                             display: 'flex',
                         }}>
-                            <FormWrapper mr={"20"}>
-                                <label>{FORM_LABELS.VENDOR_NAME}</label>
-                                <input placeholder="name" {...vendorDetails("vendor name")} />
-                            </FormWrapper>
+                            <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
+                                <InputLabel id="demo-select-small-label">{FORM_LABELS.VENDOR_NAME}</InputLabel>
+                                <Select
+                                    size="small"
+                                    labelId="demo-select-small-label"
+                                    id="demo-select-small"
+                                    value={vendorName}
+                                    label="Vendor Name"
+                                    onChange={handleChange}
+                                >
+                                    <MenuItem value="none">
+                                        <em>None</em>
+                                    </MenuItem>
+                                </Select>
+                            </FormControl>
                             <Box sx={{
                                 marginLeft: "2rem"
                             }}>
                                 <LocalizationProvider dateAdapter={AdapterDayjs} >
                                     <DemoContainer components={['DatePicker']}>
                                         <DatePicker
-                                            PopperProps={{
-                                                sx: {
-                                                    '& .MuiPaper-root': {
-                                                        backgroundColor: 'red',
-                                                        border: '1px solid black',
-                                                    }
+                                            size="small"
+                                            sx={{
+                                                '& .MuiFormLabel-root': {
+                                                    top: -6
+                                                },
+                                                '& .MuiOutlinedInput-input': {
+                                                    padding: '8.5px 14px'
                                                 }
-                                            }} label="Order Date" />
+                                            }}
+                                            label="Order Date" />
                                     </DemoContainer>
                                 </LocalizationProvider>
                             </Box>

@@ -7,21 +7,21 @@ import Dialog from '@mui/material/Dialog';
 import { useForm } from "react-hook-form";
 import { FORM_LABELS } from "../../../Constants/index";
 import { Box } from "@mui/material";
-import { Input } from '@mui/material';
 import { ErrorMessage, } from "./AddVendor.styles";
+import TextField from '@mui/material/TextField';
 
 
 export const AddVendor = ({ showModal, action }) => {
     const {
         register: vendorDetails,
         handleSubmit: handleVendorDetails,
-        formState: { errors: MedicineErrors },
+        formState: { errors: vendorDetailsErrors },
     } = useForm();
     const handleClose = () => {
         action(!showModal);
     };
-    const onSubmitMedicineDetails = (data) => {
-        console.log(data, "Medicines");
+    const onSubmitVendorDetails = (data) => {
+        // console.log(data, "vendors");
     }
     return (
         <Box>
@@ -46,49 +46,39 @@ export const AddVendor = ({ showModal, action }) => {
                     <CloseIcon />
                 </IconButton>
                 <DialogContent dividers>
-                    <form onSubmit={handleVendorDetails(onSubmitMedicineDetails)}>
+                    <form onSubmit={handleVendorDetails(onSubmitVendorDetails)}>
                         <Box sx={{
                             display: 'flex',
                             flexWrap: "wrap",
                             justifyContent: "space-between"
                         }}>
                             <div>
-                                <label>{FORM_LABELS.VENDOR_NAME}</label>
-                                <Input size="small" placeholder="" {...vendorDetails("vendorName", { required: true })}
-                                    aria-invalid={MedicineErrors.vendorName ? "true" : "false"} />
-                                {MedicineErrors.vendorName?.type === "required" && (
+                                <TextField id="outlined-basic" label={FORM_LABELS.VENDOR_NAME} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
+                                {vendorDetailsErrors.vendorName?.type === "required" && (
                                     <ErrorMessage role="alert">{FORM_LABELS.VENDOR_NAME}  is required</ErrorMessage>
                                 )}
                             </div>
                             <div>
-                                <label>{FORM_LABELS.GST}</label>
-                                <Input size="small" placeholder="" {...vendorDetails("gst", { required: true })}
-                                    aria-invalid={MedicineErrors.gst ? "true" : "false"} />
-                                {MedicineErrors.gst?.type === "required" && (
+                                <TextField id="outlined-basic" label={FORM_LABELS.GST} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
+                                {vendorDetailsErrors.gst?.type === "required" && (
                                     <ErrorMessage role="alert">{FORM_LABELS.GST}  is required</ErrorMessage>
                                 )}
                             </div>
                             <div>
-                                <label>{FORM_LABELS.EMAIL}</label>
-                                <input placeholder="" {...vendorDetails("email", { required: true })}
-                                    aria-invalid={MedicineErrors.email ? "true" : "false"} />
-                                {MedicineErrors.email?.type === "required" && (
+                                <TextField id="outlined-basic" label={FORM_LABELS.EMAIL} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
+                                {vendorDetailsErrors.email?.type === "required" && (
                                     <ErrorMessage role="alert">{FORM_LABELS.EMAIL}  is required</ErrorMessage>
                                 )}
                             </div>
                             <div>
-                                <label>{FORM_LABELS.PHONE}</label>
-                                <input placeholder="" {...vendorDetails("phone", { required: true })}
-                                    aria-invalid={MedicineErrors.phone ? "true" : "false"} />
-                                {MedicineErrors.phone?.type === "required" && (
+                                <TextField id="outlined-basic" label={FORM_LABELS.PHONE} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
+                                {vendorDetailsErrors.phone?.type === "required" && (
                                     <ErrorMessage role="alert">{FORM_LABELS.PHONE}  is required</ErrorMessage>
                                 )}
                             </div>
                             <div>
-                                <label>{FORM_LABELS.ADDRESS}</label>
-                                <input placeholder="" {...vendorDetails("address", { required: true })}
-                                    aria-invalid={MedicineErrors.address ? "true" : "false"} />
-                                {MedicineErrors.address?.type === "required" && (
+                                <TextField id="outlined-basic" label={FORM_LABELS.ADDRESS} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
+                                {vendorDetailsErrors.address?.type === "required" && (
                                     <ErrorMessage role="alert">{FORM_LABELS.ADDRESS}  is required</ErrorMessage>
                                 )}
                             </div>

@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { FORM_LABELS } from "../../Constants/index";
-import { FormWrapper, ErrorMessage, Container } from "./AddInvoice.styles";
+import { Container } from "./AddInvoice.styles";
 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -18,96 +18,50 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useState } from "react";
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 
 import { Header } from '../Header/index';
-
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-    '& .MuiDialogContent-root': {
-        padding: theme.spacing(2),
-    },
-    '& .MuiDialogActions-root': {
-        padding: theme.spacing(1),
-    },
-}));
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: "#eef0f3",
-        color: "#171A1FFF",
-        boxShadow: 'none!important'
-    },
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 14,
-    },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-        backgroundColor: theme.palette.action.hover,
-        color: "#171A1FFF"
-    },
-    // hide last border
-    '&:last-child td, &:last-child th': {
-        border: 0,
-    },
-}));
+import { StyledTableRow, StyledTableCell} from '../../Styles/CommonStyles';
 
 export const AddInvoice = () => {
     const [rows, updateRows] = useState([]);
     const {
-        register: vendorDetails,
-        handleSubmit: handleVendorDetails,
+        register: invoiceDetails,
+        handleSubmit: handleInvoiceDetails,
         watch,
         formState: { errors },
     } = useForm();
 
-    const [vendorName, setAge] = React.useState('');
-
+    const [vendorName, setVendorName] = React.useState('');
+    const [poNumber, setPoNumber] = React.useState('');
     const handleChange = (event) => {
-        setAge(event.target.value);
+        setVendorName(event.target.value);
+    };
+    const handlePoNumber = (event) => {
+        setPoNumber(event.target.value);
     };
 
     const {
-        register: medicineDetails,
-        handleSubmit: handleMedicineDetails,
-        formState: { errors: MedicineErrors },
-    } = useForm();
-
-    const {
-        register: totalBillDetails,
-        handleSubmit: handleTotalBillDetails,
+        register: billDetails,
+        handleSubmit: handleBillDetails,
+        formState: { errors: billErrors },
     } = useForm();
 
     const onSubmit = (data) => console.log(watch);;
-    const onSubmitMedicineDetails = (data) => {
+    const onSubmitBillDetails = (data) => {
         console.log(data, "Medicines");
         rows.push(data);
         updateRows(rows);
         console.log(rows, "Medicines");
     }
-    const [open, setOpen] = React.useState(false);
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-    const handleClose = () => {
-        setOpen(false);
-    };
+
 
     const card1 = (
         <React.Fragment>
@@ -116,7 +70,7 @@ export const AddInvoice = () => {
                     Gross Amount
                 </Typography>
                 <Typography sx={{ fontSize: 14 }}>
-                    
+
                 </Typography>
             </CardContent>
         </React.Fragment>
@@ -128,7 +82,7 @@ export const AddInvoice = () => {
                     Total Discount Amount
                 </Typography>
                 <Typography sx={{ fontSize: 14 }}>
-                    
+
                 </Typography>
             </CardContent>
         </React.Fragment>
@@ -140,7 +94,7 @@ export const AddInvoice = () => {
                     Total Tax Amount
                 </Typography>
                 <Typography sx={{ fontSize: 14 }}>
-                    
+
                 </Typography>
             </CardContent>
         </React.Fragment>
@@ -152,7 +106,7 @@ export const AddInvoice = () => {
                     Round Off
                 </Typography>
                 <Typography sx={{ fontSize: 14 }}>
-                    
+
                 </Typography>
             </CardContent>
         </React.Fragment>
@@ -164,7 +118,7 @@ export const AddInvoice = () => {
                     Total Amount
                 </Typography>
                 <Typography sx={{ fontSize: 14 }}>
-                    
+
                 </Typography>
             </CardContent>
         </React.Fragment>
@@ -185,10 +139,10 @@ export const AddInvoice = () => {
                     justifyContent: "space-between",
                     alignItems: "center"
                 }}>
-                    <form onSubmit={handleVendorDetails(onSubmit)}>
+                    <form onSubmit={handleInvoiceDetails(onSubmit)}>
                         <Box sx={{
                             display: 'flex',
-                            alignItems: 'center'
+                            alignItems: 'baseline'
                         }}>
                             <TextField id="outlined-basic" label={FORM_LABELS.INVOICE_NUMBER} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF' }} />
                             <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
@@ -196,9 +150,9 @@ export const AddInvoice = () => {
                                 <Select
                                     labelId="demo-select-small-label"
                                     id="demo-select-small"
-                                    value={vendorName}
+                                    value={poNumber}
                                     label="PO Number"
-                                    onChange={handleChange}
+                                    onChange={handlePoNumber}
                                 >
                                     <MenuItem value="none">
                                         <em>None</em>
@@ -225,14 +179,16 @@ export const AddInvoice = () => {
                                 <LocalizationProvider dateAdapter={AdapterDayjs} >
                                     <DemoContainer components={['DatePicker']}>
                                         <DatePicker
-                                            PopperProps={{
-                                                sx: {
-                                                    '& .MuiPaper-root': {
-                                                        backgroundColor: 'red',
-                                                        border: '1px solid black',
-                                                    }
+                                            size="small"
+                                            sx={{
+                                                '& .MuiFormLabel-root': {
+                                                    top: -6
+                                                },
+                                                '& .MuiOutlinedInput-input': {
+                                                    padding: '8.5px 14px'
                                                 }
-                                            }} label={FORM_LABELS.INVOICE_DATE} />
+                                            }}
+                                            label="Invoice Date" />
                                     </DemoContainer>
                                 </LocalizationProvider>
                             </Box>
@@ -248,7 +204,7 @@ export const AddInvoice = () => {
                     padding: 2,
                     marginTop: 4
                 }}>
-                    <form onSubmit={handleMedicineDetails(onSubmitMedicineDetails)}>
+                    <form onSubmit={handleBillDetails(onSubmitBillDetails)}>
                         <Box sx={{
                             display: 'flex',
                             flexWrap: "wrap",
@@ -279,22 +235,22 @@ export const AddInvoice = () => {
                 <Box sx={{
                     display: 'flex',
                     justifyContent: 'space-around',
-                    marginTop:'20px'
+                    marginTop: '20px'
                 }}>
                     <Box>
-                        <Card variant="outlined" sx={{backgroundColor:'#C6F8FF9E'}}>{card1}</Card>
+                        <Card variant="outlined" sx={{ backgroundColor: '#C6F8FF9E' }}>{card1}</Card>
                     </Box>
                     <Box>
-                        <Card variant="outlined" sx={{backgroundColor:'#FEF6F1FF'}}>{card2}</Card>
+                        <Card variant="outlined" sx={{ backgroundColor: '#FEF6F1FF' }}>{card2}</Card>
                     </Box>
                     <Box>
-                        <Card variant="outlined" sx={{backgroundColor:'#F1F4FDFF'}}>{card3}</Card>
+                        <Card variant="outlined" sx={{ backgroundColor: '#F1F4FDFF' }}>{card3}</Card>
                     </Box>
                     <Box>
-                        <Card variant="outlined" sx={{backgroundColor:'#FDF2F2FF'}}>{card4}</Card>
+                        <Card variant="outlined" sx={{ backgroundColor: '#FDF2F2FF' }}>{card4}</Card>
                     </Box>
                     <Box>
-                        <Card variant="outlined" sx={{backgroundColor:'#FEF9EEFF'}}>{card5}</Card>
+                        <Card variant="outlined" sx={{ backgroundColor: '#FEF9EEFF' }}>{card5}</Card>
                     </Box>
                 </Box>
                 <Box sx={{ marginTop: 3 }}>

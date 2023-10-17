@@ -12,7 +12,7 @@ export const FORM_LABELS = {
     MEDICINE_NAME: "Medicine Name",
     PHARMACOLOGICAL_NAME: "Pharmacological Name",
     BRAND_NAME: "Brand Name",
-    QUANTITY: "Quantity",
+    QUANTITY: "Quantity/Strips",
     MRP: "MRP",
     TOTAL: "Total",
     DISCOUNT: "Discount",
