@@ -11,7 +11,12 @@ const vendorCollectionRef = collection(db, "vendor");
 
 class PurchaseService {
     addVendor = (newVendor) => {
+        console.log(newVendor, db,'vendor')
         return addDoc(vendorCollectionRef, newVendor);
+    }
+
+    getAllVendors = () => {
+        return getDocs(vendorCollectionRef);
     }
     
 }

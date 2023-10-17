@@ -9,20 +9,27 @@ import { FORM_LABELS } from "../../../Constants/index";
 import { Box } from "@mui/material";
 import { Input } from '@mui/material';
 import { ErrorMessage, } from "./AddVendor.styles";
+import PurchaseService from "../../../services/Purchase.service";
 
 
 export const AddVendor = ({ showModal, action }) => {
     const {
         register: vendorDetails,
         handleSubmit: handleVendorDetails,
-        formState: { errors: MedicineErrors },
+        formState: { errors: VendorErrors },
     } = useForm();
     const handleClose = () => {
         action(!showModal);
     };
-    const onSubmitMedicineDetails = (data) => {
-        console.log(data, "Medicines");
-    }
+    const onSubmitVendorDetails = async (data) => {
+        console.log(data, "vendors");
+        try {
+            await PurchaseService.addVendor(data);
+            
+        } catch (e) {
+            console.log(e, 'error')
+        }
+    };
     return (
         <Box>
             <Dialog
@@ -45,8 +52,8 @@ export const AddVendor = ({ showModal, action }) => {
                 >
                     <CloseIcon />
                 </IconButton>
-                <DialogContent dividers>
-                    <form onSubmit={handleVendorDetails(onSubmitMedicineDetails)}>
+                <form onSubmit={handleVendorDetails(onSubmitVendorDetails)}>
+                    <DialogContent dividers>
                         <Box sx={{
                             display: 'flex',
                             flexWrap: "wrap",
@@ -55,53 +62,53 @@ export const AddVendor = ({ showModal, action }) => {
                             <div>
                                 <label>{FORM_LABELS.VENDOR_NAME}</label>
                                 <Input size="small" placeholder="" {...vendorDetails("vendorName", { required: true })}
-                                    aria-invalid={MedicineErrors.vendorName ? "true" : "false"} />
-                                {MedicineErrors.vendorName?.type === "required" && (
+                                    aria-invalid={VendorErrors.vendorName ? "true" : "false"} />
+                                {VendorErrors.vendorName?.type === "required" && (
                                     <ErrorMessage role="alert">{FORM_LABELS.VENDOR_NAME}  is required</ErrorMessage>
                                 )}
                             </div>
                             <div>
                                 <label>{FORM_LABELS.GST}</label>
                                 <Input size="small" placeholder="" {...vendorDetails("gst", { required: true })}
-                                    aria-invalid={MedicineErrors.gst ? "true" : "false"} />
-                                {MedicineErrors.gst?.type === "required" && (
+                                    aria-invalid={VendorErrors.gst ? "true" : "false"} />
+                                {VendorErrors.gst?.type === "required" && (
                                     <ErrorMessage role="alert">{FORM_LABELS.GST}  is required</ErrorMessage>
                                 )}
                             </div>
                             <div>
                                 <label>{FORM_LABELS.EMAIL}</label>
                                 <input placeholder="" {...vendorDetails("email", { required: true })}
-                                    aria-invalid={MedicineErrors.email ? "true" : "false"} />
-                                {MedicineErrors.email?.type === "required" && (
+                                    aria-invalid={VendorErrors.email ? "true" : "false"} />
+                                {VendorErrors.email?.type === "required" && (
                                     <ErrorMessage role="alert">{FORM_LABELS.EMAIL}  is required</ErrorMessage>
                                 )}
                             </div>
                             <div>
                                 <label>{FORM_LABELS.PHONE}</label>
                                 <input placeholder="" {...vendorDetails("phone", { required: true })}
-                                    aria-invalid={MedicineErrors.phone ? "true" : "false"} />
-                                {MedicineErrors.phone?.type === "required" && (
+                                    aria-invalid={VendorErrors.phone ? "true" : "false"} />
+                                {VendorErrors.phone?.type === "required" && (
                                     <ErrorMessage role="alert">{FORM_LABELS.PHONE}  is required</ErrorMessage>
                                 )}
                             </div>
                             <div>
                                 <label>{FORM_LABELS.ADDRESS}</label>
                                 <input placeholder="" {...vendorDetails("address", { required: true })}
-                                    aria-invalid={MedicineErrors.address ? "true" : "false"} />
-                                {MedicineErrors.address?.type === "required" && (
+                                    aria-invalid={VendorErrors.address ? "true" : "false"} />
+                                {VendorErrors.address?.type === "required" && (
                                     <ErrorMessage role="alert">{FORM_LABELS.ADDRESS}  is required</ErrorMessage>
                                 )}
                             </div>
                         </Box>
-                    </form>
 
-                </DialogContent>
-                <DialogActions>
-                    <Box sx={{ display: 'flex' }}>
-                        <input type="submit" value={`+ Add`} />
-                        <input type="reset" value={`Clear`} />
-                    </Box>
-                </DialogActions>
+                    </DialogContent>
+                    <DialogActions>
+                        <Box sx={{ display: 'flex' }}>
+                            <input type="submit" value={`+ Add`} />
+                            <input type="reset" value={`Clear`} />
+                        </Box>
+                    </DialogActions>
+                </form>
             </Dialog>
         </Box>
     )
