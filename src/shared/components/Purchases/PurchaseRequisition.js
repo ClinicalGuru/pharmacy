@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from "react-hook-form";
 import { FORM_LABELS } from "../../Constants/index";
-import { ErrorMessage,Container } from "./PurchaseRequisition.styles";
+import { ErrorMessage, Container } from "./PurchaseRequisition.styles";
 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -22,9 +22,27 @@ import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import { AddVendor } from "./AddVendorModal";
 import { StyledTableRow, StyledTableCell } from "../../Styles/CommonStyles";
-
+import PurchaseService from "../../services/Purchase.service";
+import { Loader } from "../../components/Loader";
 
 export const PurchaseRequisition = () => {
+    const [allVendors, setAllVendors] = useState([]);
+    const [open, setOpen] = useState(false);
+    useEffect(() => {
+        getVendors();
+    }, []);
+    const getVendors = async () => {
+        setOpen(true);
+        try {
+            let data = await PurchaseService.getAllVendors();
+            setAllVendors(data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id })));
+            setOpen(false);
+            console.log(allVendors, 'allVendors');
+        } catch (e) {
+            setOpen(false);
+            console.log(e, 'error allVendors')
+        }
+    }
     const [showNewVendorModal, setNewVendorModal] = useState(false);
     const [rows, updateRows] = useState([]);
     const {
@@ -50,7 +68,8 @@ export const PurchaseRequisition = () => {
         console.log(data, 'requestion');
     }
     const addNewVendorHandler = () => {
-        setNewVendorModal(true);
+        setNewVendorModal(!showNewVendorModal);
+        if(!showNewVendorModal) getVendors();
     }
     return (
         <Container>
@@ -80,9 +99,9 @@ export const PurchaseRequisition = () => {
                                     label="Vendor Name"
                                     onChange={handleChange}
                                 >
-                                    <MenuItem value="none">
-                                        <em>None</em>
-                                    </MenuItem>
+                                    {allVendors && allVendors?.map((vendor) => <MenuItem value={vendor?.id}>
+                                        {vendor?.vendorName}
+                                    </MenuItem>)}
                                 </Select>
                             </FormControl>
                             <Box sx={{
@@ -229,8 +248,8 @@ export const PurchaseRequisition = () => {
                 <input type="submit" value={`Print`} />
                 <input type="submit" value={'Email'} />
             </Box>
-            <AddVendor showModal={showNewVendorModal} action={addNewVendorHandler}/>
+            <AddVendor showModal={showNewVendorModal} action={addNewVendorHandler} />
+            <Loader open={open} />
         </Container >
-
     )
 }

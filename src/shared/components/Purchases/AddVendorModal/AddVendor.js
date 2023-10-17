@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
@@ -9,9 +10,12 @@ import { FORM_LABELS } from "../../../Constants/index";
 import { Box } from "@mui/material";
 import { ErrorMessage, } from "./AddVendor.styles";
 import TextField from '@mui/material/TextField';
+import PurchaseService from "../../../services/Purchase.service";
+import { Loader } from "../../../components/Loader";
 
 
 export const AddVendor = ({ showModal, action }) => {
+    const [open, setOpen] = useState(false);
     const {
         register: vendorDetails,
         handleSubmit: handleVendorDetails,
@@ -20,9 +24,20 @@ export const AddVendor = ({ showModal, action }) => {
     const handleClose = () => {
         action(!showModal);
     };
-    const onSubmitVendorDetails = (data) => {
-        // console.log(data, "vendors");
+    const resetForm = () => {
+        action(!showModal);
     }
+    const onSubmitVendorDetails = async (data) => {
+        setOpen(true);
+        try {
+            setOpen(false);
+            await PurchaseService.addVendor(data);
+            action(!showModal);
+        } catch (e) {
+            setOpen(false);
+            console.log(e, 'error')
+        }
+    };
     return (
         <Box>
             <Dialog
@@ -45,54 +60,41 @@ export const AddVendor = ({ showModal, action }) => {
                 >
                     <CloseIcon />
                 </IconButton>
-                <DialogContent dividers>
-                    <form onSubmit={handleVendorDetails(onSubmitVendorDetails)}>
+                <form onSubmit={handleVendorDetails(onSubmitVendorDetails)} onReset={resetForm}>
+                    <DialogContent dividers>
                         <Box sx={{
                             display: 'flex',
                             flexWrap: "wrap",
                             justifyContent: "space-between"
                         }}>
                             <div>
-                                <TextField id="outlined-basic" label={FORM_LABELS.VENDOR_NAME} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
-                                {vendorDetailsErrors.vendorName?.type === "required" && (
-                                    <ErrorMessage role="alert">{FORM_LABELS.VENDOR_NAME}  is required</ErrorMessage>
-                                )}
+                                <TextField error={vendorDetailsErrors.vendorName?.type === "required"} id="outlined-basic"  {...vendorDetails("vendorName", { required: true })} label={FORM_LABELS.VENDOR_NAME} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
                             </div>
                             <div>
-                                <TextField id="outlined-basic" label={FORM_LABELS.GST} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
-                                {vendorDetailsErrors.gst?.type === "required" && (
-                                    <ErrorMessage role="alert">{FORM_LABELS.GST}  is required</ErrorMessage>
-                                )}
+                                <TextField error={vendorDetailsErrors.gst?.type === "required"} id="outlined-basic"  {...vendorDetails("gst", { required: true })} label={FORM_LABELS.GST} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
                             </div>
                             <div>
-                                <TextField id="outlined-basic" label={FORM_LABELS.EMAIL} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
-                                {vendorDetailsErrors.email?.type === "required" && (
-                                    <ErrorMessage role="alert">{FORM_LABELS.EMAIL}  is required</ErrorMessage>
-                                )}
+                                <TextField error={vendorDetailsErrors.vendorName?.type === "required"} id="outlined-basic"  {...vendorDetails("email", { required: true })} label={FORM_LABELS.EMAIL} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
                             </div>
                             <div>
-                                <TextField id="outlined-basic" label={FORM_LABELS.PHONE} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
-                                {vendorDetailsErrors.phone?.type === "required" && (
-                                    <ErrorMessage role="alert">{FORM_LABELS.PHONE}  is required</ErrorMessage>
-                                )}
+                                <TextField error={vendorDetailsErrors.phone?.type === "required"} id="outlined-basic"  {...vendorDetails("phone", { required: true })} label={FORM_LABELS.PHONE} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
                             </div>
                             <div>
-                                <TextField id="outlined-basic" label={FORM_LABELS.ADDRESS} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
-                                {vendorDetailsErrors.address?.type === "required" && (
-                                    <ErrorMessage role="alert">{FORM_LABELS.ADDRESS}  is required</ErrorMessage>
-                                )}
+                                <TextField error={vendorDetailsErrors.address?.type === "required"} id="outlined-basic"  {...vendorDetails("address", { required: true })} label={FORM_LABELS.ADDRESS} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
                             </div>
                         </Box>
-                    </form>
 
-                </DialogContent>
-                <DialogActions>
-                    <Box sx={{ display: 'flex' }}>
-                        <input type="submit" value={`+ Add`} />
-                        <input type="reset" value={`Clear`} />
-                    </Box>
-                </DialogActions>
+                    </DialogContent>
+                    <DialogActions>
+                        <Box sx={{ display: 'flex' }}>
+                            <input type="submit" value={`+ Add`} />
+                            <input type="reset" value={`Close`} />
+                        </Box>
+                    </DialogActions>
+                </form>
             </Dialog>
+            <Loader open={open} />
         </Box>
+
     )
 }
