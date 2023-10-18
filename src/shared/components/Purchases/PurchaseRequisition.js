@@ -7,6 +7,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Autocomplete from '@mui/material/Autocomplete';
 
 import { Box, Typography, Button } from "@mui/material";
 import Table from '@mui/material/Table';
@@ -26,6 +27,12 @@ import PurchaseService from "../../services/Purchase.service";
 import { Loader } from "../../components/Loader";
 
 export const PurchaseRequisition = () => {
+    const PharmacologicalNamesList = [
+        { name: 'dolo' },
+        { name: 'paracetomol' }
+    ];
+    const BrandNamesList = [];
+    const [requisitionDetail, setRequisitionDetails] = useState([]);
     const [allVendors, setAllVendors] = useState([]);
     const [open, setOpen] = useState(false);
     useEffect(() => {
@@ -43,6 +50,11 @@ export const PurchaseRequisition = () => {
             console.log(e, 'error allVendors')
         }
     }
+
+    const resetForm = () => {
+        reset();
+    }
+
     const [showNewVendorModal, setNewVendorModal] = useState(false);
     const [rows, updateRows] = useState([]);
     const {
@@ -59,17 +71,24 @@ export const PurchaseRequisition = () => {
     };
 
     const {
-        register: requestionDetails,
-        handleSubmit: handleRequestionDetails,
+        register: requistionDetails,
+        handleSubmit: handleRiquistionDetails,
+        reset,
+        formState: {errors: requisitionErrors }
     } = useForm();
 
     const onSubmit = (data) => console.log(watch);;
-    const onSubmitRequestionDetails = (data) => {
-        console.log(data, 'requestion');
+    const onSubmitRequestionDetails = async (data) => {
+        try {
+            const requisitionMedicines = await PurchaseService.addRequisitionData(data);
+            reset();
+        } catch (e) {
+            console.log(e, 'error')
+        }
     }
     const addNewVendorHandler = () => {
         setNewVendorModal(!showNewVendorModal);
-        if(!showNewVendorModal) getVendors();
+        if (showNewVendorModal) getVendors();
     }
     return (
         <Container>
@@ -136,73 +155,66 @@ export const PurchaseRequisition = () => {
                 padding: 2,
                 marginTop: 4
             }}>
-                <form onSubmit={handleRequestionDetails(onSubmitRequestionDetails)}>
+                <form onSubmit={handleRiquistionDetails(onSubmitRequestionDetails)} onReset={resetForm}>
                     <Box sx={{
                         display: 'flex',
                         flexWrap: "wrap",
                         justifyContent: "space-between",
                         alignItems: "center"
                     }}>
-
-                        <FormControl sx={{ m: 1, minWidth: 220 }} size="small">
-                            <InputLabel id="demo-select-small-label">{FORM_LABELS.PHARMACOLOGICAL_NAME}</InputLabel>
-                            <Select sx={{ backgroundColor: '#FFFFFFFF' }}
-                                labelId="demo-select-small-label"
-                                id="demo-select-small"
-                                label={FORM_LABELS.PHARMACOLOGICAL_NAME}
-                                onChange={handleChange}
-                            >
-                                <MenuItem value="none">
-                                    <em>None</em>
-                                </MenuItem>
-                                {requestionDetails.pharmacologicalName?.type === "required" && (
-                                    <ErrorMessage role="alert">{FORM_LABELS.PHARMACOLOGICAL_NAME}  is required</ErrorMessage>
-                                )}
-                            </Select>
-                        </FormControl>
-                        <FormControl sx={{ m: 1, minWidth: 220 }} size="small">
-                            <InputLabel id="demo-select-small-label">{FORM_LABELS.BRAND_NAME}</InputLabel>
-                            <Select sx={{ backgroundColor: '#FFFFFFFF' }}
-                                labelId="demo-select-small-label"
-                                id="demo-select-small"
-                                label={FORM_LABELS.BRAND_NAME}
-                                onChange={handleChange}
-                            >
-                                <MenuItem value="none">
-                                    <em>None</em>
-                                </MenuItem>
-                                {requestionDetails.brandName?.type === "required" && (
-                                    <ErrorMessage role="alert">{FORM_LABELS.BRAND_NAME}  is required</ErrorMessage>
-                                )}
-                            </Select>
-                        </FormControl>
-                        <TextField id="outlined-basic" label={FORM_LABELS.DOSE} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF' }} />
-                        <TextField id="outlined-basic" label={FORM_LABELS.FORM} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF' }} />
-                        <TextField id="outlined-basic" label={FORM_LABELS.QUANTITY} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF' }} />
-                        {/* <FormWrapper>
-                                <label>{FORM_LABELS.DOSE}</label>
-                                <input placeholder="" {...medicineDetails("dose", { required: true })}
-                                    aria-invalid={MedicineErrors.dose ? "true" : "false"} />
-                                {MedicineErrors.dose?.type === "required" && (
-                                    <ErrorMessage role="alert">{FORM_LABELS.DOSE}  is required</ErrorMessage>
-                                )}
-                            </FormWrapper>
-                            <FormWrapper>
-                                <label>{FORM_LABELS.FORM}</label>
-                                <input placeholder="" {...medicineDetails("form", { required: true })}
-                                    aria-invalid={MedicineErrors.form ? "true" : "false"} />
-                                {MedicineErrors.form?.type === "required" && (
-                                    <ErrorMessage role="alert">{FORM_LABELS.FORM}  is required</ErrorMessage>
-                                )}
-                            </FormWrapper>
-                            <FormWrapper>
-                                <label>{FORM_LABELS.QUANTITY}</label>
-                                <input placeholder="" {...medicineDetails("quantity", { required: true })}
-                                    aria-invalid={MedicineErrors.price ? "true" : "false"} />
-                                {MedicineErrors.quantity?.type === "required" && (
-                                    <ErrorMessage role="alert">{FORM_LABELS.QUANTITY}  is required</ErrorMessage>
-                                )}
-                            </FormWrapper> */}
+                        <Autocomplete
+                            freeSolo
+                            id="free-solo-2-demo"
+                            disableClearable
+                            size='small'
+                            sx={{ width: 240, backgroundColor: '#FFFFFFFF' }}
+                            options={PharmacologicalNamesList.map((option) => option.name)}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    {...requistionDetails("pharmacologicalName", { required: true })}
+                                    label={FORM_LABELS.PHARMACOLOGICAL_NAME}
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        type: 'search',
+                                    }}
+                                />
+                            )}
+                        />
+                        <Autocomplete
+                            freeSolo
+                            id="free-solo-2-demo"
+                            disableClearable
+                            size='small'
+                            sx={{ width: 240, backgroundColor: '#FFFFFFFF' }}
+                            options={BrandNamesList.map((option) => option.name)}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    {...requistionDetails("brandName", { required: true })}
+                                    label={FORM_LABELS.BRAND_NAME}
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        type: 'search',
+                                    }}
+                                />
+                            )}
+                        />
+                        <div>
+                            <TextField error={requisitionErrors.dose?.type === "required"} id="outlined-basic"
+                                {...requistionDetails("dose", { required: true })} label={FORM_LABELS.DOSE} variant="outlined" size="small"
+                                sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
+                        </div>
+                        <div>
+                            <TextField error={requisitionErrors.form?.type === "required"} id="outlined-basic"
+                                {...requistionDetails("form", { required: true })} label={FORM_LABELS.FORM} variant="outlined" size="small"
+                                sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
+                        </div>
+                        <div>
+                            <TextField error={requisitionErrors.quantity?.type === "required"} id="outlined-basic"
+                                {...requistionDetails("quantity", { required: true })} label={FORM_LABELS.QUANTITY} variant="outlined" size="small"
+                                sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
+                        </div>
                         <Box sx={{ display: 'flex' }}>
                             <input type="submit" value={`+ Add`} />
                             <input type="reset" value={`Clear`} />

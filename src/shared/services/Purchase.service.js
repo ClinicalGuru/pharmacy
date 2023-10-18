@@ -3,6 +3,7 @@ import { addDoc, getDocs, collection, setDoc, deleteDoc, doc, query, onSnapshot 
 import { v4 as uuidv4 } from 'uuid';
 
 const vendorCollectionRef = collection(firestore, "vendors");
+const RequisitionCollectionRef = collection(firestore, "purchaseRequisition")
 
 class PurchaseService {
     addVendor = (newVendor) => {
@@ -11,6 +12,10 @@ class PurchaseService {
 
     getAllVendors = () => {
         return getDocs(vendorCollectionRef);
+    }
+
+    addRequisitionData = (newData) => {
+        return addDoc(RequisitionCollectionRef, newData);
     }
 
 }

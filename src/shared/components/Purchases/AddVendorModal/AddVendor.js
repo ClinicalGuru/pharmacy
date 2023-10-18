@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
@@ -16,23 +16,29 @@ import { Loader } from "../../../components/Loader";
 
 export const AddVendor = ({ showModal, action }) => {
     const [open, setOpen] = useState(false);
+    const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
     const {
         register: vendorDetails,
         handleSubmit: handleVendorDetails,
         formState: { errors: vendorDetailsErrors },
+        reset
     } = useForm();
     const handleClose = () => {
         action(!showModal);
+        reset();
     };
     const resetForm = () => {
         action(!showModal);
+        reset();
     }
     const onSubmitVendorDetails = async (data) => {
+        // data.preventDefault();
         setOpen(true);
         try {
             setOpen(false);
             await PurchaseService.addVendor(data);
             action(!showModal);
+            reset();
         } catch (e) {
             setOpen(false);
             console.log(e, 'error')
@@ -77,7 +83,9 @@ export const AddVendor = ({ showModal, action }) => {
                                 <TextField error={vendorDetailsErrors.vendorName?.type === "required"} id="outlined-basic"  {...vendorDetails("email", { required: true })} label={FORM_LABELS.EMAIL} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
                             </div>
                             <div>
-                                <TextField error={vendorDetailsErrors.phone?.type === "required"} id="outlined-basic"  {...vendorDetails("phone", { required: true })} label={FORM_LABELS.PHONE} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
+                                <TextField type='number' error={vendorDetailsErrors.phone?.type === "required"} id="outlined-basic"
+                                  {...vendorDetails("phone", { required: true, max: 10 })} label={FORM_LABELS.PHONE} variant="outlined" 
+                                  size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
                             </div>
                             <div>
                                 <TextField error={vendorDetailsErrors.address?.type === "required"} id="outlined-basic"  {...vendorDetails("address", { required: true })} label={FORM_LABELS.ADDRESS} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
