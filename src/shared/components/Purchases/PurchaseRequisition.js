@@ -31,10 +31,26 @@ export const PurchaseRequisition = () => {
         { name: 'dolo' },
         { name: 'paracetomol' }
     ];
+    const [showNewVendorModal, setNewVendorModal] = useState(false);
+    const [rows, updateRows] = useState([]);
+    const [vendorName, setVendorName] = useState('');
     const BrandNamesList = [];
-    const [requisitionDetail, setRequisitionDetails] = useState([]);
+    const [tableData, setTableData] = useState([]);
     const [allVendors, setAllVendors] = useState([]);
     const [open, setOpen] = useState(false);
+    const {
+        register: vendorDetails,
+        handleSubmit: handleVendorDetails,
+        watch,
+        formState: { errors },
+    } = useForm();
+
+    const {
+        register: requistionDetails,
+        handleSubmit: handleRiquistionDetails,
+        reset,
+        formState: { errors: requisitionErrors }
+    } = useForm();
     useEffect(() => {
         getVendors();
     }, []);
@@ -50,41 +66,22 @@ export const PurchaseRequisition = () => {
             console.log(e, 'error allVendors')
         }
     }
-
     const resetForm = () => {
         reset();
     }
-
-    const [showNewVendorModal, setNewVendorModal] = useState(false);
-    const [rows, updateRows] = useState([]);
-    const {
-        register: vendorDetails,
-        handleSubmit: handleVendorDetails,
-        watch,
-        formState: { errors },
-    } = useForm();
-
-    const [vendorName, setVendorName] = useState('');
-
     const handleChange = (event) => {
         setVendorName(event.target.value);
     };
-
-    const {
-        register: requistionDetails,
-        handleSubmit: handleRiquistionDetails,
-        reset,
-        formState: {errors: requisitionErrors }
-    } = useForm();
-
-    const onSubmit = (data) => console.log(watch);;
+    const onSubmit = (data) => console.log(watch);
+    useEffect(() => {
+        // This useEffect will run whenever tableData state changes
+        console.log(tableData);
+    }, [tableData]); // Pass tableData as a dependency to the useEffect
     const onSubmitRequestionDetails = async (data) => {
-        try {
-            const requisitionMedicines = await PurchaseService.addRequisitionData(data);
-            reset();
-        } catch (e) {
-            console.log(e, 'error')
-        }
+        // setTableData([...tableData, data]);
+        setTableData(prevData => [...prevData, data]);
+        // console.log(tableData)
+        reset();
     }
     const addNewVendorHandler = () => {
         setNewVendorModal(!showNewVendorModal);
