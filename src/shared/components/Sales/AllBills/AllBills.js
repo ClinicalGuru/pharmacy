@@ -28,7 +28,7 @@ export const AllBills = () => {
         <React.Fragment>
             <CardContent>
                 <Typography sx={{ fontSize: 14 }}>
-                    Gross Amount
+                    Total Billed
                 </Typography>
                 <Typography sx={{ fontSize: 14 }}>
 
@@ -40,7 +40,7 @@ export const AllBills = () => {
         <React.Fragment>
             <CardContent>
                 <Typography sx={{ fontSize: 14 }}>
-                    Total Discount Amount
+                    Collected By Cash
                 </Typography>
                 <Typography sx={{ fontSize: 14 }}>
 
@@ -52,7 +52,7 @@ export const AllBills = () => {
         <React.Fragment>
             <CardContent>
                 <Typography sx={{ fontSize: 14 }}>
-                    Total Tax Amount
+                    Collected By Card
                 </Typography>
                 <Typography sx={{ fontSize: 14 }}>
 
@@ -64,7 +64,7 @@ export const AllBills = () => {
         <React.Fragment>
             <CardContent>
                 <Typography sx={{ fontSize: 14 }}>
-                    Round Off
+                    Collected By UPI
                 </Typography>
                 <Typography sx={{ fontSize: 14 }}>
 
@@ -76,7 +76,7 @@ export const AllBills = () => {
         <React.Fragment>
             <CardContent>
                 <Typography sx={{ fontSize: 14 }}>
-                    Total Amount
+                    Return By Cash
                 </Typography>
                 <Typography sx={{ fontSize: 14 }}>
 
