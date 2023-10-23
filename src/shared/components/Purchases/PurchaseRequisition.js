@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from "react-hook-form";
 import { FORM_LABELS } from "../../Constants/index";
 import { ErrorMessage, Container } from "./PurchaseRequisition.styles";
+import { v4 as uuidv4 } from 'uuid';
 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -34,6 +35,7 @@ export const PurchaseRequisition = () => {
     const [showNewVendorModal, setNewVendorModal] = useState(false);
     const [rows, updateRows] = useState([]);
     const [vendorName, setVendorName] = useState('');
+    const [requisitionId, setRequisitionId] = useState('');
     const BrandNamesList = [];
     const [tableData, setTableData] = useState([]);
     const [allVendors, setAllVendors] = useState([]);
@@ -71,6 +73,7 @@ export const PurchaseRequisition = () => {
     }
     const handleChange = (event) => {
         setVendorName(event.target.value);
+        setRequisitionId(uuidv4());
     };
     const onSubmit = (data) => console.log(watch);
     useEffect(() => {
@@ -87,6 +90,16 @@ export const PurchaseRequisition = () => {
         setNewVendorModal(!showNewVendorModal);
         if (showNewVendorModal) getVendors();
     }
+    const savingRequisitionData =async () => {
+        tableData.forEach (e => {
+            e.vendorName = setVendorName;
+            e.requisitionId = setRequisitionId;
+        });
+        await PurchaseService.addRequisitionData(tableData)
+
+        console.log(tableData, 'data');
+    }
+
     return (
         <Container>
             <Box>
@@ -157,7 +170,7 @@ export const PurchaseRequisition = () => {
                         display: 'flex',
                         flexWrap: "wrap",
                         justifyContent: "space-between",
-                        alignItems: "center"
+                        alignItems: "baseline"
                     }}>
                         <Autocomplete
                             freeSolo
@@ -208,7 +221,7 @@ export const PurchaseRequisition = () => {
                                 sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
                         </div>
                         <div>
-                            <TextField error={requisitionErrors.quantity?.type === "required"} id="outlined-basic"
+                            <TextField type='number' error={requisitionErrors.quantity?.type === "required"} id="outlined-basic"
                                 {...requistionDetails("quantity", { required: true })} label={FORM_LABELS.QUANTITY} variant="outlined" size="small"
                                 sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
                         </div>
@@ -233,15 +246,15 @@ export const PurchaseRequisition = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((row, index) => (
-                                <StyledTableRow key={row.index}>
+                            {tableData.map((data, index) => (
+                                <StyledTableRow key={data.index}>
                                     <StyledTableCell>
                                         {index + 1}
                                     </StyledTableCell>
-                                    <StyledTableCell align="center">{row.pharmacologicalName},&nbsp;{row.brandName}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.dose}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.form}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.quantity}</StyledTableCell>
+                                    <StyledTableCell align="center">{data.pharmacologicalName},&nbsp;{data.brandName}</StyledTableCell>
+                                    <StyledTableCell align="center">{data.dose}</StyledTableCell>
+                                    <StyledTableCell align="center">{data.form}</StyledTableCell>
+                                    <StyledTableCell align="center">{data.quantity}</StyledTableCell>
                                 </StyledTableRow>
                             ))}
                         </TableBody>
@@ -253,7 +266,7 @@ export const PurchaseRequisition = () => {
                 display: 'flex',
                 justifyContent: 'flex-end'
             }}>
-                <input type="submit" value={`Save`} />
+                <input type="submit" value={`Save`} onClick={savingRequisitionData} />
                 <input type="submit" value={`Print`} />
                 <input type="submit" value={'Email'} />
             </Box>

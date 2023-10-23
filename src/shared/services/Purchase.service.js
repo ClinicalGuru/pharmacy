@@ -15,8 +15,22 @@ class PurchaseService {
     }
 
     addRequisitionData = (newData) => {
-        return addDoc(RequisitionCollectionRef, newData);
+        const data = Object.assign({}, newData)
+        return addDoc(RequisitionCollectionRef, data);
     }
+
+    // addRequisitionData = (newData) => {
+    //     let batch = db.batch();
+    //     if (newData.length > 0) {
+    //         newData.forEach((doc) => {
+    //             let docRef = db.collection(firestore, 'purchaseRequisition').doc();
+    //             batch.set(docRef, JSON.parse(JSON.stringify(doc)))
+    //         });
+    //         return batch.commit();
+    //     } else {
+    //         return;
+    //     }
+    // }
 
 }
 export default new PurchaseService();
