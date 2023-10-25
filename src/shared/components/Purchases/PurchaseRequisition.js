@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from "react-hook-form";
 import { FORM_LABELS } from "../../Constants/index";
-import { ErrorMessage,Container } from "./PurchaseRequisition.styles";
+import { ErrorMessage, Container } from "./PurchaseRequisition.styles";
+import { v4 as uuidv4 } from 'uuid';
 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Autocomplete from '@mui/material/Autocomplete';
 
 import { Box, Typography, Button } from "@mui/material";
 import Table from '@mui/material/Table';
@@ -22,11 +24,22 @@ import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import { AddVendor } from "./AddVendorModal";
 import { StyledTableRow, StyledTableCell } from "../../Styles/CommonStyles";
-
+import PurchaseService from "../../services/Purchase.service";
+import { Loader } from "../../components/Loader";
 
 export const PurchaseRequisition = () => {
+    const PharmacologicalNamesList = [
+        { name: 'dolo' },
+        { name: 'paracetomol' }
+    ];
     const [showNewVendorModal, setNewVendorModal] = useState(false);
     const [rows, updateRows] = useState([]);
+    const [vendorName, setVendorName] = useState('');
+    const [requisitionId, setRequisitionId] = useState('');
+    const BrandNamesList = [];
+    const [tableData, setTableData] = useState([]);
+    const [allVendors, setAllVendors] = useState([]);
+    const [open, setOpen] = useState(false);
     const {
         register: vendorDetails,
         handleSubmit: handleVendorDetails,
@@ -34,24 +47,59 @@ export const PurchaseRequisition = () => {
         formState: { errors },
     } = useForm();
 
-    const [vendorName, setVendorName] = useState('');
-
+    const {
+        register: requistionDetails,
+        handleSubmit: handleRiquistionDetails,
+        reset,
+        formState: { errors: requisitionErrors }
+    } = useForm();
+    useEffect(() => {
+        getVendors();
+    }, []);
+    const getVendors = async () => {
+        setOpen(true);
+        try {
+            let data = await PurchaseService.getAllVendors();
+            setAllVendors(data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id })));
+            setOpen(false);
+            console.log(allVendors, 'allVendors');
+        } catch (e) {
+            setOpen(false);
+            console.log(e, 'error allVendors')
+        }
+    }
+    const resetForm = () => {
+        reset();
+    }
     const handleChange = (event) => {
         setVendorName(event.target.value);
+        setRequisitionId(uuidv4());
     };
-
-    const {
-        register: requestionDetails,
-        handleSubmit: handleRequestionDetails,
-    } = useForm();
-
-    const onSubmit = (data) => console.log(watch);;
-    const onSubmitRequestionDetails = (data) => {
-        console.log(data, 'requestion');
+    const onSubmit = (data) => console.log(watch);
+    useEffect(() => {
+        // This useEffect will run whenever tableData state changes
+        console.log(tableData);
+    }, [tableData]); // Pass tableData as a dependency to the useEffect
+    const onSubmitRequestionDetails = async (data) => {
+        // setTableData([...tableData, data]);
+        setTableData(prevData => [...prevData, data]);
+        // console.log(tableData)
+        reset();
     }
     const addNewVendorHandler = () => {
-        setNewVendorModal(true);
+        setNewVendorModal(!showNewVendorModal);
+        if (showNewVendorModal) getVendors();
     }
+    const savingRequisitionData =async () => {
+        tableData.forEach (e => {
+            e.vendorName = setVendorName;
+            e.requisitionId = setRequisitionId;
+        });
+        await PurchaseService.addRequisitionData(tableData)
+
+        console.log(tableData, 'data');
+    }
+
     return (
         <Container>
             <Box>
@@ -80,9 +128,9 @@ export const PurchaseRequisition = () => {
                                     label="Vendor Name"
                                     onChange={handleChange}
                                 >
-                                    <MenuItem value="none">
-                                        <em>None</em>
-                                    </MenuItem>
+                                    {allVendors && allVendors?.map((vendor) => <MenuItem value={vendor?.id}>
+                                        {vendor?.vendorName}
+                                    </MenuItem>)}
                                 </Select>
                             </FormControl>
                             <Box sx={{
@@ -117,73 +165,66 @@ export const PurchaseRequisition = () => {
                 padding: 2,
                 marginTop: 4
             }}>
-                <form onSubmit={handleRequestionDetails(onSubmitRequestionDetails)}>
+                <form onSubmit={handleRiquistionDetails(onSubmitRequestionDetails)} onReset={resetForm}>
                     <Box sx={{
                         display: 'flex',
                         flexWrap: "wrap",
                         justifyContent: "space-between",
-                        alignItems: "center"
+                        alignItems: "baseline"
                     }}>
-
-                        <FormControl sx={{ m: 1, minWidth: 220 }} size="small">
-                            <InputLabel id="demo-select-small-label">{FORM_LABELS.PHARMACOLOGICAL_NAME}</InputLabel>
-                            <Select sx={{ backgroundColor: '#FFFFFFFF' }}
-                                labelId="demo-select-small-label"
-                                id="demo-select-small"
-                                label={FORM_LABELS.PHARMACOLOGICAL_NAME}
-                                onChange={handleChange}
-                            >
-                                <MenuItem value="none">
-                                    <em>None</em>
-                                </MenuItem>
-                                {requestionDetails.pharmacologicalName?.type === "required" && (
-                                    <ErrorMessage role="alert">{FORM_LABELS.PHARMACOLOGICAL_NAME}  is required</ErrorMessage>
-                                )}
-                            </Select>
-                        </FormControl>
-                        <FormControl sx={{ m: 1, minWidth: 220 }} size="small">
-                            <InputLabel id="demo-select-small-label">{FORM_LABELS.BRAND_NAME}</InputLabel>
-                            <Select sx={{ backgroundColor: '#FFFFFFFF' }}
-                                labelId="demo-select-small-label"
-                                id="demo-select-small"
-                                label={FORM_LABELS.BRAND_NAME}
-                                onChange={handleChange}
-                            >
-                                <MenuItem value="none">
-                                    <em>None</em>
-                                </MenuItem>
-                                {requestionDetails.brandName?.type === "required" && (
-                                    <ErrorMessage role="alert">{FORM_LABELS.BRAND_NAME}  is required</ErrorMessage>
-                                )}
-                            </Select>
-                        </FormControl>
-                        <TextField id="outlined-basic" label={FORM_LABELS.DOSE} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF' }} />
-                        <TextField id="outlined-basic" label={FORM_LABELS.FORM} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF' }} />
-                        <TextField id="outlined-basic" label={FORM_LABELS.QUANTITY} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF' }} />
-                        {/* <FormWrapper>
-                                <label>{FORM_LABELS.DOSE}</label>
-                                <input placeholder="" {...medicineDetails("dose", { required: true })}
-                                    aria-invalid={MedicineErrors.dose ? "true" : "false"} />
-                                {MedicineErrors.dose?.type === "required" && (
-                                    <ErrorMessage role="alert">{FORM_LABELS.DOSE}  is required</ErrorMessage>
-                                )}
-                            </FormWrapper>
-                            <FormWrapper>
-                                <label>{FORM_LABELS.FORM}</label>
-                                <input placeholder="" {...medicineDetails("form", { required: true })}
-                                    aria-invalid={MedicineErrors.form ? "true" : "false"} />
-                                {MedicineErrors.form?.type === "required" && (
-                                    <ErrorMessage role="alert">{FORM_LABELS.FORM}  is required</ErrorMessage>
-                                )}
-                            </FormWrapper>
-                            <FormWrapper>
-                                <label>{FORM_LABELS.QUANTITY}</label>
-                                <input placeholder="" {...medicineDetails("quantity", { required: true })}
-                                    aria-invalid={MedicineErrors.price ? "true" : "false"} />
-                                {MedicineErrors.quantity?.type === "required" && (
-                                    <ErrorMessage role="alert">{FORM_LABELS.QUANTITY}  is required</ErrorMessage>
-                                )}
-                            </FormWrapper> */}
+                        <Autocomplete
+                            freeSolo
+                            id="free-solo-2-demo"
+                            disableClearable
+                            size='small'
+                            sx={{ width: 240, backgroundColor: '#FFFFFFFF' }}
+                            options={PharmacologicalNamesList.map((option) => option.name)}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    {...requistionDetails("pharmacologicalName", { required: true })}
+                                    label={FORM_LABELS.PHARMACOLOGICAL_NAME}
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        type: 'search',
+                                    }}
+                                />
+                            )}
+                        />
+                        <Autocomplete
+                            freeSolo
+                            id="free-solo-2-demo"
+                            disableClearable
+                            size='small'
+                            sx={{ width: 240, backgroundColor: '#FFFFFFFF' }}
+                            options={BrandNamesList.map((option) => option.name)}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    {...requistionDetails("brandName", { required: true })}
+                                    label={FORM_LABELS.BRAND_NAME}
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        type: 'search',
+                                    }}
+                                />
+                            )}
+                        />
+                        <div>
+                            <TextField error={requisitionErrors.dose?.type === "required"} id="outlined-basic"
+                                {...requistionDetails("dose", { required: true })} label={FORM_LABELS.DOSE} variant="outlined" size="small"
+                                sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
+                        </div>
+                        <div>
+                            <TextField error={requisitionErrors.form?.type === "required"} id="outlined-basic"
+                                {...requistionDetails("form", { required: true })} label={FORM_LABELS.FORM} variant="outlined" size="small"
+                                sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
+                        </div>
+                        <div>
+                            <TextField type='number' error={requisitionErrors.quantity?.type === "required"} id="outlined-basic"
+                                {...requistionDetails("quantity", { required: true })} label={FORM_LABELS.QUANTITY} variant="outlined" size="small"
+                                sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
+                        </div>
                         <Box sx={{ display: 'flex' }}>
                             <input type="submit" value={`+ Add`} />
                             <input type="reset" value={`Clear`} />
@@ -205,15 +246,15 @@ export const PurchaseRequisition = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((row, index) => (
-                                <StyledTableRow key={row.index}>
+                            {tableData.map((data, index) => (
+                                <StyledTableRow key={data.index}>
                                     <StyledTableCell>
                                         {index + 1}
                                     </StyledTableCell>
-                                    <StyledTableCell align="center">{row.pharmacologicalName},&nbsp;{row.brandName}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.dose}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.form}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.quantity}</StyledTableCell>
+                                    <StyledTableCell align="center">{data.pharmacologicalName},&nbsp;{data.brandName}</StyledTableCell>
+                                    <StyledTableCell align="center">{data.dose}</StyledTableCell>
+                                    <StyledTableCell align="center">{data.form}</StyledTableCell>
+                                    <StyledTableCell align="center">{data.quantity}</StyledTableCell>
                                 </StyledTableRow>
                             ))}
                         </TableBody>
@@ -225,12 +266,12 @@ export const PurchaseRequisition = () => {
                 display: 'flex',
                 justifyContent: 'flex-end'
             }}>
-                <input type="submit" value={`Save`} />
+                <input type="submit" value={`Save`} onClick={savingRequisitionData} />
                 <input type="submit" value={`Print`} />
                 <input type="submit" value={'Email'} />
             </Box>
-            <AddVendor showModal={showNewVendorModal} action={addNewVendorHandler}/>
+            <AddVendor showModal={showNewVendorModal} action={addNewVendorHandler} />
+            <Loader open={open} />
         </Container >
-
     )
 }
