@@ -27,6 +27,9 @@ import { StyledTableRow, StyledTableCell } from "../../Styles/CommonStyles";
 import PurchaseService from "../../services/Purchase.service";
 import { Loader } from "../../components/Loader";
 
+import editIcon from "../../../assets/img/edit.png";
+import deleteIcon from "../../../assets/img/delete.png";
+
 export const PurchaseRequisition = () => {
     const PharmacologicalNamesList = [
         { name: 'dolo' },
@@ -39,12 +42,13 @@ export const PurchaseRequisition = () => {
     const BrandNamesList = [];
     const [tableData, setTableData] = useState([]);
     const [allVendors, setAllVendors] = useState([]);
-    const [open, setOpen] = useState(false);
+    const [open, setLoader] = useState(false);
     const {
         register: vendorDetails,
         handleSubmit: handleVendorDetails,
         watch,
         formState: { errors },
+        setValue
     } = useForm();
 
     const {
@@ -55,16 +59,26 @@ export const PurchaseRequisition = () => {
     } = useForm();
     useEffect(() => {
         getVendors();
+        getRequestionList();
     }, []);
+    const getRequestionList = async () => {
+        setLoader(true);
+        try {
+            let data = await PurchaseService.getRequestionData()
+            setTableData(data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id })));
+        } catch (e) {
+            console.log(e, "=> get requestion list")
+        }
+    }
     const getVendors = async () => {
-        setOpen(true);
+        setLoader(true);
         try {
             let data = await PurchaseService.getAllVendors();
             setAllVendors(data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id })));
-            setOpen(false);
+            setLoader(false);
             console.log(allVendors, 'allVendors');
         } catch (e) {
-            setOpen(false);
+            setLoader(false);
             console.log(e, 'error allVendors')
         }
     }
@@ -77,27 +91,33 @@ export const PurchaseRequisition = () => {
     };
     const onSubmit = (data) => console.log(watch);
     useEffect(() => {
-        // This useEffect will run whenever tableData state changes
         console.log(tableData);
-    }, [tableData]); // Pass tableData as a dependency to the useEffect
+    }, [tableData]);
     const onSubmitRequestionDetails = async (data) => {
-        // setTableData([...tableData, data]);
         setTableData(prevData => [...prevData, data]);
-        // console.log(tableData)
         reset();
     }
     const addNewVendorHandler = () => {
         setNewVendorModal(!showNewVendorModal);
         if (showNewVendorModal) getVendors();
     }
-    const savingRequisitionData =async () => {
-        tableData.forEach (e => {
-            e.vendorName = setVendorName;
-            e.requisitionId = setRequisitionId;
+    const savingRequisitionData = async () => {
+        setLoader(true);
+        tableData.forEach(e => {
+            e['vendorName'] = setVendorName;
+            e['requisitionId'] = setRequisitionId;
         });
-        await PurchaseService.addRequisitionData(tableData)
+        try {
+            await PurchaseService.addRequisitionData(tableData);
+            setLoader(false);
+        } catch (e) {
+            setLoader(false);
+            console.log(e, "=> add requestion error");
+        }
+    }
 
-        console.log(tableData, 'data');
+    const editHandler = (data) => {
+        setValue(data);
     }
 
     return (
@@ -246,15 +266,19 @@ export const PurchaseRequisition = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {tableData.map((data, index) => (
+                            {tableData?.map((data, index) => (
                                 <StyledTableRow key={data.index}>
                                     <StyledTableCell>
                                         {index + 1}
                                     </StyledTableCell>
-                                    <StyledTableCell align="center">{data.pharmacologicalName},&nbsp;{data.brandName}</StyledTableCell>
+                                    <StyledTableCell align="center">{data.pharmacologicalName} / {data.brandName}</StyledTableCell>
                                     <StyledTableCell align="center">{data.dose}</StyledTableCell>
                                     <StyledTableCell align="center">{data.form}</StyledTableCell>
                                     <StyledTableCell align="center">{data.quantity}</StyledTableCell>
+                                    <StyledTableCell>
+                                        <img onClick={() => editHandler(data)} className='icon_table' src={editIcon} alt='edit'/>
+                                        <img className='icon_table' src={deleteIcon} alt='delete'/>
+                                    </StyledTableCell>
                                 </StyledTableRow>
                             ))}
                         </TableBody>
@@ -272,6 +296,6 @@ export const PurchaseRequisition = () => {
             </Box>
             <AddVendor showModal={showNewVendorModal} action={addNewVendorHandler} />
             <Loader open={open} />
-        </Container >
+        </Container>
     )
 }
