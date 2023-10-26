@@ -17,6 +17,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
 
 import { Header } from '../../Header/index';
 import { Container } from './Quotations.styles'
@@ -31,6 +32,14 @@ export const Quotations = () => {
         watch,
         formState: { errors },
     } = useForm();
+
+    const Item = styled(Paper)(({ theme }) => ({
+        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+        ...theme.typography.body2,
+        padding: theme.spacing(1),
+        textAlign: 'center',
+        color: theme.palette.text.secondary,
+    }));
 
     const [vendorName, setVendorName] = React.useState('');
     const [purchaseRequisitionId, setRequisitionId] = React.useState('');
@@ -121,25 +130,46 @@ export const Quotations = () => {
                     marginTop: 4
                 }}>
                     <form onSubmit={handleQuotationDetails(onsubmitQuotationDetails)}>
-                        <Box sx={{
-                            display: 'flex',
-                            flexWrap: "wrap",
-                            justifyContent: "space-between"
-                        }}>
-                            <TextField id="outlined-basic" label={FORM_LABELS.PHARMACOLOGICAL_NAME} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '20px' }} />
-                            <TextField id="outlined-basic" label={FORM_LABELS.BRAND_NAME} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '20px' }} />
-                            <TextField id="outlined-basic" label={FORM_LABELS.DOSE} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '20px' }} />
-                            <TextField id="outlined-basic" label={FORM_LABELS.FORM} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '20px' }} />
-                            <TextField id="outlined-basic" label={FORM_LABELS.QUANTITY} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '20px' }} />
-                            <TextField id="outlined-basic" label={FORM_LABELS.MRP} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '20px' }} />
-                            <TextField id="outlined-basic" label={FORM_LABELS.PTR} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '20px' }} />
-                            <TextField id="outlined-basic" label={FORM_LABELS.PTS} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '20px' }} />
-                            <TextField id="outlined-basic" label={FORM_LABELS.GST} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '20px' }} />
-                            <TextField id="outlined-basic" label={FORM_LABELS.DISCOUNT} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '20px' }} />
-                            <Box sx={{ display: 'flex' }}>
-                                <input type="submit" value={`+ Add`} />
-                                <input type="reset" value={`Clear`} />
-                            </Box>
+                        <Box sx={{ flexGrow: 1 }}>
+                            <Grid container spacing={2}>
+                                <Grid item sm={2}>
+                                    <TextField id="outlined-basic" label={FORM_LABELS.PHARMACOLOGICAL_NAME} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '10px' }} />
+                                </Grid>
+                                <Grid item sm={2}>
+                                    <TextField id="outlined-basic" label={FORM_LABELS.BRAND_NAME} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '10px' }} />
+                                </Grid>
+                                <Grid item sm={2}>
+                                    <TextField id="outlined-basic" label={FORM_LABELS.DOSE} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '10px' }} />
+                                </Grid>
+                                <Grid item sm={2}>
+                                    <TextField id="outlined-basic" label={FORM_LABELS.FORM} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '10px' }} />
+                                </Grid>
+                                <Grid item sm={2}>
+                                    <TextField id="outlined-basic" label={FORM_LABELS.QUANTITY} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '10px' }} />
+                                </Grid>
+                                <Grid item sm={2}>
+                                    <TextField id="outlined-basic" label={FORM_LABELS.MRP} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '10px' }} />
+                                </Grid>
+                                <Grid item sm={2}>
+                                    <TextField id="outlined-basic" label={FORM_LABELS.PTR} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '10px' }} />
+                                </Grid>
+                                <Grid item sm={2}>
+                                    <TextField id="outlined-basic" label={FORM_LABELS.PTS} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '10px' }} />
+                                </Grid>
+                                <Grid item sm={2}>
+                                    <TextField id="outlined-basic" label={FORM_LABELS.GST} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '10px' }} />
+                                </Grid>
+                                <Grid item sm={2}>
+                                    <TextField id="outlined-basic" label={FORM_LABELS.DISCOUNT} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '10px' }} />
+                                </Grid>
+                                <Grid item sm={3}></Grid>
+                                <Grid item sm={1}>
+                                    <Box sx={{ display: 'flex' }}>
+                                        <input type="submit" value={`+ Add`} />
+                                        <input type="reset" value={`Clear`} />
+                                    </Box>
+                                </Grid>
+                            </Grid>
                         </Box>
                     </form>
                 </Box >
@@ -159,7 +189,6 @@ export const Quotations = () => {
                                     <StyledTableCell align="center">PTS</StyledTableCell>
                                     <StyledTableCell align="center">GST</StyledTableCell>
                                     <StyledTableCell align="center">Discount</StyledTableCell>
-                                    <StyledTableCell align="center">L1,L2,L3 Order</StyledTableCell>
                                     <StyledTableCell align="center">Actions</StyledTableCell>
                                 </TableRow>
                             </TableHead>
@@ -179,7 +208,6 @@ export const Quotations = () => {
                                         <StyledTableCell align="center">{row.pts}</StyledTableCell>
                                         <StyledTableCell align="center">{row.gst}</StyledTableCell>
                                         <StyledTableCell align="center">{row.gst}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.leastPriceOrders}</StyledTableCell>
                                         {/* <StyledTableCell align="center">{row.quantity}</StyledTableCell> */}
                                     </StyledTableRow>
                                 ))}
