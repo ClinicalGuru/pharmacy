@@ -137,13 +137,6 @@ export const PurchaseRequisition = () => {
 
     const editHandler = (data) => {
         console.log(data, 'editableData');
-        setValue({
-            "pharmacologicalName": data.pharmacologicalName,
-            "brandName": data.brandName,
-            "dose": data.dose,
-            "form": data.form,
-            "quantity":data.quantity
-        })
     }
 
     return (
