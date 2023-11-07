@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { FormInput, Form } from "../Forms/index";
+import React from "react";
+import { Form } from "../Forms/index";
 import DeleteIcon from '@mui/icons-material/Delete';
 import GoogleIcon from '@mui/icons-material/Google';
 import { Typography } from '@mui/material';
@@ -25,17 +25,61 @@ import {
 } from "../../Constants/index";
 
 export const SignIn = () => {
-    const [message, setMessage] = useState('');
 
-    const initialValues = {
-        emailAddress: '',
-        password: '',
-    };
-
-    const submit = (form) => {
+    let template = {
+        title: '',
+        submitButttonText:'Log in',
+        fields: [
+            {
+                title: 'Email',
+                type: 'email',
+                name: 'email',
+                validationProps: {
+                    required: "Email is required"
+                }
+            },
+            {
+                title: 'Password',
+                type: 'password',
+                name: 'password',
+                validationProps: {
+                    required: "Password is required"
+                }
+            },
+            // {
+            //     title: 'Select',
+            //     type: 'select',
+            //     name: 'select',
+            //     options:[
+            //         {
+            //             value:"one",
+            //             option: "one"
+            //         },
+            //         {
+            //             value:"three",
+            //             option: "two"
+            //         }
+            //     ]
+            // }
+        ]
+    }
+    const onSubmit = (form) => {
         console.log(form)
         // setMessage(`Thanks for signing up, ${form.firstName} ${form.lastName}! We've sent you an email to ${form.emailAddress}.`);
     };
+    const validate = (watchValues, errorMethods) => {
+        // console.log(watchValues)
+        // let { errors, setError, clearError } = errorMethods;
+        // //Firstname validation
+        // if (watchValues['firstname' === 'Admin']) {
+        //     if (!errors['firstname']) {
+        //         setError('firstname', {
+        //             type: 'mnual',
+        //             message: 'You cannot use this first name'
+        //         })
+        //     }
+        // }
+    }
     return (
         <Container>
             <RightSection>
@@ -62,13 +106,13 @@ export const SignIn = () => {
                         {LOGIN_TEXT}
                     </Typography>
                     <GoogleSignWrapper>
-                        <Button 
-                        variant="outlined" 
-                        startIcon={<GoogleIcon 
-                        sx={{
-                            color: "#C71610FF"
-                        }}
-                        />}>
+                        <Button
+                            variant="outlined"
+                            startIcon={<GoogleIcon
+                                sx={{
+                                    color: "#C71610FF"
+                                }}
+                            />}>
                             Log In with google
                         </Button>
                     </GoogleSignWrapper>
@@ -76,20 +120,12 @@ export const SignIn = () => {
                     {/* <IconSection>
                         <GoogleIcon fontSize="small" align="center" />
                     </IconSection> */}
-                    <Form submit={submit} initialValues={initialValues}>
-                        <InputWrapper>
-                            <FormInput
-                                label="Email"
-                                type="email"
-                                name="emailAddress"
-                                placeholder="Email" />
-                            <FormInput
-                                label="Password"
-                                type="password"
-                                name="password"
-                                placeholder="Enter your password" />
-                        </InputWrapper>
-                    </Form>
+                    <Form
+                        template={template}
+                        onSubmit={onSubmit}
+                        watchFields={['firstname', 'link']}
+                        validate={validate}
+                    />
                     <Typography
                         variant="h7"
                         component="p"
@@ -100,7 +136,6 @@ export const SignIn = () => {
                 </SigninSection>
                 <Rectangle />
             </LeftSection>
-            <p>{message}</p>
         </Container>
     )
 }

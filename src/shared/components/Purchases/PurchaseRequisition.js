@@ -47,13 +47,13 @@ export const PurchaseRequisition = () => {
         register: vendorDetails,
         handleSubmit: handleVendorDetails,
         watch,
-        formState: { errors },
-        setValue
+        formState: { errors }
     } = useForm();
 
     const {
         register: requistionDetails,
         handleSubmit: handleRiquistionDetails,
+        setValue,
         reset,
         formState: { errors: requisitionErrors }
     } = useForm();
@@ -117,7 +117,11 @@ export const PurchaseRequisition = () => {
     }
 
     const editHandler = (data) => {
-        setValue(data);
+        // setValue({quantity: 10});
+        Object.entries(data).forEach(([fieldName, value]) => {
+        console.log(fieldName, value)
+        setValue(fieldName, value);
+          });
     }
 
     return (
