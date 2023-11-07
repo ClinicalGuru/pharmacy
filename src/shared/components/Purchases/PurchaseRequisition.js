@@ -11,6 +11,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Autocomplete from '@mui/material/Autocomplete';
 
 import { Box, Typography, Button } from "@mui/material";
+import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
@@ -26,6 +27,7 @@ import { AddVendor } from "./AddVendorModal";
 import { StyledTableRow, StyledTableCell } from "../../Styles/CommonStyles";
 import PurchaseService from "../../services/Purchase.service";
 import { Loader } from "../../components/Loader";
+import Grid from '@mui/material/Grid';
 
 import editIcon from "../../../assets/img/edit.png";
 import deleteIcon from "../../../assets/img/delete.png";
@@ -57,10 +59,12 @@ export const PurchaseRequisition = () => {
         reset,
         formState: { errors: requisitionErrors }
     } = useForm();
+
     useEffect(() => {
         getVendors();
         getRequestionList();
     }, []);
+
     const getRequestionList = async () => {
         setLoader(true);
         try {
@@ -70,6 +74,7 @@ export const PurchaseRequisition = () => {
             console.log(e, "=> get requestion list")
         }
     }
+
     const getVendors = async () => {
         setLoader(true);
         try {
@@ -82,14 +87,18 @@ export const PurchaseRequisition = () => {
             console.log(e, 'error allVendors')
         }
     }
+
     const resetForm = () => {
         reset();
     }
+
     const handleChange = (event) => {
         setVendorName(event.target.value);
         setRequisitionId(uuidv4());
     };
+
     const onSubmit = (data) => console.log(watch);
+
     useEffect(() => {
         console.log(tableData);
     }, [tableData]);
@@ -97,10 +106,12 @@ export const PurchaseRequisition = () => {
         setTableData(prevData => [...prevData, data]);
         reset();
     }
+
     const addNewVendorHandler = () => {
         setNewVendorModal(!showNewVendorModal);
         if (showNewVendorModal) getVendors();
     }
+
     const savingRequisitionData = async () => {
         setLoader(true);
         tableData.forEach(e => {
@@ -115,6 +126,14 @@ export const PurchaseRequisition = () => {
             console.log(e, "=> add requestion error");
         }
     }
+
+    const Item = styled(Paper)(({ theme }) => ({
+        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+        ...theme.typography.body2,
+        padding: theme.spacing(1),
+        textAlign: 'center',
+        color: theme.palette.text.secondary,
+    }));
 
     const editHandler = (data) => {
         // setValue({quantity: 10});
@@ -190,69 +209,73 @@ export const PurchaseRequisition = () => {
                 marginTop: 4
             }}>
                 <form onSubmit={handleRiquistionDetails(onSubmitRequestionDetails)} onReset={resetForm}>
-                    <Box sx={{
-                        display: 'flex',
-                        flexWrap: "wrap",
-                        justifyContent: "space-between",
-                        alignItems: "baseline"
-                    }}>
-                        <Autocomplete
-                            freeSolo
-                            id="free-solo-2-demo"
-                            disableClearable
-                            size='small'
-                            sx={{ width: 240, backgroundColor: '#FFFFFFFF' }}
-                            options={PharmacologicalNamesList.map((option) => option.name)}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    {...requistionDetails("pharmacologicalName", { required: true })}
-                                    label={FORM_LABELS.PHARMACOLOGICAL_NAME}
-                                    InputProps={{
-                                        ...params.InputProps,
-                                        type: 'search',
-                                    }}
+                    <Box sx={{ flexGrow: 1,
+                    alignItems: 'center'}}>
+                        <Grid container spacing={2}>
+                            <Grid item sm={2}>
+                                <Autocomplete
+                                    freeSolo
+                                    id="free-solo-2-demo"
+                                    size='small'
+                                    sx={{ width: 240, backgroundColor: '#FFFFFFFF' }}
+                                    options={PharmacologicalNamesList.map((option) => option.name)}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            error={requisitionErrors.pharmacologicalName?.type === "required"}
+                                            {...requistionDetails("pharmacologicalName", { required: true })}
+                                            {...params}
+                                            label={FORM_LABELS.PHARMACOLOGICAL_NAME}
+                                            InputProps={{
+                                                ...params.InputProps,
+                                                type: 'search',
+                                            }}
+                                        />
+                                    )}
                                 />
-                            )}
-                        />
-                        <Autocomplete
-                            freeSolo
-                            id="free-solo-2-demo"
-                            disableClearable
-                            size='small'
-                            sx={{ width: 240, backgroundColor: '#FFFFFFFF' }}
-                            options={BrandNamesList.map((option) => option.name)}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    {...requistionDetails("brandName", { required: true })}
-                                    label={FORM_LABELS.BRAND_NAME}
-                                    InputProps={{
-                                        ...params.InputProps,
-                                        type: 'search',
-                                    }}
+                            </Grid>
+                            <Grid item sm={2}>
+                                <Autocomplete
+                                    freeSolo
+                                    id="free-solo-2-demo"
+                                    size='small'
+                                    sx={{ width: 240, backgroundColor: '#FFFFFFFF' }}
+                                    options={BrandNamesList.map((option) => option.name)}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            error={requisitionErrors.brandName?.type === "required"}
+                                            {...requistionDetails("brandName", { required: true })}
+                                            label={FORM_LABELS.BRAND_NAME}
+                                            InputProps={{
+                                                ...params.InputProps,
+                                                type: 'search',
+                                            }}
+                                        />
+                                    )}
                                 />
-                            )}
-                        />
-                        <div>
-                            <TextField error={requisitionErrors.dose?.type === "required"} id="outlined-basic"
-                                {...requistionDetails("dose", { required: true })} label={FORM_LABELS.DOSE} variant="outlined" size="small"
-                                sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
-                        </div>
-                        <div>
-                            <TextField error={requisitionErrors.form?.type === "required"} id="outlined-basic"
-                                {...requistionDetails("form", { required: true })} label={FORM_LABELS.FORM} variant="outlined" size="small"
-                                sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
-                        </div>
-                        <div>
-                            <TextField type='number' error={requisitionErrors.quantity?.type === "required"} id="outlined-basic"
-                                {...requistionDetails("quantity", { required: true })} label={FORM_LABELS.QUANTITY} variant="outlined" size="small"
-                                sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
-                        </div>
-                        <Box sx={{ display: 'flex' }}>
-                            <input type="submit" value={`+ Add`} />
-                            <input type="reset" value={`Clear`} />
-                        </Box>
+                            </Grid>
+                            <Grid item sm={2}>
+                                <TextField error={requisitionErrors.dose?.type === "required"} id="outlined-basic"
+                                    {...requistionDetails("dose", { required: true })} label={FORM_LABELS.DOSE} variant="outlined" size="small"
+                                    sx={{ backgroundColor: '#FFFFFFFF' }} />
+                            </Grid>
+                            <Grid item sm={2}>
+                                <TextField error={requisitionErrors.form?.type === "required"} id="outlined-basic"
+                                    {...requistionDetails("form", { required: true })} label={FORM_LABELS.FORM} variant="outlined" size="small"
+                                    sx={{ backgroundColor: '#FFFFFFFF' }} />
+                            </Grid>
+                            <Grid item sm={2}>
+                                <TextField type='number' error={requisitionErrors.quantity?.type === "required"} id="outlined-basic"
+                                    {...requistionDetails("quantity", { required: true })} label={FORM_LABELS.QUANTITY} variant="outlined" size="small"
+                                    sx={{ backgroundColor: '#FFFFFFFF' }} />
+                            </Grid>
+                            <Grid item sm={2}>
+                                <Box sx={{ display: 'flex' }}>
+                                    <input type="submit" value={`+ Add`} />
+                                    <input type="reset" value={`Clear`} />
+                                </Box>
+                            </Grid>
+                        </Grid>
                     </Box>
                 </form>
             </Box >
@@ -280,8 +303,13 @@ export const PurchaseRequisition = () => {
                                     <StyledTableCell align="center">{data.form}</StyledTableCell>
                                     <StyledTableCell align="center">{data.quantity}</StyledTableCell>
                                     <StyledTableCell>
-                                        <img onClick={() => editHandler(data)} className='icon_table' src={editIcon} alt='edit'/>
-                                        <img className='icon_table' src={deleteIcon} alt='delete'/>
+                                        <Box sx={{
+                                            display: 'flex',
+                                            justifyContent: 'center'
+                                        }}>
+                                            <img onClick={() => editHandler(data)} className='icon_table' src={editIcon} alt='edit' />
+                                            <img className='icon_table' src={deleteIcon} alt='delete' />
+                                        </Box>
                                     </StyledTableCell>
                                 </StyledTableRow>
                             ))}
