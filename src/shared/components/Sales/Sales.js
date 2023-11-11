@@ -17,7 +17,8 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { StyledTableRow, StyledTableCell } from "../../Styles/CommonStyles";
-
+import Grid from '@mui/material/Grid';
+import { styled } from '@mui/material/styles';
 
 
 export const Sales = () => {
@@ -38,6 +39,14 @@ export const Sales = () => {
     const handleGender = (e) => {
         setGender(e.target.value);
     }
+
+    const Item = styled(Paper)(({ theme }) => ({
+        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+        ...theme.typography.body2,
+        padding: theme.spacing(1),
+        textAlign: 'center',
+        color: theme.palette.text.secondary,
+    }));
 
     const [pharmacologicalName, setPharmacologicalName] = useState('')
     const handlePharmacologicalName = (e) => {
@@ -75,12 +84,58 @@ export const Sales = () => {
             padding: 2,
         }}>
             <form onSubmit={handlePatientDetails(onSubmit)}>
-                <Box sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'baseline'
-                }}>
-                    <TextField id="outlined-basic" label={FORM_LABELS.PATIENT_NAME} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginRight: '15px' }} />
+                <Box sx={{flexGrow: 1}}>
+                    <Grid container spacing={2}>
+                        <Grid item sm={2}>
+                            <TextField id="outlined-basic" label={FORM_LABELS.PATIENT_NAME} variant="outlined" size="small" />
+                        </Grid>
+                        <Grid item sm={1.5}>
+                            <FormControl sx={{ minWidth:155 }} size="small">
+                                <InputLabel id="demo-select-small-label">{FORM_LABELS.GENDER}</InputLabel>
+                                <Select
+                                    size="small"
+                                    labelId="demo-select-small-label"
+                                    id="demo-select-small"
+                                    value={gender}
+                                    label={FORM_LABELS.GENDER}
+                                    onChange={handleGender}
+                                >
+                                    <MenuItem value="male"><em>Male</em></MenuItem>
+                                    <MenuItem value="female"><em>Female</em></MenuItem>
+                                    <MenuItem value="others"><em>Others</em></MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item sm={1}>
+                            <TextField id="outlined-basic" label={FORM_LABELS.AGE} variant="outlined" size="small" />
+                        </Grid>
+                        <Grid item sm={2}>
+                            <TextField id="outlined-basic" label={FORM_LABELS.PHONE} variant="outlined" size="small"  />
+                        </Grid>
+                        <Grid item sm={2}>
+                            <TextField id="outlined-basic" label={FORM_LABELS.EMAIL} variant="outlined" size="small"  />
+                        </Grid>
+                        <Grid item sm={2}>
+                            <TextField id="outlined-basic" label={FORM_LABELS.REFERED_DOCTOR} variant="outlined" size="small"  />
+                        </Grid>
+                        <Grid item sm={1.5}>
+                            <FormControl sx={{ minWidth: 130 }} size="small">
+                                <InputLabel id="demo-select-small-label">{FORM_LABELS.OTCRX}</InputLabel>
+                                <Select
+                                    size="small"
+                                    labelId="demo-select-small-label"
+                                    id="demo-select-small"
+                                    value={otcrx}
+                                    label={FORM_LABELS.OTCRX}
+                                    onChange={handleChange}
+                                >
+                                    <MenuItem value="otc"><em>OTC</em></MenuItem>
+                                    <MenuItem value="rx"><em>RX</em></MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                    </Grid>
+                    {/* <TextField id="outlined-basic" label={FORM_LABELS.PATIENT_NAME} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginRight: '15px' }} />
                     <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
                         <InputLabel id="demo-select-small-label">{FORM_LABELS.GENDER}</InputLabel>
                         <Select
@@ -113,7 +168,7 @@ export const Sales = () => {
                             <MenuItem value="otc"><em>OTC</em></MenuItem>
                             <MenuItem value="rx"><em>RX</em></MenuItem>
                         </Select>
-                    </FormControl>
+                    </FormControl> */}
                 </Box>
 
                 {/* <input type="submit" value="Add"/> */}
@@ -126,6 +181,92 @@ export const Sales = () => {
             }}>
                 <form onSubmit={handleMedicineDetails(onSubmitMedicineDetails)}>
                     <Box sx={{
+                        flexGrow: 1,
+                        alignItems: 'baseline'
+                    }}>
+                        <Grid container spacing={2}>
+                            <Grid item sm={2}>
+                                <FormControl sx={{ minWidth: 220, backgroundColor: '#FFFFFFFF' }} size="small">
+                                    <InputLabel id="demo-select-small-label">{FORM_LABELS.PHARMACOLOGICAL_NAME}</InputLabel>
+                                    <Select
+                                        size="small"
+                                        labelId="demo-select-small-label"
+                                        id="demo-select-small"
+                                        value={pharmacologicalName}
+                                        label={FORM_LABELS.PHARMACOLOGICAL_NAME}
+                                        onChange={handlePharmacologicalName}
+                                    >
+                                        <MenuItem value="none"><em>None</em></MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item sm={2}>
+                                <FormControl sx={{ minWidth: 220, backgroundColor: '#FFFFFFFF' }} size="small">
+                                    <InputLabel id="demo-select-small-label">{FORM_LABELS.MEDICINE_NAME}</InputLabel>
+                                    <Select
+                                        size="small"
+                                        labelId="demo-select-small-label"
+                                        id="demo-select-small"
+                                        value={medicineName}
+                                        label={FORM_LABELS.MEDICINE_NAME}
+                                        onChange={handleMedicineName}
+                                    >
+                                        <MenuItem value="none"><em>None</em></MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item sm={2}>
+                                <TextField id="outlined-basic" label={FORM_LABELS.BATCH_NO} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF' }} />
+                                {MedicineErrors.batchNumber?.type === "required" && (
+                                    <ErrorMessage role="alert">{FORM_LABELS.BATCH_NO}  is required</ErrorMessage>
+                                )}
+                            </Grid>
+                            <Grid item sm={2}>
+                                <TextField id="outlined-basic" label={FORM_LABELS.HSN_CODE} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
+                                {MedicineErrors.hsnCode?.type === "required" && (
+                                    <ErrorMessage role="alert">{FORM_LABELS.HSN_CODE}  is required</ErrorMessage>
+                                )}
+                            </Grid>
+                            <Grid item sm={2}>
+                                <TextField id="outlined-basic" label={FORM_LABELS.PRICE} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
+                                {MedicineErrors.price?.type === "required" && (
+                                    <ErrorMessage role="alert">{FORM_LABELS.PRICE}  is required</ErrorMessage>
+                                )}
+                            </Grid>
+                            <Grid item sm={2}>
+                                <TextField id="outlined-basic" label={FORM_LABELS.QUANTITY} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
+                                {MedicineErrors.quantity?.type === "required" && (
+                                    <ErrorMessage role="alert">{FORM_LABELS.QUANTITY}  is required</ErrorMessage>
+                                )}
+                            </Grid>
+                            <Grid item sm={2}>
+                                <TextField id="outlined-basic" label={FORM_LABELS.TOTAL} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
+                                {MedicineErrors.total?.type === "required" && (
+                                    <ErrorMessage role="alert">{FORM_LABELS.TOTAL}  is required</ErrorMessage>
+                                )}
+                            </Grid>
+                            <Grid item sm={2}>
+                                <TextField id="outlined-basic" label={FORM_LABELS.DISCOUNT} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
+                                {MedicineErrors.discount?.type === "required" && (
+                                    <ErrorMessage role="alert">{FORM_LABELS.DISCOUNT}  is required</ErrorMessage>
+                                )}
+                            </Grid>
+                            <Grid item sm={2}>
+                                <TextField id="outlined-basic" label={FORM_LABELS.AMOUNT} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
+                                {MedicineErrors.amount?.type === "required" && (
+                                    <ErrorMessage role="alert">{FORM_LABELS.AMOUNT}  is required</ErrorMessage>
+                                )}
+                            </Grid>
+                            <Grid item sm={5}></Grid>
+                            <Grid item sm={1}>
+                                <Box sx={{ display: 'flex' }}>
+                                    <input type="submit" value={`+ Add`} />
+                                    <input type="reset" value={`Clear`} />
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                    {/* <Box sx={{
                         display: 'flex',
                         flexWrap: "wrap",
                         justifyContent: "space-between",
@@ -203,7 +344,7 @@ export const Sales = () => {
                             <input type="submit" value={`+ Add`} />
                             <input type="reset" value={`Clear`} />
                         </Box>
-                    </Box>
+                    </Box> */}
                 </form>
             </Box>
             <Box sx={{
