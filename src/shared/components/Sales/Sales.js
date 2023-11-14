@@ -1,351 +1,333 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FORM_LABELS } from "../../Constants/index";
-import { FormWrapper, ErrorMessage } from "./Sales.styles";
 
 //material ui
 import { Box } from "@mui/material";
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import TextField from '@mui/material/TextField';
-import { useState } from "react";
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import { StyledTableRow, StyledTableCell } from "../../Styles/CommonStyles";
-import Grid from '@mui/material/Grid';
-import { styled } from '@mui/material/styles';
+// import Table from '@mui/material/Table';
+// import TableBody from '@mui/material/TableBody';
+// import TableContainer from '@mui/material/TableContainer';
+// import TableHead from '@mui/material/TableHead';
+// import TableRow from '@mui/material/TableRow';
+// import Paper from '@mui/material/Paper';
 
+// import { StyledTableRow, StyledTableCell } from "../../Styles/CommonStyles";
+// import { styled } from '@mui/material/styles';
+import { Form } from "../Forms/index";
+import { Table } from "../Table";
 
 export const Sales = () => {
-    const [rows, updateRows] = useState([]);
-    const {
-        register: patientDetails,
-        handleSubmit: handlePatientDetails,
-        watch,
-        formState: { errors },
-    } = useForm();
+    // const [rows, updateRows] = useState([]);
+    const patient_details_template = {
+        title: '',
+        submitButttonText: 'Log in',
+        formStyles: {
+            backgroundColor: "#eee",
+        },
+        fields: [
+            {
+                title: 'Patient Name',
+                type: 'text',
+                name: 'text',
+                validationProps: {
+                    required: "Patient Name is required"
+                },
+                style: {
+                    width: "194px"
+                }
+            },
+            {
 
-    const [otcrx, setOtcRx] = useState('')
-    const handleChange = (event) => {
-        setOtcRx(event.target.value);
+                title: 'Gender',
+                type: 'select',
+                name: 'gender',
+                options: [
+                    {
+                        value: "male",
+                        option: "Male"
+                    },
+                    {
+                        value: "female",
+                        option: "Female"
+                    }
+                ],
+                style: {
+                    width: "194px"
+                }
+            },
+            {
+                title: 'Age',
+                type: 'number',
+                name: 'age',
+                validationProps: {
+                    required: "Age is required"
+                },
+                style: {
+                    width: "60px"
+                }
+            },
+            {
+                title: 'Phone',
+                type: 'number',
+                name: 'phone',
+                validationProps: {
+                    required: "Phone number is required"
+                },
+                style: {
+                    width: "194px"
+                }
+            },
+            {
+                title: 'Email',
+                type: 'email',
+                name: 'email',
+                style: {
+                    width: "194px"
+                }
+            },
+            {
+                title: 'Referred Doctor',
+                type: 'text',
+                name: 'referred doctor',
+                style: {
+                    width: "194px"
+                }
+            },
+            {
+
+                title: 'OTC/Rx',
+                type: 'select',
+                name: 'select',
+                options: [
+                    {
+                        value: "otc",
+                        option: "OTC"
+                    },
+                    {
+                        value: "rx",
+                        option: "RC"
+                    }
+                ],
+                style: {
+                    width: "194px"
+                }
+            },
+        ]
+    };
+    const medicine_details_template = {
+        title: '',
+        submitButttonText: '+ Add',
+        clearFormBtnText: "Clear",
+        formStyles: {
+            backgroundColor: "#FFFFFF",
+        },
+        fields: [
+            {
+                title: FORM_LABELS.PHARMACOLOGICAL_NAME,
+                type: 'select',
+                name: FORM_LABELS.PHARMACOLOGICAL_NAME,
+                validationProps: {
+                    required: `${FORM_LABELS.PHARMACOLOGICAL_NAME} is required`
+                },
+                options: [
+
+                ],
+                style: {
+                    width: "200px"
+                }
+            },
+            {
+
+                title: FORM_LABELS.MEDICINE_NAME,
+                type: 'select',
+                name: FORM_LABELS.MEDICINE_NAME,
+                options: [
+
+                ],
+                style: {
+                    width: "200px"
+                }
+            },
+            {
+                title: FORM_LABELS.BATCH_NO,
+                type: 'text',
+                name: FORM_LABELS.BATCH_NO,
+                validationProps: {
+                    required: ` ${FORM_LABELS.BATCH_NO} is required`
+                },
+            },
+            {
+                title: FORM_LABELS.HSN_CODE,
+                type: 'number',
+                name: FORM_LABELS.HSN_CODE,
+                validationProps: {
+                    required: `${FORM_LABELS.HSN_CODE} is required`
+                },
+            },
+            {
+                title: FORM_LABELS.PRICE,
+                type: 'text',
+                name: FORM_LABELS.PRICE,
+                validationProps: {
+                    required: `${FORM_LABELS.PRICE} is required`
+                },
+            },
+            {
+                title: FORM_LABELS.QUANTITY,
+                type: 'text',
+                name: FORM_LABELS.QUANTITY,
+                validationProps: {
+                    required: `${FORM_LABELS.QUANTITY} is required`
+                },
+            },
+            {
+                title: FORM_LABELS.TOTAL,
+                type: 'text',
+                name: FORM_LABELS.TOTAL,
+                validationProps: {
+                    required: `${FORM_LABELS.TOTAL} is required`
+                },
+            },
+            {
+                title: FORM_LABELS.DISCOUNT,
+                type: 'number',
+                name: FORM_LABELS.DISCOUNT,
+                validationProps: {
+                    required: `${FORM_LABELS.DISCOUNT} is required`
+                },
+            },
+            {
+                title: FORM_LABELS.AMOUNT,
+                type: 'number',
+                name: FORM_LABELS.AMOUNT,
+                validationProps: {
+                    required: `${FORM_LABELS.AMOUNT} is required`
+                },
+            },
+        ]
+    };
+    const bill_details = {
+        title: '',
+        submitButttonText: 'Save',
+        clearFormBtnText: "Print",
+        formStyles: {
+            backgroundColor: "#FFFFFF",
+        },
+        fields: [
+            {
+                title: FORM_LABELS.DISCOUNT,
+                type: 'number',
+                name: FORM_LABELS.DISCOUNT,
+                style: {
+                    width: "200px"
+                }
+            },
+            {
+
+                title: FORM_LABELS.GST,
+                type: 'number',
+                name: FORM_LABELS.GST,
+                style: {
+                    width: "200px"
+                }
+            },
+            {
+                title: FORM_LABELS.NET_PRICE,
+                type: 'number',
+                name: FORM_LABELS.NET_PRICE,
+                validationProps: {
+                    required: ` ${FORM_LABELS.NET_PRICE} is required`
+                },
+            },
+            {
+                title: FORM_LABELS.ROUND_OFF,
+                type: 'number',
+                name: FORM_LABELS.ROUND_OFF
+            },
+            {
+                title: FORM_LABELS.BILL_AMOUNT,
+                type: 'number',
+                name: FORM_LABELS.BILL_AMOUNT
+            },
+            {
+                title: FORM_LABELS.PAYMENT_MODE,
+                type: 'select',
+                name: FORM_LABELS.PAYMENT_MODE,
+                validationProps: {
+                    required: `${FORM_LABELS.PAYMENT_MODE} is required`
+                },
+                options: [
+                    {
+                        value: "cash",
+                        option: "Cash"
+                    },
+                    {
+                        value: "card",
+                        option: "FeCardmale"
+                    },
+                    {
+                        value: "upi",
+                        option: "UPI"
+                    }
+                ],
+                style: {
+                    width: "190px"
+                }
+            },
+            {
+                title: FORM_LABELS.ADD_REMARKS,
+                type: 'text',
+                name: FORM_LABELS.ADD_REMARKS
+            },
+        ]
+    };
+    const patient_details_style = {
+        display: "flex",
+        gap: "28px 10px",
+        justifyContent: "space-around"
+    }
+    const medicine_details_style = {
+        display: "flex",
+        gap: "28px 28px",
+        justifyContent: 'space-around'
+    }
+    const onSubmit = (form) => {
+        // setLoader(true);
+        console.log(form);
+        // navigate('/landing');
+        // setLoader(false);
     };
 
-    const [gender, setGender] = useState('')
-    const handleGender = (e) => {
-        setGender(e.target.value);
-    }
-
-    const Item = styled(Paper)(({ theme }) => ({
-        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-        ...theme.typography.body2,
-        padding: theme.spacing(1),
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
-    }));
-
-    const [pharmacologicalName, setPharmacologicalName] = useState('')
-    const handlePharmacologicalName = (e) => {
-        setPharmacologicalName(e.target.value)
-    };
-
-    const [medicineName, setMedicineName] = useState('')
-    const handleMedicineName = (e) => {
-        setMedicineName(e.target.value)
-    }
-
-    const [paidAmount, setPaidAmount] = useState('')
-    const handlePaidAmount = (e) => {
-        setPaidAmount(e.target.value)
-    }
-
-    const {
-        register: medicineDetails,
-        handleSubmit: handleMedicineDetails,
-        formState: { errors: MedicineErrors },
-    } = useForm();
-
-    const {
-        register: totalBillDetails,
-        handleSubmit: handleTotalBillDetails,
-    } = useForm();
-
-    const onSubmit = (data) => console.log(watch);;
-    const onSubmitMedicineDetails = (data) => {
-        rows.push(data);
-        updateRows(rows);
+    const validate = (watchValues, errorMethods) => {
+        console.log(watchValues, 'watchValues')
     }
     return (
         <Box sx={{
             padding: 2,
         }}>
-            <form onSubmit={handlePatientDetails(onSubmit)}>
-                <Box sx={{flexGrow: 1}}>
-                    <Grid container spacing={2}>
-                        <Grid item sm={2}>
-                            <TextField id="outlined-basic" label={FORM_LABELS.PATIENT_NAME} variant="outlined" size="small" />
-                        </Grid>
-                        <Grid item sm={1.5}>
-                            <FormControl sx={{ minWidth:155 }} size="small">
-                                <InputLabel id="demo-select-small-label">{FORM_LABELS.GENDER}</InputLabel>
-                                <Select
-                                    size="small"
-                                    labelId="demo-select-small-label"
-                                    id="demo-select-small"
-                                    value={gender}
-                                    label={FORM_LABELS.GENDER}
-                                    onChange={handleGender}
-                                >
-                                    <MenuItem value="male"><em>Male</em></MenuItem>
-                                    <MenuItem value="female"><em>Female</em></MenuItem>
-                                    <MenuItem value="others"><em>Others</em></MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item sm={1}>
-                            <TextField id="outlined-basic" label={FORM_LABELS.AGE} variant="outlined" size="small" />
-                        </Grid>
-                        <Grid item sm={2}>
-                            <TextField id="outlined-basic" label={FORM_LABELS.PHONE} variant="outlined" size="small"  />
-                        </Grid>
-                        <Grid item sm={2}>
-                            <TextField id="outlined-basic" label={FORM_LABELS.EMAIL} variant="outlined" size="small"  />
-                        </Grid>
-                        <Grid item sm={2}>
-                            <TextField id="outlined-basic" label={FORM_LABELS.REFERED_DOCTOR} variant="outlined" size="small"  />
-                        </Grid>
-                        <Grid item sm={1.5}>
-                            <FormControl sx={{ minWidth: 130 }} size="small">
-                                <InputLabel id="demo-select-small-label">{FORM_LABELS.OTCRX}</InputLabel>
-                                <Select
-                                    size="small"
-                                    labelId="demo-select-small-label"
-                                    id="demo-select-small"
-                                    value={otcrx}
-                                    label={FORM_LABELS.OTCRX}
-                                    onChange={handleChange}
-                                >
-                                    <MenuItem value="otc"><em>OTC</em></MenuItem>
-                                    <MenuItem value="rx"><em>RX</em></MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                    </Grid>
-                    {/* <TextField id="outlined-basic" label={FORM_LABELS.PATIENT_NAME} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginRight: '15px' }} />
-                    <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
-                        <InputLabel id="demo-select-small-label">{FORM_LABELS.GENDER}</InputLabel>
-                        <Select
-                            size="small"
-                            labelId="demo-select-small-label"
-                            id="demo-select-small"
-                            value={gender}
-                            label={FORM_LABELS.GENDER}
-                            onChange={handleGender}
-                        >
-                            <MenuItem value="male"><em>Male</em></MenuItem>
-                            <MenuItem value="female"><em>Female</em></MenuItem>
-                            <MenuItem value="others"><em>Others</em></MenuItem>
-                        </Select>
-                    </FormControl>
-                    <TextField id="outlined-basic" label={FORM_LABELS.AGE} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginRight: '15px' }} />
-                    <TextField id="outlined-basic" label={FORM_LABELS.PHONE} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginRight: '15px' }} />
-                    <TextField id="outlined-basic" label={FORM_LABELS.EMAIL} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginRight: '15px' }} />
-                    <TextField id="outlined-basic" label={FORM_LABELS.REFERED_DOCTOR} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginRight: '15px' }} />
-                    <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
-                        <InputLabel id="demo-select-small-label">{FORM_LABELS.OTCRX}</InputLabel>
-                        <Select
-                            size="small"
-                            labelId="demo-select-small-label"
-                            id="demo-select-small"
-                            value={otcrx}
-                            label={FORM_LABELS.OTCRX}
-                            onChange={handleChange}
-                        >
-                            <MenuItem value="otc"><em>OTC</em></MenuItem>
-                            <MenuItem value="rx"><em>RX</em></MenuItem>
-                        </Select>
-                    </FormControl> */}
-                </Box>
-
-                {/* <input type="submit" value="Add"/> */}
-            </form>
-            <Box sx={{
-                backgroundColor: '#eef0f3',
-                borderRadius: '4px',
-                padding: 2,
-                marginTop: 4
-            }}>
-                <form onSubmit={handleMedicineDetails(onSubmitMedicineDetails)}>
-                    <Box sx={{
-                        flexGrow: 1,
-                        alignItems: 'baseline'
-                    }}>
-                        <Grid container spacing={2}>
-                            <Grid item sm={2}>
-                                <FormControl sx={{ minWidth: 220, backgroundColor: '#FFFFFFFF' }} size="small">
-                                    <InputLabel id="demo-select-small-label">{FORM_LABELS.PHARMACOLOGICAL_NAME}</InputLabel>
-                                    <Select
-                                        size="small"
-                                        labelId="demo-select-small-label"
-                                        id="demo-select-small"
-                                        value={pharmacologicalName}
-                                        label={FORM_LABELS.PHARMACOLOGICAL_NAME}
-                                        onChange={handlePharmacologicalName}
-                                    >
-                                        <MenuItem value="none"><em>None</em></MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                            <Grid item sm={2}>
-                                <FormControl sx={{ minWidth: 220, backgroundColor: '#FFFFFFFF' }} size="small">
-                                    <InputLabel id="demo-select-small-label">{FORM_LABELS.MEDICINE_NAME}</InputLabel>
-                                    <Select
-                                        size="small"
-                                        labelId="demo-select-small-label"
-                                        id="demo-select-small"
-                                        value={medicineName}
-                                        label={FORM_LABELS.MEDICINE_NAME}
-                                        onChange={handleMedicineName}
-                                    >
-                                        <MenuItem value="none"><em>None</em></MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                            <Grid item sm={2}>
-                                <TextField id="outlined-basic" label={FORM_LABELS.BATCH_NO} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF' }} />
-                                {MedicineErrors.batchNumber?.type === "required" && (
-                                    <ErrorMessage role="alert">{FORM_LABELS.BATCH_NO}  is required</ErrorMessage>
-                                )}
-                            </Grid>
-                            <Grid item sm={2}>
-                                <TextField id="outlined-basic" label={FORM_LABELS.HSN_CODE} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
-                                {MedicineErrors.hsnCode?.type === "required" && (
-                                    <ErrorMessage role="alert">{FORM_LABELS.HSN_CODE}  is required</ErrorMessage>
-                                )}
-                            </Grid>
-                            <Grid item sm={2}>
-                                <TextField id="outlined-basic" label={FORM_LABELS.PRICE} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
-                                {MedicineErrors.price?.type === "required" && (
-                                    <ErrorMessage role="alert">{FORM_LABELS.PRICE}  is required</ErrorMessage>
-                                )}
-                            </Grid>
-                            <Grid item sm={2}>
-                                <TextField id="outlined-basic" label={FORM_LABELS.QUANTITY} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
-                                {MedicineErrors.quantity?.type === "required" && (
-                                    <ErrorMessage role="alert">{FORM_LABELS.QUANTITY}  is required</ErrorMessage>
-                                )}
-                            </Grid>
-                            <Grid item sm={2}>
-                                <TextField id="outlined-basic" label={FORM_LABELS.TOTAL} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
-                                {MedicineErrors.total?.type === "required" && (
-                                    <ErrorMessage role="alert">{FORM_LABELS.TOTAL}  is required</ErrorMessage>
-                                )}
-                            </Grid>
-                            <Grid item sm={2}>
-                                <TextField id="outlined-basic" label={FORM_LABELS.DISCOUNT} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
-                                {MedicineErrors.discount?.type === "required" && (
-                                    <ErrorMessage role="alert">{FORM_LABELS.DISCOUNT}  is required</ErrorMessage>
-                                )}
-                            </Grid>
-                            <Grid item sm={2}>
-                                <TextField id="outlined-basic" label={FORM_LABELS.AMOUNT} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
-                                {MedicineErrors.amount?.type === "required" && (
-                                    <ErrorMessage role="alert">{FORM_LABELS.AMOUNT}  is required</ErrorMessage>
-                                )}
-                            </Grid>
-                            <Grid item sm={5}></Grid>
-                            <Grid item sm={1}>
-                                <Box sx={{ display: 'flex' }}>
-                                    <input type="submit" value={`+ Add`} />
-                                    <input type="reset" value={`Clear`} />
-                                </Box>
-                            </Grid>
-                        </Grid>
-                    </Box>
-                    {/* <Box sx={{
-                        display: 'flex',
-                        flexWrap: "wrap",
-                        justifyContent: "space-between",
-                        alignItems: 'center'
-                    }}>
-                        <FormControl sx={{ m: 1, minWidth: 220, backgroundColor: '#FFFFFFFF' }} size="small">
-                            <InputLabel id="demo-select-small-label">{FORM_LABELS.PHARMACOLOGICAL_NAME}</InputLabel>
-                            <Select
-                                size="small"
-                                labelId="demo-select-small-label"
-                                id="demo-select-small"
-                                value={pharmacologicalName}
-                                label={FORM_LABELS.PHARMACOLOGICAL_NAME}
-                                onChange={handlePharmacologicalName}
-                            >
-                                <MenuItem value="none"><em>None</em></MenuItem>
-                            </Select>
-                        </FormControl>
-                        <FormControl sx={{ m: 1, minWidth: 200, backgroundColor: '#FFFFFFFF' }} size="small">
-                            <InputLabel id="demo-select-small-label">{FORM_LABELS.MEDICINE_NAME}</InputLabel>
-                            <Select
-                                size="small"
-                                labelId="demo-select-small-label"
-                                id="demo-select-small"
-                                value={medicineName}
-                                label={FORM_LABELS.MEDICINE_NAME}
-                                onChange={handleMedicineName}
-                            >
-                                <MenuItem value="none"><em>None</em></MenuItem>
-                            </Select>
-                        </FormControl>
-                        <FormWrapper>
-                            <TextField id="outlined-basic" label={FORM_LABELS.BATCH_NO} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
-                            {MedicineErrors.batchNumber?.type === "required" && (
-                                <ErrorMessage role="alert">{FORM_LABELS.BATCH_NO}  is required</ErrorMessage>
-                            )}
-                        </FormWrapper>
-                        <FormWrapper>
-                            <TextField id="outlined-basic" label={FORM_LABELS.HSN_CODE} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
-                            {MedicineErrors.hsnCode?.type === "required" && (
-                                <ErrorMessage role="alert">{FORM_LABELS.HSN_CODE}  is required</ErrorMessage>
-                            )}
-                        </FormWrapper>
-                        <FormWrapper>
-                            <TextField id="outlined-basic" label={FORM_LABELS.PRICE} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
-                            {MedicineErrors.price?.type === "required" && (
-                                <ErrorMessage role="alert">{FORM_LABELS.PRICE}  is required</ErrorMessage>
-                            )}
-                        </FormWrapper>
-                        <FormWrapper>
-                            <TextField id="outlined-basic" label={FORM_LABELS.QUANTITY} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
-                            {MedicineErrors.quantity?.type === "required" && (
-                                <ErrorMessage role="alert">{FORM_LABELS.QUANTITY}  is required</ErrorMessage>
-                            )}
-                        </FormWrapper>
-                        <FormWrapper>
-                            <TextField id="outlined-basic" label={FORM_LABELS.TOTAL} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
-                            {MedicineErrors.total?.type === "required" && (
-                                <ErrorMessage role="alert">{FORM_LABELS.TOTAL}  is required</ErrorMessage>
-                            )}
-                        </FormWrapper>
-                        <FormWrapper>
-                            <TextField id="outlined-basic" label={FORM_LABELS.DISCOUNT} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
-                            {MedicineErrors.discount?.type === "required" && (
-                                <ErrorMessage role="alert">{FORM_LABELS.DISCOUNT}  is required</ErrorMessage>
-                            )}
-                        </FormWrapper>
-                        <FormWrapper>
-                            <TextField id="outlined-basic" label={FORM_LABELS.AMOUNT} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginBottom: '15px' }} />
-                            {MedicineErrors.amount?.type === "required" && (
-                                <ErrorMessage role="alert">{FORM_LABELS.AMOUNT}  is required</ErrorMessage>
-                            )}
-                        </FormWrapper>
-                        <Box sx={{ display: 'flex' }}>
-                            <input type="submit" value={`+ Add`} />
-                            <input type="reset" value={`Clear`} />
-                        </Box>
-                    </Box> */}
-                </form>
+            <Form
+                template={patient_details_template}
+                onSubmit={onSubmit}
+                validate={validate}
+                showSubmitButton={false}
+                form_styles={patient_details_style}
+            />
+            <Box
+                sx={{
+                    backgroundColor: '#eef0f3',
+                    borderRadius: '4px',
+                    padding: 2,
+                    marginTop: 4
+                }}
+            >
+                <Form
+                    template={medicine_details_template}
+                    onSubmit={onSubmit}
+                    validate={validate}
+                    showSubmitButton={true}
+                    showClearFormButton={true}
+                    form_styles={medicine_details_style}
+                />
             </Box>
             <Box sx={{
                 backgroundColor: '#eef0f3',
@@ -353,91 +335,17 @@ export const Sales = () => {
                 padding: 2,
                 marginTop: 4
             }}>
-                <form onSubmit={handleTotalBillDetails(onSubmit)}>
-                    <Box sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center'
-                    }}>
-                        <FormWrapper>
-                            <TextField id="outlined-basic" label={FORM_LABELS.DISCOUNT} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginRight: '15px' }} />
-                        </FormWrapper>
-                        <FormWrapper>
-                            <TextField id="outlined-basic" label={FORM_LABELS.GST} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginRight: '15px' }} />
-                        </FormWrapper>
-                        <FormWrapper>
-                            <TextField id="outlined-basic" label={FORM_LABELS.NET_PRICE} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginRight: '15px' }} />
-                        </FormWrapper>
-                        <FormWrapper>
-                            <TextField id="outlined-basic" label={FORM_LABELS.ROUND_OFF} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginRight: '15px' }} />
-                        </FormWrapper>
-                        <FormWrapper>
-                            <TextField id="outlined-basic" label={FORM_LABELS.BILL_AMOUNT} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginRight: '5px' }} />
-                        </FormWrapper>
-                        <FormControl sx={{ m: 1, minWidth: 220, backgroundColor: '#FFFFFFFF' }} size="small">
-                            <InputLabel id="demo-select-small-label">{FORM_LABELS.PAID_AMOUNT}</InputLabel>
-                            <Select
-                                size="small"
-                                labelId="demo-select-small-label"
-                                id="demo-select-small"
-                                value={paidAmount}
-                                label={FORM_LABELS.PAID_AMOUNT}
-                                onChange={handlePaidAmount}
-                            >
-                                <MenuItem value="cash"><em>Cash</em></MenuItem>
-                                <MenuItem value="card"><em>Card</em></MenuItem>
-                                <MenuItem value="upi"><em>UPI</em></MenuItem>
-                            </Select>
-                        </FormControl>
-                        <FormWrapper>
-                            <TextField id="outlined-basic" label="Remarks" variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', marginRight: '15px' }} />
-                        </FormWrapper>
-
-
-                    </Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'end' }}>
-                        <input type="submit" value={`Save`} />
-                        <input type="submit" value={`Print`} />
-
-                    </Box>
-                </form>
+                <Form
+                    template={bill_details}
+                    onSubmit={onSubmit}
+                    validate={validate}
+                    showSubmitButton={true}
+                    showClearFormButton={true}
+                    form_styles={medicine_details_style}
+                />
             </Box>
             <Box sx={{ marginTop: 3 }}>
-                <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 700 }} aria-label="customized table">
-                        <TableHead>
-                            <TableRow>
-                                <StyledTableCell>S No</StyledTableCell>
-                                <StyledTableCell align="center">Medicine Name</StyledTableCell>
-                                <StyledTableCell align="center">Batch</StyledTableCell>
-                                <StyledTableCell align="center">HSN Code</StyledTableCell>
-                                <StyledTableCell align="center">Price</StyledTableCell>
-                                <StyledTableCell align="center">Quantity</StyledTableCell>
-                                <StyledTableCell align="center">Total</StyledTableCell>
-                                <StyledTableCell align="center">Discount</StyledTableCell>
-                                <StyledTableCell align="center">Amount</StyledTableCell>
-                                <StyledTableCell align="center">Action</StyledTableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {rows.map((row, index) => (
-                                <StyledTableRow key={row.index}>
-                                    <StyledTableCell>
-                                        {index + 1}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">{row.pharmacologicalName},&nbsp;{row.medicineName}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.batchNumber}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.hsnCode}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.price}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.quantity}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.total}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.discount}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.amount}</StyledTableCell>
-                                </StyledTableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                <Table />
             </Box>
         </Box>
     )

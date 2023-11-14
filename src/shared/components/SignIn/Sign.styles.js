@@ -23,8 +23,8 @@ export const OrText = styled.p`
     text-align: center; 
     border-bottom: 1px solid #eee; 
     line-height: 0.1em;
-    margin: 10px 0 20px; 
-    margin: 3rem 0rem;
+    // margin: 10px 0 20px; 
+    margin: 1rem 0rem;
     & span {
         padding:0 10px; 
         background:#fff; 
@@ -36,9 +36,9 @@ background-color: white;
 box-shadow: 0px 4px 9px;
 border-radius: 8px;
 z-index: 1;
-max-width: 80%;
-    min-width: 65%;
-    padding: 1rem;
+padding: 1rem;
+height: auto;
+width: 50%;
 `;
 
 export const Rectangle = styled.div`
@@ -81,11 +81,11 @@ margin-bottom:10px;
 `;
 
 export const RightSection = styled.div`
-    flex-basis: 60%;
+    flex-basis: 50%;
 `;
 
 export const LeftSection = styled.div`
-flex-basis: 40%;
+flex-basis: 50%;
 display: flex;
 justify-content: center;
 align-items: center;

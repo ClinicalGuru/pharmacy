@@ -1,61 +1,90 @@
 import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
-import { SubmitButton } from "./Forms.styles"
-export const Form = ({ template, onSubmit, watchFields, validate, dynamic }) => {
+import { SubmitButton } from "./Forms.styles";
+import { Box, Typography, Button } from "@mui/material";
+
+export const Form = ({
+    template,
+    onSubmit,
+    watchFields,
+    validate,
+    dynamic,
+    showClearFormButton = false,
+    showSubmitButton = false,
+    form_styles
+}) => {
     let { register, handleSubmit, watch, setError, clearErrors, formState: { errors } } = useForm();
     let watchValues = watch(watchFields);
     console.log(watchValues, 'watchValues')
     validate(watchValues, { setError, clearErrors });
-    let { title, fields, submitButttonText } = template;
+    let { title, fields, submitButttonText, clearFormBtnText, formStyles } = template;
     const renderFields = (fields) => {
         return fields.map(field => {
-            let { title, type, name, validationProps, dynamic, options } = field;
-
+            let { title, type, name, validationProps, dynamic, options, style } = field;
+            let finalStyle = { ...style, ...formStyles };
             // let showField = dynamic ? watchValues([dynamic['field']]) ===dynamic['value']: true;
             // if(!showField) return
             // console.log(validationProps)
             switch (type) {
                 case 'text':
                     return (
-                        <div key={name}>
-                            <label>{title}</label>
-                            <input type={type} name={name} id={name} {...register(name, validationProps)} />
-                            {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
-                        </div>
-                    )
+                        <Box sx={{
+                            marginBottom: 2
+                        }}>
+                            <div key={name}>
+                                <Box variant="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
+                                <input style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
+                                {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
+                            </div>
+                        </Box>)
+                case 'number':
+                    return (
+                        <Box sx={{
+                            marginBottom: 2
+                        }}>
+                            <div key={name}>
+                                <Box sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
+                                <input style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
+                                {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
+                            </div>
+                        </Box>)
                 case 'email':
                     return (
-                        <div key={name}>
-                            <label>{title}</label>
-                            <input type={type} name={name} id={name} {...register(name, validationProps)} />
-                            {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
-                        </div>
+                        <Box sx={{
+                            marginBottom: 2
+                        }}>
+                            <div key={name}>
+                                <Box sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
+                                <input style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
+                                {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
+                            </div>
+                        </Box>
+
                     )
                 case 'password':
                     return (
                         <div key={name}>
-                            <label>{title}</label>
-                            <input type={type} name={name} id={name} {...register(name, validationProps)} />
+                            <Box sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
+                            <input style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
                             {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
                         </div>
                     )
                 case 'checkbox':
                     return (
                         <div key={name}>
-                            <label>{title}</label>
-                            <input type={type} name={name} id={name} {...register(name, validationProps)} />
+                            <Box sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
+                            <input style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
                             {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
                         </div>
                     )
                 case 'select':
                     return (
                         <div key={name}>
-                            <label>{title}</label>
-                            {/* <input type={type} name={name} id={name} {...register(name, validationProps)} /> */}
-                            <select name={name} id={name} {...register(name, validationProps)} >
-                                <option>--select--</option>
+                            <Box sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
+                            <select style={finalStyle} name={name} id={name} {...register(name, validationProps)} >
+                                <option>select</option>
                                 {options && options.length > 0 && options.map(({ value, option }) => {
-                                    return <option value={value}>{option}</option>
+                                    return <option key={value} value={value}>{option}</option>
                                 })}
                             </select>
                             {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
@@ -72,13 +101,16 @@ export const Form = ({ template, onSubmit, watchFields, validate, dynamic }) => 
         })
     }
     return (
-        <div>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                {title && <h4>{title}</h4>}
+        <form onSubmit={handleSubmit(onSubmit)}>
+            {title && <h4>{title}</h4>}
+            <div style={form_styles}>
                 {renderFields(fields)}
-                <br />
-                <SubmitButton type="submit" className="btn">{submitButttonText}</SubmitButton>
-            </form>
-        </div>
+            </div>
+            <div style={{ display: "flex", gap: "20px 20px", justifyContent: "end" }}>
+                {showSubmitButton && <SubmitButton type="submit" className="btn">{submitButttonText}</SubmitButton>}
+                {showClearFormButton && <SubmitButton type="submit" className="btn">{clearFormBtnText}</SubmitButton>}
+            </div>
+
+        </form>
     );
 }

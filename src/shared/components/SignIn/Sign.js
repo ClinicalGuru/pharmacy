@@ -1,4 +1,5 @@
-import React from "react";
+import React, {useState} from "react";
+import { useNavigate } from 'react-router-dom';
 import { Form } from "../Forms/index";
 import DeleteIcon from '@mui/icons-material/Delete';
 import GoogleIcon from '@mui/icons-material/Google';
@@ -23,9 +24,9 @@ import {
     LOGIN_TEXT,
     WELCOME_BACK_TEXT
 } from "../../Constants/index";
+import { Loader } from "../../components/Loader";
 
 export const SignIn = () => {
-
     let template = {
         title: '',
         submitButttonText:'Log in',
@@ -63,34 +64,32 @@ export const SignIn = () => {
             // }
         ]
     }
+    const [open, setLoader] = useState(false);
+    const navigate = useNavigate();
     const onSubmit = (form) => {
-        console.log(form)
-        // setMessage(`Thanks for signing up, ${form.firstName} ${form.lastName}! We've sent you an email to ${form.emailAddress}.`);
+        setLoader(true);
+        console.log(form);
+        navigate('/landing');
+        setLoader(false);
     };
     const validate = (watchValues, errorMethods) => {
-        // console.log(watchValues)
-        // let { errors, setError, clearError } = errorMethods;
-        // //Firstname validation
-        // if (watchValues['firstname' === 'Admin']) {
-        //     if (!errors['firstname']) {
-        //         setError('firstname', {
-        //             type: 'mnual',
-        //             message: 'You cannot use this first name'
-        //         })
-        //     }
-        // }
+
     }
     return (
         <Container>
             <RightSection>
                 <LogoImg src={require('../../../assets/img/logo.png')} />
-                <WelcomeText>
+                <Typography 
+                variant="h4"
+                color="#6F7787FF"
+                align="center"
+                paddingTop={7}>
                     {WELCOME_BACK_TEXT}
-                </WelcomeText>
+                </Typography >
                 <Typography
                     fontSize={15}
-                    ml={20}
-                    mr={30}>There are many variations of passages of Lorem Ipsum available,
+                    align="center"
+                    color="#6F7787FF">There are many variations of passages of Lorem Ipsum available,
                     but the majority have suffered alteration in some form, by injected humour,
                     or randomised words which don't look even slightly believable. </Typography>
                 <Circle />
@@ -123,19 +122,20 @@ export const SignIn = () => {
                     <Form
                         template={template}
                         onSubmit={onSubmit}
-                        watchFields={['firstname', 'link']}
+                        // watchFields={['firstname', 'link']}
                         validate={validate}
                     />
                     <Typography
                         variant="h7"
                         component="p"
                         align="center"
-                        mb={10}>
+                        mb={2}>
                         Been here before? Log in
                     </Typography>
                 </SigninSection>
                 <Rectangle />
             </LeftSection>
+            <Loader open={open} />
         </Container>
     )
 }

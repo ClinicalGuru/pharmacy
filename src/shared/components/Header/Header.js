@@ -14,7 +14,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 import SearchIcon from '@mui/icons-material/Search';
 
 import { SearchIconWrapper, Search, StyledInputBase, TypographyWrapper } from "./Header.styles";
-import { TopMenu, Navbar } from "../TopMenu";
+import { Navbar } from "../TopMenu";
 
 const pages = ['Purchases', 'Inventory', 'Sales', 'Reports'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];

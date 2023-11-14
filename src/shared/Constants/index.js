@@ -20,6 +20,7 @@ export const FORM_LABELS = {
     HSN_CODE: "HSN Code",
     PRICE: "Price",
     AMOUNT: "Amount",
+    PAYMENT_MODE: "Payment mode",
     GST: "GST",
     NET_PRICE: "Net price",
     ROUND_OFF: "Round Off",
