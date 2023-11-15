@@ -10,13 +10,15 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as React from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import TextField from '@mui/material/TextField';
+import PurchaseService from "../../../services/Purchase.service";
+import { Loader } from "../../../components/Loader";
 
 import { Header } from '../../Header/index';
 import { Container } from './Quotations.styles'
@@ -33,7 +35,36 @@ export const Quotations = () => {
     } = useForm();
 
     const [vendorName, setVendorName] = React.useState('');
+    const [allVendors, setAllVendors] = useState([]);
+    const [allRequisitionIds, setAllRequisitionIds] = useState([]);
     const [purchaseRequisitionId, setRequisitionId] = React.useState('');
+    const [tableData, setTableData] = useState([]);
+    const [open, setLoader] = useState(false);
+
+    const getVendors = async () => {
+        setLoader(true);
+        try {
+            let data = await PurchaseService.getAllVendors();
+            setAllVendors(data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id })));
+            setLoader(false);
+            console.log(allVendors, 'allVendors');
+        } catch (e) {
+            setLoader(false);
+            console.log(e, 'error allVendors')
+        }
+    }
+
+    const getRequestionList = async () => {
+        setLoader(true);
+        try {
+            let data = await PurchaseService.getRequestionData()
+            setAllRequisitionIds(data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id })));
+            setLoader(false);
+            console.log(allRequisitionIds, 'requisitionIds');
+        } catch (e) {
+            console.log(e, "=> get requestion list")
+        }
+    }
 
     const handleChange = (event) => {
         setVendorName(event.target.value);
@@ -45,14 +76,29 @@ export const Quotations = () => {
     const {
         register: quotationDetails,
         handleSubmit: handleQuotationDetails,
-        formState: { errors: MedicineErrors },
+        setValue,
+        reset,
+        formState: { errors: quotationErrors },
     } = useForm();
 
+    useEffect(() => {
+        getVendors();
+        getRequestionList();
+    }, []);
 
-    const onSubmit = (data) => console.log(watch);;
-    const onsubmitQuotationDetails = (data) => {
-        rows.push(data);
-        updateRows(rows);
+    const resetForm = () => {
+        reset();
+    }
+
+
+    const onSubmit = (data) => console.log(watch);
+    useEffect(() => {
+        console.log(tableData);
+    }, [tableData]);
+    const onsubmitQuotationDetails = async (data) => {
+        setTableData(prevData => [...prevData, data]);
+        reset();
+        
     }
     return (
         <Container>
@@ -77,15 +123,16 @@ export const Quotations = () => {
                             <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
                                 <InputLabel id="demo-select-small-label">{FORM_LABELS.VENDOR_NAME}</InputLabel>
                                 <Select
+                                    size="small"
                                     labelId="demo-select-small-label"
                                     id="demo-select-small"
                                     value={vendorName}
-                                    label={FORM_LABELS.VENDOR_NAME}
+                                    label="Vendor Name"
                                     onChange={handleChange}
                                 >
-                                    <MenuItem value="none">
-                                        <em>None</em>
-                                    </MenuItem>
+                                    {allVendors && allVendors?.map((vendor) => <MenuItem value={vendor?.id}>
+                                        {vendor?.vendorName}
+                                    </MenuItem>)}
                                 </Select>
                             </FormControl>
                             <FormControl sx={{ m: 1, minWidth: 220 }} size="small">
@@ -97,9 +144,9 @@ export const Quotations = () => {
                                     label={FORM_LABELS.PURCHASE_REQUISITION_ID}
                                     onChange={handleRequisitionId}
                                 >
-                                    <MenuItem value="none">
-                                        <em>None</em>
-                                    </MenuItem>
+                                   {allRequisitionIds && allRequisitionIds?.map((requisitionId) => <MenuItem value={requisitionId?.id}>
+                                        {requisitionId?.requisitionId}
+                                    </MenuItem>)}
                                 </Select>
                             </FormControl>
 
@@ -120,7 +167,7 @@ export const Quotations = () => {
                     padding: 2,
                     marginTop: 4
                 }}>
-                    <form onSubmit={handleQuotationDetails(onsubmitQuotationDetails)}>
+                    <form onSubmit={handleQuotationDetails(onsubmitQuotationDetails)} onReset={resetForm}>
                         <Box sx={{
                             display: 'flex',
                             flexWrap: "wrap",
@@ -164,23 +211,22 @@ export const Quotations = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {rows.map((row, index) => (
-                                    <StyledTableRow key={row.index}>
+                                {tableData.map((data, index) => (
+                                    <StyledTableRow key={data.index}>
                                         <StyledTableCell>
                                             {index + 1}
                                         </StyledTableCell>
-                                        <StyledTableCell align="center">{row.pharmacologicalName}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.medicineName}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.dose}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.form}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.quantity}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.mrp}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.ptr}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.pts}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.gst}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.gst}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.leastPriceOrders}</StyledTableCell>
-                                        {/* <StyledTableCell align="center">{row.quantity}</StyledTableCell> */}
+                                        <StyledTableCell align="center">{data.pharmacologicalName}</StyledTableCell>
+                                        <StyledTableCell align="center">{data.medicineName}</StyledTableCell>
+                                        <StyledTableCell align="center">{data.dose}</StyledTableCell>
+                                        <StyledTableCell align="center">{data.form}</StyledTableCell>
+                                        <StyledTableCell align="center">{data.quantity}</StyledTableCell>
+                                        <StyledTableCell align="center">{data.mrp}</StyledTableCell>
+                                        <StyledTableCell align="center">{data.ptr}</StyledTableCell>
+                                        <StyledTableCell align="center">{data.pts}</StyledTableCell>
+                                        <StyledTableCell align="center">{data.gst}</StyledTableCell>
+                                        <StyledTableCell align="center">{data.discount}</StyledTableCell>
+                                        {/* <StyledTableCell align="center">{data.quantity}</StyledTableCell> */}
                                     </StyledTableRow>
                                 ))}
                             </TableBody>
