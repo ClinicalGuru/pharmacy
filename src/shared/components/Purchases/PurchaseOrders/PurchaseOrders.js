@@ -44,7 +44,6 @@ export const PurchaseOrders = () => {
 
     return (
         <Container>
-            <Header></Header>
             <Box sx={{
                 padding: 2,
             }}>

@@ -46,7 +46,6 @@ export const MasterList = () => {
     
     return (
         <Container>
-            <Header></Header>
             <Box sx={{
                 padding: 2,
             }}>

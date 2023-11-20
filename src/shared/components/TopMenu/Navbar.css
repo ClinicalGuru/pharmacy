@@ -3,16 +3,20 @@
     z-index: 999;
     position: absolute;
     background: white;
-    padding-left: 0;
+    padding:0;
+    border: 1px solid #eee;
     list-style: none;
-    border-radius: 4px;
-    margin: 0.5rem;
+    margin: 1.1em 0.5rem;
 }
 
 .dropdown li {
     border-top: 1px solid #eee;
-    /* padding-bottom: 8px; */
-    padding: 8px;
+    padding: 12px 22px;
+    cursor: pointer;
+    font-size: 14px;
+}
+.dropdown li:hover {
+    background: #f7f7f3;
 }
 
 .dropdown li:first-child {
@@ -21,6 +25,9 @@
 
 .show {
     display: block !important;
+    opacity: 1;
+  transition: opacity 1s;
+
 }
 
 .menus {

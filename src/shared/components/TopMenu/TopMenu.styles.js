@@ -12,3 +12,7 @@ display: flex;
 export const Li = styled.li`
 padding-left: 10px
 `
+
+export const MenuItemWrapper = styled.span `
+    color: #565D6DFF
+`

@@ -65,7 +65,6 @@ export const Quotations = () => {
     }
     return (
         <Container>
-            <Header></Header>
             <Box sx={{
                 padding: 2,
             }}>

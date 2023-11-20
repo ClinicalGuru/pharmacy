@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
+import { useNavigate } from 'react-router-dom';
 import Dropdown from './Dropdown';
-
+import { MenuItemWrapper } from "./TopMenu.styles";
 const MenuItems = ({ items, depthLevel }) => {
     const [dropdown, setDropdown] = useState(false);
+    const navigate = useNavigate();
     let ref = useRef();
     useEffect(() => {
         const handler = (event) => {
@@ -27,6 +28,9 @@ const MenuItems = ({ items, depthLevel }) => {
     const onMouseLeave = () => {
         window.innerWidth > 960 && setDropdown(false);
     };
+    const onNavigate = (item) => {
+        navigate(`${item?.url}`);
+    }
     return (
         <li className="menu-items" ref={ref}
             onClick={clickHandler}
@@ -45,7 +49,7 @@ const MenuItems = ({ items, depthLevel }) => {
                     <Dropdown depthLevel={depthLevel} submenus={items.submenu} dropdown={dropdown} />
                 </>
             ) : (
-                <a href={items.url}>{items.title}</a>
+                <MenuItemWrapper onClick={() => onNavigate(items)}>{items.title}</MenuItemWrapper>
             )}
         </li>
     );

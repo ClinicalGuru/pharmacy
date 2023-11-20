@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Form } from "../Forms/index";
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -29,7 +29,9 @@ import { Loader } from "../../components/Loader";
 export const SignIn = () => {
     let template = {
         title: '',
-        submitButttonText:'Log in',
+        formStyles: {
+            backgroundColor: "#eee",
+        },
         fields: [
             {
                 title: 'Email',
@@ -62,7 +64,26 @@ export const SignIn = () => {
             //         }
             //     ]
             // }
+        ],
+        btns: [
+            {
+                btn_text: "Log In",
+                styles: {
+                    width: "100%",
+                    color: "#FFFFFF",
+                    fontSize: "16px",
+                    padding: "0.5rem",
+                    margin: "2rem 0"
+                }
+            }
         ]
+    }
+    const btn_styles = {
+        // width: "100 %",
+        // padding: "0.75rem",
+        margin: "2rem 0",
+        color: "white",
+        fontSize: "16px"
     }
     const [open, setLoader] = useState(false);
     const navigate = useNavigate();
@@ -79,11 +100,11 @@ export const SignIn = () => {
         <Container>
             <RightSection>
                 <LogoImg src={require('../../../assets/img/logo.png')} />
-                <Typography 
-                variant="h4"
-                color="#6F7787FF"
-                align="center"
-                paddingTop={7}>
+                <Typography
+                    variant="h4"
+                    color="#6F7787FF"
+                    align="center"
+                    paddingTop={7}>
                     {WELCOME_BACK_TEXT}
                 </Typography >
                 <Typography
@@ -124,6 +145,8 @@ export const SignIn = () => {
                         onSubmit={onSubmit}
                         // watchFields={['firstname', 'link']}
                         validate={validate}
+                        showSubmitButton={true}
+                        btn_styles={btn_styles}
                     />
                     <Typography
                         variant="h7"

@@ -11,13 +11,14 @@ export const Form = ({
     dynamic,
     showClearFormButton = false,
     showSubmitButton = false,
-    form_styles
+    form_styles,
+    btn_styles
 }) => {
     let { register, handleSubmit, watch, setError, clearErrors, formState: { errors } } = useForm();
     let watchValues = watch(watchFields);
     console.log(watchValues, 'watchValues')
     validate(watchValues, { setError, clearErrors });
-    let { title, fields, submitButttonText, clearFormBtnText, formStyles } = template;
+    let { title, fields, formStyles, btns } = template;
     const renderFields = (fields) => {
         return fields.map(field => {
             let { title, type, name, validationProps, dynamic, options, style } = field;
@@ -100,17 +101,23 @@ export const Form = ({
 
         })
     }
+    console.log(btns, "btns")
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             {title && <h4>{title}</h4>}
             <div style={form_styles}>
                 {renderFields(fields)}
             </div>
-            <div style={{ display: "flex", gap: "20px 20px", justifyContent: "end" }}>
-                {showSubmitButton && <SubmitButton type="submit" className="btn">{submitButttonText}</SubmitButton>}
-                {showClearFormButton && <SubmitButton type="submit" className="btn">{clearFormBtnText}</SubmitButton>}
+            <div style={btn_styles}>
+                {
+                    btns && btns?.map((button) => {
+                        return (
+                            <SubmitButton style={button?.styles} type="submit" className="btn"> {button?.btn_text}</SubmitButton>);
+                    })
+                }
+                {/* {showClearFormButton && <SubmitButton type="submit" className="btn">{clearFormBtnText}</SubmitButton>} */}
             </div>
 
-        </form>
+        </form >
     );
 }

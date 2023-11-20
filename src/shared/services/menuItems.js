@@ -58,7 +58,7 @@ export const menuItems = [
         submenu: [
             {
                 title: 'Billing',
-                url: 'web-design',
+                url: 'sales/billing',
             },
             {
                 title: 'List of all Bills',

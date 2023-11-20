@@ -4,20 +4,11 @@ import { FORM_LABELS } from "../../Constants/index";
 
 //material ui
 import { Box } from "@mui/material";
-// import Table from '@mui/material/Table';
-// import TableBody from '@mui/material/TableBody';
-// import TableContainer from '@mui/material/TableContainer';
-// import TableHead from '@mui/material/TableHead';
-// import TableRow from '@mui/material/TableRow';
-// import Paper from '@mui/material/Paper';
-
-// import { StyledTableRow, StyledTableCell } from "../../Styles/CommonStyles";
-// import { styled } from '@mui/material/styles';
 import { Form } from "../Forms/index";
 import { Table } from "../Table";
 
 export const Sales = () => {
-    // const [rows, updateRows] = useState([]);
+    const [modalOpen, setModalOpen] = useState(false);
     const patient_details_template = {
         title: '',
         submitButttonText: 'Log in',
@@ -112,7 +103,7 @@ export const Sales = () => {
                     width: "194px"
                 }
             },
-        ]
+        ],
     };
     const medicine_details_template = {
         title: '',
@@ -204,6 +195,14 @@ export const Sales = () => {
                     required: `${FORM_LABELS.AMOUNT} is required`
                 },
             },
+        ],
+        btns: [
+            {
+                btn_text: "+ Add",
+            },
+            {
+                btn_text: "Clear",
+            }
         ]
     };
     const bill_details = {
@@ -279,28 +278,63 @@ export const Sales = () => {
                 type: 'text',
                 name: FORM_LABELS.ADD_REMARKS
             },
+        ],
+        btns: [
+            {
+                btn_text: "+ Add",
+            },
+            {
+                btn_text: "Clear",
+            }
         ]
     };
     const patient_details_style = {
         display: "flex",
         gap: "28px 10px",
         justifyContent: "space-around"
-    }
+    };
     const medicine_details_style = {
         display: "flex",
         gap: "28px 28px",
         justifyContent: 'space-around'
-    }
-    const onSubmit = (form) => {
-        // setLoader(true);
-        console.log(form);
-        // navigate('/landing');
-        // setLoader(false);
     };
-
+    const btn_styles = { display: "flex", gap: "20px 20px", justifyContent: "end" };
+    const [rows, setRows] = useState([
+        {
+            page: "Home",
+            description: "This is the main page of the website",
+            status: "live",
+        },
+        {
+            page: "About Us",
+            description: "This page has details about the company",
+            status: "draft",
+        },
+        {
+            page: "Pricing",
+            description: "Prices for different subscriptions",
+            status: "error",
+        },
+    ]);
+    const onSubmit = (form) => {
+        console.log(form);
+    };
+    const onAddMedicine = (formData) => {
+        console.log(formData);
+    }
     const validate = (watchValues, errorMethods) => {
         console.log(watchValues, 'watchValues')
     }
+    const [rowToEdit, setRowToEdit] = useState(null);
+
+    const handleDeleteRow = (targetIndex) => {
+        setRows(rows.filter((_, idx) => idx !== targetIndex));
+    };
+
+    const handleEditRow = (idx) => {
+        setRowToEdit(idx);
+        setModalOpen(true);
+    };
     return (
         <Box sx={{
             padding: 2,
@@ -311,6 +345,7 @@ export const Sales = () => {
                 validate={validate}
                 showSubmitButton={false}
                 form_styles={patient_details_style}
+                btn_styles={btn_styles}
             />
             <Box
                 sx={{
@@ -322,11 +357,12 @@ export const Sales = () => {
             >
                 <Form
                     template={medicine_details_template}
-                    onSubmit={onSubmit}
+                    onSubmit={onAddMedicine}
                     validate={validate}
                     showSubmitButton={true}
                     showClearFormButton={true}
                     form_styles={medicine_details_style}
+                    btn_styles={btn_styles}
                 />
             </Box>
             <Box sx={{
@@ -342,10 +378,11 @@ export const Sales = () => {
                     showSubmitButton={true}
                     showClearFormButton={true}
                     form_styles={medicine_details_style}
+                    btn_styles={btn_styles}
                 />
             </Box>
             <Box sx={{ marginTop: 3 }}>
-                <Table />
+                <Table rows={rows} deleteRow={handleDeleteRow} editRow={handleEditRow} />
             </Box>
         </Box>
     )
