@@ -21,14 +21,14 @@ const Router = createBrowserRouter([
         children: [
             {
                 path: "",
-                element: <AllBills />,
+                element: <Sales />,
             },
             {
                 path: "sales",
                 children: [
                     {
                         path: "",
-                        element: <AllBills />,
+                        element: <Sales />,
                     },
                     {
                         path: "billing",

@@ -47,10 +47,6 @@ export const PurchaseOrders = () => {
             <Box sx={{
                 padding: 2,
             }}>
-                <Box>
-                    <Typography fontSize={"20px"}
-                        mb={3}> PURCHASE ORDERS</Typography>
-                </Box>
                 <Box sx={{
                     display: "flex",
                     justifyContent: "space-between",

@@ -36,19 +36,19 @@ export const menuItems = [
     },
     {
         title: 'Inventory',
-        url: '/inventory',
+        url: '',
         submenu: [
             {
                 title: 'Add Invoice',
-                url: '/addInvoice',
+                url: 'inventory/addInvoice',
             },
             {
                 title: 'Pharmacy inventory',
-                url: 'web-dev',
+                url: 'inventory/pharmacyInventory',
             },
             {
                 title: 'Add Manufacturer',
-                url: 'seo',
+                url: 'inventory/addManufacturer',
             }
         ]
     },

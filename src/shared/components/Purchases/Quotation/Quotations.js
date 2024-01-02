@@ -68,10 +68,6 @@ export const Quotations = () => {
             <Box sx={{
                 padding: 2,
             }}>
-                <Box>
-                    <Typography fontSize={"20px"}
-                        mb={3}> QUOTATIONS</Typography>
-                </Box>
                 <Box sx={{
                     display: "flex",
                     justifyContent: "space-between",

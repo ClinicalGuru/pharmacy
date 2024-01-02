@@ -123,15 +123,9 @@ export const AddInvoice = () => {
     );
 
     return (
-        <Container>
-            <Header></Header>
             <Box sx={{
                 padding: 2,
             }}>
-                <Box>
-                    <Typography fontSize={"20px"}
-                        mb={3}> ADD INVOICE</Typography>
-                </Box>
                 <Box sx={{
                     display: "flex",
                     justifyContent: "space-between",
@@ -305,7 +299,6 @@ export const AddInvoice = () => {
                     <input type="submit" value={`Print`} />
                 </Box>
             </Box >
-        </Container>
 
     )
 }

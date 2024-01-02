@@ -95,10 +95,6 @@ export const AllBills = () => {
             padding: 2,
         }}>
             <Box>
-                <Typography fontSize={"20px"}
-                    mb={3}> ALL BILLS</Typography>
-            </Box>
-            <Box>
                 <Box sx={{
                     marginLeft: ""
                 }}>

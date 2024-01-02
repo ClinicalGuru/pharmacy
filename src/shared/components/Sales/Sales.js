@@ -352,7 +352,7 @@ export const Sales = () => {
                     backgroundColor: '#eef0f3',
                     borderRadius: '4px',
                     padding: 2,
-                    marginTop: 4
+                    marginTop: '5px'
                 }}
             >
                 <Form
@@ -369,7 +369,7 @@ export const Sales = () => {
                 backgroundColor: '#eef0f3',
                 borderRadius: '4px',
                 padding: 2,
-                marginTop: 4
+                marginTop: '4px'
             }}>
                 <Form
                     template={bill_details}

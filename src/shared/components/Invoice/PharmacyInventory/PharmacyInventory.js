@@ -38,15 +38,9 @@ export const PharmacyInventory = () => {
     const onSubmit = (data) => console.log(watch);;
 
     return (
-        <Container>
-            <Header></Header>
             <Box sx={{
                 padding: 2,
             }}>
-                <Box>
-                    <Typography fontSize={"20px"}
-                        mb={3}> PHARMACY INVENTORY</Typography>
-                </Box>
                 <Box sx={{
                     display: "flex",
                     justifyContent: "space-between",
@@ -135,7 +129,6 @@ export const PharmacyInventory = () => {
                     </TableContainer>
                 </Box>
             </Box >
-        </Container>
 
     )
 }

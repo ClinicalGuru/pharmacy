@@ -18,7 +18,7 @@ export const Form = ({
     let watchValues = watch(watchFields);
     console.log(watchValues, 'watchValues')
     validate(watchValues, { setError, clearErrors });
-    let { title, fields, formStyles, btns } = template;
+    let { title, fields, formStyles, btns, isBlockLevelBtns = true } = template;
     const renderFields = (fields) => {
         return fields.map(field => {
             let { title, type, name, validationProps, dynamic, options, style } = field;
@@ -91,6 +91,14 @@ export const Form = ({
                             {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
                         </div>
                     )
+                case 'date':
+                    return (
+                        <div key={name}>
+                            <Box sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
+                            <input style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
+                            {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
+                        </div>
+                    )
                 default:
                     return (
                         <div>
@@ -101,23 +109,28 @@ export const Form = ({
 
         })
     }
-    console.log(btns, "btns")
+    console.log(btns, "btns");
+
+    const butttons = (btns) => {
+        return btns && btns?.map((button) => {
+            return (
+                <SubmitButton style={button?.styles} type="submit" className="btn"> {button?.btn_text}</SubmitButton>);
+        })
+    }
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             {title && <h4>{title}</h4>}
             <div style={form_styles}>
                 {renderFields(fields)}
+                {/* to render buttons in same line */}
+                {!isBlockLevelBtns && <span> <Box sx ={{display: 'flex', marginTop: '28px'}}>
+                    {butttons(btns)}</Box></span>} 
             </div>
-            <div style={btn_styles}>
-                {
-                    btns && btns?.map((button) => {
-                        return (
-                            <SubmitButton style={button?.styles} type="submit" className="btn"> {button?.btn_text}</SubmitButton>);
-                    })
-                }
+             {/* to render buttons in next line */}
+            {isBlockLevelBtns && <div style={btn_styles}>
+                {butttons(btns)}
                 {/* {showClearFormButton && <SubmitButton type="submit" className="btn">{clearFormBtnText}</SubmitButton>} */}
-            </div>
-
+            </div>}
         </form >
     );
 }
