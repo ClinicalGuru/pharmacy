@@ -1,49 +1,52 @@
 import React from "react";
 
-import { BsFillTrashFill, BsFillPencilFill } from "react-icons/bs";
-
+import EditSharpIcon from '@mui/icons-material/EditSharp';
+import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
 import "./Table.css";
 
-export const Table = ({ rows, deleteRow, editRow }) => {
+export const Table = ({ headArray, gridArray }) => {
+  console.log(headArray, gridArray);
   return (
     <div className="table-wrapper">
       <table className="table">
         <thead>
+
           <tr>
-            <th>Page</th>
-            <th className="expand">Description</th>
-            <th>Status</th>
-            <th>Actions</th>
+            <th>S.No</th>
+            {
+              headArray && headArray.map(item => <th className="expand">{item?.head}</th>)
+            }
+            {
+              headArray && headArray?.head === "Action" && <th>
+                Action
+              </th>
+            }
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, idx) => {
-            const statusText =
-              row.status.charAt(0).toUpperCase() + row.status.slice(1);
-
+          {gridArray && gridArray?.map((row, i) => {
             return (
-              <tr key={idx}>
-                <td>{row.page}</td>
-                <td className="expand">{row.description}</td>
-                <td>
-                  <span className={`label label-${row.status}`}>
-                    {statusText}
-                  </span>
-                </td>
-                <td className="fit">
-                  <span className="actions">
-                    <BsFillTrashFill
-                      className="delete-btn"
-                      onClick={() => deleteRow(idx)}
-                    />
-                    <BsFillPencilFill
-                      className="edit-btn"
-                      onClick={() => editRow(idx)}
-                    />
-                  </span>
-                </td>
+              <tr>
+                <td>{i + 1}</td>
+                {
+                  headArray && headArray?.map(item => <td className="expand">{row[item?.fieldName]}</td>)
+                }
+                {
+                  headArray && headArray?.head === "Action" && <td>
+                    <span className="actions">
+                      <EditSharpIcon
+                        className="delete-btn"
+                        onClick={() => alert()}
+                      />
+                      <DeleteOutlineSharpIcon
+                        className="edit-btn"
+                        onClick={() => alert()}
+                      />
+                    </span>
+                  </td>
+                }
               </tr>
-            );
+            )
           })}
         </tbody>
       </table>

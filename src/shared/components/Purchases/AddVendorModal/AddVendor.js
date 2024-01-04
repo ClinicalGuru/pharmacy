@@ -14,7 +14,7 @@ import PurchaseService from "../../../services/Purchase.service";
 import { Loader } from "../../../components/Loader";
 
 
-export const AddVendor = ({ showModal, action }) => {
+export const AddVendor = ({ showModal, action, refreshVendorNewVendors }) => {
     const [open, setOpen] = useState(false);
     const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
     const {
@@ -39,6 +39,7 @@ export const AddVendor = ({ showModal, action }) => {
             await PurchaseService.addVendor(data);
             action(!showModal);
             reset();
+            refreshVendorNewVendors();
         } catch (e) {
             setOpen(false);
             console.log(e, 'error')
@@ -74,7 +75,7 @@ export const AddVendor = ({ showModal, action }) => {
                             justifyContent: "space-between"
                         }}>
                             <div>
-                                <TextField error={vendorDetailsErrors.vendorName?.type === "required"} id="outlined-basic"  {...vendorDetails("vendorName", { required: true })} label={FORM_LABELS.VENDOR_NAME} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
+                                <TextField error={vendorDetailsErrors.vendorName?.type === "required"} id="outlined-basic"  {...vendorDetails("name", { required: true })} label={FORM_LABELS.VENDOR_NAME} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
                             </div>
                             <div>
                                 <TextField error={vendorDetailsErrors.gst?.type === "required"} id="outlined-basic"  {...vendorDetails("gst", { required: true })} label={FORM_LABELS.GST} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
