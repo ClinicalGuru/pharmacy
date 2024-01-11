@@ -25,6 +25,8 @@
   .table th,
   .table td {
     padding: 0.8rem;
+    /* display: flex; */
+    justify-content: space-between;
   }
   
   .table td {

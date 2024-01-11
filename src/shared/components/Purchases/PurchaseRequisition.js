@@ -250,6 +250,15 @@ export const PurchaseRequisition = () => {
                 <Table headArray={headArray} gridArray={rows} />
             </Box>
             {modalOpen && <AddVendor showModal={modalOpen} action={() => setModalOpen(!modalOpen)} refreshVendorNewVendors={() => refreshVendorNewVendors} />}
+            <div>
+                {rows.length > 0 && (
+                    <Box sx ={{display: 'flex',justifyContent: 'end', marginTop: '10px '}}>
+                        <Button variant="contained">Save</Button>
+                    </Box>
+                )}
+                
+            </div>
         </Box>
+
     )
 }
