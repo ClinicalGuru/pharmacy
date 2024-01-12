@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FORM_LABELS } from "../../Constants/index";
 
 import { Box } from "@mui/material";
@@ -14,6 +14,7 @@ export const PurchaseRequisition = () => {
     const [vendorDetails, SetVendorDetails] = useState([]);
     const [rowToEdit, setRowToEdit] = useState(null);
     const [rows, setRows] = useState([]);
+    const [selectedVendor, setSelectedVendor] = useState({})
     const headArray = [
         {
             'head': 'Pharmacological Name',
@@ -39,7 +40,7 @@ export const PurchaseRequisition = () => {
             'head': 'Action',
             'fieldName': ''
         }
-    ]
+    ];
     let vendor_details_template = {
         title: '',
         submitButttonText: 'Log in',
@@ -51,7 +52,7 @@ export const PurchaseRequisition = () => {
 
                 title: 'Vendor Name',
                 type: 'select',
-                name: 'select',
+                name: 'vendorName',
                 options: [
                     {
                         value: "none",
@@ -80,9 +81,9 @@ export const PurchaseRequisition = () => {
                 style: {
                     width: "194px"
                 }
-            },
-
+            }
         ],
+        watchFields: ['vendorName', 'date']
     };
     const medicine_details_template = {
         title: '',
@@ -92,6 +93,7 @@ export const PurchaseRequisition = () => {
             backgroundColor: "#FFFFFF",
         },
         isBlockLevelBtns: false,
+        watchFields: [],
         fields: [
             {
                 title: FORM_LABELS.PHARMACOLOGICAL_NAME,
@@ -172,22 +174,27 @@ export const PurchaseRequisition = () => {
         console.log(form);
     };
     const onAddMedicine = (formData) => {
-        const updatedRows = [...rows, formData]
+        const updatedRows = [...rows, formData];
         setRows(updatedRows);
         console.log(rows, 'medicine added');
     };
-    const validate = (watchValues, errorMethods) => {
-        // console.log(watchValues, 'watchValues')
-    };
+    const validate = useCallback((watchValues, errorMethods) => {
+        setSelectedVendor(prevState => ({
+            ...prevState,
+            vendorId: watchValues.vendorName?.id || '',
+            date: watchValues.date || ''
+        }));
+        console.log('selectedVendor')
+    }, []);
 
-    const handleDeleteRow = (targetIndex) => {
-        setRows(rows.filter((_, idx) => idx !== targetIndex));
-    };
+    // const handleDeleteRow = (targetIndex) => {
+    //     setRows(rows.filter((_, idx) => idx !== targetIndex));
+    // };
 
-    const handleEditRow = (idx) => {
-        setRowToEdit(idx);
-        setModalOpen(true);
-    };
+    // const handleEditRow = (idx) => {
+    //     setRowToEdit(idx);
+    //     setModalOpen(true);
+    // };
     const getVendors = async () => {
         // setLoader(true);
         try {
@@ -208,7 +215,15 @@ export const PurchaseRequisition = () => {
     };
     useEffect(() => {
         getVendors();
-    }, []);
+    });
+    const savePurchageRequisition = () => {
+        // const data = {
+        //     vendorDetails: form
+        // }
+    }
+    const printPurchageRequisition = () => {
+
+    }
     return (
         <Box sx={{
             padding: 2,
@@ -250,6 +265,10 @@ export const PurchaseRequisition = () => {
                 <Table headArray={headArray} gridArray={rows} />
             </Box>
             {modalOpen && <AddVendor showModal={modalOpen} action={() => setModalOpen(!modalOpen)} refreshVendorNewVendors={() => refreshVendorNewVendors} />}
+            {rows.length > 0 && <Box>
+                <Button variant="contained" onClick={() => savePurchageRequisition()}>Save</Button>
+                <Button variant="contained" onClick={() => printPurchageRequisition()}>Print</Button>
+            </Box>}
         </Box>
     )
 }

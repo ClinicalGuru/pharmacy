@@ -31,5 +31,9 @@ class PurchaseService {
     getRequestionData = () => {
         return getDocs(requisitionCollectionRef);
     }
+
+    savingPurchageRequesition = async (data) => {
+
+    }
 }
 export default new PurchaseService();

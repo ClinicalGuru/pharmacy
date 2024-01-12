@@ -7,7 +7,6 @@ import { AutoComplete } from "../autoComplete/index"
 export const Form = ({
     template,
     onSubmit,
-    watchFields,
     validate,
     dynamic,
     showClearFormButton = false,
@@ -16,10 +15,10 @@ export const Form = ({
     btn_styles
 }) => {
     let { register, handleSubmit, watch, setError, clearErrors, formState: { errors } } = useForm();
+    let { title, fields, formStyles, btns, isBlockLevelBtns = true, watchFields } = template;
+    console.log(watchFields, 'watch form')
     let watchValues = watch(watchFields);
-    // console.log(watchValues, 'watchValues')
     validate(watchValues, { setError, clearErrors });
-    let { title, fields, formStyles, btns, isBlockLevelBtns = true } = template;
     const renderFields = (fields) => {
         return fields.map(field => {
             let { title, type, name, validationProps, dynamic, options, style } = field;
