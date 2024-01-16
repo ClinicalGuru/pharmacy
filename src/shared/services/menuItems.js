@@ -19,6 +19,10 @@ export const menuItems = [
                 title: 'Purchase Order',
                 url: 'purchase/order',
             },
+            {
+                title: 'Purchase Payments',
+                url: 'purchase/payments',
+            },
             // {
             //     title: 'Backend',
             //     submenu: [

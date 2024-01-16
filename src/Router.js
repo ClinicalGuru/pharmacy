@@ -5,6 +5,7 @@ import { Quotations } from "./shared/components/Purchases/Quotation/index";
 import { PurchaseOrders } from "./shared/components/Purchases/PurchaseOrders";
 import { MasterList } from "./shared/components/Purchases/MasterList";
 import { AddInvoice } from "./shared/components/Invoice";
+import { Payments} from "./shared/components/Purchases/PurchasePayments/index"
 import "./index.css";
 import { PharmacyInventory } from "./shared/components/Invoice/PharmacyInventory/index";
 import { AllBills } from "./shared/components/Sales/AllBills/AllBills";
@@ -58,6 +59,10 @@ const Router = createBrowserRouter([
                     {
                         path: "order",
                         element: <PurchaseOrders />
+                    },
+                    {
+                        path: "payments",
+                        element: <Payments />
                     },
                     {
                         path: "masterList",
