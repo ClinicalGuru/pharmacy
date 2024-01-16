@@ -72,23 +72,23 @@ export const menuItems = [
     },
     {
         title: 'Reports',
-        url: '/sales',
+        url: '',
         submenu: [
             {
                 title: 'Purchase report',
-                url: 'web-design',
+                url: 'reports/purchase',
             },
             {
                 title: 'Inventory report',
-                url: 'web-dev',
+                url: 'reports/inventory',
             },
             {
                 title: 'Sales report',
-                url: 'web-design',
+                url: 'reports/sales',
             },
             {
                 title: 'Important report',
-                url: 'web-dev',
+                url: 'reports/important',
             }
         ]
     }

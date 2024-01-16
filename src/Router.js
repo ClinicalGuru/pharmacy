@@ -5,7 +5,12 @@ import { Quotations } from "./shared/components/Purchases/Quotation/index";
 import { PurchaseOrders } from "./shared/components/Purchases/PurchaseOrders";
 import { MasterList } from "./shared/components/Purchases/MasterList";
 import { AddInvoice } from "./shared/components/Invoice";
-import { Payments} from "./shared/components/Purchases/PurchasePayments/index"
+import { Payments} from "./shared/components/Purchases/PurchasePayments/index";
+
+import { PurchaseReports} from "./shared/components/Reports/PurchaseReports/index";
+import { ImportantReports} from "./shared/components/Reports/ImportantReport/index";
+import { SalesReports} from "./shared/components/Reports/SalesReports/index";
+import { InventoryReport} from "./shared/components/Reports/InventoryReport/index";
 import "./index.css";
 import { PharmacyInventory } from "./shared/components/Invoice/PharmacyInventory/index";
 import { AllBills } from "./shared/components/Sales/AllBills/AllBills";
@@ -86,7 +91,28 @@ const Router = createBrowserRouter([
                         element: <PharmacyInventory />
                     }
                 ]
-            }
+            },
+            {
+                path: "reports",
+                children: [
+                    {
+                        path: "purchase", 
+                        element: <PurchaseReports />,  
+                    },
+                    {
+                        path: "inventory",
+                        element: <InventoryReport />
+                    },
+                    {
+                        path: "sales",
+                        element: <SalesReports />
+                    },
+                    {
+                        path: "Important",
+                        element: <ImportantReports />
+                    },
+                ]
+            },
         ]
     }
 ]);
