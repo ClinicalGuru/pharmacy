@@ -5,7 +5,7 @@ import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
 import "./Table.css";
 
 export const Table = ({ headArray, gridArray }) => {
-  console.log(headArray, gridArray);
+  // console.log(headArray, gridArray);
   return (
     <div className="table-wrapper">
       <table className="table">
@@ -48,6 +48,7 @@ export const Table = ({ headArray, gridArray }) => {
               </tr>
             )
           })}
+          {gridArray?.length === 0 && <div>No data available</div>}
         </tbody>
       </table>
     </div>

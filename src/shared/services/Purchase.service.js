@@ -1,5 +1,5 @@
 import { firestore } from "../../context/firebase";
-import { addDoc, getDocs, collection, setDoc, deleteDoc, doc, query, onSnapshot, writeBatch } from "firebase/firestore";
+import { addDoc, getDocs, collection, setDoc, deleteDoc, doc, query, onSnapshot, writeBatch, where } from "firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
 
 const vendorCollectionRef = collection(firestore, "vendors");
@@ -28,8 +28,14 @@ class PurchaseService {
         }
     }
 
-    getRequestionData = () => {
-        return getDocs(requisitionCollectionRef);
+    getRequesitionData = async (vendorId) => {
+        const queryRef = query(requisitionCollectionRef, where("vendorId", "==", vendorId));
+        const querySnapshot = await getDocs(queryRef);
+
+        // Now you can use the querySnapshot as needed
+        const filteredData = querySnapshot.docs.map(doc => doc.data());
+
+        return filteredData;
     }
 
     savingPurchageRequesition = async (data) => {

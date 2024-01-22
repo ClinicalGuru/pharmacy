@@ -7,18 +7,19 @@ import { AutoComplete } from "../autoComplete/index"
 export const Form = ({
     template,
     onSubmit,
-    validate,
+    onResetForm,
+    // onValidate,
     dynamic,
     showClearFormButton = false,
     showSubmitButton = false,
     form_styles,
-    btn_styles
+    btn_styles,
+    watchFields
 }) => {
-    let { register, handleSubmit, watch, setError, clearErrors, formState: { errors } } = useForm();
-    let { title, fields, formStyles, btns, isBlockLevelBtns = true, watchFields } = template;
-    console.log(watchFields, 'watch form')
+    let { register, handleSubmit, watch, setError, clearErrors, formState: { errors }, reset } = useForm();
+    let { title, fields, formStyles, btns, isBlockLevelBtns = true } = template;
     let watchValues = watch(watchFields);
-    validate(watchValues, { setError, clearErrors });
+    // onValidate(watchValues, { setError, clearErrors });
     const renderFields = (fields) => {
         return fields.map(field => {
             let { title, type, name, validationProps, dynamic, options, style } = field;
@@ -123,7 +124,8 @@ export const Form = ({
             return (
                 <SubmitButton style={button?.styles} type="submit" className="btn"> {button?.btn_text}</SubmitButton>);
         })
-    }
+    };
+    
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             {title && <h4>{title}</h4>}
