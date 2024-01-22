@@ -1,65 +1,287 @@
-import { useForm } from "react-hook-form";
+import React, { useState, useEffect } from 'react';
 import { FORM_LABELS } from "../../Constants/index";
-import { Container } from "./AddInvoice.styles";
-
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
-import { Box, Typography } from "@mui/material";
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import { useState } from "react";
-import * as React from 'react';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import TextField from '@mui/material/TextField';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 
-import { Header } from '../Header/index';
-import { StyledTableRow, StyledTableCell} from '../../Styles/CommonStyles';
+
+import { Box, Typography } from "@mui/material";
+import { Form } from "../Forms/index";
+// import Table from '@mui/material/Table';
+import Button from '@mui/material/Button';
+// import { AddVendor } from "./AddVendorModal";
+import PurchaseService from "../../services/Purchase.service";
+import { Table } from "../Table";
+import { Container } from './AddInvoice.styles'
+
+
 
 export const AddInvoice = () => {
-    const [rows, updateRows] = useState([]);
-    const {
-        register: invoiceDetails,
-        handleSubmit: handleInvoiceDetails,
-        watch,
-        formState: { errors },
-    } = useForm();
+    const [modalOpen, setModalOpen] = useState(false);
+    const [vendorDetails, SetVendorDetails] = useState([]);
+    const [rowToEdit, setRowToEdit] = useState(null);
+    const [rows, setRows] = useState([]);
+    const headArray = [
+        {
+            'head': 'Medicine Details',
+            'fieldName': 'medicineName'
+        },
+        {
+            'head': 'HSN Code',
+            'fieldName': 'hsnCode'
+        },
+        {
+            'head': 'Expiry ',
+            'fieldName': 'expiry'
+        },
+        {
+            'head': 'Units / Strips',
+            'fieldName': 'quantity'
+        },
+        {
+            'head': 'Total Strips',
+            'fieldName': 'totalStrips'
+        },
+        {
+            'head': 'MRP per Strip',
+            'fieldName': 'mrpPerStrip'
+        },
+        {
+            'head': 'Discount',
+            'fieldName': 'discount'
+        },
+        {
+            'head': 'Price per Strip',
+            'fieldName': 'pricePerStrip'
+        },
+        {
+            'head': 'GST',
+            'fieldName': 'gst'
+        },
+        {
+            'head': 'Tax in (rs)',
+            'fieldName': 'tax'
+        },
+        {
+            'head': 'Total Price',
+            'fieldName': 'totalPrice'
+        },
+        {
+            'head': 'Action',
+            'fieldName': ''
+        }
+    ];
 
-    const [vendorName, setVendorName] = React.useState('');
-    const [poNumber, setPoNumber] = React.useState('');
-    const handleChange = (event) => {
-        setVendorName(event.target.value);
+
+    let vendor_details_template = {
+        title: '',
+        submitButttonText: 'Log in',
+        formStyles: {
+            backgroundColor: "#eee",
+        },
+        fields: [
+            {
+
+                title: 'Invoice Number',
+                type: 'select',
+                name: 'select',
+                options: [
+                    {
+                        value: "none",
+                        name: "None",
+                    },
+                ],
+                validationProps: {
+                    required: "Invoice num is required"
+                },
+                style: {
+                    width: "194px"
+                }
+            },
+            {
+
+                title: 'PO Number',
+                type: 'select',
+                name: 'select',
+                options: [
+                    {
+                        value: "none",
+                        name: "None",
+                    },
+                ],
+                validationProps: {
+                    required: "PO Num is required"
+                },
+                style: {
+                    width: "194px"
+                }
+            },
+            {
+
+                title: 'Vendor Name',
+                type: 'select',
+                name: 'select',
+                options: [
+                    {
+                        value: "none",
+                        name: "None",
+                    },
+                    ...vendorDetails.map(vendor => ({
+                        value: vendor.id,
+                        name: vendor.name,
+                        ...vendor
+                    }))
+                ],
+                validationProps: {
+                    required: "Vendor name is required"
+                },
+                style: {
+                    width: "194px"
+                }
+            },
+            {
+                title: 'Invoice Date',
+                type: 'date',
+                name: 'date',
+                validationProps: {
+                    required: "Date is required"
+                },
+                style: {
+                    width: "194px"
+                }
+            },
+
+        ],
     };
-    const handlePoNumber = (event) => {
-        setPoNumber(event.target.value);
+    const medicine_details_template = {
+        title: '',
+        submitButttonText: '+ Add',
+        clearFormBtnText: "Clear",
+        formStyles: {
+            backgroundColor: "#FFFFFF",
+        },
+        isBlockLevelBtns: false,
+        fields: [
+            {
+                title: FORM_LABELS.PHARMACOLOGICAL_NAME,
+                type: 'autoComplete',
+                name: 'pharmacologicalName',
+                validationProps: {
+                    required: `${FORM_LABELS.PHARMACOLOGICAL_NAME} is required`
+                },
+                options: [
+
+                ],
+            },
+            {
+
+                title: FORM_LABELS.MEDICINE_NAME,
+                type: 'autoComplete',
+                name: 'brandName',
+                validationProps: {
+                    required: ` ${FORM_LABELS.MEDICINE_NAME} is required`
+                },
+                options: [
+
+                ],
+            },
+            {
+                title: FORM_LABELS.BATCH_NO,
+                type: 'text',
+                name: 'batchNo',
+                validationProps: {
+                    required: ` ${FORM_LABELS.BATCH_NO} is required`
+                },
+            },
+            {
+                title: FORM_LABELS.HSN_CODE,
+                type: 'text',
+                name: 'hsnCode',
+                validationProps: {
+                    required: `${FORM_LABELS.HSN_CODE} is required`
+                },
+            },
+            {
+                title: FORM_LABELS.EXPIRY,
+                type: 'number',
+                name: 'expiry',
+                validationProps: {
+                    required: `${FORM_LABELS.EXPIRY} is required`
+                },
+            },
+            {
+                title: FORM_LABELS.QUANTITY,
+                type: 'number',
+                name: 'quantity',
+                validationProps: {
+                    required: `${FORM_LABELS.QUANTITY} is required`
+                },
+            },
+            {
+                title: FORM_LABELS.NO_OF_STRIPS,
+                type: 'text',
+                name: 'noOfStrips',
+                validationProps: {
+                    required: ` ${FORM_LABELS.NO_OF_STRIPS} is required`
+                },
+            },
+            {
+                title: FORM_LABELS.FREE_STRIPS,
+                type: 'text',
+                name: 'freeStrips',
+                validationProps: {
+                    required: `${FORM_LABELS.FREE_STRIPS} is required`
+                },
+            },
+            {
+                title: FORM_LABELS.MRP_PER_STRIP,
+                type: 'number',
+                name: 'mrpPerStrip',
+                validationProps: {
+                    required: `${FORM_LABELS.MRP_PER_STRIP} is required`
+                },
+            },
+            {
+                title: FORM_LABELS.DISCOUNT,
+                type: 'text',
+                name: 'discount',
+                validationProps: {
+                    required: ` ${FORM_LABELS.DISCOUNT} is required`
+                },
+            },
+            {
+                title: FORM_LABELS.PRICE_PER_STRIP,
+                type: 'text',
+                name: 'pricePerStrip',
+                validationProps: {
+                    required: `${FORM_LABELS.PRICE_PER_STRIP} is required`
+                },
+            },
+            {
+                title: FORM_LABELS.GST,
+                type: 'number',
+                name: 'gst',
+                validationProps: {
+                    required: `${FORM_LABELS.GST} is required`
+                },
+            },
+            {
+                title: FORM_LABELS.NET_PRICE,
+                type: 'number',
+                name: 'netPrice',
+                validationProps: {
+                    required: `${FORM_LABELS.NET_PRICE} is required`
+                },
+            },
+        ],
+        btns: [
+            {
+                btn_text: "+ Add",
+            },
+            {
+                btn_text: "Clear",
+            }
+        ]
     };
-
-    const {
-        register: billDetails,
-        handleSubmit: handleBillDetails,
-        formState: { errors: billErrors },
-    } = useForm();
-
-    const onSubmit = (data) => console.log(watch);;
-    const onSubmitBillDetails = (data) => {
-        console.log(data, "Medicines");
-        rows.push(data);
-        updateRows(rows);
-        console.log(rows, "Medicines");
-    }
-
-
 
     const card1 = (
         <React.Fragment>
@@ -122,183 +344,124 @@ export const AddInvoice = () => {
         </React.Fragment>
     );
 
+    const vendor_details_style = {
+        display: "flex",
+        gap: "28px 30px",
+        // justifyContent: "space-around"
+    };
+    const medicine_details_style = {
+        display: "flex",
+        gap: "0px 28px",
+        flexWrap: 'wrap'
+    };
+    const btn_styles = { display: "flex", justifyContent: "end" };
+    const onSubmit = (form) => {
+        console.log(form);
+    };
+    const onAddMedicine = (formData) => {
+        const updatedRows = [...rows, formData]
+        setRows(updatedRows);
+        console.log(rows, 'medicine added');
+    };
+    const validate = (watchValues, errorMethods) => {
+        // console.log(watchValues, 'watchValues')
+    };
+
+    const handleDeleteRow = (targetIndex) => {
+        setRows(rows.filter((_, idx) => idx !== targetIndex));
+    };
+
+    const handleEditRow = (idx) => {
+        setRowToEdit(idx);
+        setModalOpen(true);
+    };
+    const getVendors = async () => {
+        // setLoader(true);
+        try {
+            let data = await PurchaseService.getAllVendors();
+            const result = data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }));
+            SetVendorDetails(result);
+            console.log(vendor_details_template, 'vendor_details_template', result)
+            // setAllVendors(data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id })));
+            // setLoader(false);
+            // console.log(allVendors, 'allVendors');
+        } catch (e) {
+            // setLoader(false);
+            console.log(e, 'error allVendors')
+        }
+    };
+    const refreshVendorNewVendors = () => {
+        getVendors();
+    };
+    useEffect(() => {
+        getVendors();
+    }, []);
     return (
-            <Box sx={{
-                padding: 2,
-            }}>
-                <Box sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center"
-                }}>
-                    <form onSubmit={handleInvoiceDetails(onSubmit)}>
-                        <Box sx={{
-                            display: 'flex',
-                            alignItems: 'baseline'
-                        }}>
-                            <TextField id="outlined-basic" label={FORM_LABELS.INVOICE_NUMBER} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF' }} />
-                            <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
-                                <InputLabel id="demo-select-small-label">{FORM_LABELS.PO_NUMBER}</InputLabel>
-                                <Select
-                                    labelId="demo-select-small-label"
-                                    id="demo-select-small"
-                                    value={poNumber}
-                                    label="PO Number"
-                                    onChange={handlePoNumber}
-                                >
-                                    <MenuItem value="none">
-                                        <em>None</em>
-                                    </MenuItem>
-                                </Select>
-                            </FormControl>
-                            <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
-                                <InputLabel id="demo-select-small-label">{FORM_LABELS.VENDOR_NAME}</InputLabel>
-                                <Select
-                                    labelId="demo-select-small-label"
-                                    id="demo-select-small"
-                                    value={vendorName}
-                                    label="Vendor Name"
-                                    onChange={handleChange}
-                                >
-                                    <MenuItem value="none">
-                                        <em>None</em>
-                                    </MenuItem>
-                                </Select>
-                            </FormControl>
-                            <Box sx={{
-                                marginLeft: "2rem"
-                            }}>
-                                <LocalizationProvider dateAdapter={AdapterDayjs} >
-                                    <DemoContainer components={['DatePicker']}>
-                                        <DatePicker
-                                            size="small"
-                                            sx={{
-                                                '& .MuiFormLabel-root': {
-                                                    top: -6
-                                                },
-                                                '& .MuiOutlinedInput-input': {
-                                                    padding: '8.5px 14px'
-                                                }
-                                            }}
-                                            label="Invoice Date" />
-                                    </DemoContainer>
-                                </LocalizationProvider>
-                            </Box>
+        <Box sx={{
+            padding: 2,
+        }}>
+            <Container>
+                <Form
+                    template={vendor_details_template}
+                    onSubmit={onSubmit}
+                    validate={validate}
+                    showSubmitButton={false}
+                    form_styles={vendor_details_style}
+                    btn_styles={btn_styles}
+                />
+            </Container>
 
-                        </Box>
-
-                        {/* <input type="submit" value="Add"/> */}
-                    </form>
-                </Box>
-                <Box sx={{
+            <Box
+                sx={{
                     backgroundColor: '#eef0f3',
                     borderRadius: '4px',
                     padding: 2,
-                    marginTop: 4
-                }}>
-                    <form onSubmit={handleBillDetails(onSubmitBillDetails)}>
-                        <Box sx={{
-                            display: 'flex',
-                            flexWrap: "wrap",
-                            justifyContent: "space-between",
-                            alignItems: "center"
-                        }}>
-                            <TextField id="outlined-basic" label={FORM_LABELS.PHARMACOLOGICAL_NAME} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
-                            <TextField id="outlined-basic" label={FORM_LABELS.MEDICINE_NAME} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
-                            <TextField id="outlined-basic" label={FORM_LABELS.BATCH_NO} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
-                            <TextField id="outlined-basic" label={FORM_LABELS.HSN_CODE} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
-                            <TextField id="outlined-basic" label={FORM_LABELS.EXPIRY} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
-                            <TextField id="outlined-basic" label={FORM_LABELS.UNITS_STRIPS} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
-                            <TextField id="outlined-basic" label={FORM_LABELS.NO_OF_STRIPS} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
-                            <TextField id="outlined-basic" label={FORM_LABELS.FREE_STRIPS} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
-                            <TextField id="outlined-basic" label={FORM_LABELS.MRP_PER_STRIP} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
-                            <TextField id="outlined-basic" label={FORM_LABELS.DISCOUNT} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
-                            <TextField id="outlined-basic" label={FORM_LABELS.PRICE_PER_STRIP} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
-                            <TextField id="outlined-basic" label={FORM_LABELS.GST} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
-                            <TextField id="outlined-basic" label={FORM_LABELS.NET_PRICE} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
-                            <TextField id="outlined-basic" label={FORM_LABELS.ADD_REMARKS} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
-                            <Box sx={{ display: 'flex' }}>
-                                <input type="submit" value={`+ Add`} />
-                                <input type="reset" value={`Clear`} />
-                            </Box>
-                        </Box>
-                    </form>
-                </Box >
-                <Box sx={{
-                    display: 'flex',
-                    justifyContent: 'space-around',
-                    marginTop: '20px'
-                }}>
-                    <Box>
-                        <Card variant="outlined" sx={{ backgroundColor: '#C6F8FF9E' }}>{card1}</Card>
-                    </Box>
-                    <Box>
-                        <Card variant="outlined" sx={{ backgroundColor: '#FEF6F1FF' }}>{card2}</Card>
-                    </Box>
-                    <Box>
-                        <Card variant="outlined" sx={{ backgroundColor: '#F1F4FDFF' }}>{card3}</Card>
-                    </Box>
-                    <Box>
-                        <Card variant="outlined" sx={{ backgroundColor: '#FDF2F2FF' }}>{card4}</Card>
-                    </Box>
-                    <Box>
-                        <Card variant="outlined" sx={{ backgroundColor: '#FEF9EEFF' }}>{card5}</Card>
-                    </Box>
-                </Box>
-                <Box sx={{ marginTop: 3 }}>
-                    <TableContainer component={Paper}>
-                        <Table sx={{ minWidth: 700 }} aria-label="customized table">
-                            <TableHead>
-                                <TableRow>
-                                    <StyledTableCell>S No</StyledTableCell>
-                                    <StyledTableCell align="center">HSN Code</StyledTableCell>
-                                    <StyledTableCell align="center">Mecicine Details</StyledTableCell>
-                                    <StyledTableCell align="center">Expiry</StyledTableCell>
-                                    <StyledTableCell align="center">Units / Strips</StyledTableCell>
-                                    <StyledTableCell align="center">Total Units</StyledTableCell>
-                                    <StyledTableCell align="center">MRP Per Strip</StyledTableCell>
-                                    <StyledTableCell align="center">Discount(%)</StyledTableCell>
-                                    <StyledTableCell align="center">Price per Strip</StyledTableCell>
-                                    <StyledTableCell align="center">GST</StyledTableCell>
-                                    <StyledTableCell align="center">Tax in(rs)</StyledTableCell>
-                                    <StyledTableCell align="center">Total Price</StyledTableCell>
-                                    <StyledTableCell align="center">Actios</StyledTableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {rows.map((row, index) => (
-                                    <StyledTableRow key={row.index}>
-                                        <StyledTableCell>
-                                            {index + 1}
-                                        </StyledTableCell>
-                                        <StyledTableCell align="center">{row.hsnCode}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.pharmacologicalName},&nbsp;{row.medicineName}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.expiry}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.unitsOrStrips}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.totalUnits}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.mrpPerStrip}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.discount}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.pricePerStrip}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.gst}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.tax}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.totalPrice}</StyledTableCell>
-                                    </StyledTableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                    marginTop: '5px'
+                }}
+            >
+                <Form
+                    template={medicine_details_template}
+                    onSubmit={onAddMedicine}
+                    validate={validate}
+                    showSubmitButton={true}
+                    showClearFormButton={true}
+                    form_styles={medicine_details_style}
+                    btn_styles={btn_styles}
+                />
+            </Box>
+            <Box sx={{
+                display: 'flex',
+                justifyContent: 'space-around',
+                marginTop: '20px'
+            }}>
+                <Box>
+                    <Card variant="outlined" sx={{ backgroundColor: '#C6F8FF9E' }}>{card1}</Card>
                 </Box>
                 <Box>
+                    <Card variant="outlined" sx={{ backgroundColor: '#FEF6F1FF' }}>{card2}</Card>
                 </Box>
-                <Box sx={{
-                    marginTop: '15px',
-                    display: 'flex',
-                    justifyContent: 'flex-end'
-                }}>
-                    <input type="submit" value={`Save`} />
-                    <input type="submit" value={`Print`} />
+                <Box>
+                    <Card variant="outlined" sx={{ backgroundColor: '#F1F4FDFF' }}>{card3}</Card>
                 </Box>
-            </Box >
+                <Box>
+                    <Card variant="outlined" sx={{ backgroundColor: '#FDF2F2FF' }}>{card4}</Card>
+                </Box>
+                <Box>
+                    <Card variant="outlined" sx={{ backgroundColor: '#FEF9EEFF' }}>{card5}</Card>
+                </Box>
+            </Box>
+            <Box sx={{ marginTop: 3 }}>
+                <Table headArray={headArray} gridArray={rows} />
+            </Box>
+            <div>
+                {rows.length > 0 && (
+                    <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px ' }}>
+                        <Button variant="contained">Save</Button>
+                    </Box>
+                )}
+
+            </div>
+        </Box>
 
     )
 }

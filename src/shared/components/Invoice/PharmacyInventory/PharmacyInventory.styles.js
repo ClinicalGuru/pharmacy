@@ -18,8 +18,10 @@ export const InvalidInput = styled.input`
 `;
 
 export const Container = styled.div`
-
-`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+`;
 
 export const SearchIconWrapper = styled('div')(({ theme }) => ({
     padding: theme?.spacing(0, 2),

@@ -4,11 +4,56 @@ import { FORM_LABELS } from "../../Constants/index";
 
 //material ui
 import { Box } from "@mui/material";
+import Button from '@mui/material/Button';
 import { Form } from "../Forms/index";
 import { Table } from "../Table";
 
 export const Sales = () => {
     const [modalOpen, setModalOpen] = useState(false);
+    const [rowToEdit, setRowToEdit] = useState(null);
+    const [rows, setRows] = useState([]);
+    const headArray = [
+        {
+            'head': 'Pharmacological Name',
+            'fieldName': 'pharmacologicalName'
+        },
+        {
+            'head': 'Medicine Name',
+            'fieldName': 'medicineName'
+        },
+        {
+            'head': 'Batch',
+            'fieldName': 'batch'
+        },
+        {
+            'head': 'HSN Code',
+            'fieldName': 'hsnCode'
+        },
+        {
+            'head': 'Price',
+            'fieldName': 'price'
+        },
+        {
+            'head': 'Qantity / Strips',
+            'fieldName': 'quantity'
+        },
+        {
+            'head': 'Total',
+            'fieldName': 'total'
+        },
+        {
+            'head': 'Discount (%)',
+            'fieldName': 'discount'
+        },
+        {
+            'head': 'Amount',
+            'fieldName': 'amount '
+        },
+        {
+            'head': 'Action',
+            'fieldName': ''
+        }
+    ]
     const patient_details_template = {
         title: '',
         submitButttonText: 'Log in',
@@ -299,33 +344,17 @@ export const Sales = () => {
         justifyContent: 'space-around'
     };
     const btn_styles = { display: "flex", gap: "20px 20px", justifyContent: "end" };
-    const [rows, setRows] = useState([
-        {
-            page: "Home",
-            description: "This is the main page of the website",
-            status: "live",
-        },
-        {
-            page: "About Us",
-            description: "This page has details about the company",
-            status: "draft",
-        },
-        {
-            page: "Pricing",
-            description: "Prices for different subscriptions",
-            status: "error",
-        },
-    ]);
     const onSubmit = (form) => {
         console.log(form);
     };
     const onAddMedicine = (formData) => {
-        console.log(formData);
-    }
+        const updatedRows = [...rows, formData]
+        setRows(updatedRows);
+        console.log(rows, 'medicine added');
+    };
     const validate = (watchValues, errorMethods) => {
-        console.log(watchValues, 'watchValues')
-    }
-    const [rowToEdit, setRowToEdit] = useState(null);
+        // console.log(watchValues, 'watchValues')
+    };
 
     const handleDeleteRow = (targetIndex) => {
         setRows(rows.filter((_, idx) => idx !== targetIndex));
@@ -382,8 +411,16 @@ export const Sales = () => {
                 />
             </Box>
             <Box sx={{ marginTop: 3 }}>
-                <Table rows={rows} deleteRow={handleDeleteRow} editRow={handleEditRow} />
+                <Table headArray={headArray} gridArray={rows} />
             </Box>
+            <div>
+                {rows.length > 0 && (
+                    <Box sx ={{display: 'flex',justifyContent: 'end', marginTop: '10px '}}>
+                        <Button variant="contained">Save</Button>
+                    </Box>
+                )}
+                
+            </div>
         </Box>
     )
 }
