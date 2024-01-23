@@ -16,6 +16,8 @@ import { PharmacyInventory } from "./shared/components/Invoice/PharmacyInventory
 import { AllBills } from "./shared/components/Sales/AllBills/AllBills";
 import { Sales } from "./shared/components/Sales";
 import { SignIn } from "./shared/components/SignIn";
+import { RequisitionList } from "./shared/components/Reports/PurchaseReports/RequisitionList/index";
+import { QuotationList } from "./shared/components/Reports/PurchaseReports/QuotationList";
 const Router = createBrowserRouter([
     {
         path: "/",
@@ -83,7 +85,7 @@ const Router = createBrowserRouter([
                         element: <AddInvoice />,  // The default route for "/landing" is "/landing/sales/allBills"
                     },
                     {
-                        path: 'addInvoice',
+                        path: 'invoice',
                         element: <AddInvoice />
                     },
                     {
@@ -97,7 +99,17 @@ const Router = createBrowserRouter([
                 children: [
                     {
                         path: "purchase", 
-                        element: <PurchaseReports />,  
+                        element: <PurchaseReports />,
+                        children: [
+                            {
+                                path: "requisitionList",
+                                element: <RequisitionList />,
+                            },
+                            {
+                                path: "quotationList",
+                                element: <QuotationList />,
+                            },
+                        ]  
                     },
                     {
                         path: "inventory",
