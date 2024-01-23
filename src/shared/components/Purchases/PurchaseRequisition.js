@@ -1,20 +1,22 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { FORM_LABELS } from "../../Constants/index";
-
 import { Box } from "@mui/material";
 import { Form } from "../Forms/index";
-// import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import { Container } from "./PurchaseRequisition.styles";
 import { AddVendor } from "./AddVendorModal";
 import PurchaseService from "../../services/Purchase.service";
 import { Table } from "../Table";
+import { PdfFile } from '../Pdf/index';
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { VendorSelection } from "./VendorSelection/index"
+
 export const PurchaseRequisition = () => {
     const [modalOpen, setModalOpen] = useState(false);
-    const [vendorDetails, SetVendorDetails] = useState([]);
-    const [rowToEdit, setRowToEdit] = useState(null);
     const [rows, setRows] = useState([]);
-    const [selectedVendor, setSelectedVendor] = useState({})
+    const [vendorDetails, setVendorDetails] = useState();
+    const btn_styles = { display: "flex", justifyContent: "end" };
+
     const headArray = [
         {
             'head': 'Pharmacological Name',
@@ -41,50 +43,7 @@ export const PurchaseRequisition = () => {
             'fieldName': ''
         }
     ];
-    let vendor_details_template = {
-        title: '',
-        submitButttonText: 'Log in',
-        formStyles: {
-            backgroundColor: "#eee",
-        },
-        fields: [
-            {
 
-                title: 'Vendor Name',
-                type: 'select',
-                name: 'vendorName',
-                options: [
-                    {
-                        value: "none",
-                        name: "None",
-                    },
-                    ...vendorDetails.map(vendor => ({
-                        value: vendor.id,
-                        name: vendor.name,
-                        ...vendor
-                    }))
-                ],
-                validationProps: {
-                    required: "Vendor name is required"
-                },
-                style: {
-                    width: "194px"
-                }
-            },
-            {
-                title: 'Date',
-                type: 'date',
-                name: 'date',
-                validationProps: {
-                    required: "Date is required"
-                },
-                style: {
-                    width: "194px"
-                }
-            }
-        ],
-        watchFields: ['vendorName', 'date']
-    };
     const medicine_details_template = {
         title: '',
         submitButttonText: '+ Add',
@@ -159,87 +118,68 @@ export const PurchaseRequisition = () => {
         ]
     };
 
-    const vendor_details_style = {
-        display: "flex",
-        gap: "28px 30px",
-        // justifyContent: "space-around"
-    };
     const medicine_details_style = {
         display: "flex",
         // gap: "28px 28px",
         justifyContent: 'space-between'
     };
-    const btn_styles = { display: "flex", justifyContent: "end" };
-    const onSubmit = (form) => {
-        console.log(form);
-    };
+
+    const handleVendorSelection = (vendorDetails) => {
+        // vendorDetails?.vendorId = vendorId;
+        setVendorDetails({ vendorId: vendorDetails?.value, date: '' });
+        getFilteredRequestionData(vendorDetails?.value);
+    }
+
+    const handelDateSelection = (value) => {
+        setVendorDetails({ vendorId: vendorDetails?.value, date: value })
+        // getFilteredRequestionData(vendorDetails);
+    }
+
     const onAddMedicine = (formData) => {
-        const updatedRows = [...rows, formData];
+        console.log({ ...formData, ...vendorDetails })
+        const updatedRows = [...rows, { ...formData, ...vendorDetails }];
         setRows(updatedRows);
         console.log(rows, 'medicine added');
     };
+
     const validate = useCallback((watchValues, errorMethods) => {
-        setSelectedVendor(prevState => ({
-            ...prevState,
-            vendorId: watchValues.vendorName?.id || '',
-            date: watchValues.date || ''
-        }));
-        console.log('selectedVendor')
+        console.log('selectedVendor');
     }, []);
 
-    // const handleDeleteRow = (targetIndex) => {
-    //     setRows(rows.filter((_, idx) => idx !== targetIndex));
-    // };
+    // useEffect(() => { console.log('watching') }, [rows, setValue])
 
-    // const handleEditRow = (idx) => {
-    //     setRowToEdit(idx);
-    //     setModalOpen(true);
-    // };
-    const getVendors = async () => {
-        // setLoader(true);
+    const getFilteredRequestionData = async (vendorId) => {
         try {
-            let data = await PurchaseService.getAllVendors();
-            const result = data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }));
-            SetVendorDetails(result);
-            console.log(vendor_details_template, 'vendor_details_template', result)
-            // setAllVendors(data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id })));
-            // setLoader(false);
-            // console.log(allVendors, 'allVendors');
-        } catch (e) {
-            // setLoader(false);
-            console.log(e, 'error allVendors')
+            let data = await PurchaseService.getRequesitionData(vendorId);
+            console.log(data, 'data');
+            const updatedRows = [...data];
+            setRows(updatedRows);
+        } catch (err) {
+            console.log(err, 'error getting requisition data');
         }
     };
-    const refreshVendorNewVendors = () => {
-        getVendors();
-    };
-    useEffect(() => {
-        getVendors();
-    });
-    const savePurchageRequisition = () => {
-        // const data = {
-        //     vendorDetails: form
-        // }
-    }
-    const printPurchageRequisition = () => {
 
-    }
+    const onSaveData = async () => {
+        try {
+            await PurchaseService.addRequisitionData(rows).then(() => {
+                console.log('success');
+            })
+        } catch (err) {
+            console.log(err, 'err add requisition data');
+        }
+    };
+
     return (
         <Box sx={{
             padding: 2,
         }}>
             <Container>
-                <Form
-                    template={vendor_details_template}
-                    onSubmit={onSubmit}
-                    validate={validate}
-                    showSubmitButton={false}
-                    form_styles={vendor_details_style}
-                    btn_styles={btn_styles}
+                <VendorSelection
+                    onSelectVendor={handleVendorSelection}
+                    onSelectDate={handelDateSelection}
                 />
                 <div>
                     <Button variant="contained" onClick={() => setModalOpen(true)}>+ Add Vendor</Button>
-
                 </div>
             </Container>
 
@@ -254,7 +194,7 @@ export const PurchaseRequisition = () => {
                 <Form
                     template={medicine_details_template}
                     onSubmit={onAddMedicine}
-                    validate={validate}
+                    onValidate={validate}
                     showSubmitButton={true}
                     showClearFormButton={true}
                     form_styles={medicine_details_style}
@@ -264,15 +204,19 @@ export const PurchaseRequisition = () => {
             <Box sx={{ marginTop: 3 }}>
                 <Table headArray={headArray} gridArray={rows} />
             </Box>
-            {modalOpen && <AddVendor showModal={modalOpen} action={() => setModalOpen(!modalOpen)} refreshVendorNewVendors={() => refreshVendorNewVendors} />}
+            {modalOpen && <AddVendor showModal={modalOpen} action={() => setModalOpen(!modalOpen)} />}
             <div>
                 {rows.length > 0 && (
-                    <Box sx ={{display: 'flex',justifyContent: 'end', marginTop: '10px '}}>
-                        <Button variant="contained">Save</Button>
+                    <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px ' }}>
+                        <Button variant="contained" onClick={() => onSaveData()}>Save</Button>
                     </Box>
                 )}
-                
+
             </div>
+            {rows.length > 0 && <PDFDownloadLink document={<PdfFile />} filename="FORM">
+                {({ loading }) => (loading ? <button>Loading Document...</button> : <button>Download</button>)}
+            </PDFDownloadLink>
+            }
         </Box>
 
     )
