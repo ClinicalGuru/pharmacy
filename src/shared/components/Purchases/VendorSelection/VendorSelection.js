@@ -83,6 +83,22 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
                     {errors?.inputField && errors.inputField.message}
                 </small>
             </span>
+            <span>
+                <label>Quotation Id</label>
+                <Controller
+                    name="quotationId"
+                    control={control}
+                    render={({ field }) => (
+                        <input type="text"
+                            {...field}
+                            onChange={(e) => handleDateChange(e.target.value)}
+                        />
+                    )}
+                />
+                <small className="text-danger">
+                    {errors?.inputField && errors.inputField.message}
+                </small>
+            </span>
         </form>
     );
 };

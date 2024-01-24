@@ -5,6 +5,7 @@ import Dropdown from './Dropdown';
 import { MenuItemWrapper } from "./TopMenu.styles";
 const MenuItems = ({ items, depthLevel }) => {
     const [dropdown, setDropdown] = useState(false);
+    const [activeId, setActiveId] = useState('purchages')
     const navigate = useNavigate();
     let ref = useRef();
     useEffect(() => {
@@ -40,8 +41,9 @@ const MenuItems = ({ items, depthLevel }) => {
             {items?.submenu ? (
                 <>
                     <button
+                        className={`${items.id === activeId ? 'active' : ''}`}
                         aria-expanded={dropdown ? "true" : "false"}
-                        onClick={() => setDropdown((prev) => !prev)}
+                        onClick={() => { setDropdown((prev) => !prev); setActiveId(items?.id); console.log(activeId, 'activeId') }}
                         type="button" aria-haspopup="menu">
                         {items.title}{' '}
                         {depthLevel > 0 ? <span>&raquo;</span> : <ExpandMoreIcon />}

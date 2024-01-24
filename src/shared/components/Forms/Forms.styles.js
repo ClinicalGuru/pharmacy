@@ -2,25 +2,17 @@ import styled from "styled-components";
 
 export const SubmitButton = styled.button`
 width: auto;
-padding: 6px 12px;
-font-size: 12px;
+padding: 0.5rem;
+font-size: 14px;
+margin-right: 10px;
+font-size: 14px;
 display: flex; 
   align-items: center; 
   justify-content: center; 
   color: #002E34FF; 
   background: #56EBFFFF; 
   border: none; 
-  border-radius: 2px; 
-  :hover {
-    color: #FFFFFFFF; /* white */
-    background: #56EBFFFF; /* primary-500 */
-  }
-  /* Pressed */
-  :hover:active {
-    color: #FFFFFFFF; /* white */
-    background: #56EBFFFF; /* primary-500 */
-  }
-  /* Disabled */
+  border-radius: 4px; 
   :disabled {
     opacity: 0.4; 
   }

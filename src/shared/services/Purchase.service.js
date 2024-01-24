@@ -33,7 +33,7 @@ class PurchaseService {
         const querySnapshot = await getDocs(queryRef);
 
         // Now you can use the querySnapshot as needed
-        const filteredData = querySnapshot.docs.map(doc => doc.data());
+        const filteredData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
 
         return filteredData;
     }

@@ -8,121 +8,105 @@ import Button from '@mui/material/Button';
 import { Container } from "./Quotations.styles";
 // import { AddVendor } from "./AddVendorModal";
 import PurchaseService from "../../../services/Purchase.service";
-import { Table } from "../../Table";
-
+import { EditableTable } from "../../EditableTable";
+import { VendorSelection } from "../VendorSelection/index"
 export const Quotations = () => {
     const [modalOpen, setModalOpen] = useState(false);
-    const [vendorDetails, SetVendorDetails] = useState([]);
+    const [vendorDetails, setVendorDetails] = useState([]);
     const [rowToEdit, setRowToEdit] = useState(null);
     const [rows, setRows] = useState([]);
-    const headArray = [
+    const fields = {
+        mrp: '',
+        ptr: '',
+        pts: '',
+        gst: '',
+        discount: ''
+    }
+    const columns = [
         {
-            'head': 'Pharmacological Name',
-            'fieldName': 'pharmacologicalName'
+            'Header': 'Pharmacological Name',
+            'accessor': 'pharmacologicalName',
+            editEnable: true,
         },
         {
-            'head': 'Brand Name',
-            'fieldName': 'brandName'
+            'Header': 'Brand Name',
+            'accessor': 'brandName'
         },
         {
-            'head': 'Dose',
-            'fieldName': 'dose'
+            'Header': 'Dose',
+            'accessor': 'dose'
         },
         {
-            'head': 'Form',
-            'fieldName': 'form'
+            'Header': 'Form',
+            'accessor': 'form'
         },
         {
-            'head': 'Qantity / Strips',
-            'fieldName': 'quantity'
+            'Header': 'Qantity / Strips',
+            'accessor': 'quantity'
         },
         {
-            'head': 'MRP',
-            'fieldName': 'mrp'
+            'Header': 'MRP',
+            'accessor': 'mrp',
+            editEnable: true,
         },
         {
-            'head': 'PTR',
-            'fieldName': 'ptr'
+            'Header': 'PTR',
+            'accessor': 'ptr',
+            editEnable: true,
         },
         {
-            'head': 'PTS',
-            'fieldName': 'pts'
+            'Header': 'PTS',
+            'accessor': 'pts',
+            editEnable: true,
         },
         {
-            'head': 'GST',
-            'fieldName': 'gst'
+            'Header': 'GST',
+            'accessor': 'gst',
+            editEnable: true,
         },
         {
-            'head': 'Discount',
-            'fieldName': 'discount'
+            'Header': 'Discount',
+            'accessor': 'discount',
+            editEnable: true,
         },
         {
-            'head': 'Action',
-            'fieldName': ''
-        }
+            Header: "Actions",
+            id: "actions",
+            disableSortBy: true,
+            Cell: ({ row, column, cell }) =>
+                row.original.isEditing ? (
+                    <>
+                        <button onClick={() => handleButtonClick("save", row.original)}>
+                            Save
+                        </button>
+                        <button onClick={() => handleButtonClick("cancel", row.original)}>
+                            Cancel
+                        </button>
+                    </>
+                ) : (
+                    <button onClick={() => handleButtonClick("edit", row.original)}>
+                        Edit
+                    </button>
+                ),
+        },
     ]
-    let vendor_details_template = {
-        title: '',
-        submitButttonText: 'Log in',
-        formStyles: {
-            backgroundColor: "#eee",
-        },
-        fields: [
-            {
-
-                title: 'Vendor Name',
-                type: 'select',
-                name: 'select',
-                options: [
-                    {
-                        value: "none",
-                        name: "None",
-                    },
-                    ...vendorDetails.map(vendor => ({
-                        value: vendor.id,
-                        name: vendor.name,
-                        ...vendor
-                    }))
-                ],
-                validationProps: {
-                    required: "Vendor name is required"
-                },
-                style: {
-                    width: "194px"
+    const handleButtonClick = (action, row) => {
+        console.log(action, row)
+        const newData = rows.map((rowData) => {
+            if (rowData.id === row.id) {
+                if (action === "edit") {
+                    console.log(rowData, row, 'loop')
+                    return { ...rowData, isEditing: true, prevData: { ...rowData } };
+                } else if (action === "cancel") {
+                    return { ...rowData, isEditing: false, ...rowData.prevData };
+                } else if (action === "save") {
+                    const { prevData, ...updatedRowData } = rowData;
+                    return { ...updatedRowData, isEditing: false };
                 }
-            },
-            {
-
-                title: FORM_LABELS.PURCHASE_REQUISITION_ID,
-                type: 'select',
-                name: 'select',
-                options: [
-                    {
-                        value: "none",
-                        name: "None",
-                    },
-                    
-                ],
-                validationProps: {
-                    required: "Vendor name is required"
-                },
-                style: {
-                    width: "194px"
-                }
-            },
-            {
-                title: FORM_LABELS.QUOTATION_ID,
-                type: 'text',
-                name: 'quotationId',
-                validationProps: {
-                    required: "Quotation Id is required"
-                },
-                style: {
-                    width: "194px"
-                }
-            },
-
-        ],
+            }
+            return rowData;
+        });
+        setRows(newData);
     };
     const medicine_details_template = {
         title: '',
@@ -236,12 +220,6 @@ export const Quotations = () => {
             }
         ]
     };
-
-    const vendor_details_style = {
-        display: "flex",
-        gap: "28px 30px",
-        // justifyContent: "space-around"
-    };
     const medicine_details_style = {
         display: "flex",
         flexWrap: 'wrap',
@@ -257,51 +235,53 @@ export const Quotations = () => {
         setRows(updatedRows);
         console.log(rows, 'medicine added');
     };
-    
+
     const validate = (watchValues, errorMethods) => {
         // console.log(watchValues, 'watchValues')
-    };
-    const handleDeleteRow = (targetIndex) => {
-        setRows(rows.filter((_, idx) => idx !== targetIndex));
-    };
-
-    const handleEditRow = (idx) => {
-        setRowToEdit(idx);
-        setModalOpen(true);
     };
     const getVendors = async () => {
         try {
             let data = await PurchaseService.getAllVendors();
             const result = data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }));
-            SetVendorDetails(result);
-            console.log(vendor_details_template, 'vendor_details_template', result)
+            setVendorDetails(result);
+            console.log(result, 'result', rows)
         } catch (e) {
             console.log(e, 'error allVendors')
         }
     };
-    const refreshVendorNewVendors = () => {
-        getVendors();
-    };
     useEffect(() => {
         getVendors();
     }, []);
+    const getFilteredRequestionData = async (vendorId) => {
+        try {
+            let data = await PurchaseService.getRequesitionData(vendorId);
+            console.log(data, 'data');
+
+            const updatedRows = data?.map((item) => ({...item, ...fields}));
+            setRows([...updatedRows]);
+        } catch (err) {
+            console.log(err, 'error getting requisition data');
+        }
+    };
+    const handleVendorSelection = (vendorDetails) => {
+        // vendorDetails?.vendorId = vendorId;
+        setVendorDetails({ vendorId: vendorDetails?.value, date: '' });
+        getFilteredRequestionData(vendorDetails?.value);
+    }
+
+    const handelDateSelection = (value) => {
+        setVendorDetails({ vendorId: vendorDetails?.value, date: value })
+        // getFilteredRequestionData(vendorDetails);
+    }
     return (
         <Box sx={{
             padding: 2,
         }}>
             <Container>
-                <Form
-                    template={vendor_details_template}
-                    onSubmit={onSubmit}
-                    validate={validate}
-                    showSubmitButton={false}
-                    form_styles={vendor_details_style}
-                    btn_styles={btn_styles}
+                <VendorSelection
+                    onSelectVendor={handleVendorSelection}
+                    onSelectDate={handelDateSelection}
                 />
-                <div>
-                    <Button variant="contained">Master List</Button>
-
-                </div>
             </Container>
 
             <Box
@@ -315,7 +295,7 @@ export const Quotations = () => {
                 <Form
                     template={medicine_details_template}
                     onSubmit={onAddMedicine}
-                    validate={validate}
+                    onValidate={validate}
                     showSubmitButton={true}
                     showClearFormButton={true}
                     form_styles={medicine_details_style}
@@ -323,15 +303,20 @@ export const Quotations = () => {
                 />
             </Box>
             <Box sx={{ marginTop: 3 }}>
-                <Table headArray={headArray} gridArray={rows} />
+                <EditableTable
+                    columns={columns}
+                    data={rows}
+                    setData={setRows}
+                    handleButtonClick={handleButtonClick}
+                />
             </Box>
             <div>
                 {rows.length > 0 && (
-                    <Box sx ={{display: 'flex',justifyContent: 'end', marginTop: '10px'}}>
+                    <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px' }}>
                         <Button variant="contained">Save</Button>
                     </Box>
                 )}
-                
+
             </div>
         </Box>
 
