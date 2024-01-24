@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { FORM_LABELS } from "../../../Constants/index";
-
 import { Box } from "@mui/material";
 import { Form } from "../../Forms/index";
-// import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import { Container } from "./Quotations.styles";
-// import { AddVendor } from "./AddVendorModal";
 import PurchaseService from "../../../services/Purchase.service";
 import { EditableTable } from "../../EditableTable";
-import { VendorSelection } from "../VendorSelection/index"
+import { VendorSelection } from "../VendorSelection/index";
+
 export const Quotations = () => {
-    const [modalOpen, setModalOpen] = useState(false);
     const [vendorDetails, setVendorDetails] = useState([]);
-    const [rowToEdit, setRowToEdit] = useState(null);
     const [rows, setRows] = useState([]);
     const fields = {
         mrp: '',
@@ -91,11 +87,9 @@ export const Quotations = () => {
         },
     ]
     const handleButtonClick = (action, row) => {
-        console.log(action, row)
         const newData = rows.map((rowData) => {
             if (rowData.id === row.id) {
                 if (action === "edit") {
-                    console.log(rowData, row, 'loop')
                     return { ...rowData, isEditing: true, prevData: { ...rowData } };
                 } else if (action === "cancel") {
                     return { ...rowData, isEditing: false, ...rowData.prevData };
@@ -227,18 +221,16 @@ export const Quotations = () => {
         // justifyContent: 'space-between'
     };
     const btn_styles = { display: "flex", justifyContent: "end" };
-    const onSubmit = (form) => {
-        console.log(form);
-    };
+
     const onAddMedicine = (formData) => {
         const updatedRows = [...rows, formData]
         setRows(updatedRows);
-        console.log(rows, 'medicine added');
     };
 
     const validate = (watchValues, errorMethods) => {
         // console.log(watchValues, 'watchValues')
     };
+
     const getVendors = async () => {
         try {
             let data = await PurchaseService.getAllVendors();
@@ -249,15 +241,17 @@ export const Quotations = () => {
             console.log(e, 'error allVendors')
         }
     };
+
     useEffect(() => {
         getVendors();
     }, []);
+
     const getFilteredRequestionData = async (vendorId) => {
         try {
             let data = await PurchaseService.getRequesitionData(vendorId);
             console.log(data, 'data');
 
-            const updatedRows = data?.map((item) => ({...item, ...fields}));
+            const updatedRows = data?.map((item) => ({ ...item, ...fields }));
             setRows([...updatedRows]);
         } catch (err) {
             console.log(err, 'error getting requisition data');
@@ -272,6 +266,15 @@ export const Quotations = () => {
     const handelDateSelection = (value) => {
         setVendorDetails({ vendorId: vendorDetails?.value, date: value })
         // getFilteredRequestionData(vendorDetails);
+    }
+    const onSaveQuotation = async () => {
+        try {
+            await PurchaseService.saveQuotation(rows).then((res) => {
+                console.log(res, 'data addedd successfully');
+            })
+        } catch (err) {
+            console.log(err, 'err add quotation data');
+        }
     }
     return (
         <Box sx={{
@@ -313,7 +316,7 @@ export const Quotations = () => {
             <div>
                 {rows.length > 0 && (
                     <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px' }}>
-                        <Button variant="contained">Save</Button>
+                        <Button variant="contained" onClick={onSaveQuotation}>Save</Button>
                     </Box>
                 )}
 
