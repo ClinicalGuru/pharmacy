@@ -15,12 +15,12 @@ export const Form = ({
     form_styles,
     btn_styles,
     watchFields,
-    onValidate
+    // onValidate
 }) => {
     let { register, handleSubmit, watch, setError, clearErrors, formState: { errors }, reset } = useForm();
     let { title, fields, formStyles, btns, isBlockLevelBtns = true } = template;
     let watchValues = watch(watchFields);
-    onValidate(watchValues, { setError, clearErrors });
+    // onValidate(watchValues, { setError, clearErrors });
     const renderFields = (fields) => {
         return fields.map(field => {
             let { title, type, name, validationProps, dynamic, options, style } = field;

@@ -213,7 +213,7 @@ export const PurchaseRequisition = () => {
                 )}
 
             </div>
-            {rows.length > 0 && <PDFDownloadLink document={<PdfFile />} filename="FORM">
+            {<PDFDownloadLink document={<PdfFile />} filename="FORM">
                 {({ loading }) => (loading ? <button>Loading Document...</button> : <button>Download</button>)}
             </PDFDownloadLink>
             }
