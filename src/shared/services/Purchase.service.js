@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const vendorCollectionRef = collection(firestore, "vendors");
 const requisitionCollectionRef = collection(firestore, "purchaseRequisition");
+const quotationCollectionRef = collection(firestore, "quotation");
 class PurchaseService {
     addVendor = (newVendor) => {
         return addDoc(vendorCollectionRef, newVendor);
@@ -22,7 +23,7 @@ class PurchaseService {
 
         try {
             await Promise.all(batch);
-            console.log('Data added to Firestore successfully!');
+            console.log('Requisition data added to Firestore successfully!');
         } catch (error) {
             console.error('Error adding data to Firestore: ', error);
         }
@@ -33,13 +34,28 @@ class PurchaseService {
         const querySnapshot = await getDocs(queryRef);
 
         // Now you can use the querySnapshot as needed
-        const filteredData = querySnapshot.docs.map(doc => doc.data());
+        const filteredData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
 
         return filteredData;
     }
 
     savingPurchageRequesition = async (data) => {
 
+    }
+
+    saveQuotation = async (data) => {
+        const batch = [];
+        data.forEach((object) => {
+            const docRef = quotationCollectionRef;
+            batch.push(addDoc(docRef, object));
+        });
+
+        try {
+            await Promise.all(batch);
+            console.log('Quotation data added to Firestore successfully!');
+        } catch (error) {
+            console.error('Error adding data to Firestore: ', error);
+        }
     }
 }
 export default new PurchaseService();

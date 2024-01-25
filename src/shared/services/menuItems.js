@@ -2,6 +2,7 @@ export const menuItems = [
     {
         title: 'Purchase',
         url: '',
+        id: 'purchages',
         submenu: [
             {
                 title: 'Purchase Requisition',
@@ -40,6 +41,7 @@ export const menuItems = [
     },
     {
         title: 'Inventory',
+        id: 'inventory',
         url: '',
         submenu: [
             {
@@ -59,6 +61,7 @@ export const menuItems = [
     {
         title: 'Sales',
         url: '/sales',
+        id: 'sales',
         submenu: [
             {
                 title: 'Billing',
@@ -72,7 +75,8 @@ export const menuItems = [
     },
     {
         title: 'Reports',
-        url: '',
+        url: '/sales',
+        id: 'reports',
         submenu: [
             {
                 title: 'Purchase report',

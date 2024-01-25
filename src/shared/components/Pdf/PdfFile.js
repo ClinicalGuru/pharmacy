@@ -1,14 +1,14 @@
 import React from "react";
 import { Page, Text, Image, Document, StyleSheet } from "@react-pdf/renderer";
 
-import {Font} from '@react-pdf/renderer';
+import { Font } from '@react-pdf/renderer';
 
 Font.register({
   family: 'AntonFamily',
-//   src: MyCustomFont
+  //   src: MyCustomFont
 })
 
- const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   body: {
     paddingTop: 35,
     paddingBottom: 65,
@@ -54,31 +54,26 @@ export const PdfFile = () => {
   const pageColors = ['#f6d186', '#f67280', '#c06c84'];
 
   const pages = [
-    {text: 'First page content goes here...', image: '' },
-    {text: 'Second page content goes here...', image: 'https://www.si.com/.image/ar_4:3%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTcwMzExMzEwNTc0MTAxODM5/lebron-dunk.jpg' },
-    {text: 'Third page content goes here...', image: 'https://s.yimg.com/ny/api/res/1.2/Aj5UoHHKnNOpdwE6Zz9GIQ--/YXBwaWQ9aGlnaGxhbmRlcjt3PTY0MA--/https://s.yimg.com/os/creatr-uploaded-images/2023-01/b02a71d0-a774-11ed-bf7f-08714e8ad300' },
+    { text: 'First page content goes here...', image: '' },
+    { text: 'Second page content goes here...', image: 'https://www.si.com/.image/ar_4:3%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTcwMzExMzEwNTc0MTAxODM5/lebron-dunk.jpg' },
+    { text: 'Third page content goes here...', image: 'https://s.yimg.com/ny/api/res/1.2/Aj5UoHHKnNOpdwE6Zz9GIQ--/YXBwaWQ9aGlnaGxhbmRlcjt3PTY0MA--/https://s.yimg.com/os/creatr-uploaded-images/2023-01/b02a71d0-a774-11ed-bf7f-08714e8ad300' },
   ]
 
   return (
     <Document>
-      {pages.map((page, index) => {
-        return (
-          <Page key={index} style={{...styles.body, backgroundColor: pageColors[index]}}>
-          <Text style={styles.header} fixed></Text>
-          {/* <Image style={styles.image} src={page.image} /> */}
-          <Text style={styles.text}>
-          {page.text}
-          </Text>
-          <Text
-            style={styles.pageNumber}
-            render={({ pageNumber, totalPages }) =>
-              `${pageNumber} / ${totalPages}`
-            }
-          />
-        </Page>
-        )
-      })}
-
+      <Page  style={{ ...styles.body}}>
+        <Text style={styles.header} fixed></Text>
+        {/* <Image style={styles.image} src={page.image} /> */}
+        <Text style={styles.text}>
+          Hi
+        </Text>
+        {/* <Text
+          style={styles.pageNumber}
+          render={({ pageNumber, totalPages }) =>
+            `${pageNumber} / ${totalPages}`
+          }
+        /> */}
+      </Page>
     </Document>
   );
 };

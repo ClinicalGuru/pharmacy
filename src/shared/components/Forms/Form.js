@@ -14,7 +14,8 @@ export const Form = ({
     showSubmitButton = false,
     form_styles,
     btn_styles,
-    watchFields
+    watchFields,
+    // onValidate
 }) => {
     let { register, handleSubmit, watch, setError, clearErrors, formState: { errors }, reset } = useForm();
     let { title, fields, formStyles, btns, isBlockLevelBtns = true } = template;
@@ -85,8 +86,8 @@ export const Form = ({
                             <Box sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
                             <select style={finalStyle} name={name} id={name} {...register(name, validationProps)} >
                                 <option>select</option>
-                                {options && options.length > 0 && options.map(({ value, name }) => {
-                                    return <option key={value} value={value}>{name}</option>
+                                {options && options.length > 0 && options.map(({ value, name, index }) => {
+                                    return <option key={`${value} ${index}`} value={value}>{name}</option>
                                 })}
                             </select>
                             {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
