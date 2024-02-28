@@ -19,7 +19,7 @@ const Router = createBrowserRouter([
     },
     {
         path: "landing",
-        element: <Landing to="landing/sales" replace />,
+        element: <Landing to="/landing/sales" replace />,
         children: [
             {
                 path: "",

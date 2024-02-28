@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useTable } from "react-table";
 
 export const EditableTable = ({ columns, data, setData, handleButtonClick }) => {
+  console.log(data, 'data')
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,

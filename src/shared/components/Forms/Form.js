@@ -15,7 +15,7 @@ export const Form = ({
     form_styles,
     btn_styles,
     watchFields,
-    // onValidate
+    onValidate
 }) => {
     let { register, handleSubmit, watch, setError, clearErrors, formState: { errors }, reset } = useForm();
     let { title, fields, formStyles, btns, isBlockLevelBtns = true } = template;
@@ -24,6 +24,7 @@ export const Form = ({
     const renderFields = (fields) => {
         return fields.map(field => {
             let { title, type, name, validationProps, dynamic, options, style } = field;
+            console.log(options, 'options')
             let finalStyle = { ...style, ...formStyles };
             // let showField = dynamic ? watchValues([dynamic['field']]) ===dynamic['value']: true;
             // if(!showField) return

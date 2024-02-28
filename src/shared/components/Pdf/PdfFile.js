@@ -1,81 +1,41 @@
-import React from "react";
-import { Page, Text, Image, Document, StyleSheet } from "@react-pdf/renderer";
+import React from 'react';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import moment from 'moment'
 
-import { Font } from '@react-pdf/renderer';
-
-Font.register({
-  family: 'AntonFamily',
-  //   src: MyCustomFont
-})
-
-const styles = StyleSheet.create({
-  body: {
-    paddingTop: 35,
-    paddingBottom: 65,
-    paddingHorizontal: 35,
-  },
-  title: {
-    fontSize: 24,
-    textAlign: "center",
-    fontFamily: "AntonFamily",
-  },
-  text: {
-    margin: 12,
-    fontSize: 14,
-    textAlign: "justify",
-    fontFamily: "AntonFamily",
-
-  },
-  image: {
-    marginVertical: 15,
-    marginHorizontal: 100,
-  },
-  header: {
-    fontSize: 12,
-    marginBottom: 20,
-    textAlign: "center",
-    color: "grey",
-    fontFamily: "AntonFamily",
-  },
-  pageNumber: {
-    position: "absolute",
-    fontSize: 12,
-    bottom: 30,
-    left: 0,
-    right: 0,
-    textAlign: "center",
-    color: "grey",
-    fontFamily: "AntonFamily",
-  },
-});
-
-export const PdfFile = () => {
-
-  const pageColors = ['#f6d186', '#f67280', '#c06c84'];
-
-  const pages = [
-    { text: 'First page content goes here...', image: '' },
-    { text: 'Second page content goes here...', image: 'https://www.si.com/.image/ar_4:3%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTcwMzExMzEwNTc0MTAxODM5/lebron-dunk.jpg' },
-    { text: 'Third page content goes here...', image: 'https://s.yimg.com/ny/api/res/1.2/Aj5UoHHKnNOpdwE6Zz9GIQ--/YXBwaWQ9aGlnaGxhbmRlcjt3PTY0MA--/https://s.yimg.com/os/creatr-uploaded-images/2023-01/b02a71d0-a774-11ed-bf7f-08714e8ad300' },
-  ]
+export const PdfFile = ({ data }) => {
+  const handleDownload = () => {
+    const doc = new jsPDF();
+    const totalPages = doc.internal.getNumberOfPages();
+    const columns = Object.keys(data[0]);
+    const rows = data.map((item) => Object.values(item));
+    doc.setFontSize(16)
+    doc.text('PURCHASE ORDER', doc.internal.pageSize.getWidth() / 2, 10, { align: 'center' });
+    doc.setFontSize(12);
+    doc.text(`Date: ${moment(new Date()).format('DD/MM/YYYY')}`, doc.internal.pageSize.getWidth() - 40, 10, { align: 'left' });
+    doc.text('To,', 10, 20);
+    doc.text('Sri Yugandar Medicals,', 10, 25);
+    doc.text('D.No: 2-56-896, New street,', 10, 30);
+    doc.text('Mobile: 1234567890', 10, 35);
+    doc.text('From,', doc.internal.pageSize.getWidth() - 80, 20, { align: 'left' });
+    doc.text('Laxmi Medicals,', doc.internal.pageSize.getWidth() - 80, 25, { align: 'left' });
+    doc.text('A Unit of Winmedica Healthcare  Pvt. ltd,', doc.internal.pageSize.getWidth() - 80, 30, { align: 'left' });
+    doc.text('Railway Kodur - 516101', doc.internal.pageSize.getWidth() - 80, 35, { align: 'left' });
+    doc.autoTable({
+      head: [columns],
+      body: rows,
+      startY: 40,
+      startX: 20
+    },);
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      doc.text(`Text at the end of Page ${i}`, doc.internal.pageSize.getWidth() / 2, doc.internal.pageSize.getHeight() - 10, { align: 'center' });
+    }
+    // Save the PDF file
+    doc.save('table.pdf');
+  };
 
   return (
-    <Document>
-      <Page  style={{ ...styles.body}}>
-        <Text style={styles.header} fixed></Text>
-        {/* <Image style={styles.image} src={page.image} /> */}
-        <Text style={styles.text}>
-          Hi
-        </Text>
-        {/* <Text
-          style={styles.pageNumber}
-          render={({ pageNumber, totalPages }) =>
-            `${pageNumber} / ${totalPages}`
-          }
-        /> */}
-      </Page>
-    </Document>
+    <button onClick={handleDownload}>Download PDF</button>
   );
 };
-
-

@@ -45,6 +45,7 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
         setValue("date", selectedDate);
         onSelectDate(selectedDate); // Callback to update parent state
     };
+
     return (
         <form>
             <span>
@@ -74,22 +75,6 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
                     control={control}
                     render={({ field }) => (
                         <input type="date"
-                            {...field}
-                            onChange={(e) => handleDateChange(e.target.value)}
-                        />
-                    )}
-                />
-                <small className="text-danger">
-                    {errors?.inputField && errors.inputField.message}
-                </small>
-            </span>
-            <span>
-                <label>Quotation Id</label>
-                <Controller
-                    name="quotationId"
-                    control={control}
-                    render={({ field }) => (
-                        <input type="text"
                             {...field}
                             onChange={(e) => handleDateChange(e.target.value)}
                         />
