@@ -8,7 +8,7 @@ module.exports = ({ mode } = { mode: "production" }) => {
     return {
         mode,
         entry: {
-            bundle: path.resolve(__dirname, 'src/index.js')
+            pharmacy: path.resolve(__dirname, 'src/index.js')
         },
         output: {
             path: path.resolve(__dirname, "build"),
@@ -17,7 +17,8 @@ module.exports = ({ mode } = { mode: "production" }) => {
         },
         devServer: {
             open: true,
-            port: 3000
+            port: 3000,
+            historyApiFallback: true,
         },
         module: {
             rules: [
@@ -44,7 +45,7 @@ module.exports = ({ mode } = { mode: "production" }) => {
             }),
             new webpack.ProvidePlugin({
                 "React": "react",
-             }),
+            }),
         ],
         resolve: {
             extensions: ['.js', '.jsx'],

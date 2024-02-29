@@ -14,9 +14,9 @@ class PurchaseService {
         return getDocs(vendorCollectionRef);
     }
 
-    addRequisitionData = async (newData) => {
+    addRequisitionData = async (data) => {
         const batch = [];
-        newData.forEach((object) => {
+        data.forEach((object) => {
             const docRef = requisitionCollectionRef;
             batch.push(addDoc(docRef, object));
         });
@@ -27,6 +27,7 @@ class PurchaseService {
         } catch (error) {
             console.error('Error adding data to Firestore: ', error);
         }
+        // return addDoc(requisitionCollectionRef, data);
     }
 
     getRequesitionData = async (vendorId) => {
@@ -44,18 +45,19 @@ class PurchaseService {
     }
 
     saveQuotation = async (data) => {
-        const batch = [];
-        data.forEach((object) => {
-            const docRef = quotationCollectionRef;
-            batch.push(addDoc(docRef, object));
-        });
-
-        try {
-            await Promise.all(batch);
-            console.log('Quotation data added to Firestore successfully!');
-        } catch (error) {
-            console.error('Error adding data to Firestore: ', error);
-        }
+        // return addDoc(quotationCollectionRef, data);
+         const batch = [];
+         data.forEach((object) => {
+             const docRef = quotationCollectionRef;
+             batch.push(addDoc(docRef, object));
+         });
+ 
+         try {
+             await Promise.all(batch);
+             console.log('Quotation data added to Firestore successfully!');
+         } catch (error) {
+             console.error('Error adding data to Firestore: ', error);
+         }
     }
 }
 export default new PurchaseService();

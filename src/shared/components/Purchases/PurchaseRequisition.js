@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { FORM_LABELS } from "../../Constants/index";
 import { Box } from "@mui/material";
 import { Form } from "../Forms/index";
@@ -8,15 +8,24 @@ import { AddVendor } from "./AddVendorModal";
 import PurchaseService from "../../services/Purchase.service";
 import { Table } from "../Table";
 import { PdfFile } from '../Pdf/index';
-import { PDFDownloadLink } from "@react-pdf/renderer";
+import { v4 as uuidv4 } from 'uuid';
 import { VendorSelection } from "./VendorSelection/index"
+import { Notification } from '../Notification/index'
+import { Loader } from "../Loader/index";
 
 export const PurchaseRequisition = () => {
+    const [showLoader, setShowLoader] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [rows, setRows] = useState([]);
     const [vendorDetails, setVendorDetails] = useState();
+    const [selectedDate, setSelectedDate] = useState();
+    const [notification, setNotification] = useState(false);
     const btn_styles = { display: "flex", justifyContent: "end" };
-
+    const data = [
+        { id: 1, name: 'John Doe', age: 25 },
+        { id: 2, name: 'Jane Smith', age: 30 },
+        // Add more data as needed
+    ];
     const headArray = [
         {
             'head': 'Pharmacological Name',
@@ -124,49 +133,66 @@ export const PurchaseRequisition = () => {
         justifyContent: 'space-between'
     };
 
-    const handleVendorSelection = (vendorDetails) => {
-        // vendorDetails?.vendorId = vendorId;
-        setVendorDetails({ vendorId: vendorDetails?.value, date: '' });
-        getFilteredRequestionData(vendorDetails?.value);
+    const handleVendorSelection = (details) => {
+        let updatedObj = { vendorId: details?.value }
+        setVendorDetails(updatedObj);
     }
 
     const handelDateSelection = (value) => {
-        setVendorDetails({ vendorId: vendorDetails?.value, date: value })
-        // getFilteredRequestionData(vendorDetails);
+        setSelectedDate({ date: value });
     }
 
     const onAddMedicine = (formData) => {
-        console.log({ ...formData, ...vendorDetails })
-        const updatedRows = [...rows, { ...formData, ...vendorDetails }];
+        console.log({ ...formData, ...vendorDetails }, 'medicine added');
+        const updatedRows = [...rows, { ...formData }];
         setRows(updatedRows);
-        console.log(rows, 'medicine added');
+        // console.log(rows, 'medicine added');
     };
 
     const validate = useCallback((watchValues, errorMethods) => {
         console.log('selectedVendor');
     }, []);
 
-    // useEffect(() => { console.log('watching') }, [rows, setValue])
-
     const getFilteredRequestionData = async (vendorId) => {
+        setShowLoader(true);
+        let medicine = [];
         try {
             let data = await PurchaseService.getRequesitionData(vendorId);
             console.log(data, 'data');
-            const updatedRows = [...data];
-            setRows(updatedRows);
+            data?.forEach((item) => medicine.push(...item?.medicine));
+            setRows([...medicine]);
+            setShowLoader(false);
         } catch (err) {
             console.log(err, 'error getting requisition data');
+            setShowLoader(false);
         }
     };
 
     const onSaveData = async () => {
+        let reqDetails = {
+            vendorId: vendorDetails?.vendorId,
+            requesitionOrderedData: selectedDate?.date,
+            requesitionId: uuidv4()
+        };
+        const data = rows.map((item) => ({...item, ...reqDetails}));
         try {
-            await PurchaseService.addRequisitionData(rows).then(() => {
+            await PurchaseService.addRequisitionData(data).then(() => {
                 console.log('success');
+                setNotification(true);
             })
         } catch (err) {
             console.log(err, 'err add requisition data');
         }
+    };
+    useEffect(() => {
+        // This code will run whenever vendorDetails is updated
+        console.log(vendorDetails, 'vendorDetails');
+        // You can put your other logic here or call a function
+        getFilteredRequestionData(vendorDetails?.vendorId);
+    }, [vendorDetails, selectedDate]); // Add vendorDetails as a dependency to useEffect
+    
+    const alertState = () => {
+        setNotification(!notification);
     };
 
     return (
@@ -211,13 +237,10 @@ export const PurchaseRequisition = () => {
                         <Button variant="contained" onClick={() => onSaveData()}>Save</Button>
                     </Box>
                 )}
-
             </div>
-            {<PDFDownloadLink document={<PdfFile />} filename="FORM">
-                {({ loading }) => (loading ? <button>Loading Document...</button> : <button>Download</button>)}
-            </PDFDownloadLink>
-            }
+            <PdfFile data={rows} />
+            {notification && <Notification notificationState={notification} type="success" message="Purchage requisition saved successfully" action={alertState} />}
+            <Loader open={showLoader} />
         </Box>
-
     )
 }

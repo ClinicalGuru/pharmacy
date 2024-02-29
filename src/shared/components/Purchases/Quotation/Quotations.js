@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FORM_LABELS } from "../../../Constants/index";
 import { Box } from "@mui/material";
 import { Form } from "../../Forms/index";
@@ -7,22 +7,27 @@ import { Container } from "./Quotations.styles";
 import PurchaseService from "../../../services/Purchase.service";
 import { EditableTable } from "../../EditableTable";
 import { VendorSelection } from "../VendorSelection/index";
+import { Notification } from "../../Notification/index";
+import { Loader } from "../../Loader/index";
+import { v4 as uuidv4 } from 'uuid';
 
 export const Quotations = () => {
+    const [showLoader, setShowLoader] = useState(false);
     const [vendorDetails, setVendorDetails] = useState([]);
     const [rows, setRows] = useState([]);
+    const [reqisition, setRequisition] = useState();
+    const [notification, setNotification] = useState(false);
     const fields = {
         mrp: '',
         ptr: '',
         pts: '',
         gst: '',
         discount: ''
-    }
+    };
     const columns = [
         {
             'Header': 'Pharmacological Name',
-            'accessor': 'pharmacologicalName',
-            editEnable: true,
+            'accessor': 'pharmacologicalName'
         },
         {
             'Header': 'Brand Name',
@@ -85,7 +90,7 @@ export const Quotations = () => {
                     </button>
                 ),
         },
-    ]
+    ];
     const handleButtonClick = (action, row) => {
         const newData = rows.map((rowData) => {
             if (rowData.id === row.id) {
@@ -232,13 +237,16 @@ export const Quotations = () => {
     };
 
     const getVendors = async () => {
+        setShowLoader(true);
         try {
             let data = await PurchaseService.getAllVendors();
             const result = data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }));
             setVendorDetails(result);
-            console.log(result, 'result', rows)
+            console.log(result, 'result', rows);
+            setShowLoader(false);
         } catch (e) {
-            console.log(e, 'error allVendors')
+            console.log(e, 'error allVendors');
+            setShowLoader(false);
         }
     };
 
@@ -247,35 +255,54 @@ export const Quotations = () => {
     }, []);
 
     const getFilteredRequestionData = async (vendorId) => {
+        console.log(vendorId, 'vendorId quotation.js')
+        setShowLoader(true);
         try {
             let data = await PurchaseService.getRequesitionData(vendorId);
-            console.log(data, 'data');
-
-            const updatedRows = data?.map((item) => ({ ...item, ...fields }));
-            setRows([...updatedRows]);
+            setRequisition(data);
+            setRows([...data]);
+            setShowLoader(false);
         } catch (err) {
             console.log(err, 'error getting requisition data');
+            setShowLoader(false);
         }
     };
+
     const handleVendorSelection = (vendorDetails) => {
         // vendorDetails?.vendorId = vendorId;
         setVendorDetails({ vendorId: vendorDetails?.value, date: '' });
         getFilteredRequestionData(vendorDetails?.value);
-    }
+    };
 
     const handelDateSelection = (value) => {
         setVendorDetails({ vendorId: vendorDetails?.value, date: value })
         // getFilteredRequestionData(vendorDetails);
-    }
+    };
+
     const onSaveQuotation = async () => {
+        setShowLoader(true);
+        let quotationDetails = {
+            vendorId: reqisition[0]?.vendorId,
+            requesitionId: reqisition[0]?.requesitionId,
+            quotationId: uuidv4()
+        };
+        const data = rows.map((item) => ({...item, ...quotationDetails}));
         try {
-            await PurchaseService.saveQuotation(rows).then((res) => {
-                console.log(res, 'data addedd successfully');
-            })
+            await PurchaseService.saveQuotation(data).then((res) => {
+                console.log(res, 'Quotation data saved successfully');
+                setShowLoader(false);
+                alertState();
+            });
         } catch (err) {
-            console.log(err, 'err add quotation data');
+            console.log(err, 'err while adding quotation data');
+            setShowLoader(false);
         }
-    }
+    };
+
+    const alertState = () => {
+        setNotification(!notification);
+    };
+
     return (
         <Box sx={{
             padding: 2,
@@ -321,7 +348,8 @@ export const Quotations = () => {
                 )}
 
             </div>
+            <Loader open={showLoader} />
+            {notification && <Notification notificationState={notification} type="success" message="Quotation saved successfully" action={alertState} />}
         </Box>
-
     )
 }
