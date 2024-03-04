@@ -24,7 +24,7 @@ export default function Breadcrumbs() {
 
                 return (
                     <span key={name} style={{ display: 'flex', alignItems: 'center' }}>
-                        {isSecondToLast && <span>{displayName}</span>}
+                        {isSecondToLast && <span>{displayName}&nbsp; /</span>}
                         {isLast && <span style={{ marginLeft: isSecondToLast ? '2px' : '2px' }}>{displayName}</span>}
                         {isLast ? null : <span style={{ marginLeft: '2px', marginRight: '2px' }}>&nbsp;&nbsp;</span>}
                     </span>

@@ -6,12 +6,19 @@ import { Quotations } from "./shared/components/Purchases/Quotation/index";
 import { PurchaseOrders } from "./shared/components/Purchases/PurchaseOrders";
 import { MasterList } from "./shared/components/Purchases/MasterList";
 import { AddInvoice } from "./shared/components/Invoice";
-import { Payments} from "./shared/components/Purchases/PurchasePayments/index"
+import { Payments} from "./shared/components/Purchases/PurchasePayments/index";
+
+import { PurchaseReports} from "./shared/components/Reports/PurchaseReports/index";
+import { ImportantReports} from "./shared/components/Reports/ImportantReport/index";
+import { SalesReports} from "./shared/components/Reports/SalesReports/index";
+import { InventoryReport} from "./shared/components/Reports/InventoryReport/index";
 import "./index.css";
 import { PharmacyInventory } from "./shared/components/Invoice/PharmacyInventory/index";
 import { AllBills } from "./shared/components/Sales/AllBills/AllBills";
 import { Sales } from "./shared/components/Sales";
 import { SignIn } from "./shared/components/SignIn";
+import { RequisitionList } from "./shared/components/Reports/PurchaseReports/RequisitionList/index";
+import { QuotationList } from "./shared/components/Reports/PurchaseReports/QuotationList";
 const Router = createBrowserRouter([
     {
         path: "/",
@@ -79,7 +86,7 @@ const Router = createBrowserRouter([
                         element: <AddInvoice />,  // The default route for "/landing" is "/landing/sales/allBills"
                     },
                     {
-                        path: 'addInvoice',
+                        path: 'invoice',
                         element: <AddInvoice />
                     },
                     {
@@ -87,7 +94,38 @@ const Router = createBrowserRouter([
                         element: <PharmacyInventory />
                     }
                 ]
-            }
+            },
+            {
+                path: "reports",
+                children: [
+                    {
+                        path: "purchase", 
+                        element: <PurchaseReports />,
+                        children: [
+                            {
+                                path: "requisitionList",
+                                element: <RequisitionList />,
+                            },
+                            {
+                                path: "quotationList",
+                                element: <QuotationList />,
+                            },
+                        ]  
+                    },
+                    {
+                        path: "inventory",
+                        element: <InventoryReport />
+                    },
+                    {
+                        path: "sales",
+                        element: <SalesReports />
+                    },
+                    {
+                        path: "Important",
+                        element: <ImportantReports />
+                    },
+                ]
+            },
         ]
     }
 ]);

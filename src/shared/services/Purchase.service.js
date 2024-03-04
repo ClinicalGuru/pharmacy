@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 const vendorCollectionRef = collection(firestore, "vendors");
 const requisitionCollectionRef = collection(firestore, "purchaseRequisition");
 const quotationCollectionRef = collection(firestore, "quotation");
+
 class PurchaseService {
     addVendor = (newVendor) => {
         return addDoc(vendorCollectionRef, newVendor);
@@ -15,19 +16,19 @@ class PurchaseService {
     }
 
     addRequisitionData = async (data) => {
-        const batch = [];
-        data.forEach((object) => {
-            const docRef = requisitionCollectionRef;
-            batch.push(addDoc(docRef, object));
-        });
+        // const batch = [];
+        // data.forEach((object) => {
+        //     const docRef = requisitionCollectionRef;
+        //     batch.push(addDoc(docRef, object));
+        // });
 
-        try {
-            await Promise.all(batch);
-            console.log('Requisition data added to Firestore successfully!');
-        } catch (error) {
-            console.error('Error adding data to Firestore: ', error);
-        }
-        // return addDoc(requisitionCollectionRef, data);
+        // try {
+        //     await Promise.all(batch);
+        //     console.log('Requisition data added to Firestore successfully!');
+        // } catch (error) {
+        //     console.error('Error adding data to Firestore: ', error);
+        // }
+        return addDoc(requisitionCollectionRef, data);
     }
 
     getRequesitionData = async (vendorId) => {

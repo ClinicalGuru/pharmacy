@@ -12,6 +12,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import SearchIcon from '@mui/icons-material/Search';
+import { FixedHeader } from './Header.styles';
 
 import { SearchIconWrapper, Search, StyledInputBase, TypographyWrapper } from "./Header.styles";
 import { Navbar } from "../TopMenu";
@@ -21,6 +22,23 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 export const Header = () => {
   const [value, setValue] = React.useState('1');
+  const [isSticky, setIsSticky] = React.useState(false);
+
+  // Function to handle scroll event
+  const handleScroll = () => {
+    // If the user has scrolled more than 50 pixels from the top, make the header sticky
+    setIsSticky(window.scrollY > 50);
+  };
+
+  // Add scroll event listener when the component mounts
+  React.useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      // Clean up the scroll event listener when the component unmounts
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -46,12 +64,13 @@ export const Header = () => {
   };
 
   return (
-    <AppBar position="static"
-      sx={{ backgroundColor: "#DEE1E6B5" }}>
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <img style={{ width: '95px', height: '32px',objectFit: 'cover', marginRight: '1rem'}} src={require('../../../assets/img/logo.png')} alt='logo' />
-          {/* <Box
+    <FixedHeader className={isSticky ? 'sticky' : ''}>
+      <AppBar position="static"
+        sx={{ backgroundColor: "#DEE1E6B5" }}>
+        <Container maxWidth="xl">
+          <Toolbar disableGutters>
+            <img style={{ width: '95px', height: '32px', objectFit: 'cover', marginRight: '1rem' }} src={require('../../../assets/img/logo.png')} alt='logo' />
+            {/* <Box
             component="img"
             sx={{
               width: 95,
@@ -62,72 +81,72 @@ export const Header = () => {
             alt="Logo"
             src={require('../../../assets/img/logo.png')}
           /> */}
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+                color="inherit"
+              >
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorElNav}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
+                }}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+                sx={{
+                  display: { xs: 'block', md: 'none' },
+                }}
+              >
+                {pages.map((page) => (
+                  <MenuItem key={page} onClick={handleCloseNavMenu}>
+                    <TypographyWrapper
+                      sx={{
+                        display: { xs: 'none', md: 'flex' },
+                        fontWeight: 700,
+                        letterSpacing: '.3rem',
+                        color: '#565D6DFF',
+                        textDecoration: 'none',
+                        textTransformation: 'capitalize',
+                        fontFamily: "'Mukta', sans-serif"
+                      }}
+                      textAlign="center">{page}</TypographyWrapper>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+            <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+            <TypographyWrapper
+              variant="h5"
+              noWrap
+              component="a"
+              href="/"
               sx={{
-                display: { xs: 'block', md: 'none' },
+                mr: 2,
+                display: { xs: 'flex', md: 'none' },
+                flexGrow: 1,
+                fontWeight: 700,
+                letterSpacing: '.3rem',
+                color: 'inherit',
+                textDecoration: 'none',
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <TypographyWrapper
-                    sx={{
-                      display: { xs: 'none', md: 'flex' },
-                      fontWeight: 700,
-                      letterSpacing: '.3rem',
-                      color: '#565D6DFF',
-                      textDecoration: 'none',
-                      textTransformation: 'capitalize',
-                      fontFamily: "'Mukta', sans-serif"
-                    }}
-                    textAlign="center">{page}</TypographyWrapper>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <TypographyWrapper
-            variant="h5"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            LOGO
-          </TypographyWrapper>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {/* {pages.map((page) => (
+              LOGO
+            </TypographyWrapper>
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+              {/* {pages.map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
@@ -136,52 +155,53 @@ export const Header = () => {
                 {page}
               </Button>
             ))} */}
-            <Navbar />
-          </Box>
-          <Box sx={{ marginRight: 4 }}>
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon sx={{ color: '#BDC1CAFF' }} />
-              </SearchIconWrapper>
-              <StyledInputBase
-                sx={{ color: '#BDC1CAFF' }}
-                placeholder="Search…"
-                inputProps={{ 'aria-label': 'search', backgroundColor: "#F3F4F6FF" }}
-              />
-            </Search>
-          </Box>
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <TypographyWrapper textAlign="center">{setting}</TypographyWrapper>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+              <Navbar />
+            </Box>
+            <Box sx={{ marginRight: 4 }}>
+              <Search>
+                <SearchIconWrapper>
+                  <SearchIcon sx={{ color: '#BDC1CAFF' }} />
+                </SearchIconWrapper>
+                <StyledInputBase
+                  sx={{ color: '#BDC1CAFF' }}
+                  placeholder="Search…"
+                  inputProps={{ 'aria-label': 'search', backgroundColor: "#F3F4F6FF" }}
+                />
+              </Search>
+            </Box>
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                    <TypographyWrapper textAlign="center">{setting}</TypographyWrapper>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
+    </FixedHeader>
   );
 }
 

@@ -20,10 +20,10 @@ export const menuItems = [
                 title: 'Purchase Order',
                 url: 'purchase/order',
             },
-            {
-                title: 'Purchase Payments',
-                url: 'purchase/payments',
-            },
+            // {
+            //     title: 'Purchase Payments',
+            //     url: 'purchase/payments',
+            // },
             // {
             //     title: 'Backend',
             //     submenu: [
@@ -46,16 +46,16 @@ export const menuItems = [
         submenu: [
             {
                 title: 'Add Invoice',
-                url: 'inventory/addInvoice',
+                url: 'inventory/invoice',
             },
             {
                 title: 'Pharmacy inventory',
                 url: 'inventory/pharmacyInventory',
             },
-            {
-                title: 'Add Manufacturer',
-                url: 'inventory/addManufacturer',
-            }
+            // {
+            //     title: 'Add Manufacturer',
+            //     url: 'inventory/addManufacturer',
+            // }
         ]
     },
     {
@@ -80,19 +80,52 @@ export const menuItems = [
         submenu: [
             {
                 title: 'Purchase report',
-                url: 'web-design',
+                url: 'reports/purchase',
+                submenu: [
+                    {
+                        title: 'Purchase Requisition List',
+                        url: 'reports/purchase/requisitionList',
+                    },
+                    {
+                        title: 'Purchase Quotation List',
+                        url: 'reports/purchase/quotationList',
+                    },
+                    {
+                        title: 'Purchase Order List',
+                        url: 'reports/purchase/orderList',
+                    },
+                    {
+                        title: 'Purchase Return List',
+                        url: 'reports/purchase/returnList',
+                    },
+                    {
+                        title: 'Purchase Payments List',
+                        url: 'reports/purchase/paymentsList',
+                    },
+                    
+                    {
+                        title: 'Invoice List',
+                        url: 'reports/purchase/invoiceList',
+                    },
+                ],
             },
             {
                 title: 'Inventory report',
-                url: 'web-dev',
+                url: 'reports/inventory',
+                // submenu: [
+                //     {
+                //         title: ' Vendor List',
+                //         url: 'reports/purchase/vendorList',
+                //     },
+                // ]
             },
             {
                 title: 'Sales report',
-                url: 'web-design',
+                url: 'reports/sales',
             },
             {
                 title: 'Important report',
-                url: 'web-dev',
+                url: 'reports/important',
             }
         ]
     }

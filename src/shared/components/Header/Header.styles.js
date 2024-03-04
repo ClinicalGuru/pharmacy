@@ -8,9 +8,28 @@ import Typography from '@mui/material/Typography';
 // margin-right: 1rem
 // `;
 
+export const FixedHeader = styled('div')`
+    
+  transition: background-color 0.3s ease;
+
+    position: fixed,
+    top: 0,
+    width: 100%,
+    z-index: 1000,
+    background-color: #DEE1E6B5; /* Your desired background color for the sticky header */
+
+`
+
+
+  
+/* Adjust z-index as needed */
+
+
 export const TypographyWrapper = styled(Typography)`
 font-family: 'Mukta', sans-serif
     `
+
+
 export const SearchIconWrapper = styled('div')(({ theme }) => ({
     padding: theme?.spacing(0, 2),
     height: '100%',
