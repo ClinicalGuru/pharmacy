@@ -9,14 +9,16 @@ import PurchaseService from "../../services/Purchase.service";
 import { Table } from "../Table";
 import { PdfFile } from '../Pdf/index';
 import { v4 as uuidv4 } from 'uuid';
-import { VendorSelection } from "./VendorSelection/index"
-import { Notification } from '../Notification/index'
+import { VendorSelection } from "./VendorSelection/index";
+import { EditableTable } from "../EditableTable";
+import { Notification } from '../Notification/index';
 import { Loader } from "../Loader/index";
 
 export const PurchaseRequisition = () => {
     const [showLoader, setShowLoader] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [rows, setRows] = useState([]);
+    const [dataFetched, setDataFetched] = useState(false);
     const [vendorDetails, setVendorDetails] = useState();
     const [selectedDate, setSelectedDate] = useState();
     const [notification, setNotification] = useState(false);
@@ -26,32 +28,69 @@ export const PurchaseRequisition = () => {
         { id: 2, name: 'Jane Smith', age: 30 },
         // Add more data as needed
     ];
-    const headArray = [
+    const columns = [
         {
-            'head': 'Pharmacological Name',
-            'fieldName': 'pharmacologicalName'
+            'Header': 'Pharmacological Name',
+            'accessor': 'pharmacologicalName',
+            editEnable: true,
         },
         {
-            'head': 'Brand Name',
-            'fieldName': 'brandName'
+            'Header': 'Brand Name',
+            'accessor': 'brandName',
+            editEnable: true,
         },
         {
-            'head': 'Dose',
-            'fieldName': 'dose'
+            'Header': 'Dose',
+            'accessor': 'dose',
+            editEnable: true,
         },
         {
-            'head': 'Form',
-            'fieldName': 'form'
+            'Header': 'Form',
+            'accessor': 'form',
+            editEnable: true,
         },
         {
-            'head': 'Qantity / Strips',
-            'fieldName': 'quantity'
+            'Header': 'Qantity / Strips',
+            'accessor': 'quantity',
+            editEnable: true,
         },
         {
-            'head': 'Action',
-            'fieldName': ''
-        }
+            Header: "Actions",
+            id: "actions",
+            disableSortBy: true,
+            Cell: ({ row, column, cell }) =>
+                row.original.isEditing ? (
+                    <>
+                        <button onClick={() => handleButtonClick("save", row.original)}>
+                            Save
+                        </button>
+                        <button onClick={() => handleButtonClick("cancel", row.original)}>
+                            Cancel
+                        </button>
+                    </>
+                ) : (
+                    <button disabled={dataFetched} onClick={() => handleButtonClick("edit", row.original)}>
+                        Edit
+                    </button>
+                ),
+        },
     ];
+    const handleButtonClick = (action, row) => {
+        const newData = rows.map((rowData) => {
+            if (rowData.id === row.id) {
+                if (action === "edit") {
+                    return { ...rowData, isEditing: true, prevData: { ...rowData } };
+                } else if (action === "cancel") {
+                    return { ...rowData, isEditing: false, ...rowData.prevData };
+                } else if (action === "save") {
+                    const { prevData, ...updatedRowData } = rowData;
+                    return { ...updatedRowData, isEditing: false };
+                }
+            }
+            return rowData;
+        });
+        setRows(newData);
+    };
 
     const medicine_details_template = {
         title: '',
@@ -70,9 +109,6 @@ export const PurchaseRequisition = () => {
                 validationProps: {
                     required: `${FORM_LABELS.PHARMACOLOGICAL_NAME} is required`
                 },
-                options: [
-
-                ],
                 style: {
                     width: "200px"
                 }
@@ -85,9 +121,6 @@ export const PurchaseRequisition = () => {
                 validationProps: {
                     required: ` ${FORM_LABELS.MEDICINE_NAME} is required`
                 },
-                options: [
-
-                ],
                 style: {
                     width: "200px"
                 }
@@ -158,9 +191,15 @@ export const PurchaseRequisition = () => {
         let medicine = [];
         try {
             let data = await PurchaseService.getRequesitionData(vendorId);
-            console.log(data, 'data');
-            data?.forEach((item) => medicine.push(...item?.medicine));
-            setRows([...medicine]);
+            console.log(data, 'abcdefgh');
+            if (data?.length > 0) {
+                data?.forEach((item) => medicine.push(...item?.medicines));
+                setRows([...medicine]);
+                setDataFetched(true);
+            } else {
+                setDataFetched(false);
+                setRows([]);
+            }
             setShowLoader(false);
         } catch (err) {
             console.log(err, 'error getting requisition data');
@@ -172,11 +211,11 @@ export const PurchaseRequisition = () => {
         let reqDetails = {
             vendorId: vendorDetails?.vendorId,
             requesitionOrderedData: selectedDate?.date,
-            requesitionId: uuidv4()
+            requesitionId: uuidv4(),
+            medicines: rows
         };
-        const data = rows.map((item) => ({...item, ...reqDetails}));
         try {
-            await PurchaseService.addRequisitionData(data).then(() => {
+            await PurchaseService.addRequisitionData(reqDetails).then(() => {
                 console.log('success');
                 setNotification(true);
             })
@@ -190,7 +229,7 @@ export const PurchaseRequisition = () => {
         // You can put your other logic here or call a function
         getFilteredRequestionData(vendorDetails?.vendorId);
     }, [vendorDetails, selectedDate]); // Add vendorDetails as a dependency to useEffect
-    
+
     const alertState = () => {
         setNotification(!notification);
     };
@@ -228,13 +267,18 @@ export const PurchaseRequisition = () => {
                 />
             </Box>
             <Box sx={{ marginTop: 3 }}>
-                <Table headArray={headArray} gridArray={rows} />
+                <EditableTable
+                    columns={columns}
+                    data={rows}
+                    setData={setRows}
+                    handleButtonClick={handleButtonClick}
+                />
             </Box>
             {modalOpen && <AddVendor showModal={modalOpen} action={() => setModalOpen(!modalOpen)} />}
             <div>
                 {rows.length > 0 && (
                     <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px ' }}>
-                        <Button variant="contained" onClick={() => onSaveData()}>Save</Button>
+                        <Button variant="contained" onClick={() => onSaveData()} disabled={dataFetched}>Save</Button>
                     </Box>
                 )}
             </div>
