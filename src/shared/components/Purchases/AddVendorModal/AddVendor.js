@@ -53,7 +53,7 @@ export const AddVendor = ({ showModal, action, refreshVendorNewVendors }) => {
                 open={showModal}
             >
                 <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                    Add New Vendor
+                     New Vendor
                 </DialogTitle>
                 <IconButton
                     aria-label="close"
@@ -96,7 +96,7 @@ export const AddVendor = ({ showModal, action, refreshVendorNewVendors }) => {
                     </DialogContent>
                     <DialogActions>
                         <Box sx={{ display: 'flex' }}>
-                            <input type="submit" value={`+ Add`} />
+                            <input type="submit" value={`+ Add`} style={{marginRight: '15px'}}/>
                             <input type="reset" value={`Close`} />
                         </Box>
                     </DialogActions>

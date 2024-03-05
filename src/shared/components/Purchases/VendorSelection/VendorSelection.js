@@ -48,42 +48,51 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
 
     return (
         <form>
-            <span>
-                <label>Select vendor</label>
-                <Controller
-                    name="vendorId"
-                    control={control}
-                    defaultValue=""
-                    render={({ field }) => (
-                        <Select
-                            options={vendors}
-                            {...field}
-                            label="Text field"
-                            onChange={(selectedOption) => handleVendorChange(selectedOption)}
-                            value={vendors.find((vendor) => vendor?.id === selectedVendor?.value)}
-                        />
-                    )}
-                />
-                <small className="text-danger">
-                    {errors?.role && errors.role.message}
-                </small>
-            </span>
-            <span>
-                <label>Date</label>
-                <Controller
-                    name="date"
-                    control={control}
-                    render={({ field }) => (
-                        <input type="date"
-                            {...field}
-                            onChange={(e) => handleDateChange(e.target.value)}
-                        />
-                    )}
-                />
-                <small className="text-danger">
-                    {errors?.inputField && errors.inputField.message}
-                </small>
-            </span>
+            <div style={{display: 'flex'}}>
+                <span>
+                    <label>Select vendor</label>
+                    <Controller
+                        name="vendorId"
+                        control={control}
+                        defaultValue=""
+                        render={({ field }) => (
+                            <Select
+                                options={vendors}
+                                {...field}
+                                label="Text field"
+                                onChange={(selectedOption) => handleVendorChange(selectedOption)}
+                                value={vendors.find((vendor) => vendor?.id === selectedVendor?.value)}
+                                styles={{
+                                    container: (provided) => ({
+                                        ...provided,
+                                        width: 300,
+                                        marginRight: 50 
+                                    })
+                                }}
+                            />
+                        )}
+                    />
+                    <small className="text-danger">
+                        {errors?.role && errors.role.message}
+                    </small>
+                </span>
+                <span>
+                    <label>Date</label>
+                    <Controller
+                        name="date"
+                        control={control}
+                        render={({ field }) => (
+                            <input type="date"
+                                {...field}
+                                onChange={(e) => handleDateChange(e.target.value)}
+                            />
+                        )}
+                    />
+                    <small className="text-danger">
+                        {errors?.inputField && errors.inputField.message}
+                    </small>
+                </span>
+            </div>
         </form>
     );
 };

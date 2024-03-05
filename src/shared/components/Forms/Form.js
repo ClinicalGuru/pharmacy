@@ -41,6 +41,19 @@ export const Form = ({
                                 {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
                             </div>
                         </Box>)
+                case 'textArea':
+                    return (
+                        <Box sx={{
+                            narginBottom: 2
+                        }}>
+                            <div key={name}>
+                                <Box variant="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title} </Box>
+                                <input style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)}/>
+                                {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
+                            </div>
+
+                        </Box>
+                    )
                 case 'number':
                     return (
                         <Box sx={{
@@ -127,7 +140,7 @@ export const Form = ({
                 <SubmitButton style={button?.styles} type="submit" className="btn"> {button?.btn_text}</SubmitButton>);
         })
     };
-    
+
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             {title && <h4>{title}</h4>}
