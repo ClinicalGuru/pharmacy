@@ -13,8 +13,11 @@ import { VendorSelection } from "./VendorSelection/index";
 import { EditableTable } from "../EditableTable";
 import { Notification } from '../Notification/index';
 import { Loader } from "../Loader/index";
+import { useForm } from 'react-hook-form';
+
 
 export const PurchaseRequisition = () => {
+    const { reset } = useForm();
     const [showLoader, setShowLoader] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [rows, setRows] = useState([]);
@@ -95,7 +98,6 @@ export const PurchaseRequisition = () => {
     const medicine_details_template = {
         title: '',
         submitButttonText: '+ Add',
-        clearFormBtnText: "Clear",
         formStyles: {
             backgroundColor: "#FFFFFF",
         },
@@ -154,9 +156,6 @@ export const PurchaseRequisition = () => {
             {
                 btn_text: "+ Add",
             },
-            {
-                btn_text: "Clear",
-            }
         ]
     };
 
@@ -175,10 +174,11 @@ export const PurchaseRequisition = () => {
         setSelectedDate({ date: value });
     }
 
-    const onAddMedicine = (formData) => {
+    const onAddMedicine = (formData, e) => {
         console.log({ ...formData, ...vendorDetails }, 'medicine added');
         const updatedRows = [...rows, { ...formData }];
         setRows(updatedRows);
+        e.target.reset();
         // console.log(rows, 'medicine added');
     };
 
@@ -259,6 +259,7 @@ export const PurchaseRequisition = () => {
                 <Form
                     template={medicine_details_template}
                     onSubmit={onAddMedicine}
+                    onResetForm
                     onValidate={validate}
                     showSubmitButton={true}
                     showClearFormButton={true}
