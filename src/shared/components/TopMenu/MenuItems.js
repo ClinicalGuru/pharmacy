@@ -22,6 +22,7 @@ const MenuItems = ({ items, depthLevel }) => {
             document.removeEventListener("touchstart", handler);
         };
     }, [dropdown]);
+
     const clickHandler = () => {
         window.innerWidth > 960 && setDropdown(true);
     };
@@ -31,6 +32,7 @@ const MenuItems = ({ items, depthLevel }) => {
     };
     const onNavigate = (item) => {
         navigate(`${item?.url}`);
+        setDropdown(false);
     }
     return (
         <li className="menu-items" ref={ref}

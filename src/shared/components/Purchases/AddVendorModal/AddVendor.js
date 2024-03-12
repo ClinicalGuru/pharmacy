@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
@@ -12,9 +12,10 @@ import { ErrorMessage, } from "./AddVendor.styles";
 import TextField from '@mui/material/TextField';
 import PurchaseService from "../../../services/Purchase.service";
 import { Loader } from "../../../components/Loader";
+import { RefreshVendorsDetailsContext } from "../../../../context/RefreshVendorDetailsContext";
 
-
-export const AddVendor = ({ showModal, action, refreshVendorNewVendors }) => {
+export const AddVendor = ({ showModal, action }) => {
+    const { setRefreshVDetails } = useContext(RefreshVendorsDetailsContext);
     const [open, setOpen] = useState(false);
     const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
     const {
@@ -39,7 +40,7 @@ export const AddVendor = ({ showModal, action, refreshVendorNewVendors }) => {
             await PurchaseService.addVendor(data);
             action(!showModal);
             reset();
-            refreshVendorNewVendors();
+            setRefreshVDetails(true);
         } catch (e) {
             setOpen(false);
             console.log(e, 'error')
@@ -53,7 +54,7 @@ export const AddVendor = ({ showModal, action, refreshVendorNewVendors }) => {
                 open={showModal}
             >
                 <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                     New Vendor
+                    New Vendor
                 </DialogTitle>
                 <IconButton
                     aria-label="close"
@@ -85,8 +86,8 @@ export const AddVendor = ({ showModal, action, refreshVendorNewVendors }) => {
                             </div>
                             <div>
                                 <TextField type='number' error={vendorDetailsErrors.phone?.type === "required"} id="outlined-basic"
-                                  {...vendorDetails("phone", { required: true, max: 10 })} label={FORM_LABELS.PHONE} variant="outlined" 
-                                  size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
+                                    {...vendorDetails("phone", { required: true, max: 10 })} label={FORM_LABELS.PHONE} variant="outlined"
+                                    size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
                             </div>
                             <div>
                                 <TextField error={vendorDetailsErrors.address?.type === "required"} id="outlined-basic"  {...vendorDetails("address", { required: true })} label={FORM_LABELS.ADDRESS} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
@@ -96,7 +97,7 @@ export const AddVendor = ({ showModal, action, refreshVendorNewVendors }) => {
                     </DialogContent>
                     <DialogActions>
                         <Box sx={{ display: 'flex' }}>
-                            <input type="submit" value={`+ Add`} style={{marginRight: '15px'}}/>
+                            <input type="submit" value={`+ Add`} style={{ marginRight: '15px' }} />
                             <input type="reset" value={`Close`} />
                         </Box>
                     </DialogActions>

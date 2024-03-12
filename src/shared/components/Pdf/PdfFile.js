@@ -2,6 +2,7 @@ import React from 'react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import moment from 'moment'
+import ListItemText from '@mui/material/ListItemText';
 
 export const PdfFile = ({ data }) => {
   const handleDownload = () => {
@@ -36,6 +37,7 @@ export const PdfFile = ({ data }) => {
   };
 
   return (
-    <button onClick={handleDownload}>Download PDF</button>
+    <ListItemText onClick={handleDownload} primary="Download as PDF" />
+    // <button onClick={handleDownload}>Download PDF</button>
   );
 };

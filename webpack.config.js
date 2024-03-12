@@ -25,7 +25,7 @@ module.exports = ({ mode } = { mode: "production" }) => {
                 {
                     test: /\.(jpe?g|png|woff|woff2|eot|ttf|svg)$/,
                     exclude: /node_modules/,
-                    use: ["url-loader", 'file-loader?name=[name].[ext]']
+                    use: ["url-loader", "file-loader"]
                 },
                 {
                     test: /\.(js|jsx)$/,

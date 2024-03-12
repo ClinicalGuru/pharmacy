@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from 'react';
-// import { FORM_LABELS } from "../../../Constants/index";
-
+import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Box } from "@mui/material";
-import { Form } from "../../../Forms/index";
-// import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
-// import { AddVendor } from "./AddVendorModal";
 import PurchaseService from "../../../../services/Purchase.service";
-import { Table } from "../../../Table";
-import { Container } from './RequisitionList.styles'
+import { Container } from './RequisitionList.styles';
+import { VendorSelection } from "../../../Purchases/VendorSelection/index";
+import { Loader } from "../../../Loader/index";
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { AlertMessage } from "../../../Alert/index"
+
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -21,159 +24,123 @@ const VisuallyHiddenInput = styled('input')({
     left: 0,
     whiteSpace: 'nowrap',
     width: 1,
-  });
+});
 export const RequisitionList = () => {
-   
-    const [modalOpen, setModalOpen] = useState(false);
-    const [vendorDetails, SetVendorDetails] = useState([]);
-    const [rowToEdit, setRowToEdit] = useState(null);
+    const [noDataAvailable, setNoDataAvailable] = useState(false);
+    const [selectVendorAlert, setSelectVendorAlert] = useState(true);
+    const [vendorDetails, setVendorDetails] = useState([]);
     const [rows, setRows] = useState([]);
-    const headArray = [
-        {
-            'head': 'Date',
-            'fieldName': 'date'
-        },
-        {
-            'head': 'Vendor Name',
-            'fieldName': 'vendorName'
-        },
-        {
-            'head': 'Purchase Requisition ID',
-            'fieldName': 'purchaseRequisitionId'
-        },
-        {
-            'head': 'Status',
-            'fieldName': 'status'
-        },
-        {
-            'head': 'Remarks',
-            'fieldName': 'remarks'
-        },
-        {
-            'head': 'Action',
-            'fieldName': ''
-        }
-    ]
-    let purchaseReports_details_template = {
-        title: '',
-        submitButttonText: 'Log in',
-        formStyles: {
-            backgroundColor: "#eee",
-        },
-        fields: [
-            {
-                title: 'Search',
-                type: 'text',
-                name: 'text',
-                validationProps: {
-                    required: ""
-                },
-                style: {
-                    width: "194px"
-                }
-            },
-            {
-                title: 'Select Date',
-                type: 'date',
-                name: 'date',
-                validationProps: {
-                    required: "Date is required"
-                },
-                style: {
-                    width: "194px"
-                }
-            },
+    const [showLoader, setShowLoader] = useState(false);
+    const [expanded, setExpanded] = React.useState(false);
 
-            {
-
-                title: 'Select Options',
-                type: 'select',
-                name: 'select',
-                options: [
-                    {
-                        value: "none",
-                        name: "None",
-                    },
-                ],
-                validationProps: {
-                    required: ""
-                },
-                style: {
-                    width: "194px"
-                }
-            },
-
-        ],
+    const handleChange = (panel) => (event, isExpanded) => {
+        setExpanded(isExpanded ? panel : false);
     };
-
-    const vendor_details_style = {
-        display: "flex",
-        gap: "28px 30px",
-        // alignItems: "center"
-        // justifyContent: "space-around"
-    };
-    const btn_styles = { display: "flex", justifyContent: "end" };
-    const onSubmit = (form) => {
-        console.log(form);
-    };
-
-    const validate = (watchValues, errorMethods) => {
-        // console.log(watchValues, 'watchValues')
-    };
-    const handleDeleteRow = (targetIndex) => {
-        setRows(rows.filter((_, idx) => idx !== targetIndex));
-    };
-
-    const handleEditRow = (idx) => {
-        setRowToEdit(idx);
-        setModalOpen(true);
-    };
-    const getVendors = async () => {
+    const getFilteredRequestionData = async (vendorId) => {
+        console.log(vendorId, 'vendorId quotation.js')
+        setShowLoader(true);
         try {
-            let data = await PurchaseService.getAllVendors();
-            const result = data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }));
-            SetVendorDetails(result);
-            console.log(purchaseReports_details_template, 'vendor_details_template', result)
-        } catch (e) {
-            console.log(e, 'error allVendors')
+            let data = await PurchaseService.getRequesitionData(vendorId);
+            setSelectVendorAlert(false);
+            console.log(data, 'data');
+            setRows([...data]);
+            setShowLoader(false);
+            if (data?.length === 0) {
+                setNoDataAvailable(true);
+            } else {
+                setNoDataAvailable(false);
+            };
+        } catch (err) {
+            console.log(err, 'error getting requisition data');
+            setShowLoader(false);
         }
     };
-    const refreshVendorNewVendors = () => {
-        getVendors();
+
+    const handleVendorSelection = (vendorDetails) => {
+        // vendorDetails?.vendorId = vendorId;
+        setVendorDetails({ vendorId: vendorDetails?.value, date: '' });
+        getFilteredRequestionData(vendorDetails?.value);
     };
-    useEffect(() => {
-        getVendors();
-    }, []);
+
+    const handelDateSelection = (value) => {
+        setVendorDetails({ vendorId: vendorDetails?.value, date: value })
+        // getFilteredRequestionData(vendorDetails);
+    };
+
     return (
         <Box sx={{
             padding: 2,
         }}>
             <Container>
-                <Form
-                    template={purchaseReports_details_template}
-                    onSubmit={onSubmit}
-                    validate={validate}
-                    showSubmitButton={false}
-                    form_styles={vendor_details_style}
-                    btn_styles={btn_styles}
-                />
+                <Container>
+                    <VendorSelection
+                        onSelectVendor={handleVendorSelection}
+                        onSelectDate={handelDateSelection}
+                    />
+                </Container>
                 <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
                     Export as Excel
                     <VisuallyHiddenInput type="file" />
                 </Button>
             </Container>
-            <Box sx={{ marginTop: 3 }}>
-                <Table headArray={headArray} gridArray={rows} />
-            </Box>
-            <div>
-                {rows.length > 0 && (
-                    <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px' }}>
-                        <Button variant="contained">Save</Button>
-                    </Box>
-                )}
-
+            <div sx={{marginTop: 8}}>
+                {rows?.map((item) => {
+                    return (
+                        <Accordion expanded={expanded === item?.requesitionId} onChange={handleChange(item?.requesitionId)}>
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1bh-content"
+                                id="panel1bh-header"
+                            >
+                                <Typography sx={{ width: '33%', flexShrink: 0 }}>
+                                    Created Date: {item?.requesitionCreatedDate}
+                                </Typography>
+                                <Typography sx={{ width: '33%', flexShrink: 0 }}>
+                                    Status: {item?.status}
+                                </Typography>
+                                <Typography sx={{ color: 'text.secondary' }}>Number of medicines ordered: {item?.medicines?.length}</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Pharmacological Name</th>
+                                            <th align="right">Brand Name</th>
+                                            <th align="right">Dose</th>
+                                            <th align="right">Form</th>
+                                            <th align="right">Quantity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {item?.medicines?.map((row) => (
+                                            <tr
+                                                key={row.pharmacologicalName}
+                                            >
+                                                <td>
+                                                    {row.pharmacologicalName}
+                                                </td>
+                                                <td align="right">{row.brandName}</td>
+                                                <td align="right">{row.dose}</td>
+                                                <td align="right">{row.form}</td>
+                                                <td align="right">{row.quantity}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </AccordionDetails>
+                        </Accordion>
+                    )
+                })}
             </div>
+            {noDataAvailable && <AlertMessage
+                type="info"
+                title="Info"
+                message="No data availablefor this vendor" />}
+            {selectVendorAlert && <AlertMessage
+                type="info"
+                title="Info"
+                message="Please select vendor to see purchage requisitions history" />}
+            <Loader open={showLoader} />
         </Box>
-
     )
 }

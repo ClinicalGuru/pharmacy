@@ -1,38 +1,38 @@
-import { useEffect } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useForm, Controller } from "react-hook-form";
 import PurchaseService from "../../../services/Purchase.service";
-import { useState } from "react";
 import Select from 'react-select';
+import { RefreshVendorsDetailsContext } from "../../../../context/RefreshVendorDetailsContext";
+import { Loader } from "../../Loader/index";
 
 export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
-
+    const { refreshVDetails } = useContext(RefreshVendorsDetailsContext);
     const { control, formState: { errors }, setValue, watch } = useForm({
         mode: "onChange"
     });
-
+    const [showLoader, setShowLoader] = useState(false);
     const [vendors, setVendors] = useState([]);
     const [selectedVendor, setSelectedVendor] = useState({});
     const [selectedDate, setSelectedDate] = useState({});
 
     const getVendors = async () => {
+        setShowLoader(true);
         try {
             let data = await PurchaseService.getAllVendors();
             const result = data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }));
+            result.unshift({ id: 'select', name: '--Select--' })
             setVendors(result.map((item) => ({ value: item?.id, label: item?.name })));
+            setShowLoader(false);
         } catch (err) {
             console.log(err, 'error allVendors');
+            setShowLoader(false);
         }
     };
 
+
     useEffect(() => {
         getVendors();
-    }, []);
-
-    // useEffect(() => {
-    //     setValue("vendorId", selectedVendor.value);
-    //     console.log(selectedVendor, 'selectedVendor', selectedDate)
-    // }, [selectedVendor, selectedDate]);
-
+    }, [refreshVDetails]);
     const handleVendorChange = (selectedOption) => {
         setValue("vendorId", selectedOption);
         onSelectVendor(selectedOption); // Callback to update parent state
@@ -48,7 +48,7 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
 
     return (
         <form>
-            <div style={{display: 'flex'}}>
+            <div style={{ display: 'flex' }}>
                 <span>
                     <label>Select vendor</label>
                     <Controller
@@ -66,7 +66,7 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
                                     container: (provided) => ({
                                         ...provided,
                                         width: 300,
-                                        marginRight: 50 
+                                        marginRight: 50
                                     })
                                 }}
                             />
@@ -93,6 +93,7 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
                     </small>
                 </span>
             </div>
+            <Loader open={showLoader} />
         </form>
     );
 };

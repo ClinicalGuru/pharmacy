@@ -10,6 +10,7 @@ import { VendorSelection } from "../VendorSelection/index";
 import { Notification } from "../../Notification/index";
 import { Loader } from "../../Loader/index";
 import { v4 as uuidv4 } from 'uuid';
+import { List } from "./List";
 
 export const Quotations = () => {
     const [showLoader, setShowLoader] = useState(false);
@@ -17,13 +18,8 @@ export const Quotations = () => {
     const [rows, setRows] = useState([]);
     const [reqisition, setRequisition] = useState();
     const [notification, setNotification] = useState(false);
-    const fields = {
-        mrp: '',
-        ptr: '',
-        pts: '',
-        gst: '',
-        discount: ''
-    };
+    const [modalOpen, setModalOpen] = useState(false);
+    const [requesitionId, setRequesitionId] = useState('');
     const columns = [
         {
             'Header': 'Pharmacological Name',
@@ -93,7 +89,7 @@ export const Quotations = () => {
     ];
     const handleButtonClick = (action, row) => {
         const newData = rows.map((rowData) => {
-            if (rowData.id === row.id) {
+            if (rowData.pharmacologicalName === row.pharmacologicalName) {
                 if (action === "edit") {
                     return { ...rowData, isEditing: true, prevData: { ...rowData } };
                 } else if (action === "cancel") {
@@ -236,32 +232,15 @@ export const Quotations = () => {
         // console.log(watchValues, 'watchValues')
     };
 
-    const getVendors = async () => {
-        setShowLoader(true);
-        try {
-            let data = await PurchaseService.getAllVendors();
-            const result = data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }));
-            setVendorDetails(result);
-            console.log(result, 'result', rows);
-            setShowLoader(false);
-        } catch (e) {
-            console.log(e, 'error allVendors');
-            setShowLoader(false);
-        }
-    };
-
-    useEffect(() => {
-        getVendors();
-    }, []);
-
     const getFilteredRequestionData = async (vendorId) => {
         console.log(vendorId, 'vendorId quotation.js')
         setShowLoader(true);
         try {
             let data = await PurchaseService.getRequesitionData(vendorId);
             setRequisition(data);
-            setRows([...data]);
+            // setRows([...data]);
             setShowLoader(false);
+            setModalOpen(true);
         } catch (err) {
             console.log(err, 'error getting requisition data');
             setShowLoader(false);
@@ -286,7 +265,7 @@ export const Quotations = () => {
             requesitionId: reqisition[0]?.requesitionId,
             quotationId: uuidv4()
         };
-        const data = rows.map((item) => ({...item, ...quotationDetails}));
+        const data = rows.map((item) => ({ ...item, ...quotationDetails }));
         try {
             await PurchaseService.saveQuotation(data).then((res) => {
                 console.log(res, 'Quotation data saved successfully');
@@ -302,7 +281,11 @@ export const Quotations = () => {
     const alertState = () => {
         setNotification(!notification);
     };
-
+    const getRequisitionId = (value) => {
+        setRequesitionId(value);
+        const rslt = reqisition.find(item => item?.requesitionId === value);
+        setRows([...rslt?.medicines]);
+    }
     return (
         <Box sx={{
             padding: 2,
@@ -349,6 +332,7 @@ export const Quotations = () => {
 
             </div>
             <Loader open={showLoader} />
+            {<List showModal={modalOpen} requisitions={reqisition} action={() => setModalOpen(!modalOpen)} getRequisitionId={getRequisitionId} />}
             {notification && <Notification notificationState={notification} type="success" message="Quotation saved successfully" action={alertState} />}
         </Box>
     )

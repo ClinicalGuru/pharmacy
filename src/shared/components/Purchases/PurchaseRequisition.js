@@ -6,18 +6,16 @@ import Button from '@mui/material/Button';
 import { Container } from "./PurchaseRequisition.styles";
 import { AddVendor } from "./AddVendorModal";
 import PurchaseService from "../../services/Purchase.service";
-import { Table } from "../Table";
-import { PdfFile } from '../Pdf/index';
+import { RefreshVendorsDetailsContext } from '../../../context/RefreshVendorDetailsContext'
+
 import { v4 as uuidv4 } from 'uuid';
 import { VendorSelection } from "./VendorSelection/index";
 import { EditableTable } from "../EditableTable";
 import { Notification } from '../Notification/index';
 import { Loader } from "../Loader/index";
-import { useForm } from 'react-hook-form';
-
+import { DownloadOptionsModal } from "../DownloadOptionsModal/DownloadOptionsModal"
 
 export const PurchaseRequisition = () => {
-    const { reset } = useForm();
     const [showLoader, setShowLoader] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [rows, setRows] = useState([]);
@@ -25,12 +23,9 @@ export const PurchaseRequisition = () => {
     const [vendorDetails, setVendorDetails] = useState();
     const [selectedDate, setSelectedDate] = useState();
     const [notification, setNotification] = useState(false);
+    const [refreshVDetails, setRefreshVDetails] = useState(false);
     const btn_styles = { display: "flex", justifyContent: "end" };
-    const data = [
-        { id: 1, name: 'John Doe', age: 25 },
-        { id: 2, name: 'Jane Smith', age: 30 },
-        // Add more data as needed
-    ];
+    const [downloadModal, setDownloadModal] = useState(false);
     const columns = [
         {
             'Header': 'Pharmacological Name',
@@ -166,7 +161,7 @@ export const PurchaseRequisition = () => {
     };
 
     const handleVendorSelection = (details) => {
-        let updatedObj = { vendorId: details?.value }
+        let updatedObj = { vendorId: details?.value, vendorName: details?.label }
         setVendorDetails(updatedObj);
     }
 
@@ -186,63 +181,43 @@ export const PurchaseRequisition = () => {
         console.log('selectedVendor');
     }, []);
 
-    const getFilteredRequestionData = async (vendorId) => {
-        setShowLoader(true);
-        let medicine = [];
-        try {
-            let data = await PurchaseService.getRequesitionData(vendorId);
-            console.log(data, 'abcdefgh');
-            if (data?.length > 0) {
-                data?.forEach((item) => medicine.push(...item?.medicines));
-                setRows([...medicine]);
-                setDataFetched(true);
-            } else {
-                setDataFetched(false);
-                setRows([]);
-            }
-            setShowLoader(false);
-        } catch (err) {
-            console.log(err, 'error getting requisition data');
-            setShowLoader(false);
-        }
-    };
-
     const onSaveData = async () => {
         let reqDetails = {
-            vendorId: vendorDetails?.vendorId,
-            requesitionOrderedData: selectedDate?.date,
+            ...vendorDetails,
+            requesitionCreatedDate: selectedDate?.date,
             requesitionId: uuidv4(),
-            medicines: rows
+            medicines: rows,
+            status: 'created'
         };
         try {
             await PurchaseService.addRequisitionData(reqDetails).then(() => {
                 console.log('success');
                 setNotification(true);
+                setDownloadModal(true);
             })
         } catch (err) {
             console.log(err, 'err add requisition data');
         }
     };
-    useEffect(() => {
-        // This code will run whenever vendorDetails is updated
-        console.log(vendorDetails, 'vendorDetails');
-        // You can put your other logic here or call a function
-        getFilteredRequestionData(vendorDetails?.vendorId);
-    }, [vendorDetails, selectedDate]); // Add vendorDetails as a dependency to useEffect
 
     const alertState = () => {
         setNotification(!notification);
     };
-
+    const handleClose = () => {
+        setDownloadModal(false);
+    };
     return (
         <Box sx={{
             padding: 2,
         }}>
             <Container>
-                <VendorSelection
-                    onSelectVendor={handleVendorSelection}
-                    onSelectDate={handelDateSelection}
-                />
+                <RefreshVendorsDetailsContext.Provider value={{ refreshVDetails, setRefreshVDetails }}>
+                    <VendorSelection
+                        onSelectVendor={handleVendorSelection}
+                        onSelectDate={handelDateSelection}
+                    />
+                    {modalOpen && <AddVendor requisitions={rows} showModal={modalOpen} action={() => setModalOpen(!modalOpen)} />}
+                </RefreshVendorsDetailsContext.Provider>
                 <div>
                     <Button variant="contained" onClick={() => setModalOpen(true)}>+ Add Vendor</Button>
                 </div>
@@ -275,17 +250,16 @@ export const PurchaseRequisition = () => {
                     handleButtonClick={handleButtonClick}
                 />
             </Box>
-            {modalOpen && <AddVendor showModal={modalOpen} action={() => setModalOpen(!modalOpen)} />}
             <div>
                 {rows.length > 0 && (
                     <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px ' }}>
-                        <Button variant="contained" onClick={() => onSaveData()} disabled={dataFetched}>Save</Button>
+                        <Button variant="contained" onClick={() => onSaveData()} disabled={dataFetched}>Create purchage requisition</Button>
                     </Box>
                 )}
             </div>
-            <PdfFile data={rows} />
             {notification && <Notification notificationState={notification} type="success" message="Purchage requisition saved successfully" action={alertState} />}
             <Loader open={showLoader} />
+            <DownloadOptionsModal open={downloadModal} onClose={handleClose} rows={rows} />
         </Box>
     )
 }
