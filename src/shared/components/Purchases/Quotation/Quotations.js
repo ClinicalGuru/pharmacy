@@ -175,7 +175,7 @@ export const Quotations = () => {
             },
             {
                 title: FORM_LABELS.PTR,
-                type: 'text',
+                type: 'number',
                 name: 'ptr',
                 validationProps: {
                     required: `${FORM_LABELS.PTR} is required`
@@ -237,6 +237,7 @@ export const Quotations = () => {
         setShowLoader(true);
         try {
             let data = await PurchaseService.getRequesitionData(vendorId);
+            console.log(data, 'quotation')
             setRequisition(data);
             // setRows([...data]);
             setShowLoader(false);
@@ -284,6 +285,7 @@ export const Quotations = () => {
     const getRequisitionId = (value) => {
         setRequesitionId(value);
         const rslt = reqisition.find(item => item?.requesitionId === value);
+        console.log(rslt, 'rslt')
         setRows([...rslt?.medicines]);
     }
     return (

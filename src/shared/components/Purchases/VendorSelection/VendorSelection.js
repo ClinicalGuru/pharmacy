@@ -29,10 +29,10 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
         }
     };
 
-
     useEffect(() => {
         getVendors();
     }, [refreshVDetails]);
+    
     const handleVendorChange = (selectedOption) => {
         setValue("vendorId", selectedOption);
         onSelectVendor(selectedOption); // Callback to update parent state

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { SubmitButton } from "./Forms.styles";
 import { Box, Typography, Button } from "@mui/material";
-import { AutoComplete } from "../autoComplete/index"
+import { AutoComplete } from "../autoComplete/index";
+import CreatableSelect from 'react-select/creatable';
 
 export const Form = ({
     template,
@@ -15,15 +16,24 @@ export const Form = ({
     form_styles,
     btn_styles,
     watchFields,
-    onValidate
+    onValidate = () => {},
 }) => {
-    let { register, handleSubmit, watch, setError, clearErrors, formState: { errors }, reset } = useForm();
+    // const [selectOption, setSelectedOption] = useState({});
+    let { control, register, handleSubmit, watch, setError, clearErrors, formState: { errors }, reset } = useForm({
+        mode: "onChange"
+    });
     let { title, fields, formStyles, btns, isBlockLevelBtns = true } = template;
     let watchValues = watch(watchFields);
-    // onValidate(watchValues, { setError, clearErrors });
+    // console.log(watchValues, 'watchValues')
+    onValidate(watchValues, { setError, clearErrors });
+    // const handleVendorChange = (selectedOption) => {
+    //     setSelectedOption(selectedOption);
+    // };
     const renderFields = (fields) => {
         return fields.map(field => {
-            let { title, type, name, validationProps, dynamic, options, style } = field;
+            let { title, type, name, validationProps, dynamic, options = [], style } = field;
+            console.log(options, 'options')
+           
             let finalStyle = { ...style, ...formStyles };
             // let showField = dynamic ? watchValues([dynamic['field']]) ===dynamic['value']: true;
             // if(!showField) return
@@ -46,7 +56,7 @@ export const Form = ({
                         }}>
                             <div key={name}>
                                 <Box variant="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title} </Box>
-                                <input style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)}/>
+                                <input style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
                                 {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
                             </div>
 
@@ -98,8 +108,8 @@ export const Form = ({
                             <Box sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
                             <select style={finalStyle} name={name} id={name} {...register(name, validationProps)} >
                                 <option>select</option>
-                                {options && options.length > 0 && options.map(({ value, name, index }) => {
-                                    return <option key={`${value} ${index}`} value={value}>{name}</option>
+                                {options && options?.length > 0 && options?.map(({ value, label, index }) => {
+                                    return <option key={`${value} ${index}`} value={value}>{label}</option>
                                 })}
                             </select>
                             {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
@@ -117,7 +127,35 @@ export const Form = ({
                     return (
                         <div key={name}>
                             <Box variant="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
-                            <input style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
+                            <Controller
+                                name={name}
+                                control={control}
+                                defaultValue=""
+                                render={({ field }) => (
+                                    <CreatableSelect
+                                    {...field}
+                                    options={options}
+                                    onChange={(newValue, actionMeta) => {
+                                        field.onChange(newValue);
+                        
+                                        // If the clear action is triggered, set the field value to null
+                                        if (actionMeta.action === 'clear') {
+                                            field.onChange(null);
+                                        }
+                        
+                                        // Optionally, trigger validation
+                                        field.onBlur();
+                                    }}
+                                    styles={{
+                                        container: (provided) => ({
+                                            ...provided,
+                                            width: 300,
+                                            marginRight: 50
+                                        })
+                                    }}
+                                />
+                                )}
+                            />
                             {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
                         </div>
                     )

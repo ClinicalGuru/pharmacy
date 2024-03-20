@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Box } from "@mui/material";
 import { Form } from "../../Forms/index";
 import Button from '@mui/material/Button';
@@ -8,10 +8,14 @@ import PurchaseService from "../../../services/Purchase.service";
 import { Table } from "../../Table";
 import { Loader } from "../../Loader/index";
 
+
 export const MasterList = () => {
     const [showLoader, setShowLoader] = useState(false);
     const [vendorDetails, SetVendorDetails] = useState([]);
     const [rows, setRows] = useState([]);
+    const [initialVendorFormState, setInitialVendorFormState] = useState([]);
+
+    let filter = {};
     const headArray = [
         {
             'head': 'Pharmacological Name',
@@ -63,6 +67,7 @@ export const MasterList = () => {
         formStyles: {
             backgroundColor: "#eee",
         },
+        watchFields: ['vendorId', 'listType', 'medicinesList'],
         fields: [
             {
 
@@ -120,6 +125,21 @@ export const MasterList = () => {
                 style: {
                     width: "194px"
                 }
+            },
+            {
+
+                title: 'Medicines List',
+                type: 'autoComplete',
+                name: 'medicinesList',
+                options: [
+                    ...initialVendorFormState
+                ],
+                validationProps: {
+                    required: "This field is required"
+                },
+                style: {
+                    width: "194px"
+                }
             }
         ]
     };
@@ -135,7 +155,10 @@ export const MasterList = () => {
     };
 
     const validate = (watchValues, errorMethods) => {
-        console.log(watchValues, 'watchValues')
+        console.log(watchValues, 'watchValues');
+        let { vendorId, listType, medicinesList } = watchValues;
+        console.log(vendorId, listType, medicinesList);
+        getMedicineById(medicinesList?.value)
     };
 
     const getVendors = async () => {
@@ -150,10 +173,40 @@ export const MasterList = () => {
             setShowLoader(false);
         }
     };
+    const getMedicines = async () => {
+        setShowLoader(true);
+        try {
+            let data = await PurchaseService.getAllMedicines();
+            const result = data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }));
+            result.unshift({ id: 'select', brandName: '--Select--' });
+            console.log(result.map((item) => ({ value: item?.id, label: item?.brandName })), 'result');
+            setInitialVendorFormState(result.map((item) => ({ value: item?.id, label: item?.brandName })));
+            setShowLoader(false);
+        } catch (e) {
+            console.log(e, 'error allVendors');
+            setShowLoader(false);
+        }
+    }
 
     useEffect(() => {
         getVendors();
+        getMedicines();
     }, []);
+
+    const getMedicineById = async (id) => {
+        setShowLoader(true);
+        try {
+            let data = await PurchaseService.medicineById(id);
+            console.log(data, 'data')
+        } catch (err) {
+            console.log(err, 'Master list get medicines by id');
+        }
+    }
+    // useEffect(() => {
+    //     console.log(filter, 'val');
+    //     let { vendorId, listType, medicineList } = filter;
+    //     // getMedicineById(medicineList?.value);
+    // }, [filter])
 
     return (
         <Box sx={{

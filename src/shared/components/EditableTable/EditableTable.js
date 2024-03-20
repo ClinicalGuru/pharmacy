@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useTable } from "react-table";
 
 export const EditableTable = ({ columns, data, setData, handleButtonClick }) => {
-  console.log(data, 'data')
+
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
@@ -10,8 +10,9 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick }) => 
     });
 
   const handleInputChange = (event, row, columnId) => {
+    console.log(data, 'editable table')
     const newData = data.map((rowData) => {
-      if (rowData.id === row.original.id) {
+      if (rowData.medicineId === row.original.medicineId) {
         return { ...rowData, [columnId]: event.target.value };
       }
       return rowData;

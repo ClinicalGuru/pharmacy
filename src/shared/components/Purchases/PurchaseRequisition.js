@@ -26,6 +26,8 @@ export const PurchaseRequisition = () => {
     const [refreshVDetails, setRefreshVDetails] = useState(false);
     const btn_styles = { display: "flex", justifyContent: "end" };
     const [downloadModal, setDownloadModal] = useState(false);
+    const [pharmacologicalNames, setPharmacologicalNames] = useState([]);
+    const [brandNames, setBrandNames] = useState([]);
     const columns = [
         {
             'Header': 'Pharmacological Name',
@@ -101,26 +103,28 @@ export const PurchaseRequisition = () => {
         fields: [
             {
                 title: FORM_LABELS.PHARMACOLOGICAL_NAME,
-                type: 'autoComplete',
+                type: 'select',
                 name: 'pharmacologicalName',
                 validationProps: {
                     required: `${FORM_LABELS.PHARMACOLOGICAL_NAME} is required`
                 },
                 style: {
                     width: "200px"
-                }
+                },
+                options: [...pharmacologicalNames]
             },
             {
 
                 title: FORM_LABELS.MEDICINE_NAME,
-                type: 'autoComplete',
+                type: 'select',
                 name: 'brandName',
                 validationProps: {
                     required: ` ${FORM_LABELS.MEDICINE_NAME} is required`
                 },
                 style: {
                     width: "200px"
-                }
+                },
+                options: [...brandNames]
             },
             {
                 title: FORM_LABELS.DOSE,
@@ -169,16 +173,51 @@ export const PurchaseRequisition = () => {
         setSelectedDate({ date: value });
     }
 
-    const onAddMedicine = (formData, e) => {
-        console.log({ ...formData, ...vendorDetails }, 'medicine added');
-        const updatedRows = [...rows, { ...formData }];
-        setRows(updatedRows);
-        e.target.reset();
-        // console.log(rows, 'medicine added');
+    const addMedicine = async (formData, e) => {
+        try {
+            const docRef = await PurchaseService.addMedicine(formData);
+            console.log(docRef);
+            const updatedRows = [...rows, { ...formData, "medicineId": docRef }];
+            console.log(updatedRows, 'updatedRows')
+            setRows(updatedRows);
+            e.target.reset();
+            setShowLoader(false);
+        } catch (err) {
+            setShowLoader(false);
+            console.log(err, 'err adding medicine data');
+        }
+    }
+    
+    const onAddMedicine = async (formData, e) => {
+        setShowLoader(true);
+        console.log(formData, 'formData')
+        for (let key in formData) {
+            if (formData[key]?.value) formData[key] = formData[key].label
+        };
+        if (formData?.id) {
+            formData['medicineId'] = formData?.value;
+        }
+        try {
+            await PurchaseService.getAllMedicinesByFilter(formData).then((data) => {
+                console.log(data, 'getAllMedicines');
+                if (data.length === 0) {
+                    addMedicine(formData, e);
+                    return;
+                };
+                const updatedRows = [...rows, { ...formData }];
+                setRows(updatedRows);
+                setShowLoader(false);
+                e.target.reset();
+            })
+        } catch (err) {
+            setShowLoader(false);
+            console.log(err, 'err getting medicines data');
+        }
     };
 
+
     const validate = useCallback((watchValues, errorMethods) => {
-        console.log('selectedVendor');
+        // console.log('selectedVendor');
     }, []);
 
     const onSaveData = async () => {
@@ -206,6 +245,22 @@ export const PurchaseRequisition = () => {
     const handleClose = () => {
         setDownloadModal(false);
     };
+    const getMedicines = async () => {
+        setShowLoader(true);
+        try {
+            let data = await PurchaseService.getAllMedicines();
+            const result = data?.docs?.map((doc) => ({ ...doc?.data(), id: doc?.id }));
+            setPharmacologicalNames(result?.map((item) => ({ value: item?.id, label: item?.pharmacologicalName })));
+            setBrandNames(result?.map((item) => ({ value: item?.id, label: item?.brandName })));
+            setShowLoader(false);
+        } catch (e) {
+            console.log(e, 'error allVendors');
+            setShowLoader(false);
+        }
+    }
+    useEffect(() => {
+        getMedicines();
+    }, []);
     return (
         <Box sx={{
             padding: 2,
