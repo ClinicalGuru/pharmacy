@@ -103,7 +103,7 @@ export const PurchaseRequisition = () => {
         fields: [
             {
                 title: FORM_LABELS.PHARMACOLOGICAL_NAME,
-                type: 'select',
+                type: 'autoComplete',
                 name: 'pharmacologicalName',
                 validationProps: {
                     required: `${FORM_LABELS.PHARMACOLOGICAL_NAME} is required`
@@ -116,7 +116,7 @@ export const PurchaseRequisition = () => {
             {
 
                 title: FORM_LABELS.MEDICINE_NAME,
-                type: 'select',
+                type: 'autoComplete',
                 name: 'brandName',
                 validationProps: {
                     required: ` ${FORM_LABELS.MEDICINE_NAME} is required`
@@ -187,25 +187,29 @@ export const PurchaseRequisition = () => {
             console.log(err, 'err adding medicine data');
         }
     }
-    
+
     const onAddMedicine = async (formData, e) => {
         setShowLoader(true);
-        console.log(formData, 'formData')
-        for (let key in formData) {
-            if (formData[key]?.value) formData[key] = formData[key].label
+        console.log(formData, 'formData');
+        const { dose, form, quantity, pharmacologicalName, brandName } = formData;
+        const transformedObject = {
+            dose,
+            form,
+            quantity,
+            pharmacologicalName: pharmacologicalName?.label,
+            brandName: brandName?.label,
+            medicineId: brandName?.value
         };
-        if (formData?.id) {
-            formData['medicineId'] = formData?.value;
-        }
         try {
-            await PurchaseService.getAllMedicinesByFilter(formData).then((data) => {
+            await PurchaseService.getAllMedicinesByFilter(transformedObject).then((data) => {
                 console.log(data, 'getAllMedicines');
                 if (data.length === 0) {
-                    addMedicine(formData, e);
+                    addMedicine(transformedObject, e);
                     return;
                 };
-                const updatedRows = [...rows, { ...formData }];
+                const updatedRows = [...rows, { ...transformedObject }];
                 setRows(updatedRows);
+                console.log(updatedRows, 'updatedRows')
                 setShowLoader(false);
                 e.target.reset();
             })
@@ -250,8 +254,8 @@ export const PurchaseRequisition = () => {
         try {
             let data = await PurchaseService.getAllMedicines();
             const result = data?.docs?.map((doc) => ({ ...doc?.data(), id: doc?.id }));
-            setPharmacologicalNames(result?.map((item) => ({ value: item?.id, label: item?.pharmacologicalName })));
-            setBrandNames(result?.map((item) => ({ value: item?.id, label: item?.brandName })));
+            setPharmacologicalNames(result?.map((item) => ({ value: item?.id, name: item?.pharmacologicalName })));
+            setBrandNames(result?.map((item) => ({ value: item?.id, name: item?.brandName })));
             setShowLoader(false);
         } catch (e) {
             console.log(e, 'error allVendors');

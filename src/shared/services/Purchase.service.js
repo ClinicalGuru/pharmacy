@@ -1,5 +1,5 @@
 import { firestore } from "../../context/firebase";
-import { addDoc, getDocs, collection, setDoc, deleteDoc, doc, query, onSnapshot, writeBatch, where } from "firebase/firestore";
+import { addDoc, getDocs, collection, orderBy, deleteDoc, doc, query, onSnapshot, writeBatch, where } from "firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
 
 const vendorCollectionRef = collection(firestore, "vendors");
@@ -96,9 +96,20 @@ class PurchaseService {
             console.error('Error adding data to Firestore: ', error);
         }
     }
-    medicineById = async (medicineId) => {
-        console.log(medicineId, 'medicine id')
-        const queryRef = query(quotationCollectionRef, where("id", "==", medicineId));
+    medicineById = async (vendorId,medicineId) => {
+        debugger
+        let queryRef;
+        if (medicineId && vendorId && medicineId !== '' && vendorId !== '') {
+            queryRef = query(quotationCollectionRef, where("medicineId", "==", medicineId),
+                where("vendorId", "==", vendorId),
+                orderBy("pts", "asc"));
+        } else if (medicineId && medicineId !== '') {
+            queryRef = query(quotationCollectionRef, where("medicineId", "==", medicineId),
+                orderBy("pts", "asc"));
+        } else {
+            queryRef = query(quotationCollectionRef, where("vendorId", "==", vendorId),
+                orderBy("pts", "asc"));
+        }
         const querySnapshot = await getDocs(queryRef);
         const filteredData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
         return filteredData;

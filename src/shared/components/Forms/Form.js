@@ -108,8 +108,8 @@ export const Form = ({
                             <Box sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
                             <select style={finalStyle} name={name} id={name} {...register(name, validationProps)} >
                                 <option>select</option>
-                                {options && options?.length > 0 && options?.map(({ value, label, index }) => {
-                                    return <option key={`${value} ${index}`} value={value}>{label}</option>
+                                {options && options?.length > 0 && options?.map((option, index) => {
+                                    return <option key={`${option?.value} ${index}`} value={option?.value}>{option?.name}</option>
                                 })}
                             </select>
                             {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
@@ -134,7 +134,7 @@ export const Form = ({
                                 render={({ field }) => (
                                     <CreatableSelect
                                     {...field}
-                                    options={options}
+                                    options={options?.map(option => ({ value: option?.value, label: option?.name }))}
                                     onChange={(newValue, actionMeta) => {
                                         field.onChange(newValue);
                         

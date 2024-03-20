@@ -1,164 +1,117 @@
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box } from "@mui/material";
-import { Form } from "../../Forms/index";
 import Button from '@mui/material/Button';
 import { Container } from "./MasterList.styles";
 import PurchaseService from "../../../services/Purchase.service";
-import { Table } from "../../Table";
 import { Loader } from "../../Loader/index";
-
+import { EditableTable } from "../../EditableTable";
+import { useForm } from "react-hook-form";
 
 export const MasterList = () => {
     const [showLoader, setShowLoader] = useState(false);
     const [vendorDetails, SetVendorDetails] = useState([]);
     const [rows, setRows] = useState([]);
-    const [initialVendorFormState, setInitialVendorFormState] = useState([]);
-
-    let filter = {};
-    const headArray = [
+    const [medicineList, setMedicineList] = useState([]);
+    const [dataFetched, setDataFetched] = useState(false);
+    const [filter, setFilter] = useState({
+        vendorId: "",
+        list: "",
+        medicineId: ""
+    });
+    const columns = [
         {
-            'head': 'Pharmacological Name',
-            'fieldName': 'pharmacologicalName'
+            'Header': 'S.No',
+            'accessor': 's.no',
+            editEnable: false,
         },
         {
-            'head': 'Brand Name',
-            'fieldName': 'brandName'
+            'Header': 'Pharmacological Name',
+            'accessor': 'pharmacologicalName',
+            editEnable: true,
         },
         {
-            'head': 'Dose',
-            'fieldName': 'dose'
+            'Header': 'Brand Name',
+            'accessor': 'brandName',
+            editEnable: true,
         },
         {
-            'head': 'Form',
-            'fieldName': 'form'
+            'Header': 'Dose',
+            'accessor': 'dose',
+            editEnable: true,
         },
         {
-            'head': 'Qantity / Strips',
-            'fieldName': 'quantity'
+            'Header': 'Form',
+            'accessor': 'form',
+            editEnable: true,
         },
         {
-            'head': 'MRP',
-            'fieldName': 'mrp'
+            'Header': 'Qantity / Strips',
+            'accessor': 'quantity',
+            editEnable: true,
         },
         {
-            'head': 'PTR',
-            'fieldName': 'ptr'
+            'Header': 'MRP',
+            'accessor': 'mrp',
+            editEnable: false,
         },
         {
-            'head': 'PTS',
-            'fieldName': 'pts'
+            'Header': 'PTR',
+            'accessor': 'ptr',
+            editEnable: false,
         },
         {
-            'head': 'GST',
-            'fieldName': 'gst'
+            'Header': 'pts',
+            'accessor': 'pts',
+            editEnable: false,
         },
         {
-            'head': 'Discount',
-            'fieldName': 'discount'
+            'Header': 'GST',
+            'accessor': 'gst',
+            editEnable: false,
         },
         {
-            'head': 'Action',
-            'fieldName': ''
-        }
+            'Header': 'Discount',
+            'accessor': 'discount',
+            editEnable: false,
+        },
+        {
+            Header: "Actions",
+            id: "actions",
+            disableSortBy: true,
+            Cell: ({ row, column, cell }) =>
+                row.original.isEditing ? (
+                    <>
+                        <button onClick={() => handleButtonClick("save", row.original)}>
+                            Save
+                        </button>
+                        <button onClick={() => handleButtonClick("cancel", row.original)}>
+                            Cancel
+                        </button>
+                    </>
+                ) : (
+                    <button disabled={dataFetched} onClick={() => handleButtonClick("edit", row.original)}>
+                        Edit
+                    </button>
+                ),
+        },
     ];
-    let vendor_details_template = {
-        title: '',
-        formStyles: {
-            backgroundColor: "#eee",
-        },
-        watchFields: ['vendorId', 'listType', 'medicinesList'],
-        fields: [
-            {
 
-                title: 'Vendor Name',
-                type: 'select',
-                name: 'vendorId',
-                options: [
-                    {
-                        value: "none",
-                        name: "None",
-                    },
-                    ...vendorDetails.map(vendor => ({
-                        value: vendor.id,
-                        name: vendor.name,
-                        ...vendor
-                    }))
-                ],
-                validationProps: {
-                    required: "Vendor name is required"
-                },
-                style: {
-                    width: "194px"
-                }
-            },
-            {
-
-                title: 'Select List',
-                type: 'select',
-                name: 'listType',
-                options: [
-                    {
-                        value: "none",
-                        name: "None",
-                    },
-                    {
-                        value: "l1",
-                        name: "L1",
-                    }, {
-                        value: "l2",
-                        name: "L2",
-                    }, {
-                        value: "l3",
-                        name: "L3",
-                    }, {
-                        value: "l4",
-                        name: "L4",
-                    }, {
-                        value: "l5",
-                        name: "L5",
-                    },
-                ],
-                validationProps: {
-                    required: "This field is required"
-                },
-                style: {
-                    width: "194px"
-                }
-            },
-            {
-
-                title: 'Medicines List',
-                type: 'autoComplete',
-                name: 'medicinesList',
-                options: [
-                    ...initialVendorFormState
-                ],
-                validationProps: {
-                    required: "This field is required"
-                },
-                style: {
-                    width: "194px"
+    const handleButtonClick = (action, row) => {
+        const newData = rows.map((rowData) => {
+            if (rowData.id === row.id) {
+                if (action === "edit") {
+                    return { ...rowData, isEditing: true, prevData: { ...rowData } };
+                } else if (action === "cancel") {
+                    return { ...rowData, isEditing: false, ...rowData.prevData };
+                } else if (action === "save") {
+                    const { prevData, ...updatedRowData } = rowData;
+                    return { ...updatedRowData, isEditing: false };
                 }
             }
-        ]
-    };
-
-    const vendor_details_style = {
-        display: "flex",
-        gap: "28px 30px",
-        // justifyContent: "space-around"
-    };
-    const btn_styles = { display: "flex", justifyContent: "end" };
-    const onSubmit = (form) => {
-        console.log(form);
-    };
-
-    const validate = (watchValues, errorMethods) => {
-        console.log(watchValues, 'watchValues');
-        let { vendorId, listType, medicinesList } = watchValues;
-        console.log(vendorId, listType, medicinesList);
-        getMedicineById(medicinesList?.value)
+            return rowData;
+        });
+        setRows(newData);
     };
 
     const getVendors = async () => {
@@ -166,6 +119,7 @@ export const MasterList = () => {
         try {
             let data = await PurchaseService.getAllVendors();
             const result = data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }));
+            console.log(result, 'result ven')
             SetVendorDetails(result);
             setShowLoader(false);
         } catch (e) {
@@ -178,9 +132,7 @@ export const MasterList = () => {
         try {
             let data = await PurchaseService.getAllMedicines();
             const result = data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }));
-            result.unshift({ id: 'select', brandName: '--Select--' });
-            console.log(result.map((item) => ({ value: item?.id, label: item?.brandName })), 'result');
-            setInitialVendorFormState(result.map((item) => ({ value: item?.id, label: item?.brandName })));
+            setMedicineList(result.map((item) => ({ value: item?.id, name: item?.brandName })));
             setShowLoader(false);
         } catch (e) {
             console.log(e, 'error allVendors');
@@ -193,37 +145,72 @@ export const MasterList = () => {
         getMedicines();
     }, []);
 
-    const getMedicineById = async (id) => {
+    const getMedicineById = async (vendorId, medicineId) => {
+        // console.log(id, 'val');
         setShowLoader(true);
         try {
-            let data = await PurchaseService.medicineById(id);
-            console.log(data, 'data')
+            let data = await PurchaseService.medicineById(vendorId, medicineId);
+            console.log(data, 'data');
+            setRows(data);
         } catch (err) {
             console.log(err, 'Master list get medicines by id');
         }
     }
-    // useEffect(() => {
-    //     console.log(filter, 'val');
-    //     let { vendorId, listType, medicineList } = filter;
-    //     // getMedicineById(medicineList?.value);
-    // }, [filter])
 
+    useEffect(() => {
+        console.log("Filter changed:", filter);
+        // Ensure both vendorId and medicineList are defined before making the API call
+        if (filter.vendorId !== undefined && filter.medicineList !== undefined) {
+            getMedicineById(filter.vendorId, filter.medicineList);
+        }
+    }, [filter.vendorId, filter.medicineList]);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFilter(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    }
     return (
         <Box sx={{
             padding: 2,
         }}>
             <Container>
-                <Form
-                    template={vendor_details_template}
-                    onSubmit={onSubmit}
-                    onValidate={validate}
-                    showSubmitButton={false}
-                    form_styles={vendor_details_style}
-                    btn_styles={btn_styles}
-                />
+                <form >
+                    <select onChange={(e) => handleChange(e)} name="vendorId" >
+                        <option value="">--select--</option>
+                        {
+                            vendorDetails?.map(({ name, id }) => <option key={id} value={id}>{name}</option>)
+                        }
+                    </select>
+
+                    <select onChange={(e) => handleChange(e)} name="list">
+                        <option value="">--select--</option>
+                        <option value="l1">L1</option>
+                        <option value="l2">L2</option>
+                        <option value="l3">L3</option>
+                        <option value="l4">L4</option>
+                        <option value="l5">L5</option>
+                    </select>
+                    <select onChange={(e) => handleChange(e)} name="medicineId">
+                        <option value="">--select--</option>
+                        {
+                            medicineList?.map(({ value, name }) => <option key={value} value={value}>{name}</option>)
+                        }
+                    </select>
+                </form>
             </Container>
             <Box sx={{ marginTop: 3 }}>
-                <Table headArray={headArray} gridArray={rows} />
+                {/* <Table headArray={headArray} gridArray={rows} /> */}
+                <Box sx={{ marginTop: 3 }}>
+                    <EditableTable
+                        columns={columns}
+                        data={rows}
+                        setData={setRows}
+                        handleButtonClick={handleButtonClick}
+                    />
+                </Box>
             </Box>
             <div>
                 {rows.length > 0 && (
