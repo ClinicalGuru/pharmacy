@@ -16,7 +16,11 @@ export const InvalidInput = styled.input`
 `;
 
 export const Container = styled.div`
+& form {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    & select {
+        width: 200px
+    }
+}
+
 `;

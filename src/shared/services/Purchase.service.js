@@ -6,6 +6,7 @@ const vendorCollectionRef = collection(firestore, "vendors");
 const requisitionCollectionRef = collection(firestore, "purchaseRequisition");
 const quotationCollectionRef = collection(firestore, "quotation");
 const medicineCollectionRef = collection(firestore, "pMedicines")
+const purchageOrderRef = collection(firestore, "purchageOrder");
 
 class PurchaseService {
     addVendor = (newVendor) => {
@@ -52,18 +53,6 @@ class PurchaseService {
     }
 
     addRequisitionData = async (data) => {
-        // const batch = [];
-        // data.forEach((object) => {
-        //     const docRef = requisitionCollectionRef;
-        //     batch.push(addDoc(docRef, object));
-        // });
-
-        // try {
-        //     await Promise.all(batch);
-        //     console.log('Requisition data added to Firestore successfully!');
-        // } catch (error) {
-        //     console.error('Error adding data to Firestore: ', error);
-        // }
         return addDoc(requisitionCollectionRef, data);
     }
 
@@ -84,7 +73,7 @@ class PurchaseService {
     saveQuotation = async (data) => {
         // return addDoc(quotationCollectionRef, data);
         const batch = [];
-        data.forEach((object) => {
+        data?.forEach((object) => {
             const docRef = quotationCollectionRef;
             batch.push(addDoc(docRef, object));
         });
@@ -96,23 +85,38 @@ class PurchaseService {
             console.error('Error adding data to Firestore: ', error);
         }
     }
-    medicineById = async (vendorId,medicineId) => {
+    medicineById = async (vendorId, medicineId) => {
+        console.log(vendorId, medicineId, 'service')
         debugger
         let queryRef;
         if (medicineId && vendorId && medicineId !== '' && vendorId !== '') {
             queryRef = query(quotationCollectionRef, where("medicineId", "==", medicineId),
                 where("vendorId", "==", vendorId),
-                orderBy("pts", "asc"));
+                orderBy("ptr", "asc"));
         } else if (medicineId && medicineId !== '') {
             queryRef = query(quotationCollectionRef, where("medicineId", "==", medicineId),
-                orderBy("pts", "asc"));
+                orderBy("ptr", "asc"));
         } else {
             queryRef = query(quotationCollectionRef, where("vendorId", "==", vendorId),
-                orderBy("pts", "asc"));
+                orderBy("ptr", "asc"));
         }
         const querySnapshot = await getDocs(queryRef);
         const filteredData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
         return filteredData;
+    }
+
+    savePO = async (data) => {
+        const batch = [];
+        data.forEach((object) => {
+            const docRef = purchageOrderRef;
+            batch.push(addDoc(docRef, object));
+        });
+        try {
+            await Promise.all(batch);
+            console.log('Purchage order data added to Firestore successfully!');
+        } catch (error) {
+            console.error('Error adding purchage order data to Firestore: ', error);
+        }
     }
 }
 export default new PurchaseService();
