@@ -7,7 +7,6 @@ import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
@@ -69,7 +68,8 @@ export const Header = () => {
         sx={{ backgroundColor: "#DEE1E6B5" }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <img style={{ width: '95px', height: '32px', objectFit: 'cover', marginRight: '1rem' }} src={require('../../../assets/img/logo.png')} alt='logo' />
+            <img style={{ width: '95px', height: '32px', objectFit: 'cover', marginRight: '1rem' }}
+             src={require('../../../assets/img/logo.png')} alt='logo' />
             {/* <Box
             component="img"
             sx={{

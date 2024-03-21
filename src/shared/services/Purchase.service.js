@@ -16,6 +16,7 @@ class PurchaseService {
     }
 
     getVendor = async (vendorId) => {
+        debugger;
         const queryRef = query(vendorCollectionRef, where("vendorId", "==", vendorId));
         const querySnapshot = await getDocs(queryRef);
         const filteredData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
