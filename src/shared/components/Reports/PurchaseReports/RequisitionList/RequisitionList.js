@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Box } from "@mui/material";
@@ -12,7 +12,8 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { AlertMessage } from "../../../Alert/index"
+import { AlertMessage } from "../../../Alert/index";
+import { useLocation } from 'react-router-dom';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -32,7 +33,11 @@ export const RequisitionList = () => {
     const [rows, setRows] = useState([]);
     const [showLoader, setShowLoader] = useState(false);
     const [expanded, setExpanded] = React.useState(false);
-
+    let location = useLocation();
+    useEffect(() => {
+        // setRows(location.state.data);
+        console.log(location.state.data, 'state rList');
+    }, [location]);
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
@@ -83,7 +88,7 @@ export const RequisitionList = () => {
                     <VisuallyHiddenInput type="file" />
                 </Button>
             </Container>
-            <div sx={{marginTop: 8}}>
+            <div sx={{ marginTop: 8 }}>
                 {rows?.map((item) => {
                     return (
                         <Accordion expanded={expanded === item?.requesitionId} onChange={handleChange(item?.requesitionId)}>

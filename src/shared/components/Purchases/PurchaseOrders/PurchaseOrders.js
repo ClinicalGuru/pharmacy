@@ -182,6 +182,7 @@ export const PurchaseOrders = () => {
             const docRef = await PurchaseService.savePO(rows);
             console.log('successfull on saving PO');
             setNotification(true);
+            setDownloadModal(true);
         } catch (err) {
             console.log('error on saving PO', err)
         }

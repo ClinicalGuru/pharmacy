@@ -14,8 +14,10 @@ import { EditableTable } from "../EditableTable";
 import { Notification } from '../Notification/index';
 import { Loader } from "../Loader/index";
 import { DownloadOptionsModal } from "../DownloadOptionsModal/DownloadOptionsModal"
+import { useNavigate } from 'react-router-dom';
 
 export const PurchaseRequisition = () => {
+    const navigate = useNavigate();
     const [showLoader, setShowLoader] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [rows, setRows] = useState([]);
@@ -237,11 +239,23 @@ export const PurchaseRequisition = () => {
                 console.log('success');
                 setNotification(true);
                 setDownloadModal(true);
+                navigateToRequisitionHistory();
             })
         } catch (err) {
             console.log(err, 'err add requisition data');
         }
     };
+
+    const navigateToRequisitionHistory = () => {
+        navigate('/landing/reports/purchase/requisitionList',
+            {
+                state: {
+                    data: {
+                        vendorId: vendorDetails
+                    }
+                }
+            });
+    }
 
     const alertState = () => {
         setNotification(!notification);
