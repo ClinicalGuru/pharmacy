@@ -14,6 +14,9 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { AlertMessage } from "../../../Alert/index";
 import { useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { PdfFile } from '../../../Pdf';
+
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -30,6 +33,7 @@ export const RequisitionList = () => {
     const [noDataAvailable, setNoDataAvailable] = useState(false);
     const [selectVendorAlert, setSelectVendorAlert] = useState(true);
     const [vendorDetails, setVendorDetails] = useState([]);
+    const [vendorData, setVendorData] = useState([]);
     const [rows, setRows] = useState([]);
     const [showLoader, setShowLoader] = useState(false);
     const [expanded, setExpanded] = React.useState(false);
@@ -61,16 +65,59 @@ export const RequisitionList = () => {
         }
     };
 
+   
+
     const handleVendorSelection = (vendorDetails) => {
-        // vendorDetails?.vendorId = vendorId;
         setVendorDetails({ vendorId: vendorDetails?.value, date: '' });
         getFilteredRequestionData(vendorDetails?.value);
+        console.log(vendorDetails, 'details');
     };
 
     const handelDateSelection = (value) => {
         setVendorDetails({ vendorId: vendorDetails?.value, date: value })
         // getFilteredRequestionData(vendorDetails);
     };
+
+    useEffect(() => {
+        const vendorInfo = async () => {
+            console.log(vendorDetails, 'vendor data');
+            setShowLoader(true);
+        try {
+            let data = await PurchaseService.getVendor(vendorDetails.vendorId);
+            console.log(data, 'djgcftydgfcyudgcudehsjytrfg')
+            setSelectVendorAlert(false);
+            setVendorData([...data]);
+            setShowLoader(false);
+            if (data?.length === 0) {
+                setNoDataAvailable(true);
+            } else {
+                setNoDataAvailable(false);
+            };
+        } catch (err) {
+            console.log(err, 'error getting requisition data');
+            setShowLoader(false);
+        }
+        }
+        vendorInfo();
+    }, [vendorDetails]);
+
+    const generateEmailContent = (item) => {
+        let emailContent = "Please see the list of medicines below:\n\n";
+        emailContent += "Pharmacological Name       Brand Name       Dose       Form       Quantity\n";
+        item.medicines.forEach((row) => {
+            emailContent += `${row.pharmacologicalName.padEnd(45)}${row.brandName.padEnd(20)}${row.dose.padEnd(10)}${row.form.padEnd(10)}${row.quantity}\n`;
+        });
+        return emailContent;
+    };
+
+
+    const openDefaultMailClient = (item) => {
+        const emailContent = generateEmailContent(item);
+        const emailLink = `mailto:?subject=Purchase Requisition&body=${encodeURIComponent(emailContent)}`;
+        window.location.href = emailLink;
+    };
+
+
 
     return (
         <Box sx={{
@@ -83,10 +130,13 @@ export const RequisitionList = () => {
                         onSelectDate={handelDateSelection}
                     />
                 </Container>
-                <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                <Link to="/landing/purchase/requisition">
+                    <Button variant="contained" >Create New Requisition</Button>
+                </Link>
+                {/* <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
                     Export as Excel
                     <VisuallyHiddenInput type="file" />
-                </Button>
+                </Button> */}
             </Container>
             <div sx={{ marginTop: 8 }}>
                 {rows?.map((item) => {
@@ -104,6 +154,10 @@ export const RequisitionList = () => {
                                     Status: {item?.status}
                                 </Typography>
                                 <Typography sx={{ color: 'text.secondary' }}>Number of medicines ordered: {item?.medicines?.length}</Typography>
+                                <Typography sx={{ marginLeft: '30px', display: 'flex', alignItems: 'center' }}>
+                                    <a href='#'>{item && <PdfFile vendorData = {vendorData} data={item.medicines} />}</a> &nbsp;&nbsp;&nbsp;
+                                    <span><a href='#' onClick={() => openDefaultMailClient(item)}>Email</a></span>
+                                </Typography>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <table class="table">
