@@ -17,7 +17,6 @@ const MenuItems = ({ items, depthLevel }) => {
         document.addEventListener("mousedown", handler);
         document.addEventListener("touchstart", handler);
         return () => {
-            // Cleanup the event listener
             document.removeEventListener("mousedown", handler);
             document.removeEventListener("touchstart", handler);
         };
@@ -30,15 +29,17 @@ const MenuItems = ({ items, depthLevel }) => {
     const onMouseLeave = () => {
         window.innerWidth > 960 && setDropdown(false);
     };
-    const onNavigate = (item) => {
-        navigate(`${item?.url}`);
-        setDropdown(false);
-    }
+    const onNavigate = (item, event) => {
+        console.log("Navigating to:", item?.url);
+        navigate(`${item?.url}`); 
+        setDropdown(false); 
+        console.log("Dropdown closed");
+        event.stopPropagation();
+    };
+    
     return (
         <li className="menu-items" ref={ref}
             onClick={clickHandler}
-        // onMouseEnter={onMouseEnter}
-        // onMouseLeave={onMouseLeave}
         >
             {items?.submenu ? (
                 <>
@@ -53,7 +54,7 @@ const MenuItems = ({ items, depthLevel }) => {
                     <Dropdown depthLevel={depthLevel} submenus={items.submenu} dropdown={dropdown} />
                 </>
             ) : (
-                <MenuItemWrapper onClick={() => onNavigate(items)}>{items.title}</MenuItemWrapper>
+                <MenuItemWrapper onClick={(event) => onNavigate(items, event)} >{items.title}</MenuItemWrapper>
             )}
         </li>
     );

@@ -4,18 +4,19 @@ import 'jspdf-autotable';
 import moment from 'moment'
 import ListItemText from '@mui/material/ListItemText';
 
-export const PdfFile = ({ data }) => {
+export const PdfFile = ({ data, vendorData }) => {
+  console.log(vendorData, 'data');
   const handleDownload = () => {
     const doc = new jsPDF();
     const totalPages = doc.internal.getNumberOfPages();
     const columns = Object.keys(data[0]);
     const rows = data.map((item) => Object.values(item));
     doc.setFontSize(16)
-    doc.text('PURCHASE ORDER', doc.internal.pageSize.getWidth() / 2, 10, { align: 'center' });
+    doc.text('PURCHASE REQUISITION', doc.internal.pageSize.getWidth() / 2, 10, { align: 'center' });
     doc.setFontSize(12);
     doc.text(`Date: ${moment(new Date()).format('DD/MM/YYYY')}`, doc.internal.pageSize.getWidth() - 40, 10, { align: 'left' });
     doc.text('To,', 10, 20);
-    doc.text('Sri Yugandar Medicals,', 10, 25);
+    doc.text(',', 10, 25);
     doc.text('D.No: 2-56-896, New street,', 10, 30);
     doc.text('Mobile: 1234567890', 10, 35);
     doc.text('From,', doc.internal.pageSize.getWidth() - 80, 20, { align: 'left' });
@@ -37,7 +38,7 @@ export const PdfFile = ({ data }) => {
   };
 
   return (
-    <ListItemText onClick={handleDownload} primary="Download as PDF" />
+    <ListItemText onClick={handleDownload} primary=" PDF" />
     // <button onClick={handleDownload}>Download PDF</button>
   );
 };
