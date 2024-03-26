@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { styled } from '@mui/material/styles';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Box } from "@mui/material";
 import Button from '@mui/material/Button';
 import PurchaseService from "../../../../services/Purchase.service";
@@ -18,17 +16,6 @@ import { Link } from 'react-router-dom';
 import { PdfFile } from '../../../Pdf';
 
 
-const VisuallyHiddenInput = styled('input')({
-    clip: 'rect(0 0 0 0)',
-    clipPath: 'inset(50%)',
-    height: 1,
-    overflow: 'hidden',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    whiteSpace: 'nowrap',
-    width: 1,
-});
 export const RequisitionList = () => {
     const [noDataAvailable, setNoDataAvailable] = useState(false);
     const [selectVendorAlert, setSelectVendorAlert] = useState(true);
@@ -39,33 +26,31 @@ export const RequisitionList = () => {
     const [expanded, setExpanded] = React.useState(false);
     let location = useLocation();
     useEffect(() => {
-        // setRows(location.state.data);
-        console.log(location.state.data, 'state rList');
+        console.log(location?.state?.data, 'state rList');
     }, [location]);
+
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
+
     const getFilteredRequestionData = async (vendorId) => {
-        console.log(vendorId, 'vendorId quotation.js')
         setShowLoader(true);
         try {
             let data = await PurchaseService.getRequesitionData(vendorId);
             setSelectVendorAlert(false);
-            console.log(data, 'data');
+            data?.forEach((item) => delete item?.medicineId);
             setRows([...data]);
             setShowLoader(false);
-            if (data?.length === 0) {
-                setNoDataAvailable(true);
-            } else {
-                setNoDataAvailable(false);
-            };
+            console.log(data, 'data rlisat')
+            if (data && data?.length === 0) setNoDataAvailable(true);
+            else setNoDataAvailable(false);
+            ;
         } catch (err) {
             console.log(err, 'error getting requisition data');
             setShowLoader(false);
+            setNoDataAvailable(false);
         }
     };
-
-   
 
     const handleVendorSelection = (vendorDetails) => {
         setVendorDetails({ vendorId: vendorDetails?.value, date: '' });
@@ -75,7 +60,6 @@ export const RequisitionList = () => {
 
     const handelDateSelection = (value) => {
         setVendorDetails({ vendorId: vendorDetails?.value, date: value })
-        // getFilteredRequestionData(vendorDetails);
     };
 
     useEffect(() => {
@@ -84,15 +68,9 @@ export const RequisitionList = () => {
             setShowLoader(true);
         try {
             let data = await PurchaseService.getVendor(vendorDetails.vendorId);
-            console.log(data, 'djgcftydgfcyudgcudehsjytrfg')
             setSelectVendorAlert(false);
-            setVendorData([...data]);
+            setVendorData(data);
             setShowLoader(false);
-            if (data?.length === 0) {
-                setNoDataAvailable(true);
-            } else {
-                setNoDataAvailable(false);
-            };
         } catch (err) {
             console.log(err, 'error getting requisition data');
             setShowLoader(false);
@@ -104,20 +82,17 @@ export const RequisitionList = () => {
     const generateEmailContent = (item) => {
         let emailContent = "Please see the list of medicines below:\n\n";
         emailContent += "Pharmacological Name       Brand Name       Dose       Form       Quantity\n";
-        item.medicines.forEach((row) => {
+        item?.medicines?.forEach((row) => {
             emailContent += `${row.pharmacologicalName.padEnd(45)}${row.brandName.padEnd(20)}${row.dose.padEnd(10)}${row.form.padEnd(10)}${row.quantity}\n`;
         });
         return emailContent;
     };
-
 
     const openDefaultMailClient = (item) => {
         const emailContent = generateEmailContent(item);
         const emailLink = `mailto:?subject=Purchase Requisition&body=${encodeURIComponent(emailContent)}`;
         window.location.href = emailLink;
     };
-
-
 
     return (
         <Box sx={{
@@ -133,12 +108,8 @@ export const RequisitionList = () => {
                 <Link to="/landing/purchase/requisition">
                     <Button variant="contained" >Create New Requisition</Button>
                 </Link>
-                {/* <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-                    Export as Excel
-                    <VisuallyHiddenInput type="file" />
-                </Button> */}
             </Container>
-            <div sx={{ marginTop: 8 }}>
+            <Box sx={{ marginTop: 8 }}>
                 {rows?.map((item) => {
                     return (
                         <Accordion expanded={expanded === item?.requesitionId} onChange={handleChange(item?.requesitionId)}>
@@ -155,7 +126,7 @@ export const RequisitionList = () => {
                                 </Typography>
                                 <Typography sx={{ color: 'text.secondary' }}>Number of medicines ordered: {item?.medicines?.length}</Typography>
                                 <Typography sx={{ marginLeft: '30px', display: 'flex', alignItems: 'center' }}>
-                                    <a href='#'>{item && <PdfFile vendorData = {vendorData} data={item.medicines} />}</a> &nbsp;&nbsp;&nbsp;
+                                    <a href='#'>{item && <PdfFile vendorData={vendorData} data={item?.medicines} />}</a> &nbsp;&nbsp;&nbsp;
                                     <span><a href='#' onClick={() => openDefaultMailClient(item)}>Email</a></span>
                                 </Typography>
                             </AccordionSummary>
@@ -190,7 +161,7 @@ export const RequisitionList = () => {
                         </Accordion>
                     )
                 })}
-            </div>
+            </Box>
             {noDataAvailable && <AlertMessage
                 type="info"
                 title="Info"

@@ -21,7 +21,7 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick }) => 
 
   // Handler to toggle all row selections
   const toggleSelectAll = () => {
-    const isAllSelected = Object.keys(selectedRowIds).length === rows.length;
+    const isAllSelected = Object?.keys(selectedRowIds)?.length === rows?.length;
     toggleAllRowsSelected(!isAllSelected);
   };
 
@@ -52,7 +52,7 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick }) => 
           <th>
             <input
               type="checkbox"
-              checked={Object.keys(selectedRowIds).length === rows.length}
+              checked={Object?.keys(selectedRowIds)?.length === rows?.length}
               onChange={toggleSelectAll}
             />
           </th>

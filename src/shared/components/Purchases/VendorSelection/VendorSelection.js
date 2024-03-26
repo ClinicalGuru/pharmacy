@@ -13,7 +13,7 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
     const [showLoader, setShowLoader] = useState(false);
     const [vendors, setVendors] = useState([]);
     const [selectedVendor, setSelectedVendor] = useState({});
-    const [selectedDate, setSelectedDate] = useState({});
+    const [defaultDate, setDefaultDate] = useState(getTodayDate());
 
     const getVendors = async () => {
         setShowLoader(true);
@@ -32,7 +32,7 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
     useEffect(() => {
         getVendors();
     }, [refreshVDetails]);
-    
+
     const handleVendorChange = (selectedOption) => {
         setValue("vendorId", selectedOption);
         onSelectVendor(selectedOption); // Callback to update parent state
@@ -44,8 +44,15 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
     const handleDateChange = (selectedDate) => {
         setValue("date", selectedDate);
         onSelectDate(selectedDate); // Callback to update parent state
+        setDefaultDate(selectedDate)
     };
-
+    function getTodayDate() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
     return (
         <form>
             <div style={{ display: 'flex' }}>
@@ -83,6 +90,7 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
                         control={control}
                         render={({ field }) => (
                             <input type="date"
+                                defaultValue={defaultDate}
                                 {...field}
                                 onChange={(e) => handleDateChange(e.target.value)}
                             />

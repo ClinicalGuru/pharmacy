@@ -5,20 +5,31 @@ import moment from 'moment'
 import ListItemText from '@mui/material/ListItemText';
 
 export const PdfFile = ({ data, vendorData }) => {
-  console.log(vendorData, 'data');
+  console.log(vendorData, 'vendorData');
+  const { address, email, gst, name, phone } = vendorData;
   const handleDownload = () => {
     const doc = new jsPDF();
     const totalPages = doc.internal.getNumberOfPages();
     const columns = Object.keys(data[0]);
-    const rows = data.map((item) => Object.values(item));
-    doc.setFontSize(16)
+    const rows = data.map(item => {
+      // Get the keys of the item and sort them
+      const sortedKeys = Object.keys(item).sort((a, b) => {
+        // You can customize the sorting logic here, e.g., based on index or alphabetically
+        return columns.indexOf(a) - columns.indexOf(b);
+      });
+
+      // Map the sorted keys to their corresponding values
+      return sortedKeys.map(key => item[key]);
+    });
+    console.log(columns, rows, 'data pdf');
+    doc.setFontSize(16);
     doc.text('PURCHASE REQUISITION', doc.internal.pageSize.getWidth() / 2, 10, { align: 'center' });
     doc.setFontSize(12);
     doc.text(`Date: ${moment(new Date()).format('DD/MM/YYYY')}`, doc.internal.pageSize.getWidth() - 40, 10, { align: 'left' });
     doc.text('To,', 10, 20);
-    doc.text(',', 10, 25);
-    doc.text('D.No: 2-56-896, New street,', 10, 30);
-    doc.text('Mobile: 1234567890', 10, 35);
+    doc.text(name, 10, 25);
+    doc.text(address, 10, 30);
+    doc.text(`Mobile: ${phone}`, 10, 35);
     doc.text('From,', doc.internal.pageSize.getWidth() - 80, 20, { align: 'left' });
     doc.text('Laxmi Medicals,', doc.internal.pageSize.getWidth() - 80, 25, { align: 'left' });
     doc.text('A Unit of Winmedica Healthcare  Pvt. ltd,', doc.internal.pageSize.getWidth() - 80, 30, { align: 'left' });

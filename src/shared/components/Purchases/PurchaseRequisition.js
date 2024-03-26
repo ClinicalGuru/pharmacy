@@ -205,7 +205,7 @@ export const PurchaseRequisition = () => {
         try {
             await PurchaseService.getAllMedicinesByFilter(transformedObject).then((data) => {
                 console.log(data, 'getAllMedicines');
-                if (data.length === 0) {
+                if (data?.length === 0) {
                     addMedicine(transformedObject, e);
                     return;
                 };

@@ -1,5 +1,5 @@
 import { firestore } from "../../context/firebase";
-import { addDoc, getDocs, collection, orderBy, deleteDoc, doc, query, onSnapshot, writeBatch, where } from "firebase/firestore";
+import { addDoc, getDocs,getDoc, collection, orderBy, deleteDoc, doc, query, onSnapshot, writeBatch, where } from "firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
 
 const vendorCollectionRef = collection(firestore, "vendors");
@@ -46,11 +46,20 @@ class PurchaseService {
     }
 
     getVendor = async (vendorId) => {
-        debugger;
-        const queryRef = query(vendorCollectionRef, where("vendorId", "==", vendorId));
-        const querySnapshot = await getDocs(queryRef);
-        const filteredData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-        return filteredData;
+        const queryRef = doc(vendorCollectionRef, vendorId);
+        const vendorDocSnapshot = await getDoc(queryRef);
+        if (vendorDocSnapshot.exists()) {
+            // Document exists, return its data
+        console.log({ id: vendorDocSnapshot.id, ...vendorDocSnapshot.data() }, 'vendorDocSnapshot')
+
+            return { id: vendorDocSnapshot.id, ...vendorDocSnapshot.data() };
+        } else {
+            // Document does not exist
+            throw new Error("Vendor document not found");
+        } 
+        // const querySnapshot = await getDocs(queryRef);
+        // const filteredData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+        // return filteredData;
     }
 
     addRequisitionData = async (data) => {
@@ -108,7 +117,7 @@ class PurchaseService {
 
     savePO = async (data) => {
         const batch = [];
-        data.forEach((object) => {
+        data?.forEach((object) => {
             const docRef = purchageOrderRef;
             batch.push(addDoc(docRef, object));
         });

@@ -144,8 +144,8 @@ export const PurchaseOrders = () => {
     };
     let location = useLocation();
     useEffect(() => {
-        setRows(location.state.data);
-        console.log(location.state.data, 'state')
+        setRows(location?.state?.data);
+        console.log(location?.state?.data, 'state')
     }, [location]);
 
     const vendor_details_style = {
@@ -165,7 +165,7 @@ export const PurchaseOrders = () => {
     const getVendors = async () => {
         try {
             let data = await PurchaseService.getAllVendors();
-            const result = data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }));
+            const result = data?.docs?.map((doc) => ({ ...doc?.data(), id: doc.id }));
             SetVendorDetails(result);
             console.log(vendor_details_template, 'vendor_details_template', result)
         } catch (e) {
@@ -213,15 +213,15 @@ export const PurchaseOrders = () => {
                 </Box>
             </Container>
             <Box sx={{ marginTop: 3 }}>
-                <EditableTable
+                {rows?.length > 0 && <EditableTable
                     columns={columns}
                     data={rows}
                     setData={setRows}
                     handleButtonClick={handleButtonClick}
-                />
+                />}
             </Box>
             <div>
-                {rows.length > 0 && (
+                {rows?.length > 0 && (
                     <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px' }}>
                         <Button variant="contained" onClick={onSavePO}>Save</Button>
                     </Box>
