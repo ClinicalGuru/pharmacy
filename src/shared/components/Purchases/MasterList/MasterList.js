@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Box } from "@mui/material";
 import Button from '@mui/material/Button';
 import { Container } from "./MasterList.styles";
@@ -8,11 +8,14 @@ import { Loader } from "../../Loader/index";
 import { EditableTable } from "../../EditableTable";
 import { useNavigate } from 'react-router-dom';
 
+import { Form } from "../../Forms/index";
+
 export const MasterList = () => {
     const [showLoader, setShowLoader] = useState(false);
     const [vendorDetails, SetVendorDetails] = useState([]);
     const [rows, setRows] = useState([]);
     const [medicineList, setMedicineList] = useState([]);
+    const [pharmacologicalNames, setPharmacologicalNames] = useState([]);
     const [dataFetched, setDataFetched] = useState(false);
     const [pricingOrder, setPricingOrder] = useState("");
     const navigate = useNavigate();
@@ -105,6 +108,76 @@ export const MasterList = () => {
         },
     ];
 
+    const masterList_details_template = {
+        
+        fields: [
+            {
+                title: 'Select Vendor',
+                type: 'autoComplete',
+                name: 'vendorName',
+                validationProps: {
+                    required: ``
+                },
+                style: {
+                    width: "200px"
+                },
+                options: [...vendorDetails]
+            },
+            {
+
+                title: 'Price Order',
+                type: 'autoComplete',
+                name: 'priceOrder',
+                validationProps: {
+                    required: ` `
+                },
+                style: {
+                    width: "200px"
+                },
+                options: [
+                    {
+                        value: "L1",
+                        name: "L1",
+                    },
+                    {
+                        value: "L2",
+                        name: "L2",
+                    },
+                    {
+                        value: "L3",
+                        name: "L3",
+                    },
+                    {
+                        value: "L4",
+                        name: "L4",
+                    },
+                    {
+                        value: "L5",
+                        name: "L5",
+                    },
+                ],
+            },
+            {
+                title: 'Select Pharmacological Name',
+                type: 'autoComplete',
+                name: 'pharmacologicalName',
+                validationProps: {
+                    required: ``
+                },
+                style: {
+                    width: "200px"
+                },
+                options: [ ...pharmacologicalNames]
+            },
+        ],
+    };
+
+    const masterList_details_style = {
+        display: "flex",
+        // gap: "28px 28px",
+        justifyContent: 'space-between'
+    };
+
     const handleButtonClick = (action, row) => {
         const newData = rows.map((rowData) => {
             if (rowData.id === row.id) {
@@ -135,19 +208,18 @@ export const MasterList = () => {
         }
     };
     const getMedicines = async () => {
-
         setShowLoader(true);
         try {
             let data = await PurchaseService.getAllMedicines();
-            const result = data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }));
-            setMedicineList(result.map((item) => ({ value: item?.id, name: item?.pharmacologicalName })));
+            const result = data?.docs?.map((doc) => ({ ...doc?.data(), id: doc?.id }));
+            setPharmacologicalNames(result?.map((item) => ({ value: item?.id, name: item?.pharmacologicalName })));
+            setBrandNames(result?.map((item) => ({ value: item?.id, name: item?.brandName })));
             setShowLoader(false);
         } catch (e) {
             console.log(e, 'error allVendors');
             setShowLoader(false);
         }
     }
-
     useEffect(() => {
         getVendors();
         getMedicines();
@@ -184,6 +256,10 @@ export const MasterList = () => {
         getMedicineById(filter?.vendorId, filter?.medicineId);
     }, [filter]);
 
+    const validate = useCallback((watchValues, errorMethods) => {
+        // console.log('selectedVendor');
+    }, []);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFilter(prevState => ({
@@ -218,7 +294,7 @@ export const MasterList = () => {
             padding: 2,
         }}>
             <Container>
-                <form >
+                {/* <form >
                     <div class="form-group">
                         <label class="form-label" for="vendorId">Select Vendor</label>
                         <select class="form-control" onChange={(e) => handleChange(e)} name="vendorId" >
@@ -248,7 +324,23 @@ export const MasterList = () => {
                             }
                         </select>
                     </div>
-                </form>
+                </form> */}
+                 <Box
+                sx={{
+                    backgroundColor: '#eef0f3',
+                    borderRadius: '4px',
+                    padding: 2,
+                    marginTop: '5px'
+                }}
+            >
+                <Form
+                    template={masterList_details_template}
+                    onValidate={validate}
+                    showSubmitButton={true}
+                    showClearFormButton={true}
+                    form_styles={masterList_details_style}
+                />
+            </Box>
             </Container>
             <Box sx={{ marginTop: 3 }}>
                 {/* <Table headArray={headArray} gridArray={rows} /> */}

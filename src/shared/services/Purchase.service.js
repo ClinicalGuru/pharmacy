@@ -97,7 +97,6 @@ class PurchaseService {
     }
     medicineById = async (vendorId, medicineId) => {
         console.log(vendorId, medicineId, 'service')
-        debugger
         let queryRef;
         if (medicineId && vendorId && medicineId !== '' && vendorId !== '') {
             queryRef = query(quotationCollectionRef, where("medicineId", "==", medicineId),

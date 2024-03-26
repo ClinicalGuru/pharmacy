@@ -14,6 +14,7 @@ import { AlertMessage } from "../../../Alert/index";
 import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { PdfFile } from '../../../Pdf';
+import  {CollapsibleTable}  from './CollapsibleTable'
 
 
 export const RequisitionList = () => {
@@ -37,6 +38,7 @@ export const RequisitionList = () => {
         setShowLoader(true);
         try {
             let data = await PurchaseService.getRequesitionData(vendorId);
+            console.log(data, 'requistionData');
             setSelectVendorAlert(false);
             data?.forEach((item) => delete item?.medicineId);
             setRows([...data]);
@@ -110,7 +112,7 @@ export const RequisitionList = () => {
                 </Link>
             </Container>
             <Box sx={{ marginTop: 8 }}>
-                {rows?.map((item) => {
+                {/* {rows?.map((item) => {
                     return (
                         <Accordion expanded={expanded === item?.requesitionId} onChange={handleChange(item?.requesitionId)}>
                             <AccordionSummary
@@ -160,7 +162,12 @@ export const RequisitionList = () => {
                             </AccordionDetails>
                         </Accordion>
                     )
-                })}
+                })} */}
+               {rows?.length > 0 && <CollapsibleTable
+                data = {rows}
+                vendorData = {vendorData}
+                />}
+
             </Box>
             {noDataAvailable && <AlertMessage
                 type="info"
