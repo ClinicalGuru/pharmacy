@@ -26,7 +26,7 @@ export const FixedHeader = styled('div')`
 
 
 export const TypographyWrapper = styled(Typography)`
-font-family: 'Mukta', sans-serif
+// font-family: 'Mukta', sans-serif
     `
 
 

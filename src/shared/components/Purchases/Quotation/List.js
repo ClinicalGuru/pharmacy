@@ -61,22 +61,15 @@ export const List = ({ showModal, action, requisitions, getRequisitionId }) => {
                                                 <td>{item?.vendorName}</td>
                                                 <td>{item?.requesitionCreatedDate}</td>
                                                 <td>{item?.status}</td>
-                                                <td><span onClick={() => requisitionHandler(item?.requesitionId)}>Get Details</span></td>
+                                                <td><a onClick={() => requisitionHandler(item?.requesitionId)}>Get Details</a></td>
                                             </tr>
                                         )
                                     })}
                                 </tbody>
                             </table>
-
                         }
                     </Box>}
-
                 </DialogContent>
-                <DialogActions>
-                    <Box sx={{ display: 'flex' }}>
-                        <input type="reset" value={`Close`} />
-                    </Box>
-                </DialogActions>
             </Dialog>
         </Box>
     )

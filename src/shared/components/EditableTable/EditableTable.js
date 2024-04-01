@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useTable, useRowSelect } from "react-table";
 
-export const EditableTable = ({ columns, data, setData, handleButtonClick }) => {
+export const EditableTable = ({ columns, data, setData, handleButtonClick, hideColumns = [] }) => {
+  // console.log(hideColumns, 'hideColumns = []')
   const {
     getTableProps,
     getTableBodyProps,
@@ -10,11 +11,12 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick }) => 
     prepareRow,
     state: { selectedRowIds },
     toggleAllRowsSelected, // Function to toggle all row selections
+
   } = useTable(
     {
       columns,
       data,
-      initialState: { selectedRowIds: {} }, // Initial state for row selection
+      initialState: { selectedRowIds: {}, hiddenColumns: hideColumns }, // Initial state for row selection
     },
     useRowSelect // Adding useRowSelect hook
   );
@@ -36,7 +38,7 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick }) => 
     setData(rows.filter((row) => newSelectedRowIds[row.id]));
   };
   const handleInputChange = (event, row, columnId) => {
-    console.log(data, 'editable table')
+    // console.log(data, 'editable table')
     const newData = data.map((rowData) => {
       if (rowData.medicineId === row.original.medicineId) {
         return { ...rowData, [columnId]: event.target.value };
@@ -49,13 +51,13 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick }) => 
     <table {...getTableProps()} style={{ border: "solid 1px gray", width: "100%" }}>
       <thead>
         <tr>
-          <th>
+          {/* <th>
             <input
               type="checkbox"
               checked={Object?.keys(selectedRowIds)?.length === rows?.length}
               onChange={toggleSelectAll}
             />
-          </th>
+          </th> */}
           {headerGroups.map((headerGroup) => (
             <React.Fragment key={headerGroup.id}>
               {headerGroup.headers.map((column) => (
@@ -80,13 +82,13 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick }) => 
           prepareRow(row);
           return (
             <tr {...row.getRowProps()}>
-              <td>
+              {/* <td>
                 <input
                   type="checkbox"
                   {...row.getToggleRowSelectedProps()}
                   checked={selectedRowIds[row.id]}
                 />
-              </td>
+              </td> */}
               {row.cells.map((cell) => {
                 return (
                   <td

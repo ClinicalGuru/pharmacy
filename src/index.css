@@ -2,24 +2,10 @@ body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-family: "Lato", sans- serif,
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-@font-face {
-  font-family: 'Inter', sans-serif;
-  src: local("Inter"),
-    url("./assets/fonts/Inter-Bold.ttf") format("truetype");
-}
-
-body {
-  font-family: 'Inter', sans-serif;
-}
-
-select{
+select {
   /* padding: 10px; */
   /* margin: 4px 4px 10px 0px; */
   border-radius: 4px;
@@ -30,9 +16,11 @@ select{
   box-sizing: border-box;
   /* min-height: 20px; */
   font-size: 14px;
+  padding: 0.5rem;
+  border: 1px solid #d7d4d4;
 }
 
-input{
+input {
   padding: 10px 0px;
   /* margin: 4px 4px 10px 0px; */
   border-radius: 4px;
@@ -50,18 +38,21 @@ input::placeholder {
   color: #c9c9c9;
   font-size: "14px"
 }
-input[type=submit]{
+
+input[type=submit] {
   cursor: pointer;
   background-color: #4CEAFFFF;
   color: #005F6CFF;
   cursor: pointer;
 }
-input[type=reset]{
+
+input[type=reset] {
   cursor: pointer;
   background-color: #4CEAFFFF;
   color: #005F6CFF;
 }
-label{
+
+label {
   font-size: 14px;
   font-weight: 700;
 }
@@ -75,4 +66,12 @@ label{
 .red-text {
   color: red;
   font-size: 12px;
+}
+
+label{
+  font-weight: 600;
+}
+
+a {
+  cursor: pointer
 }

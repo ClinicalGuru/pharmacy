@@ -8,6 +8,7 @@ import { DownloadOptionsModal } from "../../DownloadOptionsModal/DownloadOptions
 import { Container } from './PurchaseOrders.styles'
 import { useLocation } from 'react-router-dom';
 import { Notification } from '../../Notification/index';
+import { Loader } from "../../Loader/index";
 
 export const PurchaseOrders = () => {
     const [modalOpen, setModalOpen] = useState(false);
@@ -17,7 +18,14 @@ export const PurchaseOrders = () => {
     const [dataFetched, setDataFetched] = useState(false);
     const [downloadModal, setDownloadModal] = useState(false);
     const [notification, setNotification] = useState(false);
+    const [showLoader, setShowLoader] = useState(false);
+
     const columns = [
+        {
+            'Header': 'Vendor Name',
+            'accessor': 'vendorName',
+            editEnable: false,
+        },
         {
             'Header': 'Pharmacological Name',
             'accessor': 'pharmacologicalName',
@@ -179,10 +187,10 @@ export const PurchaseOrders = () => {
 
     const onSavePO = async () => {
         try {
-            const docRef = await PurchaseService.savePO(rows);
-            console.log('successfull on saving PO');
-            setNotification(true);
-            setDownloadModal(true);
+            // const docRef = await PurchaseService.savePO(rows);
+            // console.log('successfull on saving PO');
+            // setNotification(true);
+            // setDownloadModal(true);
         } catch (err) {
             console.log('error on saving PO', err)
         }
@@ -193,6 +201,53 @@ export const PurchaseOrders = () => {
     const handleClose = () => {
         setDownloadModal(false);
     };
+
+    const getAllMedicines = async () => {
+        setShowLoader(true);
+        try {
+            let data = await PurchaseService.getAllQuotationData();
+            const result = data?.docs?.map((doc) => ({ ...doc?.data(), id: doc?.id }));
+            console.log(result, 'result');
+            joinQuotationsWithVendors(result);
+            setShowLoader(false);
+        } catch (e) {
+            console.log(e, 'error allVendors');
+            setShowLoader(false);
+        }
+    }
+
+    const joinQuotationsWithVendors = (data) => {
+        setShowLoader(true);
+        let vendorMap = new Map();
+        for (const vendor of vendorDetails) {
+            vendorMap.set(vendor.id, vendor.name)
+        }
+        const updatedQuotationDetails = data?.map((quotation) => ({
+            ...quotation,
+            vendorName: vendorMap.get(quotation.vendorId)
+        }));
+        setRows(findingL1(updatedQuotationDetails));
+    }
+    const findingL1 = (arr) => {
+        const minAgeMap = new Map();
+
+        // Iterate over each object in the array
+        arr.forEach(obj => {
+            // Check if the name exists in the map
+            if (minAgeMap.has(obj.pharmacologicalName)) {
+                // If it exists, update the object if the age is lower
+                const existingObj = minAgeMap.get(obj?.ptr);
+                if (obj?.ptr < existingObj?.ptr) {
+                    minAgeMap.set(obj.pharmacologicalName, obj);
+                }
+            } else {
+                // If it doesn't exist, add the object to the map
+                minAgeMap.set(obj.pharmacologicalName, obj);
+            }
+        });
+        return Array.from(minAgeMap.values());
+    }
+
     return (
         <Box sx={{
             padding: 2,
@@ -208,7 +263,7 @@ export const PurchaseOrders = () => {
                 />
                 <Box sx={{ display: "flex", }}>
                     <Button disabled sx={{ marginRight: "10px" }} variant="contained">PO List</Button>
-                    <Button sx={{ marginRight: "10px" }} variant="contained">L1 List</Button>
+                    <Button sx={{ marginRight: "10px" }} variant="contained" onClick={getAllMedicines}>L1 List</Button>
                     <Button variant="contained">Re-Order</Button>
                 </Box>
             </Container>
@@ -223,12 +278,13 @@ export const PurchaseOrders = () => {
             <div>
                 {rows?.length > 0 && (
                     <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px' }}>
-                        <Button variant="contained" onClick={onSavePO}>Save</Button>
+                        <Button variant="contained" onClick={onSavePO}>Save purchage order</Button>
                     </Box>
                 )}
             </div>
             <DownloadOptionsModal open={downloadModal} onClose={handleClose} rows={rows} />
             {notification && <Notification notificationState={notification} type="success" message="Purchage order saved successfully" action={alertState} />}
+            <Loader open={showLoader} />
         </Box>
 
     )

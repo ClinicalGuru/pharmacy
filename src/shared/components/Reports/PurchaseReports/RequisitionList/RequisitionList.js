@@ -14,7 +14,7 @@ import { AlertMessage } from "../../../Alert/index";
 import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { PdfFile } from '../../../Pdf';
-import  {CollapsibleTable}  from './CollapsibleTable'
+import { CollapsibleTable } from './CollapsibleTable'
 
 
 export const RequisitionList = () => {
@@ -38,13 +38,17 @@ export const RequisitionList = () => {
         setShowLoader(true);
         try {
             let data = await PurchaseService.getRequesitionData(vendorId);
-            console.log(data, 'requistionData');
             setSelectVendorAlert(false);
-            data?.forEach((item) => delete item?.medicineId);
-            setRows([...data]);
+            const updatedObj = data?.map((item) => ({
+                ...item,
+                medicines: item?.medicines?.map((med) => {
+                    const { medicineId, ...rest } = med;
+                    return rest;
+                })
+            }));
+            setRows([...updatedObj]);
             setShowLoader(false);
-            console.log(data, 'data rlisat')
-            if (data && data?.length === 0) setNoDataAvailable(true);
+            if (updatedObj && updatedObj?.length === 0) setNoDataAvailable(true);
             else setNoDataAvailable(false);
             ;
         } catch (err) {
@@ -68,15 +72,15 @@ export const RequisitionList = () => {
         const vendorInfo = async () => {
             console.log(vendorDetails, 'vendor data');
             setShowLoader(true);
-        try {
-            let data = await PurchaseService.getVendor(vendorDetails.vendorId);
-            setSelectVendorAlert(false);
-            setVendorData(data);
-            setShowLoader(false);
-        } catch (err) {
-            console.log(err, 'error getting requisition data');
-            setShowLoader(false);
-        }
+            try {
+                let data = await PurchaseService.getVendor(vendorDetails.vendorId);
+                setSelectVendorAlert(false);
+                setVendorData(data);
+                setShowLoader(false);
+            } catch (err) {
+                console.log(err, 'error getting requisition data');
+                setShowLoader(false);
+            }
         }
         vendorInfo();
     }, [vendorDetails]);
@@ -163,9 +167,9 @@ export const RequisitionList = () => {
                         </Accordion>
                     )
                 })} */}
-               {rows?.length > 0 && <CollapsibleTable
-                data = {rows}
-                vendorData = {vendorData}
+                {rows?.length > 0 && <CollapsibleTable
+                    data={rows}
+                    vendorData={vendorData}
                 />}
 
             </Box>

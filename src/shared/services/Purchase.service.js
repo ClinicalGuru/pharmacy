@@ -1,5 +1,5 @@
 import { firestore } from "../../context/firebase";
-import { addDoc, getDocs,getDoc, collection, orderBy, deleteDoc, doc, query, onSnapshot, writeBatch, where } from "firebase/firestore";
+import { addDoc, getDocs, getDoc, collection, orderBy, limit, doc, query, onSnapshot, writeBatch, where } from "firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
 
 const vendorCollectionRef = collection(firestore, "vendors");
@@ -12,7 +12,9 @@ class PurchaseService {
     addVendor = (newVendor) => {
         return addDoc(vendorCollectionRef, newVendor);
     }
-
+    getAllQuotationData = async () => {
+        return getDocs(quotationCollectionRef);
+    }
     addMedicine = async (medicine) => {
         //  await addDoc(medicineCollectionRef, medicine);
         try {
@@ -50,13 +52,11 @@ class PurchaseService {
         const vendorDocSnapshot = await getDoc(queryRef);
         if (vendorDocSnapshot.exists()) {
             // Document exists, return its data
-        console.log({ id: vendorDocSnapshot.id, ...vendorDocSnapshot.data() }, 'vendorDocSnapshot')
-
             return { id: vendorDocSnapshot.id, ...vendorDocSnapshot.data() };
         } else {
             // Document does not exist
             throw new Error("Vendor document not found");
-        } 
+        }
         // const querySnapshot = await getDocs(queryRef);
         // const filteredData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
         // return filteredData;
@@ -96,21 +96,32 @@ class PurchaseService {
         }
     }
     medicineById = async (vendorId, medicineId) => {
-        console.log(vendorId, medicineId, 'service')
+        console.log(vendorId, medicineId, 'service call')
         let queryRef;
         if (medicineId && vendorId && medicineId !== '' && vendorId !== '') {
-            queryRef = query(quotationCollectionRef, where("medicineId", "==", medicineId),
+            queryRef = query(quotationCollectionRef,
+                where("medicineId", "==", medicineId),
                 where("vendorId", "==", vendorId),
-                orderBy("ptr", "asc"));
+                orderBy("ptr", "asc"),
+                limit(5));
         } else if (medicineId && medicineId !== '') {
-            queryRef = query(quotationCollectionRef, where("medicineId", "==", medicineId),
-                orderBy("ptr", "asc"));
+            queryRef = query(quotationCollectionRef,
+                where("medicineId", "==", medicineId),
+                orderBy("ptr", "asc"),
+                limit(5));
+        } else if (vendorId && vendorId !== '') {
+            queryRef = query(quotationCollectionRef,
+                where("vendorId", "==", vendorId),
+                orderBy("ptr", "asc"),
+                limit(5));
         } else {
-            queryRef = query(quotationCollectionRef, where("vendorId", "==", vendorId),
-                orderBy("ptr", "asc"));
+            queryRef = query(quotationCollectionRef,
+                orderBy("ptr", "asc"),
+                limit(5));
         }
         const querySnapshot = await getDocs(queryRef);
         const filteredData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+        console.log(filteredData)
         return filteredData;
     }
 
@@ -127,5 +138,6 @@ class PurchaseService {
             console.error('Error adding purchage order data to Firestore: ', error);
         }
     }
+
 }
 export default new PurchaseService();

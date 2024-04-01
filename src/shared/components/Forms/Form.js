@@ -32,7 +32,7 @@ export const Form = ({
     const renderFields = (fields) => {
         return fields.map(field => {
             let { title, type, name, validationProps, dynamic, options = [], style } = field;
-            console.log(options, 'options')
+            // console.log(options, 'options')
            
             let finalStyle = { ...style, ...formStyles };
             // let showField = dynamic ? watchValues([dynamic['field']]) ===dynamic['value']: true;
@@ -44,7 +44,7 @@ export const Form = ({
                             marginBottom: 2
                         }}>
                             <div key={name}>
-                                <Box variant="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
+                                <Box component="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
                                 <input style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
                                 {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
                             </div>
@@ -55,7 +55,7 @@ export const Form = ({
                             narginBottom: 2
                         }}>
                             <div key={name}>
-                                <Box variant="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title} </Box>
+                                <Box component="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title} </Box>
                                 <input style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
                                 {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
                             </div>
@@ -68,7 +68,7 @@ export const Form = ({
                             marginBottom: 2
                         }}>
                             <div key={name}>
-                                <Box sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
+                                <Box component="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
                                 <input style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
                                 {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
                             </div>
@@ -79,7 +79,7 @@ export const Form = ({
                             marginBottom: 2
                         }}>
                             <div key={name}>
-                                <Box sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
+                                <Box component="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
                                 <input style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
                                 {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
                             </div>
@@ -89,7 +89,7 @@ export const Form = ({
                 case 'password':
                     return (
                         <div key={name}>
-                            <Box sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
+                            <Box  component="label"sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
                             <input style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
                             {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
                         </div>
@@ -97,7 +97,7 @@ export const Form = ({
                 case 'checkbox':
                     return (
                         <div key={name}>
-                            <Box sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
+                            <Box component="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
                             <input style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
                             {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
                         </div>
@@ -105,7 +105,7 @@ export const Form = ({
                 case 'select':
                     return (
                         <div key={name}>
-                            <Box sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
+                            <Box component="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
                             <select style={finalStyle} name={name} id={name} {...register(name, validationProps)} >
                                 <option>select</option>
                                 {options && options?.length > 0 && options?.map((option, index) => {
@@ -118,7 +118,7 @@ export const Form = ({
                 case 'date':
                     return (
                         <div key={name}>
-                            <Box sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
+                            <Box  component="label"sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
                             <input style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
                             {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
                         </div>
@@ -126,7 +126,7 @@ export const Form = ({
                 case 'autoComplete':
                     return (
                         <div key={name}>
-                            <Box variant="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
+                            <Box component="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
                             <Controller
                                 name={name}
                                 control={control}

@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box } from "@mui/material";
 import Button from '@mui/material/Button';
 import { Container } from "./MasterList.styles";
@@ -7,24 +7,23 @@ import PurchaseService from "../../../services/Purchase.service";
 import { Loader } from "../../Loader/index";
 import { EditableTable } from "../../EditableTable";
 import { useNavigate } from 'react-router-dom';
-
-import { Form } from "../../Forms/index";
+import CreatableSelect from 'react-select/creatable';
+import { Notification } from '../../Notification/index';
 
 export const MasterList = () => {
     const [showLoader, setShowLoader] = useState(false);
     const [vendorDetails, SetVendorDetails] = useState([]);
+    const [quotationDetails, setQuotations] = useState([]);
     const [rows, setRows] = useState([]);
-    const [medicineList, setMedicineList] = useState([]);
     const [pharmacologicalNames, setPharmacologicalNames] = useState([]);
     const [dataFetched, setDataFetched] = useState(false);
     const [pricingOrder, setPricingOrder] = useState("");
+    const [originalData, setOriginalData] = useState([]);
+    const [notification, setNotification] = useState(false);
+    const columnsToHide = ['actions'];
     const navigate = useNavigate();
-    const pricingOrderList = ['L1', 'L2', 'L3', 'L4', 'L5'];
-
-    const [filter, setFilter] = useState({
-        vendorId: "",
-        medicineId: ""
-    });
+    const [vendorId, setVendorId] = useState("");
+    const [pMed, setPMedId] = useState("");
     const columns = [
         {
             'Header': 'Vendor Name',
@@ -90,8 +89,9 @@ export const MasterList = () => {
             Header: "Actions",
             id: "actions",
             disableSortBy: true,
+            show: false,
             Cell: ({ row, column, cell }) =>
-                row.original.isEditing ? (
+                row.original.disableActions ? (
                     <>
                         <button onClick={() => handleButtonClick("save", row.original)}>
                             Save
@@ -108,76 +108,6 @@ export const MasterList = () => {
         },
     ];
 
-    const masterList_details_template = {
-        
-        fields: [
-            {
-                title: 'Select Vendor',
-                type: 'autoComplete',
-                name: 'vendorName',
-                validationProps: {
-                    required: ``
-                },
-                style: {
-                    width: "200px"
-                },
-                options: [...vendorDetails]
-            },
-            {
-
-                title: 'Price Order',
-                type: 'autoComplete',
-                name: 'priceOrder',
-                validationProps: {
-                    required: ` `
-                },
-                style: {
-                    width: "200px"
-                },
-                options: [
-                    {
-                        value: "L1",
-                        name: "L1",
-                    },
-                    {
-                        value: "L2",
-                        name: "L2",
-                    },
-                    {
-                        value: "L3",
-                        name: "L3",
-                    },
-                    {
-                        value: "L4",
-                        name: "L4",
-                    },
-                    {
-                        value: "L5",
-                        name: "L5",
-                    },
-                ],
-            },
-            {
-                title: 'Select Pharmacological Name',
-                type: 'autoComplete',
-                name: 'pharmacologicalName',
-                validationProps: {
-                    required: ``
-                },
-                style: {
-                    width: "200px"
-                },
-                options: [ ...pharmacologicalNames]
-            },
-        ],
-    };
-
-    const masterList_details_style = {
-        display: "flex",
-        // gap: "28px 28px",
-        justifyContent: 'space-between'
-    };
-
     const handleButtonClick = (action, row) => {
         const newData = rows.map((rowData) => {
             if (rowData.id === row.id) {
@@ -193,6 +123,7 @@ export const MasterList = () => {
             return rowData;
         });
         setRows(newData);
+        setOriginalData(newData)
     };
 
     const getVendors = async () => {
@@ -202,6 +133,7 @@ export const MasterList = () => {
             const result = data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }));
             SetVendorDetails(result);
             setShowLoader(false);
+            getAllQuotationsData();
         } catch (e) {
             console.log(e, 'error allVendors');
             setShowLoader(false);
@@ -212,8 +144,8 @@ export const MasterList = () => {
         try {
             let data = await PurchaseService.getAllMedicines();
             const result = data?.docs?.map((doc) => ({ ...doc?.data(), id: doc?.id }));
-            setPharmacologicalNames(result?.map((item) => ({ value: item?.id, name: item?.pharmacologicalName })));
-            setBrandNames(result?.map((item) => ({ value: item?.id, name: item?.brandName })));
+            setPharmacologicalNames(result);
+            // setBrandNames(result?.map((item) => ({ value: item?.id, name: item?.brandName })));
             setShowLoader(false);
         } catch (e) {
             console.log(e, 'error allVendors');
@@ -224,26 +156,57 @@ export const MasterList = () => {
         getVendors();
         getMedicines();
     }, []);
-    const joinQuotationsWithVendors = (data) => {
+
+    const joinQuotationsWithVendors = () => {
         setShowLoader(true);
         let vendorMap = new Map();
         for (const vendor of vendorDetails) {
             vendorMap.set(vendor.id, vendor.name)
         }
-        const updatedQuotationDetails = data?.map((quotation) => ({
+        // console.log(vendorMap, 'vendorMap')
+        const updatedQuotationDetails = quotationDetails?.map((quotation) => ({
             ...quotation,
             vendorName: vendorMap.get(quotation.vendorId)
         }));
-        setRows(updatedQuotationDetails);
-        rows?.length > 0 && makePricingOrder();
+        // console.log(updatedQuotationDetails, 'updatedQuotationDetails');
+        let medicineIdCount = {};
+        updatedQuotationDetails?.forEach(medicine => {
+            if (medicine.medicineId in medicineIdCount) {
+                medicineIdCount[medicine.medicineId]++;
+            } else {
+                medicineIdCount[medicine.medicineId] = 1;
+            }
+        });
+        // console.log(medicineIdCount, 'medicineIdCount')
+        // Iterate through medicines to assign pricing order
+        updatedQuotationDetails.forEach(medicine => {
+            const count = medicineIdCount[medicine.medicineId];
+            if (count === 1) {
+                medicine.pricingOrder = 'L1';
+            } else {
+                // Sort updatedQuotationDetails by ptr in ascending order
+                const sameMedicines = updatedQuotationDetails.filter(med => med.medicineId === medicine.medicineId);
+                sameMedicines.sort((a, b) => parseFloat(a?.ptr) - parseFloat(b?.ptr));
+
+                // Assign pricing order
+                for (let i = 0; i < sameMedicines.length; i++) {
+                    sameMedicines[i].pricingOrder = `L${i + 1}`;
+                }
+            }
+        });
+        // console.log(updatedQuotationDetails, 'final list');
+        setOriginalData(updatedQuotationDetails);
         setShowLoader(false);
     }
-    const getMedicineById = async (vendorId, medicineId) => {
-        // console.log(id, 'val');
+
+    const getAllQuotationsData = async () => {
         setShowLoader(true);
         try {
-            let data = await PurchaseService.medicineById(vendorId, medicineId);
-            joinQuotationsWithVendors(data);
+            let data = await PurchaseService.getAllQuotationData();
+            const result = data?.docs?.map((doc) => ({ ...doc?.data(), id: doc?.id }));
+            setQuotations(result)
+            console.log(data, 'api result');
+            // joinQuotationsWithVendors(result);
             setShowLoader(false);
         } catch (err) {
             setShowLoader(false);
@@ -252,35 +215,30 @@ export const MasterList = () => {
     }
 
     useEffect(() => {
-        // Ensure both vendorId and medicineList are defined before making the API call
-        getMedicineById(filter?.vendorId, filter?.medicineId);
-    }, [filter]);
+        // console.log(rows, 'rows')
+        quotationDetails?.length > 0 && joinQuotationsWithVendors()
+    }, [quotationDetails])
 
-    const validate = useCallback((watchValues, errorMethods) => {
-        // console.log('selectedVendor');
-    }, []);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFilter(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
-    };
+    const vendorHandler = (e) => {
+        const { value } = e
+        setVendorId(value);
+        // filterDataOnSelection(vendorId, medicineId, pricingOrder);
+    }
+    const pNameHandler = (e) => {
+        const { value } = e;
+        setPMedId(value);
+    }
     const handleList = (e) => {
         const { value } = e.target;
         setPricingOrder(value);
-        rows?.length > 0 && makePricingOrder();
     };
-    const makePricingOrder = () => {
-        const updatedRows = rows.map((element, index) => ({
-            ...element,
-            pricingOrder: pricingOrderList[index]
-        }));
-        setRows(updatedRows);
-        console.log(rows, 'rows')
-    }
+
     const onCreatePurchageOrder = () => {
+        debugger
+        if (vendorId && vendorId === '') { 
+            setNotification(true); 
+            return;
+        }
         navigate(
             '/landing/purchase/order',
             {
@@ -288,59 +246,87 @@ export const MasterList = () => {
                     data: rows
                 }
             })
-    }
+    };
+    useEffect(() => {
+        let filteredRows;
+        if (vendorId && vendorId !== '' && pMed && pMed !== '') {
+            // Filter based on vendorId and medicineId
+            filteredRows = originalData.filter((item) => item?.vendorId === vendorId && item?.medicineId === pMed);
+        } else if (vendorId && vendorId !== '') {
+            // Filter only based on vendorId
+            filteredRows = originalData.filter((item) => item?.vendorId === vendorId)
+        } else if (pMed && pMed !== '') {
+            // Filter only based on medicineId
+            filteredRows = originalData.filter((item) => item?.medicineId === pMed)
+        } else {
+            // If neither vendorId nor medicineId is provided, use originalData
+            filteredRows = originalData;
+        }
+        // Optionally, filter based on pricingOrder
+        if (pricingOrder) {
+            if (filteredRows?.length > 0) {
+                filteredRows = filteredRows.filter((item) => item?.pricingOrder === pricingOrder);
+            } else {
+                filteredRows = originalData.filter((item) => item?.pricingOrder === pricingOrder);
+            }
+        }
+        // console.log(filteredRows, 'filteredRows')
+        setRows(filteredRows);
+    }, [vendorId, pMed, pricingOrder]);
+
+    const alertState = () => {
+        setNotification(!notification);
+    };
+
     return (
         <Box sx={{
             padding: 2,
         }}>
             <Container>
-                {/* <form >
-                    <div class="form-group">
-                        <label class="form-label" for="vendorId">Select Vendor</label>
-                        <select class="form-control" onChange={(e) => handleChange(e)} name="vendorId" >
-                            <option value="">--select--</option>
-                            {
-                                vendorDetails?.map(({ name, id }) => <option key={id} value={id}>{name}</option>)
-                            }
-                        </select>
+                {<form >
+                    <div className="form-group">
+                        <label className="form-label" for="vendorId">Select Vendor</label>
+                        <CreatableSelect
+                            options={vendorDetails?.map(vendor => ({ value: vendor?.id, label: vendor?.name }))}
+                            onChange={(e) => vendorHandler(e)}
+                            styles={{
+                                container: (provided) => ({
+                                    ...provided,
+                                    width: 300,
+                                    marginRight: 50
+                                })
+                            }}
+                        />
                     </div>
-                    <div class="form-group">
-                        <label for="priceOrder">Price Order</label>
-                        <select class="form-control" onChange={(e) => handleList(e)} name="list">
-                            <option value="">--select--</option>
-                            <option value="l1">L1</option>
-                            <option value="l2">L2</option>
-                            <option value="l3">L3</option>
-                            <option value="l4">L4</option>
-                            <option value="l5">L5</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
+                    <div className="form-group">
                         <label for="vendorId">Select Pharmacological Name</label>
-                        <select class="form-control" onChange={(e) => handleChange(e)} name="medicineId">
-                            <option value="">--select--</option>
-                            {
-                                medicineList?.map(({ value, name }) => <option key={value} value={value}>{name}</option>)
-                            }
+                        <CreatableSelect
+                            options={pharmacologicalNames?.map(med => ({ value: med?.id, label: med?.pharmacologicalName }))}
+                            onChange={(e) => pNameHandler(e)}
+                            styles={{
+                                container: (provided) => ({
+                                    ...provided,
+                                    width: 300,
+                                    marginRight: 50
+                                })
+                            }}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label for="priceOrder">Price Order</label>
+                        <select style={{ marginRight: '2rem' }} className="form-control" onChange={(e) => handleList(e)} name="list">
+                            <option value="">--All--</option>
+                            <option value="L1">L1</option>
+                            <option value="L2">L2</option>
+                            <option value="L3">L3</option>
+                            <option value="L4">L4</option>
+                            <option value="L5">L5</option>
                         </select>
                     </div>
-                </form> */}
-                 <Box
-                sx={{
-                    backgroundColor: '#eef0f3',
-                    borderRadius: '4px',
-                    padding: 2,
-                    marginTop: '5px'
-                }}
-            >
-                <Form
-                    template={masterList_details_template}
-                    onValidate={validate}
-                    showSubmitButton={true}
-                    showClearFormButton={true}
-                    form_styles={masterList_details_style}
-                />
-            </Box>
+                    {/* <div className="form-control">
+                        <button>Clear filters</button>
+                    </div> */}
+                </form>}
             </Container>
             <Box sx={{ marginTop: 3 }}>
                 {/* <Table headArray={headArray} gridArray={rows} /> */}
@@ -350,16 +336,18 @@ export const MasterList = () => {
                         data={rows}
                         setData={setRows}
                         handleButtonClick={handleButtonClick}
+                        hideColumns={columnsToHide}
                     />
                 </Box>
             </Box>
             <div>
                 {rows.length > 0 && (
                     <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px' }}>
-                        <Button variant="contained" onClick={onCreatePurchageOrder}>Create purchage order</Button>
+                        <Button variant="contained" onClick={onCreatePurchageOrder}>Purchase order</Button>
                     </Box>
                 )}
             </div>
+            {notification && <Notification notificationState={notification} type="info" message="Please select vendor before creating PO" action={alertState} />}
             <Loader open={showLoader} />
         </Box>
     )

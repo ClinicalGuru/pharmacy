@@ -22,7 +22,9 @@ export const PurchaseRequisition = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [rows, setRows] = useState([]);
     const [dataFetched, setDataFetched] = useState(false);
-    const [vendorDetails, setVendorDetails] = useState();
+    const [vendorDetails, setVendorDetails] = useState({
+        vendorId: undefined
+    });
     const [selectedDate, setSelectedDate] = useState();
     const [notification, setNotification] = useState(false);
     const [refreshVDetails, setRefreshVDetails] = useState(false);
@@ -30,6 +32,8 @@ export const PurchaseRequisition = () => {
     const [downloadModal, setDownloadModal] = useState(false);
     const [pharmacologicalNames, setPharmacologicalNames] = useState([]);
     const [brandNames, setBrandNames] = useState([]);
+    const [manditoryAlert, setManditoryAlert] = useState(false);
+    const [undefindedValues, setundefindedValues] = useState(false);
     const columns = [
         {
             'Header': 'Pharmacological Name',
@@ -227,13 +231,19 @@ export const PurchaseRequisition = () => {
     }, []);
 
     const onSaveData = async () => {
+        let undefindedValues = [];
         let reqDetails = {
             ...vendorDetails,
-            requesitionCreatedDate: selectedDate?.date,
+            date: selectedDate?.date,
             requesitionId: uuidv4(),
             medicines: rows,
             status: 'created'
         };
+        for (const key in reqDetails) {
+            if (reqDetails[key] === undefined || reqDetails[key] === 'undefined') undefindedValues.push(key)
+        }
+        setundefindedValues(undefindedValues);
+        if (undefindedValues?.length > 0) setManditoryAlert(true);
         try {
             await PurchaseService.addRequisitionData(reqDetails).then(() => {
                 console.log('success');
@@ -260,6 +270,9 @@ export const PurchaseRequisition = () => {
     const alertState = () => {
         setNotification(!notification);
     };
+    const manditoryAlertState = () => {
+        setManditoryAlert(!manditoryAlert);
+    }
     const handleClose = () => {
         setDownloadModal(false);
     };
@@ -331,6 +344,7 @@ export const PurchaseRequisition = () => {
                 )}
             </div>
             {notification && <Notification notificationState={notification} type="success" message="Purchage requisition saved successfully" action={alertState} />}
+            {manditoryAlert && <Notification notificationState={manditoryAlert} severity="error" message={`Please fill manditory fields ${undefindedValues.join(',')}`} action={manditoryAlertState} />}
             <Loader open={showLoader} />
             <DownloadOptionsModal open={downloadModal} onClose={handleClose} rows={rows} />
         </Box>
