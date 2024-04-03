@@ -32,7 +32,7 @@ export const Form = ({
     const renderFields = (fields) => {
         return fields.map(field => {
             let { title, type, name, validationProps, dynamic, options = [], style } = field;
-            console.log(options, 'options')
+            // console.log(options, 'options')
            
             let finalStyle = { ...style, ...formStyles };
             // let showField = dynamic ? watchValues([dynamic['field']]) ===dynamic['value']: true;
@@ -149,8 +149,8 @@ export const Form = ({
                                     styles={{
                                         container: (provided) => ({
                                             ...provided,
-                                            width: 300,
-                                            marginRight: 50
+                                            width: 250,
+                                            marginRight: 30
                                         })
                                     }}
                                 />

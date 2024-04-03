@@ -1,59 +1,109 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useState, useEffect } from "react";
 import { FORM_LABELS } from "../../Constants/index";
 
 //material ui
 import { Box } from "@mui/material";
 import Button from '@mui/material/Button';
 import { Form } from "../Forms/index";
-import { Table } from "../Table";
+import { EditableTable } from "../EditableTable";
+import PurchaseService from "../../services/Purchase.service";
+import { Loader } from "../Loader/index";
+import { TotalCalculation } from "../../Helper/Helper";
 
 export const Sales = () => {
-    const [modalOpen, setModalOpen] = useState(false);
-    const [rowToEdit, setRowToEdit] = useState(null);
+    const [dataFetched, setDataFetched] = useState(false);
+    const [showLoader, setShowLoader] = useState(false);
     const [rows, setRows] = useState([]);
-    const headArray = [
+    const [pharmacologicalNames, setPharmacologicalNames] = useState([]);
+    const [brandNames, setBrandNames] = useState([]);
+    const [medicineFormValues, setMedicineFormValues] = useState(null);
+
+    const columns = [
         {
-            'head': 'Pharmacological Name',
-            'fieldName': 'pharmacologicalName'
+            'Header': 'Pharmacological Name',
+            'accessor': 'pharmacologicalName',
+            editEnable: true,
         },
         {
-            'head': 'Medicine Name',
-            'fieldName': 'medicineName'
+            'Header': 'Brand Name',
+            'accessor': 'brandName',
+            editEnable: true,
         },
         {
-            'head': 'Batch',
-            'fieldName': 'batch'
+            'Header': 'Batch No',
+            'accessor': 'batchNo',
+            editEnable: true,
         },
         {
-            'head': 'HSN Code',
-            'fieldName': 'hsnCode'
+            'Header': 'HSN Code',
+            'accessor': 'hsnCode',
+            editEnable: true,
         },
         {
-            'head': 'Price',
-            'fieldName': 'price'
+            'Header': 'Price',
+            'accessor': 'price',
+            editEnable: true,
         },
         {
-            'head': 'Qantity / Strips',
-            'fieldName': 'quantity'
+            'Header': 'Qty',
+            'accessor': 'quantity',
+            editEnable: true,
         },
         {
-            'head': 'Total',
-            'fieldName': 'total'
+            'Header': 'Total',
+            'accessor': 'total',
+            editEnable: false,
+
+            Cell: ({ row }) => <TotalCalculation price={row.original.price} quantity={row.original.quantity} />,
         },
         {
-            'head': 'Discount (%)',
-            'fieldName': 'discount'
+            'Header': 'Discount',
+            'accessor': 'discount',
+            editEnable: true,
         },
         {
-            'head': 'Amount',
-            'fieldName': 'amount '
+            'Header': 'Amount',
+            'accessor': 'amount',
+            editEnable: true,
         },
         {
-            'head': 'Action',
-            'fieldName': ''
-        }
-    ]
+            Header: "Actions",
+            id: "actions",
+            disableSortBy: true,
+            Cell: ({ row, column, cell }) =>
+                row.original.isEditing ? (
+                    <>
+                        <button onClick={() => handleButtonClick("save", row.original)}>
+                            Save
+                        </button>
+                        <button onClick={() => handleButtonClick("cancel", row.original)}>
+                            Cancel
+                        </button>
+                    </>
+                ) : (
+                    <button disabled={dataFetched} onClick={() => handleButtonClick("edit", row.original)}>
+                        Edit
+                    </button>
+                ),
+        },
+    ];
+    const handleButtonClick = (action, row) => {
+        const newData = rows.map((rowData) => {
+            if (rowData.id === row.id) {
+                if (action === "edit") {
+                    return { ...rowData, isEditing: true, prevData: { ...rowData } };
+                } else if (action === "cancel") {
+                    return { ...rowData, isEditing: false, ...rowData.prevData };
+                } else if (action === "save") {
+                    const { prevData, ...updatedRowData } = rowData;
+                    return { ...updatedRowData, isEditing: false };
+                }
+            }
+            return rowData;
+        });
+        setRows(newData);
+    };
+
     const patient_details_template = {
         title: '',
         submitButttonText: 'Log in',
@@ -80,15 +130,16 @@ export const Sales = () => {
                 options: [
                     {
                         value: "male",
-                        option: "Male"
+                        name: "Male"
                     },
                     {
                         value: "female",
-                        option: "Female"
+                        name: "Female"
                     }
                 ],
                 style: {
-                    width: "194px"
+                    width: "150px",
+                    height: "35px"
                 }
             },
             {
@@ -110,7 +161,7 @@ export const Sales = () => {
                     required: "Phone number is required"
                 },
                 style: {
-                    width: "194px"
+                    width: "150px"
                 }
             },
             {
@@ -118,7 +169,7 @@ export const Sales = () => {
                 type: 'email',
                 name: 'email',
                 style: {
-                    width: "194px"
+                    width: "250px"
                 }
             },
             {
@@ -141,15 +192,17 @@ export const Sales = () => {
                     },
                     {
                         value: "rx",
-                        option: "RC"
+                        option: "Rx"
                     }
                 ],
                 style: {
-                    width: "194px"
+                    width: "100px",
+                    height: "35px"
                 }
             },
         ],
     };
+
     const medicine_details_template = {
         title: '',
         submitButttonText: '+ Add',
@@ -160,34 +213,33 @@ export const Sales = () => {
         fields: [
             {
                 title: FORM_LABELS.PHARMACOLOGICAL_NAME,
-                type: 'select',
-                name: FORM_LABELS.PHARMACOLOGICAL_NAME,
+                type: 'autoComplete',
+                name: 'pharmacologicalName',
                 validationProps: {
                     required: `${FORM_LABELS.PHARMACOLOGICAL_NAME} is required`
                 },
-                options: [
-
-                ],
                 style: {
                     width: "200px"
-                }
+                },
+                options: [...pharmacologicalNames]
             },
             {
 
                 title: FORM_LABELS.MEDICINE_NAME,
-                type: 'select',
-                name: FORM_LABELS.MEDICINE_NAME,
-                options: [
-
-                ],
+                type: 'autoComplete',
+                name: 'brandName',
+                validationProps: {
+                    required: ` ${FORM_LABELS.MEDICINE_NAME} is required`
+                },
                 style: {
                     width: "200px"
-                }
+                },
+                options: [...brandNames]
             },
             {
                 title: FORM_LABELS.BATCH_NO,
                 type: 'text',
-                name: FORM_LABELS.BATCH_NO,
+                name: 'batchNo',
                 validationProps: {
                     required: ` ${FORM_LABELS.BATCH_NO} is required`
                 },
@@ -195,7 +247,7 @@ export const Sales = () => {
             {
                 title: FORM_LABELS.HSN_CODE,
                 type: 'number',
-                name: FORM_LABELS.HSN_CODE,
+                name: 'hsnCode',
                 validationProps: {
                     required: `${FORM_LABELS.HSN_CODE} is required`
                 },
@@ -203,23 +255,23 @@ export const Sales = () => {
             {
                 title: FORM_LABELS.PRICE,
                 type: 'text',
-                name: FORM_LABELS.PRICE,
+                name: 'price',
                 validationProps: {
                     required: `${FORM_LABELS.PRICE} is required`
                 },
             },
             {
                 title: FORM_LABELS.QUANTITY,
-                type: 'text',
-                name: FORM_LABELS.QUANTITY,
+                type: 'number',
+                name: 'quantity',
                 validationProps: {
                     required: `${FORM_LABELS.QUANTITY} is required`
                 },
             },
             {
                 title: FORM_LABELS.TOTAL,
-                type: 'text',
-                name: FORM_LABELS.TOTAL,
+                type: 'number',
+                name: 'total',
                 validationProps: {
                     required: `${FORM_LABELS.TOTAL} is required`
                 },
@@ -227,7 +279,7 @@ export const Sales = () => {
             {
                 title: FORM_LABELS.DISCOUNT,
                 type: 'number',
-                name: FORM_LABELS.DISCOUNT,
+                name: 'discount',
                 validationProps: {
                     required: `${FORM_LABELS.DISCOUNT} is required`
                 },
@@ -235,7 +287,7 @@ export const Sales = () => {
             {
                 title: FORM_LABELS.AMOUNT,
                 type: 'number',
-                name: FORM_LABELS.AMOUNT,
+                name: 'amount',
                 validationProps: {
                     required: `${FORM_LABELS.AMOUNT} is required`
                 },
@@ -303,19 +355,20 @@ export const Sales = () => {
                 options: [
                     {
                         value: "cash",
-                        option: "Cash"
+                        name: "Cash"
                     },
                     {
                         value: "card",
-                        option: "FeCardmale"
+                        name: "FeCardmale"
                     },
                     {
                         value: "upi",
-                        option: "UPI"
+                        name: "UPI"
                     }
                 ],
                 style: {
-                    width: "190px"
+                    width: "190px",
+                    height: "35px"
                 }
             },
             {
@@ -344,26 +397,69 @@ export const Sales = () => {
         justifyContent: 'space-around'
     };
     const btn_styles = { display: "flex", gap: "20px 20px", justifyContent: "end" };
-    const onSubmit = (form) => {
-        console.log(form);
+
+    const resetMedicineForm = () => {
+        setMedicineFormValues(null);
     };
+
     const onAddMedicine = (formData) => {
-        const updatedRows = [...rows, formData]
-        setRows(updatedRows);
-        console.log(rows, 'medicine added');
+        // setShowLoader(true);
+        console.log(formData, 'formData');
+        const { price, total, discount, amount, batchNo, hsnCode, quantity, pharmacologicalName, brandName } = formData;
+        // const total = calculateTotal(price, quantity);
+        console.log(total, 'djnenfjefniewsnjikewsnfjsnejkn');
+        const transformedObject = {
+            price,
+            total,
+            discount,
+            amount,
+            batchNo,
+            hsnCode,
+            quantity,
+            pharmacologicalName: pharmacologicalName?.label,
+            brandName: brandName?.label,
+            medicineId: brandName?.value
+        };
+        setRows([...rows, transformedObject]);
+        resetMedicineForm();
     };
+
+
+    const onSubmit = (form, formType) => {
+        if (formType === "medicine_details_template") {
+            onAddMedicine(form);
+            resetMedicineForm();
+        } else {
+            console.log(form);
+        }
+    };
+    // const onAddMedicine = (formData) => {
+    //     const updatedRows = [...rows, formData]
+    //     setRows(updatedRows);
+    //     console.log(rows, 'medicine added');
+    // };
     const validate = (watchValues, errorMethods) => {
         // console.log(watchValues, 'watchValues')
     };
 
-    const handleDeleteRow = (targetIndex) => {
-        setRows(rows.filter((_, idx) => idx !== targetIndex));
-    };
+    const getMedicines = async () => {
+        setShowLoader(true);
+        try {
+            let data = await PurchaseService.getAllMedicines();
+            const result = data?.docs?.map((doc) => ({ ...doc?.data(), id: doc?.id }));
+            console.log(result, 'medicinesData');
+            setPharmacologicalNames(result?.map((item) => ({ value: item?.id, name: item?.pharmacologicalName })));
+            setBrandNames(result?.map((item) => ({ value: item?.id, name: item?.brandName })));
+            setShowLoader(false);
+        } catch (e) {
+            console.log(e, 'error allVendors');
+            setShowLoader(false);
+        }
+    }
+    useEffect(() => {
+        getMedicines();
+    }, []);
 
-    const handleEditRow = (idx) => {
-        setRowToEdit(idx);
-        setModalOpen(true);
-    };
     return (
         <Box sx={{
             padding: 2,
@@ -386,12 +482,14 @@ export const Sales = () => {
             >
                 <Form
                     template={medicine_details_template}
-                    onSubmit={onAddMedicine}
+                    onSubmit={(form) => onSubmit(form, "medicine_details_template")}
                     validate={validate}
                     showSubmitButton={true}
                     showClearFormButton={true}
                     form_styles={medicine_details_style}
                     btn_styles={btn_styles}
+                    onAddMedicine={onAddMedicine}
+                    initialValues={medicineFormValues}
                 />
             </Box>
             <Box sx={{
@@ -411,16 +509,22 @@ export const Sales = () => {
                 />
             </Box>
             <Box sx={{ marginTop: 3 }}>
-                <Table headArray={headArray} gridArray={rows} />
+                <EditableTable
+                    columns={columns}
+                    data={rows}
+                    setData={setRows}
+                    handleButtonClick={handleButtonClick}
+                />
             </Box>
             <div>
                 {rows.length > 0 && (
-                    <Box sx ={{display: 'flex',justifyContent: 'end', marginTop: '10px '}}>
+                    <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px ' }}>
                         <Button variant="contained">Save</Button>
                     </Box>
                 )}
-                
+
             </div>
+            <Loader open={showLoader} />
         </Box>
     )
 }
