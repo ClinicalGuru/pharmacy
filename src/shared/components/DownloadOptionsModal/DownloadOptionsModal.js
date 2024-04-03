@@ -12,9 +12,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { blue } from '@mui/material/colors';
 
-export const DownloadOptionsModal = (props) => {
-    const { onClose, selectedValue, open, rows, vendorDetails } = props;
-    console.log(vendorDetails, 'vendorDetails')
+export const DownloadOptionsModal = ({ onClose, selectedValue, open, rows, vendorDetails, pdfTitle }) => {
     const handleClose = () => {
         onClose(selectedValue);
     };
@@ -46,7 +44,7 @@ export const DownloadOptionsModal = (props) => {
                                 <PictureAsPdfIcon />
                             </Avatar>
                         </ListItemAvatar>
-                        <PdfFile data={rows} vendorData={vendorDetails} />
+                        <PdfFile data={rows} vendorDetails={vendorDetails} pdfTitle={pdfTitle}/>
                     </ListItemButton>
                 </ListItem>
             </List>

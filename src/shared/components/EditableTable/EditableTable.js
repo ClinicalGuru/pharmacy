@@ -61,8 +61,6 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick, hideC
     }
   );
 
-  console.log(selectedRowIds, 'selectedRowIds')
-
   const handleInputChange = (event, row, columnId) => {
     // console.log(data, 'editable table')
     const newData = data.map((rowData) => {

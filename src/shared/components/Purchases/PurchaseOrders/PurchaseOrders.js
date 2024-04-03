@@ -20,6 +20,7 @@ export const PurchaseOrders = () => {
     const [notification, setNotification] = useState(false);
     const [showLoader, setShowLoader] = useState(false);
     const [originalData, setOriginalData] = useState([]);
+    const [pdfData, setPdfData] = useState([]);
     const [selectedVendorDtls, setSelectedVendorDtls] = useState();
     const [notificationMsg, setNotificationMsg] = useState({
         message: '',
@@ -136,11 +137,11 @@ export const PurchaseOrders = () => {
         console.log(filtredRows, 'filtredRows')
         try {
             await PurchaseService.savePO(filtredRows);
+            pdfUsableData(filtredRows);
             console.log('successfull on saving PO');
             setNotification(true);
             setDownloadModal(true);
             setShowLoader(false);
-            setNotification(true);
             setNotificationMsg({
                 severity: 'success',
                 message: 'Purchase order created successfully.'
@@ -149,7 +150,22 @@ export const PurchaseOrders = () => {
             console.log('error on saving PO', err)
             setShowLoader(false);
         }
+    };
+
+    const pdfUsableData = (data) => {
+        const filteredList = data.map(({ discount, gst, id, isEditing, medicineId, mrp, ptr, pts, quotationId, requesitionId, vendorId, vendorName, ...rest }) => {
+            return {
+                pharmacologicalName: rest.pharmacologicalName,
+                brandName: rest.brandName,
+                form: rest.form,
+                dose: rest.dose,
+                quantity: rest.quantity
+            }
+        });
+        console.log(filteredList, 'filteredList')
+        setPdfData(filteredList);
     }
+
     const alertState = () => {
         setNotification(!notification);
     };
@@ -215,19 +231,18 @@ export const PurchaseOrders = () => {
                 setShowLoader(true);
                 try {
                     let data = await PurchaseService.getVendor(vendorId);
-                    setSelectedVendorDtls(data[0]);
+                    setSelectedVendorDtls(data);
                     setShowLoader(false);
                 } catch (err) {
                     console.log(err, 'error while getting vendor details Purchage order');
                     setShowLoader(false);
                 }
-
             }
-
             getVendorDetails();
         }
 
-    }, [vendorId])
+    }, [vendorId]);
+
     return (
         <Box sx={{
             padding: 2,
@@ -299,7 +314,7 @@ export const PurchaseOrders = () => {
                     </Box>
                 )}
             </div>
-            <DownloadOptionsModal open={downloadModal} onClose={handleClose} rows={rows} vendorDetails={selectedVendorDtls} />
+            <DownloadOptionsModal open={downloadModal} onClose={handleClose} rows={pdfData} vendorDetails={selectedVendorDtls} pdfTitle="PURCHASE ORDER" />
             {notification && <Notification notificationState={notification} severity={notificationMsg?.severity} message={notificationMsg?.message} action={alertState} />}
             <Loader open={showLoader} />
         </Box>
