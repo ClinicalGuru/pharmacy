@@ -1,6 +1,6 @@
 
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, props } from 'react';
 import { Box,  } from "@mui/material";
 import { Form } from "../../Forms/index";
 // import Table from '@mui/material/Table';
@@ -9,6 +9,7 @@ import Button from '@mui/material/Button';
 import PurchaseService from "../../../services/Purchase.service";
 import { Table } from "../../Table";
 import { Container } from "./PharmacyInventory.styles";
+import { useLocation } from 'react-router-dom';
 
 
 
@@ -125,7 +126,7 @@ export const PharmacyInventory = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [vendorDetails, SetVendorDetails] = useState([]);
     const [rowToEdit, setRowToEdit] = useState(null);
-    const [rows, setRows] = useState([]);
+    let [rows, setRows] = useState([]);
     const headArray = [
         {
             'head': 'Medicine Details',
@@ -207,8 +208,17 @@ export const PharmacyInventory = () => {
             },
         ],
     };
+    const location = useLocation();
+    let state = location.state
+    useEffect(() => {
+        // passing_data_from_addinvoice_to_pharmacyinventory
+        if(state.passing_data_from_addinvoice_to_pharmacyinventory){
+            // rows=state.passing_data_from_addinvoice_to_pharmacyinventory;
+            setRows(rows=state.passing_data_from_addinvoice_to_pharmacyinventory)
+        }
+        
+    })
     
-
     const vendor_details_style = {
         display: "flex",
         gap: "28px 30px",

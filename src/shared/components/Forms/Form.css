@@ -1,0 +1,25 @@
+.atofq{
+    width: 200px;
+    display:grid;
+    grid-template-columns: 40px 150px;
+}
+.atofq-text{
+    margin-top: 8px;
+}
+.atofq-checkbox{
+    width: 20px;
+    height: 30px;
+    margin-top: -2px;
+
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
