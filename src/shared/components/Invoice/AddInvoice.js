@@ -4,7 +4,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 
 
-import { Box, Typography } from "@mui/material";
+import { Box, Typography,formControlClasses } from "@mui/material";
 import { Form } from "../Forms/index";
 // import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
@@ -12,14 +12,17 @@ import Button from '@mui/material/Button';
 import PurchaseService from "../../services/Purchase.service";
 import { Table } from "../Table";
 import { Container } from './AddInvoice.styles'
+import {Routes, Route, Link,useNavigate} from 'react-router-dom';
 
 
 
 export const AddInvoice = () => {
+    const navigate = useNavigate();
     const [modalOpen, setModalOpen] = useState(false);
     const [vendorDetails, SetVendorDetails] = useState([]);
     const [rowToEdit, setRowToEdit] = useState(null);
     const [rows, setRows] = useState([]);
+    const [medicineFormData, setMedicineFormData] = useState({});
     const headArray = [
         {
             'head': 'Medicine Details',
@@ -154,7 +157,7 @@ export const AddInvoice = () => {
     };
     const medicine_details_template = {
         title: '',
-        submitButttonText: '+ Add',
+        submitButttonText: 'Add',
         clearFormBtnText: "Clear",
         formStyles: {
             backgroundColor: "#FFFFFF",
@@ -163,13 +166,16 @@ export const AddInvoice = () => {
         fields: [
             {
                 title: FORM_LABELS.PHARMACOLOGICAL_NAME,
-                type: 'autoComplete',
+                type: 'select',
                 name: 'pharmacologicalName',
                 validationProps: {
                     required: `${FORM_LABELS.PHARMACOLOGICAL_NAME} is required`
                 },
                 options: [
-
+                    {
+                        value: "none",
+                        name: "None",
+                    },
                 ],
             },
             {
@@ -203,6 +209,7 @@ export const AddInvoice = () => {
             {
                 title: FORM_LABELS.EXPIRY,
                 type: 'number',
+                inputmode:"numeric",
                 name: 'expiry',
                 validationProps: {
                     required: `${FORM_LABELS.EXPIRY} is required`
@@ -211,6 +218,7 @@ export const AddInvoice = () => {
             {
                 title: FORM_LABELS.QUANTITY,
                 type: 'number',
+                inputmode:"numeric",
                 name: 'quantity',
                 validationProps: {
                     required: `${FORM_LABELS.QUANTITY} is required`
@@ -235,6 +243,7 @@ export const AddInvoice = () => {
             {
                 title: FORM_LABELS.MRP_PER_STRIP,
                 type: 'number',
+                inputmode:"numeric",
                 name: 'mrpPerStrip',
                 validationProps: {
                     required: `${FORM_LABELS.MRP_PER_STRIP} is required`
@@ -259,6 +268,7 @@ export const AddInvoice = () => {
             {
                 title: FORM_LABELS.GST,
                 type: 'number',
+                inputmode:"numeric",
                 name: 'gst',
                 validationProps: {
                     required: `${FORM_LABELS.GST} is required`
@@ -267,6 +277,7 @@ export const AddInvoice = () => {
             {
                 title: FORM_LABELS.NET_PRICE,
                 type: 'number',
+                inputmode:"numeric",
                 name: 'netPrice',
                 validationProps: {
                     required: `${FORM_LABELS.NET_PRICE} is required`
@@ -275,11 +286,16 @@ export const AddInvoice = () => {
         ],
         btns: [
             {
-                btn_text: "+ Add",
+                btn_text: "Add",type:'submit'
             },
             {
-                btn_text: "Clear",
-            }
+                btn_text: "Clear",type:'button'
+            },
+            {
+            btn_text: "Add Tax on Free Qty",
+            type: 'checkbox', 
+            name: "addTaxOnFreeQty",
+            },
         ]
     };
 
@@ -358,11 +374,24 @@ export const AddInvoice = () => {
     const onSubmit = (form) => {
         console.log(form);
     };
+    let [passing_data_from_addinvoice_to_pharmacyinventory,setpdfatp]=useState([])
     const onAddMedicine = (formData) => {
-        const updatedRows = [...rows, formData]
-        setRows(updatedRows);
-        console.log(rows, 'medicine added');
+        // Check if the HSN code already exists in the rows
+        const isDuplicate = rows.some(row => row.hsnCode === formData.hsnCode);
+        if (isDuplicate) {
+            alert("Duplicates detected. This HSN code already exists.");
+        } else {
+            // If not a duplicate, add the medicine data to rows
+            formData['medicineName']=formData['brandName']
+            const updatedRows = [...rows, formData];
+            setpdfatp(passing_data_from_addinvoice_to_pharmacyinventory=updatedRows);
+            setRows(updatedRows);
+        }
     };
+    function save(){
+        console.log('save method',passing_data_from_addinvoice_to_pharmacyinventory);
+        navigate("/landing/inventory/pharmacyInventory",{state:{passing_data_from_addinvoice_to_pharmacyinventory:passing_data_from_addinvoice_to_pharmacyinventory}})
+    }
     const validate = (watchValues, errorMethods) => {
         // console.log(watchValues, 'watchValues')
     };
@@ -456,7 +485,7 @@ export const AddInvoice = () => {
             <div>
                 {rows.length > 0 && (
                     <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px ' }}>
-                        <Button variant="contained">Save</Button>
+                        <Button variant="contained" onClick={() => save()}>Save</Button>
                     </Box>
                 )}
 
