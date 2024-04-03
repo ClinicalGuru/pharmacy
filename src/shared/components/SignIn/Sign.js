@@ -68,7 +68,7 @@ export const SignIn = () => {
     const onSubmit = async (form) => {
         const { userName, password } = form;
         setLoader(true);
-        console.log(form);
+        // console.log(form);
         try {
             let data = await SigninService.validateUser(userName);
             setLoader(false);

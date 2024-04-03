@@ -8,16 +8,7 @@ class SigninService {
         const queryRef = query(employeesCollectionRef, where("firstName", "==", name));
         const querySnapshot = await getDocs(queryRef);
         const filterData = querySnapshot.docs.map((doc) => ({ ...doc.data()}));
-        console.log(filterData)
         return filterData;
-
-        // const queryRef = query(employeesCollectionRef, where("firstName", "==", name));
-        // const querySnapshot = await getDocs(queryRef);
-
-        // // Now you can use the querySnapshot as needed
-        // const filteredData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-
-        // return filteredData;
     }
 }
 

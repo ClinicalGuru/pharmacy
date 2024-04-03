@@ -1,7 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, forwardRef } from "react";
 import { useTable, useRowSelect } from "react-table";
 
-export const EditableTable = ({ columns, data, setData, handleButtonClick, hideColumns = [] }) => {
+export const EditableTable = ({ columns, data, setData, handleButtonClick, hideColumns = [], selectedRows }) => {
+
+  const IndeterminateCheckbox = forwardRef(
+    ({ indeterminate, ...rest }, ref) => {
+      const defaultRef = React.useRef()
+      const resolvedRef = ref || defaultRef
+
+      React.useEffect(() => {
+        resolvedRef.current.indeterminate = indeterminate
+      }, [resolvedRef, indeterminate])
+
+      return (
+        <>
+          <input type="checkbox" ref={resolvedRef} {...rest} />
+        </>
+      )
+    }
+  )
   // console.log(hideColumns, 'hideColumns = []')
   const {
     getTableProps,
@@ -18,25 +35,34 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick, hideC
       data,
       initialState: { selectedRowIds: {}, hiddenColumns: hideColumns }, // Initial state for row selection
     },
-    useRowSelect // Adding useRowSelect hook
+    useRowSelect, // Adding useRowSelect hook
+    hooks => {
+      hooks.visibleColumns.push(columns => [
+        // Let's make a column for selection
+        {
+          id: 'selection',
+          // The header can use the table's getToggleAllRowsSelectedProps method
+          // to render a checkbox
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <div>
+              <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+            </div>
+          ),
+          // The cell can use the individual row's getToggleRowSelectedProps method
+          // to the render a checkbox
+          Cell: ({ row }) => (
+            <div>
+              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+            </div>
+          ),
+        },
+        ...columns,
+      ])
+    }
   );
 
-  // Handler to toggle all row selections
-  const toggleSelectAll = () => {
-    const isAllSelected = Object?.keys(selectedRowIds)?.length === rows?.length;
-    toggleAllRowsSelected(!isAllSelected);
-  };
+  console.log(selectedRowIds, 'selectedRowIds')
 
-  // Handler to toggle individual row selection
-  const toggleRowSelection = (rowId) => {
-    const newSelectedRowIds = { ...selectedRowIds };
-    if (newSelectedRowIds[rowId]) {
-      delete newSelectedRowIds[rowId];
-    } else {
-      newSelectedRowIds[rowId] = true;
-    }
-    setData(rows.filter((row) => newSelectedRowIds[row.id]));
-  };
   const handleInputChange = (event, row, columnId) => {
     // console.log(data, 'editable table')
     const newData = data.map((rowData) => {
@@ -47,6 +73,7 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick, hideC
     });
     setData(newData);
   };
+  selectedRows(selectedRowIds);
   return (
     <table {...getTableProps()} style={{ border: "solid 1px gray", width: "100%" }}>
       <thead>

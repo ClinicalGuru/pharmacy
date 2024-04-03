@@ -145,7 +145,6 @@ export const MasterList = () => {
             let data = await PurchaseService.getAllMedicines();
             const result = data?.docs?.map((doc) => ({ ...doc?.data(), id: doc?.id }));
             setPharmacologicalNames(result);
-            // setBrandNames(result?.map((item) => ({ value: item?.id, name: item?.brandName })));
             setShowLoader(false);
         } catch (e) {
             console.log(e, 'error allVendors');
@@ -163,12 +162,10 @@ export const MasterList = () => {
         for (const vendor of vendorDetails) {
             vendorMap.set(vendor.id, vendor.name)
         }
-        // console.log(vendorMap, 'vendorMap')
         const updatedQuotationDetails = quotationDetails?.map((quotation) => ({
             ...quotation,
             vendorName: vendorMap.get(quotation.vendorId)
         }));
-        // console.log(updatedQuotationDetails, 'updatedQuotationDetails');
         let medicineIdCount = {};
         updatedQuotationDetails?.forEach(medicine => {
             if (medicine.medicineId in medicineIdCount) {
@@ -177,24 +174,18 @@ export const MasterList = () => {
                 medicineIdCount[medicine.medicineId] = 1;
             }
         });
-        // console.log(medicineIdCount, 'medicineIdCount')
-        // Iterate through medicines to assign pricing order
         updatedQuotationDetails.forEach(medicine => {
             const count = medicineIdCount[medicine.medicineId];
             if (count === 1) {
                 medicine.pricingOrder = 'L1';
             } else {
-                // Sort updatedQuotationDetails by ptr in ascending order
                 const sameMedicines = updatedQuotationDetails.filter(med => med.medicineId === medicine.medicineId);
                 sameMedicines.sort((a, b) => parseFloat(a?.ptr) - parseFloat(b?.ptr));
-
-                // Assign pricing order
                 for (let i = 0; i < sameMedicines.length; i++) {
                     sameMedicines[i].pricingOrder = `L${i + 1}`;
                 }
             }
         });
-        // console.log(updatedQuotationDetails, 'final list');
         setOriginalData(updatedQuotationDetails);
         setShowLoader(false);
     }
@@ -204,9 +195,7 @@ export const MasterList = () => {
         try {
             let data = await PurchaseService.getAllQuotationData();
             const result = data?.docs?.map((doc) => ({ ...doc?.data(), id: doc?.id }));
-            setQuotations(result)
-            console.log(data, 'api result');
-            // joinQuotationsWithVendors(result);
+            setQuotations(result);
             setShowLoader(false);
         } catch (err) {
             setShowLoader(false);
@@ -215,14 +204,12 @@ export const MasterList = () => {
     }
 
     useEffect(() => {
-        // console.log(rows, 'rows')
         quotationDetails?.length > 0 && joinQuotationsWithVendors()
     }, [quotationDetails])
 
     const vendorHandler = (e) => {
         const { value } = e
         setVendorId(value);
-        // filterDataOnSelection(vendorId, medicineId, pricingOrder);
     }
     const pNameHandler = (e) => {
         const { value } = e;
@@ -234,11 +221,10 @@ export const MasterList = () => {
     };
 
     const onCreatePurchageOrder = () => {
-        debugger
-        if (vendorId && vendorId === '') { 
-            setNotification(true); 
+        if (vendorId === "") {
+            setNotification(true);
             return;
-        }
+        };
         navigate(
             '/landing/purchase/order',
             {
@@ -250,19 +236,14 @@ export const MasterList = () => {
     useEffect(() => {
         let filteredRows;
         if (vendorId && vendorId !== '' && pMed && pMed !== '') {
-            // Filter based on vendorId and medicineId
             filteredRows = originalData.filter((item) => item?.vendorId === vendorId && item?.medicineId === pMed);
         } else if (vendorId && vendorId !== '') {
-            // Filter only based on vendorId
             filteredRows = originalData.filter((item) => item?.vendorId === vendorId)
         } else if (pMed && pMed !== '') {
-            // Filter only based on medicineId
             filteredRows = originalData.filter((item) => item?.medicineId === pMed)
         } else {
-            // If neither vendorId nor medicineId is provided, use originalData
             filteredRows = originalData;
         }
-        // Optionally, filter based on pricingOrder
         if (pricingOrder) {
             if (filteredRows?.length > 0) {
                 filteredRows = filteredRows.filter((item) => item?.pricingOrder === pricingOrder);
@@ -270,7 +251,6 @@ export const MasterList = () => {
                 filteredRows = originalData.filter((item) => item?.pricingOrder === pricingOrder);
             }
         }
-        // console.log(filteredRows, 'filteredRows')
         setRows(filteredRows);
     }, [vendorId, pMed, pricingOrder]);
 
@@ -343,11 +323,11 @@ export const MasterList = () => {
             <div>
                 {rows.length > 0 && (
                     <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px' }}>
-                        <Button variant="contained" onClick={onCreatePurchageOrder}>Purchase order</Button>
+                        <Button variant="contained" onClick={onCreatePurchageOrder}>Go to purchase orders</Button>
                     </Box>
                 )}
             </div>
-            {notification && <Notification notificationState={notification} type="info" message="Please select vendor before creating PO" action={alertState} />}
+            {notification && <Notification notificationState={notification} severity="info" message="Please select vendor before creating PO" action={alertState} />}
             <Loader open={showLoader} />
         </Box>
     )

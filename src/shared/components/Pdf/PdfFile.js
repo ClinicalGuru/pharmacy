@@ -6,7 +6,7 @@ import ListItemText from '@mui/material/ListItemText';
 
 export const PdfFile = ({ data, vendorData }) => {
   console.log(vendorData, 'vendorData');
-  const { address, email, gst, name, phone } = vendorData;
+  const { address = '', email ='', gst = '', name = '', phone = '' } = vendorData || {};
   const handleDownload = () => {
     const doc = new jsPDF();
     const totalPages = doc.internal.getNumberOfPages();

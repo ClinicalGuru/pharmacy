@@ -13,8 +13,8 @@ import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { blue } from '@mui/material/colors';
 
 export const DownloadOptionsModal = (props) => {
-    const { onClose, selectedValue, open, rows } = props;
-
+    const { onClose, selectedValue, open, rows, vendorDetails } = props;
+    console.log(vendorDetails, 'vendorDetails')
     const handleClose = () => {
         onClose(selectedValue);
     };
@@ -46,47 +46,10 @@ export const DownloadOptionsModal = (props) => {
                                 <PictureAsPdfIcon />
                             </Avatar>
                         </ListItemAvatar>
-                        <PdfFile data={rows} />
+                        <PdfFile data={rows} vendorData={vendorDetails} />
                     </ListItemButton>
                 </ListItem>
             </List>
         </Dialog>
     );
 }
-
-// SimpleDialog.propTypes = {
-//     onClose: PropTypes.func.isRequired,
-//     open: PropTypes.bool.isRequired,
-//     selectedValue: PropTypes.string.isRequired,
-// };
-
-// export const SimpleDialogDemo = () => {
-//     const [open, setOpen] = React.useState(false);
-//     const [selectedValue, setSelectedValue] = React.useState(emails[1]);
-
-//     const handleClickOpen = () => {
-//         setOpen(true);
-//     };
-
-//     const handleClose = (value) => {
-//         setOpen(false);
-//         setSelectedValue(value);
-//     };
-
-//     return (
-//         <div>
-//             <Typography variant="subtitle1" component="div">
-//                 Selected: {selectedValue}
-//             </Typography>
-//             <br />
-//             <Button variant="outlined" onClick={handleClickOpen}>
-//                 Open simple dialog
-//             </Button>
-//             <SimpleDialog
-//                 selectedValue={selectedValue}
-//                 open={open}
-//                 onClose={handleClose}
-//             />
-//         </div>
-//     );
-// }
