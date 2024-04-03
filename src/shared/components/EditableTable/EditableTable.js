@@ -1,7 +1,7 @@
 import React, { useState, forwardRef } from "react";
 import { useTable, useRowSelect } from "react-table";
 
-export const EditableTable = ({ columns, data, setData, handleButtonClick, hideColumns = [], selectedRows }) => {
+export const EditableTable = ({ columns, data, setData, handleButtonClick, hideColumns = [], selectedRows = () => {} }) => {
 
   const IndeterminateCheckbox = forwardRef(
     ({ indeterminate, ...rest }, ref) => {
