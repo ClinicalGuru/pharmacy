@@ -73,7 +73,18 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick, hideC
   };
   selectedRows(selectedRowIds);
   return (
-    <table {...getTableProps()} style={{ border: "solid 1px gray", width: "100%" }}>
+    <table {...getTableProps()} style={{
+      overflow: 'hidden',
+      tableLayout: 'fixed',
+      borderCollapse: 'collapse',
+      boxShadow: '0px 5px 10px #ccc',
+      borderRadius: '10px',
+      whiteSpace: 'nowrap',
+      width: '100%',
+      margin: 'auto',
+      tableLayout: 'auto',
+      overflowX: 'auto',
+    }}>
       <thead>
         <tr>
           {/* <th>
@@ -120,8 +131,9 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick, hideC
                     {...cell.getCellProps()}
                     style={{
                       padding: "10px",
-                      border: "solid 1px gray",
-                      background: "papayawhip",
+                      textAlign:"center"
+                      // border: "solid 1px gray",
+                      // background: "papayawhip",
                     }}
                   >
                     {cell.column.editEnable ? (
