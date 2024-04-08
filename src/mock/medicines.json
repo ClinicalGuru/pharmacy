@@ -1,0 +1,60 @@
+ {
+    "medicines": [
+      {
+        "pharmacologicalName": "pharma1",
+        "brandName": "brand1",
+        "batchNo": "batchNo1",
+        "hsnCode": 1231,
+        "price": 5
+      },
+      {
+        "pharmacologicalName": "pharma2",
+        "brandName": "brand2",
+        "batchNo": "batchNo2",
+        "hsnCode": 1232,
+        "price": 50
+      },
+      {
+        "pharmacologicalName": "pharma3",
+        "brandName": "brand3",
+        "batchNo": "batchNo3",
+        "hsnCode": 1233,
+        "price": 25 
+      },
+      {
+        "pharmacologicalName": "pharma4",
+        "brandName": "brand4",
+        "batchNo": "batchNo4",
+        "hsnCode": 1234,
+        "price": 55
+      },
+      {
+        "pharmacologicalName": "pharma5",
+        "brandName": "brand5",
+        "batchNo": "batchNo5",
+        "hsnCode": 1235,
+        "price": 54
+      },
+      {
+        "pharmacologicalName": "pharma6",
+        "brandName": "brand6",
+        "batchNo": "batchNo6",
+        "hsnCode": 1236,
+        "price": 52
+      },
+      {
+        "pharmacologicalName": "pharma7",
+        "brandName": "brand7",
+        "batchNo": "batchNo7",
+        "hsnCode": 1237,
+        "price": 15
+      },
+      {
+        "pharmacologicalName": "pharma8",
+        "brandName": "brand8",
+        "batchNo": "batchNo8",
+        "hsnCode": 1238,
+        "price": 20
+      }
+    ]
+  }

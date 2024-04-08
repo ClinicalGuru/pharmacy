@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
+
+import { useForm } from 'react-hook-form'
 import { FORM_LABELS } from "../../Constants/index";
+// import jsonData from "../../../../src/mock/medicines.json"
 
 //material ui
 import { Box } from "@mui/material";
@@ -8,15 +11,18 @@ import { Form } from "../Forms/index";
 import { EditableTable } from "../EditableTable";
 import PurchaseService from "../../services/Purchase.service";
 import { Loader } from "../Loader/index";
-import { TotalCalculation } from "../../Helper/Helper";
 
 export const Sales = () => {
+    const {  watch, formState: { errors } } = useForm();
     const [dataFetched, setDataFetched] = useState(false);
     const [showLoader, setShowLoader] = useState(false);
     const [rows, setRows] = useState([]);
     const [pharmacologicalNames, setPharmacologicalNames] = useState([]);
     const [brandNames, setBrandNames] = useState([]);
     const [medicineFormValues, setMedicineFormValues] = useState(null);
+    const [total, setTotal] = useState(0);
+
+    // console.log(jsonData, 'jsonDataOfMedicines');
 
     const columns = [
         {
@@ -119,7 +125,7 @@ export const Sales = () => {
                     required: "Patient Name is required"
                 },
                 style: {
-                    width: "194px"
+                    width: "250px"
                 }
             },
             {
@@ -138,7 +144,7 @@ export const Sales = () => {
                     }
                 ],
                 style: {
-                    width: "150px",
+                    width: "100px",
                     height: "35px"
                 }
             },
@@ -203,6 +209,17 @@ export const Sales = () => {
         ],
     };
 
+    const handleInputChange = (e) => {
+        console.log(e, 'target')
+        const { name, value } = e.target;
+        if (name === 'price' || name === 'quantity') {
+            const currentPrice = parseFloat(name === 'price' ? value : watch('price') || 0);
+            const currentQuantity = parseInt(name === 'quantity' ? value : watch('quantity') || 0);
+            const newTotal = currentPrice * currentQuantity;
+            setTotal(newTotal);
+        }
+    };
+
     const medicine_details_template = {
         title: '',
         submitButttonText: '+ Add',
@@ -219,7 +236,8 @@ export const Sales = () => {
                     required: `${FORM_LABELS.PHARMACOLOGICAL_NAME} is required`
                 },
                 style: {
-                    width: "200px"
+                    width: "170px",
+                    marginRight: "5px"
                 },
                 options: [...pharmacologicalNames]
             },
@@ -232,7 +250,8 @@ export const Sales = () => {
                     required: ` ${FORM_LABELS.MEDICINE_NAME} is required`
                 },
                 style: {
-                    width: "200px"
+                    width: "170px",
+                    marginRight: "5px"
                 },
                 options: [...brandNames]
             },
@@ -243,6 +262,9 @@ export const Sales = () => {
                 validationProps: {
                     required: ` ${FORM_LABELS.BATCH_NO} is required`
                 },
+                style: {
+                    width: "80px"
+                }
             },
             {
                 title: FORM_LABELS.HSN_CODE,
@@ -251,14 +273,20 @@ export const Sales = () => {
                 validationProps: {
                     required: `${FORM_LABELS.HSN_CODE} is required`
                 },
+                style: {
+                    width: "80px"
+                }
             },
             {
                 title: FORM_LABELS.PRICE,
-                type: 'text',
+                type: 'number',
                 name: 'price',
                 validationProps: {
                     required: `${FORM_LABELS.PRICE} is required`
                 },
+                style: {
+                    width: "80px"
+                }
             },
             {
                 title: FORM_LABELS.QUANTITY,
@@ -267,6 +295,9 @@ export const Sales = () => {
                 validationProps: {
                     required: `${FORM_LABELS.QUANTITY} is required`
                 },
+                style: {
+                    width: "80px"
+                }
             },
             {
                 title: FORM_LABELS.TOTAL,
@@ -275,6 +306,10 @@ export const Sales = () => {
                 validationProps: {
                     required: `${FORM_LABELS.TOTAL} is required`
                 },
+                style: {
+                    width: "80px"
+                },
+                value: total
             },
             {
                 title: FORM_LABELS.DISCOUNT,
@@ -283,6 +318,9 @@ export const Sales = () => {
                 validationProps: {
                     required: `${FORM_LABELS.DISCOUNT} is required`
                 },
+                style: {
+                    width: "80px"
+                }
             },
             {
                 title: FORM_LABELS.AMOUNT,
@@ -291,6 +329,9 @@ export const Sales = () => {
                 validationProps: {
                     required: `${FORM_LABELS.AMOUNT} is required`
                 },
+                style: {
+                    width: "80px"
+                }
             },
         ],
         btns: [
@@ -315,7 +356,7 @@ export const Sales = () => {
                 type: 'number',
                 name: FORM_LABELS.DISCOUNT,
                 style: {
-                    width: "200px"
+                    width: "150px"
                 }
             },
             {
@@ -324,7 +365,7 @@ export const Sales = () => {
                 type: 'number',
                 name: FORM_LABELS.GST,
                 style: {
-                    width: "200px"
+                    width: "100px"
                 }
             },
             {
@@ -359,7 +400,7 @@ export const Sales = () => {
                     },
                     {
                         value: "card",
-                        name: "FeCardmale"
+                        name: "Card"
                     },
                     {
                         value: "upi",
@@ -367,7 +408,6 @@ export const Sales = () => {
                     }
                 ],
                 style: {
-                    width: "190px",
                     height: "35px"
                 }
             },
@@ -379,10 +419,7 @@ export const Sales = () => {
         ],
         btns: [
             {
-                btn_text: "+ Add",
-            },
-            {
-                btn_text: "Clear",
+                btn_text: "Save & Print",
             }
         ]
     };
@@ -393,13 +430,28 @@ export const Sales = () => {
     };
     const medicine_details_style = {
         display: "flex",
-        gap: "28px 28px",
+        gap: "20px 20px",
         justifyContent: 'space-around'
     };
+    const bill_details_styles = {
+        display: "grid",
+        columnGap: "20px",
+        gridTemplateColumns: "auto auto",
+    }
     const btn_styles = { display: "flex", gap: "20px 20px", justifyContent: "end" };
+
+    
+
+    const totalCalculation = (formData) => {
+        // console.log(formData, 'fhyurhvurihvcurifhv');
+        setTotal = formData.price * formData.quantity
+    }
 
     const resetMedicineForm = () => {
         setMedicineFormValues(null);
+    };
+    const validate = (watchValues, errorMethods) => {
+        // console.log(watchValues, 'watchValues')
     };
 
     const onAddMedicine = (formData) => {
@@ -433,14 +485,6 @@ export const Sales = () => {
             console.log(form);
         }
     };
-    // const onAddMedicine = (formData) => {
-    //     const updatedRows = [...rows, formData]
-    //     setRows(updatedRows);
-    //     console.log(rows, 'medicine added');
-    // };
-    const validate = (watchValues, errorMethods) => {
-        // console.log(watchValues, 'watchValues')
-    };
 
     const getMedicines = async () => {
         setShowLoader(true);
@@ -463,6 +507,7 @@ export const Sales = () => {
     return (
         <Box sx={{
             padding: 2,
+            backgroundColor: "#c0a6a614"
         }}>
             <Form
                 template={patient_details_template}
@@ -474,56 +519,65 @@ export const Sales = () => {
             />
             <Box
                 sx={{
+                    display: "flex"
+                }}>
+                <Box
+                    sx={{
+                        flexBasis: 3,
+                        marginRight: "50px"
+                    }}>
+                    <Box
+                        sx={{
+                            backgroundColor: '#eef0f3',
+                            borderRadius: '4px',
+                            padding: 2,
+                            marginTop: '5px',
+                            display: "flex",
+                            flexWrap: "wrap"
+                        }}
+                    >
+                        <Form
+                            template={medicine_details_template}
+                            onSubmit={(form) => onSubmit(form, "medicine_details_template")}
+                            validate={validate}
+                            showSubmitButton={true}
+                            showClearFormButton={true}
+                            form_styles={medicine_details_style}
+                            btn_styles={btn_styles}
+                            onAddMedicine={onAddMedicine}
+                            initialValues={medicineFormValues}
+                            handleInputChange={handleInputChange}
+                        />
+                    </Box>
+
+                    <Box sx={{ marginTop: 3 }}>
+                        <EditableTable
+                            columns={columns}
+                            data={rows}
+                            setData={setRows}
+                            handleButtonClick={handleButtonClick}
+                        />
+                    </Box>
+
+                </Box>
+                <Box sx={{
                     backgroundColor: '#eef0f3',
                     borderRadius: '4px',
                     padding: 2,
-                    marginTop: '5px'
-                }}
-            >
-                <Form
-                    template={medicine_details_template}
-                    onSubmit={(form) => onSubmit(form, "medicine_details_template")}
-                    validate={validate}
-                    showSubmitButton={true}
-                    showClearFormButton={true}
-                    form_styles={medicine_details_style}
-                    btn_styles={btn_styles}
-                    onAddMedicine={onAddMedicine}
-                    initialValues={medicineFormValues}
-                />
+                    marginTop: '4px',
+                    flexBasis: 1
+                }}>
+                    <Form
+                        template={bill_details}
+                        onSubmit={onSubmit}
+                        validate={validate}
+                        showSubmitButton={true}
+                        showClearFormButton={true}
+                        form_styles={bill_details_styles}
+                        btn_styles={btn_styles}
+                    />
+                </Box>
             </Box>
-            <Box sx={{
-                backgroundColor: '#eef0f3',
-                borderRadius: '4px',
-                padding: 2,
-                marginTop: '4px'
-            }}>
-                <Form
-                    template={bill_details}
-                    onSubmit={onSubmit}
-                    validate={validate}
-                    showSubmitButton={true}
-                    showClearFormButton={true}
-                    form_styles={medicine_details_style}
-                    btn_styles={btn_styles}
-                />
-            </Box>
-            <Box sx={{ marginTop: 3 }}>
-                <EditableTable
-                    columns={columns}
-                    data={rows}
-                    setData={setRows}
-                    handleButtonClick={handleButtonClick}
-                />
-            </Box>
-            <div>
-                {rows.length > 0 && (
-                    <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px ' }}>
-                        <Button variant="contained">Save</Button>
-                    </Box>
-                )}
-
-            </div>
             <Loader open={showLoader} />
         </Box>
     )
