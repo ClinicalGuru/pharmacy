@@ -4,6 +4,7 @@ import { SubmitButton } from "./Forms.styles";
 import { Box, Typography, Button } from "@mui/material";
 import { AutoComplete } from "../autoComplete/index";
 import CreatableSelect from 'react-select/creatable';
+import "./Form.css";
 
 export const Form = ({
     template,
@@ -22,16 +23,24 @@ export const Form = ({
     let { control, register, handleSubmit, watch, setError, clearErrors, formState: { errors }, reset } = useForm({
         mode: "onChange"
     });
-    let { title, fields, formStyles, btns, isBlockLevelBtns = true } = template;
+    let { title, fields, value, formStyles, btns, isBlockLevelBtns = true } = template;
     let watchValues = watch(watchFields);
     // console.log(watchValues, 'watchValues')
     onValidate(watchValues, { setError, clearErrors });
     // const handleVendorChange = (selectedOption) => {
     //     setSelectedOption(selectedOption);
     // };
+    function onlyDecimalNumberKey(event) {
+        let charCode = (event.which) ? event.which : event.keyCode;
+        // if ( charCode > 31
+        //   && (charCode < 48 || charCode > 57))
+        //   return false;
+        // return true;
+        return false;
+      }
     const renderFields = (fields) => {
         return fields.map(field => {
-            let { title, type, name, validationProps, dynamic, options = [], style } = field;
+            let { title, type, value ,name, validationProps, dynamic, options = [], style } = field;
             // console.log(options, 'options')
            
             let finalStyle = { ...style, ...formStyles };
@@ -44,8 +53,8 @@ export const Form = ({
                             marginBottom: 2
                         }}>
                             <div key={name}>
-                                <Box variant="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
-                                <input style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
+                                <Box component="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
+                                <input className='makefieldsempty1' style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
                                 {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
                             </div>
                         </Box>)
@@ -55,8 +64,8 @@ export const Form = ({
                             narginBottom: 2
                         }}>
                             <div key={name}>
-                                <Box variant="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title} </Box>
-                                <input style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
+                                <Box component="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title} </Box>
+                                <input className='makefieldsempty2' style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
                                 {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
                             </div>
 
@@ -68,8 +77,8 @@ export const Form = ({
                             marginBottom: 2
                         }}>
                             <div key={name}>
-                                <Box sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
-                                <input style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
+                                <Box component="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
+                                <input className='makefieldsempty3' style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
                                 {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
                             </div>
                         </Box>)
@@ -79,8 +88,8 @@ export const Form = ({
                             marginBottom: 2
                         }}>
                             <div key={name}>
-                                <Box sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
-                                <input style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
+                                <Box component="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
+                                <input className='makefieldsempty4'style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
                                 {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
                             </div>
                         </Box>
@@ -89,23 +98,23 @@ export const Form = ({
                 case 'password':
                     return (
                         <div key={name}>
-                            <Box sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
-                            <input style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
+                            <Box  component="label"sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
+                            <input className='makefieldsempty5' style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
                             {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
                         </div>
                     )
                 case 'checkbox':
                     return (
                         <div key={name}>
-                            <Box sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
-                            <input style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
+                            <Box component="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
+                            <input className='makefieldsempty6' style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
                             {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
                         </div>
                     )
                 case 'select':
                     return (
                         <div key={name}>
-                            <Box sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
+                            <Box component="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
                             <select style={finalStyle} name={name} id={name} {...register(name, validationProps)} >
                                 <option>select</option>
                                 {options && options?.length > 0 && options?.map((option, index) => {
@@ -118,15 +127,15 @@ export const Form = ({
                 case 'date':
                     return (
                         <div key={name}>
-                            <Box sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
-                            <input style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
+                            <Box  component="label"sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
+                            <input className='makefieldsempty7' style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
                             {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
                         </div>
                     )
                 case 'autoComplete':
                     return (
                         <div key={name}>
-                            <Box variant="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
+                            <Box component="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
                             <Controller
                                 name={name}
                                 control={control}
@@ -169,11 +178,52 @@ export const Form = ({
 
         })
     }
+    function submit_clear(type){
+        let fieldsempty={}
+        fields.map(field => {
+            fieldsempty[field.name]=""
+        })
+        setTimeout(() => {
+            // console.log("fieldsempty",fieldsempty);
+            reset(fieldsempty)
+        },200);
+        // if(false)
+        // {
+        //     setTimeout(() => {
+        //         for(let j=1;j<9;j++){
+        //             console.log('makefieldsempty'+j)
+        //             let makefieldsempty = document.getElementsByClassName('makefieldsempty'+j)
+        //         if(makefieldsempty.length){
+        //             for(let i=0;i<makefieldsempty.length;i++){
+        //                 makefieldsempty[i].value=''
+        //             }
+                    
+        //         }
+        //         console.log("fields => ",fields,makefieldsempty.length)
+        //         }
+        //     }, 300);
+            
+            
+            
+        // }
+
+    }
 
     const butttons = (btns) => {
-        return btns && btns?.map((button) => {
+        return btns && btns?.map((button) => 
+        {
             return (
-                <SubmitButton style={button?.styles} type="submit" className="btn"> {button?.btn_text}</SubmitButton>);
+                <div>
+                   {
+                     button.type=='checkbox'
+                     ?<div className='atofq'><div className='atofq-checkbox'><input type={button.type}/></div><div className='atofq-text'>{button?.btn_text}</div></div>
+                     :<SubmitButton onClick={() => submit_clear(button.type)} style={button?.styles} type={button.type} className="btn"> {button?.btn_text}</SubmitButton>
+                     
+                   }
+                </div>
+                
+            )
+                
         })
     };
 

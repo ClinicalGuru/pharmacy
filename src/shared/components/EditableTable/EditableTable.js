@@ -1,7 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, forwardRef } from "react";
 import { useTable, useRowSelect } from "react-table";
 
-export const EditableTable = ({ columns, data, setData, handleButtonClick }) => {
+export const EditableTable = ({ columns, data, setData, handleButtonClick, hideColumns = [], selectedRows = () => {} }) => {
+
+  const IndeterminateCheckbox = forwardRef(
+    ({ indeterminate, ...rest }, ref) => {
+      const defaultRef = React.useRef()
+      const resolvedRef = ref || defaultRef
+
+      React.useEffect(() => {
+        resolvedRef.current.indeterminate = indeterminate
+      }, [resolvedRef, indeterminate])
+
+      return (
+        <>
+          <input type="checkbox" ref={resolvedRef} {...rest} />
+        </>
+      )
+    }
+  )
+  // console.log(hideColumns, 'hideColumns = []')
   const {
     getTableProps,
     getTableBodyProps,
@@ -10,33 +28,41 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick }) => 
     prepareRow,
     state: { selectedRowIds },
     toggleAllRowsSelected, // Function to toggle all row selections
+
   } = useTable(
     {
       columns,
       data,
-      initialState: { selectedRowIds: {} }, // Initial state for row selection
+      initialState: { selectedRowIds: {}, hiddenColumns: hideColumns }, // Initial state for row selection
     },
-    useRowSelect // Adding useRowSelect hook
+    useRowSelect, // Adding useRowSelect hook
+    hooks => {
+      hooks.visibleColumns.push(columns => [
+        // Let's make a column for selection
+        {
+          id: 'selection',
+          // The header can use the table's getToggleAllRowsSelectedProps method
+          // to render a checkbox
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <div>
+              <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+            </div>
+          ),
+          // The cell can use the individual row's getToggleRowSelectedProps method
+          // to the render a checkbox
+          Cell: ({ row }) => (
+            <div>
+              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+            </div>
+          ),
+        },
+        ...columns,
+      ])
+    }
   );
 
-  // Handler to toggle all row selections
-  const toggleSelectAll = () => {
-    const isAllSelected = Object?.keys(selectedRowIds)?.length === rows?.length;
-    toggleAllRowsSelected(!isAllSelected);
-  };
-
-  // Handler to toggle individual row selection
-  const toggleRowSelection = (rowId) => {
-    const newSelectedRowIds = { ...selectedRowIds };
-    if (newSelectedRowIds[rowId]) {
-      delete newSelectedRowIds[rowId];
-    } else {
-      newSelectedRowIds[rowId] = true;
-    }
-    setData(rows.filter((row) => newSelectedRowIds[row.id]));
-  };
   const handleInputChange = (event, row, columnId) => {
-    console.log(data, 'editable table')
+    // console.log(data, 'editable table')
     const newData = data.map((rowData) => {
       if (rowData.medicineId === row.original.medicineId) {
         return { ...rowData, [columnId]: event.target.value };
@@ -45,17 +71,29 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick }) => 
     });
     setData(newData);
   };
+  selectedRows(selectedRowIds);
   return (
-    <table {...getTableProps()} style={{ border: "solid 1px gray", width: "100%" }}>
+    <table {...getTableProps()} style={{
+      overflow: 'hidden',
+      tableLayout: 'fixed',
+      borderCollapse: 'collapse',
+      boxShadow: '0px 5px 10px #ccc',
+      borderRadius: '10px',
+      whiteSpace: 'nowrap',
+      width: '100%',
+      margin: 'auto',
+      tableLayout: 'auto',
+      overflowX: 'auto',
+    }}>
       <thead>
         <tr>
-          <th>
+          {/* <th>
             <input
               type="checkbox"
               checked={Object?.keys(selectedRowIds)?.length === rows?.length}
               onChange={toggleSelectAll}
             />
-          </th>
+          </th> */}
           {headerGroups.map((headerGroup) => (
             <React.Fragment key={headerGroup.id}>
               {headerGroup.headers.map((column) => (
@@ -80,21 +118,22 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick }) => 
           prepareRow(row);
           return (
             <tr {...row.getRowProps()}>
-              <td>
+              {/* <td>
                 <input
                   type="checkbox"
                   {...row.getToggleRowSelectedProps()}
                   checked={selectedRowIds[row.id]}
                 />
-              </td>
+              </td> */}
               {row.cells.map((cell) => {
                 return (
                   <td
                     {...cell.getCellProps()}
                     style={{
                       padding: "10px",
-                      border: "solid 1px gray",
-                      background: "papayawhip",
+                      textAlign:"center"
+                      // border: "solid 1px gray",
+                      // background: "papayawhip",
                     }}
                   >
                     {cell.column.editEnable ? (

@@ -13,14 +13,14 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
     const [showLoader, setShowLoader] = useState(false);
     const [vendors, setVendors] = useState([]);
     const [selectedVendor, setSelectedVendor] = useState({});
-    const [defaultDate, setDefaultDate] = useState(getTodayDate());
+    // const [defaultDate, setDefaultDate] = useState(getTodayDate());
 
     const getVendors = async () => {
         setShowLoader(true);
         try {
             let data = await PurchaseService.getAllVendors();
             const result = data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }));
-            result.unshift({ id: 'select', name: '--Select--' })
+            result.unshift({ id: undefined, name: '--Select--' })
             setVendors(result.map((item) => ({ value: item?.id, label: item?.name })));
             setShowLoader(false);
         } catch (err) {
@@ -37,14 +37,13 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
         setValue("vendorId", selectedOption);
         onSelectVendor(selectedOption); // Callback to update parent state
         setSelectedVendor(selectedOption)
-        console.log(selectedVendor, 'selectedVendor');
     };
 
     // Assuming there's a date input
     const handleDateChange = (selectedDate) => {
         setValue("date", selectedDate);
         onSelectDate(selectedDate); // Callback to update parent state
-        setDefaultDate(selectedDate)
+        // setDefaultDate(selectedDate)
     };
     function getTodayDate() {
         const today = new Date();
@@ -90,7 +89,7 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
                         control={control}
                         render={({ field }) => (
                             <input type="date"
-                                defaultValue={defaultDate}
+                                // defaultValue={defaultDate}
                                 {...field}
                                 onChange={(e) => handleDateChange(e.target.value)}
                             />

@@ -4,9 +4,8 @@ import 'jspdf-autotable';
 import moment from 'moment'
 import ListItemText from '@mui/material/ListItemText';
 
-export const PdfFile = ({ data, vendorData }) => {
-  console.log(vendorData, 'vendorData');
-  const { address, email, gst, name, phone } = vendorData;
+export const PdfFile = ({ data, vendorDetails, pdfTitle }) => {
+  const { address = '', email ='', gst = '', name = '', phone = '' } = vendorDetails || {};
   const handleDownload = () => {
     const doc = new jsPDF();
     const totalPages = doc.internal.getNumberOfPages();
@@ -23,7 +22,7 @@ export const PdfFile = ({ data, vendorData }) => {
     });
     console.log(columns, rows, 'data pdf');
     doc.setFontSize(16);
-    doc.text('PURCHASE REQUISITION', doc.internal.pageSize.getWidth() / 2, 10, { align: 'center' });
+    doc.text(pdfTitle, doc.internal.pageSize.getWidth() / 2, 10, { align: 'center' });
     doc.setFontSize(12);
     doc.text(`Date: ${moment(new Date()).format('DD/MM/YYYY')}`, doc.internal.pageSize.getWidth() - 40, 10, { align: 'left' });
     doc.text('To,', 10, 20);

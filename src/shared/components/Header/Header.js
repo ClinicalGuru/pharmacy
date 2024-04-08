@@ -70,17 +70,6 @@ export const Header = () => {
           <Toolbar disableGutters>
             <img style={{ width: '95px', height: '32px', objectFit: 'cover', marginRight: '1rem' }}
              src={require('../../../assets/img/logo.png')} alt='logo' />
-            {/* <Box
-            component="img"
-            sx={{
-              width: 95,
-              height: 32,
-              objectFit: 'cover',
-              marginRight: '1rem'
-            }}
-            alt="Logo"
-            src={require('../../../assets/img/logo.png')}
-          /> */}
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
               <IconButton
                 size="large"

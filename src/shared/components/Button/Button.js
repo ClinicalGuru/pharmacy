@@ -1,8 +1,11 @@
 import React from "react";
-import {ButtonWrapper  } from "./Button.styles";
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 
-export const Button = ({text, bgColor, fontColor}) => {
+export const CButton = ({ text, variant, buttonHandler = () => { }, type, style = {} }) => {
     return (
-        <ButtonWrapper white={bgColor} fontColor={fontColor} type="button">{text}</ButtonWrapper>
-    )
+        <Stack spacing={2} direction="row">
+            <Button style={style} type={type} onClick={buttonHandler} variant={variant}>{text}</Button>
+        </Stack>
+    );
 }

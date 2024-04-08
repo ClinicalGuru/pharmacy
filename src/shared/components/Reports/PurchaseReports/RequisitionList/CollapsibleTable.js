@@ -63,7 +63,7 @@ export const CollapsibleTable = ({ data, vendorData }) => {
           <TableCell align="right">{row?.medicines?.length}</TableCell>
           <TableCell>
             <Typography sx={{ marginLeft: '30px', display: 'flex', alignItems: 'center' }}>
-              <a href='#'>{row && <PdfFile vendorData={vendorData} data={row?.medicines} />}</a> &nbsp;&nbsp;&nbsp;
+              <a href='#'>{row && <PdfFile vendorDetails={vendorData} data={row?.medicines} pdfTitle="PURCHASE REQUISITION" />}</a> &nbsp;&nbsp;&nbsp;
               {/* <span><a href='#' onClick={() => openDefaultMailClient(item)}>Email</a></span> */}
             </Typography>
           </TableCell>

@@ -1,32 +1,27 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Form } from "../Forms/index";
-import DeleteIcon from '@mui/icons-material/Delete';
-import GoogleIcon from '@mui/icons-material/Google';
 import { Typography } from '@mui/material';
-import Button from '@mui/material/Button';
 import {
     Container,
     SigninSection,
     Rectangle,
     Oval,
     Circle,
-    WelcomeText,
     LeftSection,
     RightSection,
-    IconSection,
-    OrText,
-    GoogleSignWrapper,
-    LogoImg,
-    InputWrapper
+    LogoImg
 } from "./Sign.styles";
 import {
     LOGIN_TEXT,
     WELCOME_BACK_TEXT
 } from "../../Constants/index";
 import { Loader } from "../../components/Loader";
+import SigninService from '../../services/Signin.service';
+import { Notification } from '../Notification/index';
 
 export const SignIn = () => {
+    const [notification, setNotification] = useState(false);
     let template = {
         title: '',
         formStyles: {
@@ -34,9 +29,9 @@ export const SignIn = () => {
         },
         fields: [
             {
-                title: 'Email',
-                type: 'email',
-                name: 'email',
+                title: 'user name',
+                type: 'text',
+                name: 'userName',
                 validationProps: {
                     required: "Email is required"
                 }
@@ -48,22 +43,7 @@ export const SignIn = () => {
                 validationProps: {
                     required: "Password is required"
                 }
-            },
-            // {
-            //     title: 'Select',
-            //     type: 'select',
-            //     name: 'select',
-            //     options:[
-            //         {
-            //             value:"one",
-            //             option: "one"
-            //         },
-            //         {
-            //             value:"three",
-            //             option: "two"
-            //         }
-            //     ]
-            // }
+            }
         ],
         btns: [
             {
@@ -79,23 +59,34 @@ export const SignIn = () => {
         ]
     }
     const btn_styles = {
-        // width: "100 %",
-        // padding: "0.75rem",
         margin: "2rem 0",
         color: "white",
         fontSize: "16px"
     }
     const [open, setLoader] = useState(false);
     const navigate = useNavigate();
-    const onSubmit = (form) => {
+    const onSubmit = async (form) => {
+        const { userName, password } = form;
         setLoader(true);
-        console.log(form);
-        navigate('/landing');
-        setLoader(false);
+        // console.log(form);
+        try {
+            let data = await SigninService.validateUser(userName);
+            setLoader(false);
+            if (data[0]?.pin === password) navigate('/landing');
+            else setNotification(true);
+        } catch (err) {
+            setLoader(false);
+        }
+        // setLoader(true);
+        // navigate('/landing');
+        // setLoader(false);
     };
     const validate = (watchValues, errorMethods) => {
 
-    }
+    };
+    const alertState = () => {
+        setNotification(!notification);
+    };
     return (
         <Container>
             <RightSection>
@@ -125,25 +116,9 @@ export const SignIn = () => {
                         sx={{ pt: "25px" }}>
                         {LOGIN_TEXT}
                     </Typography>
-                    <GoogleSignWrapper>
-                        <Button
-                            variant="outlined"
-                            startIcon={<GoogleIcon
-                                sx={{
-                                    color: "#C71610FF"
-                                }}
-                            />}>
-                            Log In with google
-                        </Button>
-                    </GoogleSignWrapper>
-                    <OrText><span>Or</span></OrText>
-                    {/* <IconSection>
-                        <GoogleIcon fontSize="small" align="center" />
-                    </IconSection> */}
                     <Form
                         template={template}
                         onSubmit={onSubmit}
-                        // watchFields={['firstname', 'link']}
                         validate={validate}
                         showSubmitButton={true}
                         btn_styles={btn_styles}
@@ -159,6 +134,12 @@ export const SignIn = () => {
                 <Rectangle />
             </LeftSection>
             <Loader open={open} />
+            {/* {alert && <Notification
+                type="error"
+                title="Wrong user name or password"
+                message="Please check your user name or password and try again." />} */}
+            {notification && <Notification notificationState={notification} type="error" severity="error" message="Please check your user name or password and try again." action={alertState} />}
+
         </Container>
     )
 }

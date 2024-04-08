@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { FORM_LABELS } from "../../Constants/index";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-
+import { AddInvoiceForm } from './addInvoiceForm';
 
 import { Box, Typography } from "@mui/material";
 import { Form } from "../Forms/index";
@@ -12,13 +11,13 @@ import Button from '@mui/material/Button';
 import PurchaseService from "../../services/Purchase.service";
 import { Table } from "../Table";
 import { Container } from './AddInvoice.styles'
+import { useNavigate } from 'react-router-dom';
 
 
 
 export const AddInvoice = () => {
-    const [modalOpen, setModalOpen] = useState(false);
+    const navigate = useNavigate();
     const [vendorDetails, SetVendorDetails] = useState([]);
-    const [rowToEdit, setRowToEdit] = useState(null);
     const [rows, setRows] = useState([]);
     const headArray = [
         {
@@ -152,228 +151,37 @@ export const AddInvoice = () => {
 
         ],
     };
-    const medicine_details_template = {
-        title: '',
-        submitButttonText: '+ Add',
-        clearFormBtnText: "Clear",
-        formStyles: {
-            backgroundColor: "#FFFFFF",
-        },
-        isBlockLevelBtns: false,
-        fields: [
-            {
-                title: FORM_LABELS.PHARMACOLOGICAL_NAME,
-                type: 'autoComplete',
-                name: 'pharmacologicalName',
-                validationProps: {
-                    required: `${FORM_LABELS.PHARMACOLOGICAL_NAME} is required`
-                },
-                options: [
-
-                ],
-            },
-            {
-
-                title: FORM_LABELS.MEDICINE_NAME,
-                type: 'autoComplete',
-                name: 'brandName',
-                validationProps: {
-                    required: ` ${FORM_LABELS.MEDICINE_NAME} is required`
-                },
-                options: [
-
-                ],
-            },
-            {
-                title: FORM_LABELS.BATCH_NO,
-                type: 'text',
-                name: 'batchNo',
-                validationProps: {
-                    required: ` ${FORM_LABELS.BATCH_NO} is required`
-                },
-            },
-            {
-                title: FORM_LABELS.HSN_CODE,
-                type: 'text',
-                name: 'hsnCode',
-                validationProps: {
-                    required: `${FORM_LABELS.HSN_CODE} is required`
-                },
-            },
-            {
-                title: FORM_LABELS.EXPIRY,
-                type: 'number',
-                name: 'expiry',
-                validationProps: {
-                    required: `${FORM_LABELS.EXPIRY} is required`
-                },
-            },
-            {
-                title: FORM_LABELS.QUANTITY,
-                type: 'number',
-                name: 'quantity',
-                validationProps: {
-                    required: `${FORM_LABELS.QUANTITY} is required`
-                },
-            },
-            {
-                title: FORM_LABELS.NO_OF_STRIPS,
-                type: 'text',
-                name: 'noOfStrips',
-                validationProps: {
-                    required: ` ${FORM_LABELS.NO_OF_STRIPS} is required`
-                },
-            },
-            {
-                title: FORM_LABELS.FREE_STRIPS,
-                type: 'text',
-                name: 'freeStrips',
-                validationProps: {
-                    required: `${FORM_LABELS.FREE_STRIPS} is required`
-                },
-            },
-            {
-                title: FORM_LABELS.MRP_PER_STRIP,
-                type: 'number',
-                name: 'mrpPerStrip',
-                validationProps: {
-                    required: `${FORM_LABELS.MRP_PER_STRIP} is required`
-                },
-            },
-            {
-                title: FORM_LABELS.DISCOUNT,
-                type: 'text',
-                name: 'discount',
-                validationProps: {
-                    required: ` ${FORM_LABELS.DISCOUNT} is required`
-                },
-            },
-            {
-                title: FORM_LABELS.PRICE_PER_STRIP,
-                type: 'text',
-                name: 'pricePerStrip',
-                validationProps: {
-                    required: `${FORM_LABELS.PRICE_PER_STRIP} is required`
-                },
-            },
-            {
-                title: FORM_LABELS.GST,
-                type: 'number',
-                name: 'gst',
-                validationProps: {
-                    required: `${FORM_LABELS.GST} is required`
-                },
-            },
-            {
-                title: FORM_LABELS.NET_PRICE,
-                type: 'number',
-                name: 'netPrice',
-                validationProps: {
-                    required: `${FORM_LABELS.NET_PRICE} is required`
-                },
-            },
-        ],
-        btns: [
-            {
-                btn_text: "+ Add",
-            },
-            {
-                btn_text: "Clear",
-            }
-        ]
-    };
-
-    const card1 = (
-        <React.Fragment>
-            <CardContent>
-                <Typography sx={{ fontSize: 14 }}>
-                    Gross Amount
-                </Typography>
-                <Typography sx={{ fontSize: 14 }}>
-
-                </Typography>
-            </CardContent>
-        </React.Fragment>
-    );
-    const card2 = (
-        <React.Fragment>
-            <CardContent>
-                <Typography sx={{ fontSize: 14 }}>
-                    Total Discount Amount
-                </Typography>
-                <Typography sx={{ fontSize: 14 }}>
-
-                </Typography>
-            </CardContent>
-        </React.Fragment>
-    );
-    const card3 = (
-        <React.Fragment>
-            <CardContent>
-                <Typography sx={{ fontSize: 14 }}>
-                    Total Tax Amount
-                </Typography>
-                <Typography sx={{ fontSize: 14 }}>
-
-                </Typography>
-            </CardContent>
-        </React.Fragment>
-    );
-    const card4 = (
-        <React.Fragment>
-            <CardContent>
-                <Typography sx={{ fontSize: 14 }}>
-                    Round Off
-                </Typography>
-                <Typography sx={{ fontSize: 14 }}>
-
-                </Typography>
-            </CardContent>
-        </React.Fragment>
-    );
-    const card5 = (
-        <React.Fragment>
-            <CardContent>
-                <Typography sx={{ fontSize: 14 }}>
-                    Total Amount
-                </Typography>
-                <Typography sx={{ fontSize: 14 }}>
-
-                </Typography>
-            </CardContent>
-        </React.Fragment>
-    );
 
     const vendor_details_style = {
         display: "flex",
         gap: "28px 30px",
         // justifyContent: "space-around"
     };
-    const medicine_details_style = {
-        display: "flex",
-        gap: "0px 28px",
-        flexWrap: 'wrap'
-    };
+
     const btn_styles = { display: "flex", justifyContent: "end" };
     const onSubmit = (form) => {
         console.log(form);
     };
+    let [passing_data_from_addinvoice_to_pharmacyinventory, setpdfatp] = useState([])
     const onAddMedicine = (formData) => {
-        const updatedRows = [...rows, formData]
-        setRows(updatedRows);
-        console.log(rows, 'medicine added');
+        // Check if the HSN code already exists in the rows
+        const isDuplicate = rows.some(row => row.hsnCode === formData.hsnCode);
+        if (isDuplicate) {
+            alert("Duplicates detected. This HSN code already exists.");
+        } else {
+            // If not a duplicate, add the medicine data to rows
+            formData['medicineName'] = formData['brandName']
+            const updatedRows = [...rows, formData];
+            setpdfatp(passing_data_from_addinvoice_to_pharmacyinventory = updatedRows);
+            setRows(updatedRows);
+        }
     };
+    function save() {
+        console.log('save method', passing_data_from_addinvoice_to_pharmacyinventory);
+        navigate("/landing/inventory/pharmacyInventory", { state: { passing_data_from_addinvoice_to_pharmacyinventory: passing_data_from_addinvoice_to_pharmacyinventory } })
+    }
     const validate = (watchValues, errorMethods) => {
         // console.log(watchValues, 'watchValues')
-    };
-
-    const handleDeleteRow = (targetIndex) => {
-        setRows(rows.filter((_, idx) => idx !== targetIndex));
-    };
-
-    const handleEditRow = (idx) => {
-        setRowToEdit(idx);
-        setModalOpen(true);
     };
     const getVendors = async () => {
         // setLoader(true);
@@ -390,9 +198,7 @@ export const AddInvoice = () => {
             console.log(e, 'error allVendors')
         }
     };
-    const refreshVendorNewVendors = () => {
-        getVendors();
-    };
+
     useEffect(() => {
         getVendors();
     }, []);
@@ -410,7 +216,9 @@ export const AddInvoice = () => {
                     btn_styles={btn_styles}
                 />
             </Container>
-
+            <Container>
+                <AddInvoiceForm />
+            </Container>
             <Box
                 sx={{
                     backgroundColor: '#eef0f3',
@@ -419,36 +227,7 @@ export const AddInvoice = () => {
                     marginTop: '5px'
                 }}
             >
-                <Form
-                    template={medicine_details_template}
-                    onSubmit={onAddMedicine}
-                    validate={validate}
-                    showSubmitButton={true}
-                    showClearFormButton={true}
-                    form_styles={medicine_details_style}
-                    btn_styles={btn_styles}
-                />
-            </Box>
-            <Box sx={{
-                display: 'flex',
-                justifyContent: 'space-around',
-                marginTop: '20px'
-            }}>
-                <Box>
-                    <Card variant="outlined" sx={{ backgroundColor: '#C6F8FF9E' }}>{card1}</Card>
-                </Box>
-                <Box>
-                    <Card variant="outlined" sx={{ backgroundColor: '#FEF6F1FF' }}>{card2}</Card>
-                </Box>
-                <Box>
-                    <Card variant="outlined" sx={{ backgroundColor: '#F1F4FDFF' }}>{card3}</Card>
-                </Box>
-                <Box>
-                    <Card variant="outlined" sx={{ backgroundColor: '#FDF2F2FF' }}>{card4}</Card>
-                </Box>
-                <Box>
-                    <Card variant="outlined" sx={{ backgroundColor: '#FEF9EEFF' }}>{card5}</Card>
-                </Box>
+
             </Box>
             <Box sx={{ marginTop: 3 }}>
                 <Table headArray={headArray} gridArray={rows} />
@@ -456,12 +235,11 @@ export const AddInvoice = () => {
             <div>
                 {rows.length > 0 && (
                     <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px ' }}>
-                        <Button variant="contained">Save</Button>
+                        <Button variant="contained" onClick={() => save()}>Save</Button>
                     </Box>
                 )}
 
             </div>
         </Box>
-
     )
 }

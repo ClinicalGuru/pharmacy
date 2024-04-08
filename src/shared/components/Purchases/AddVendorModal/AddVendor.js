@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useContext } from 'react';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
@@ -8,16 +8,15 @@ import Dialog from '@mui/material/Dialog';
 import { useForm } from "react-hook-form";
 import { FORM_LABELS } from "../../../Constants/index";
 import { Box } from "@mui/material";
-import { ErrorMessage, Input } from "./AddVendor.styles";
-import TextField from '@mui/material/TextField';
+import { Input } from "./AddVendor.styles";
 import PurchaseService from "../../../services/Purchase.service";
 import { Loader } from "../../../components/Loader";
 import { RefreshVendorsDetailsContext } from "../../../../context/RefreshVendorDetailsContext";
+import { CButton } from '../../Button/index';
 
 export const AddVendor = ({ showModal, action }) => {
     const { setRefreshVDetails } = useContext(RefreshVendorsDetailsContext);
     const [open, setOpen] = useState(false);
-    const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
     const {
         register: vendorDetails,
         handleSubmit: handleVendorDetails,
@@ -46,6 +45,9 @@ export const AddVendor = ({ showModal, action }) => {
             console.log(e, 'error')
         }
     };
+    const buttonHandler = () => {
+        onSubmitVendorDetails();
+    }
     return (
         <Box>
             <Dialog
@@ -103,8 +105,9 @@ export const AddVendor = ({ showModal, action }) => {
                     </DialogContent>
                     <DialogActions>
                         <Box sx={{ display: 'flex' }}>
-                            <input type="submit" value={`+ Add`} style={{ marginRight: '15px' }} />
-                            <input type="reset" value={`Close`} />
+                            < CButton type="submit" variant='contained' style={{marginRight: '10px'}} text="+ Add" />
+                            < CButton type="reset" variant='outlined' text="Close" />
+                            {/* <input type="submit" value={`+ Add`} style={{ marginRight: '15px' }} /> */}
                         </Box>
                     </DialogActions>
                 </form>

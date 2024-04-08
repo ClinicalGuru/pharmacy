@@ -2,7 +2,7 @@ import * as React from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
-export const Notification = ({ type, message, notificationState, action }) => {
+export const Notification = ({ type, message, notificationState, action, severity="success" }) => {
     // const [open, setOpen] = React.useState(false);
 
     // const handleClose = () => {
@@ -16,7 +16,7 @@ export const Notification = ({ type, message, notificationState, action }) => {
             <Snackbar open={action} autoHideDuration={3000} onClose={action}>
                 <Alert
                     onClose={action}
-                    severity="success"
+                    severity={severity}
                     variant="filled"
                     sx={{ width: '100%' }}
                 >
