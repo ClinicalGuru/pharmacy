@@ -5,7 +5,7 @@ import MenuItems from './MenuItems';
 
 export const Navbar = () => {
     return (
-        <nav>
+        <nav className="dorpdownList">
             <ul className="menus">
                 {menuItems.map((menu, index) => {
                     const depthLevel = 0;
