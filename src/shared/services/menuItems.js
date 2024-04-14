@@ -45,16 +45,16 @@ export const menuItems = [
         url: '',
         submenu: [
             {
-                title: 'Add Invoice',
-                url: 'inventory/invoice',
+                title: "Add Invoice",
+                url: "inventory/invoice",
             },
             {
-                title: 'Pharmacy inventory',
-                url: 'inventory/pharmacyInventory',
+                title: "Pharmacy inventory",
+                url: "inventory/pharmacyInventory",
             },
             // {
-            //     title: 'Add Manufacturer',
-            //     url: 'inventory/addManufacturer',
+            //     title: "Add Manufacturer",
+            //     url: "inventory/addManufacturer",
             // }
         ]
     },

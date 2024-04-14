@@ -22,6 +22,7 @@
     "dayjs": "^1.11.9",
     "file-saver": "^2.0.5",
     "firebase": "^10.5.0",
+    "framer-motion": "^11.0.28",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.1",
     "moment": "^2.30.1",

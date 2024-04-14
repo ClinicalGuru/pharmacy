@@ -14,6 +14,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { FixedHeader } from './Header.styles';
 
 import { SearchIconWrapper, Search, StyledInputBase, TypographyWrapper } from "./Header.styles";
+import navLinksData from "../../../Json/MenuItems.json";
 import { Navbar } from "../TopMenu";
 
 const pages = ['Purchases', 'Inventory', 'Sales', 'Reports'];
@@ -144,7 +145,7 @@ export const Header = () => {
                 {page}
               </Button>
             ))} */}
-              <Navbar />
+              <Navbar navLinksData={navLinksData}/>
             </Box>
             <Box sx={{ marginRight: 4 }}>
               <Search>
