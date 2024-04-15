@@ -1,51 +1,173 @@
-import React, { useState } from 'react';
-
-const MedicineForm = ({ onSubmit }) => {
-  const [formData, setFormData] = useState({
-    pharmacologicalName: '',
-    brandName: '',
-    batchNo: '',
-    hsnCode: '',
-    price: '',
-    quantity: '',
-    discount: '',
-    amount: ''
+import React, { useEffect, useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import CreatableSelect from 'react-select/creatable';
+import { FormContainer } from './Sales.styles'
+import { FORM_LABELS } from "../../Constants/index";
+import { Notification } from '../Notification/index';
+export const SalesForm = ({ pData = [], bData = [] }) => {
+  const [notification, setNotification] = useState(false);
+  const [notificationMsg, setNotificationMsg] = useState({
+    message: '',
+    severity: ''
   });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(formData);
-    // Optionally, you can reset the form after submission
-    setFormData({
+  const { control, register, handleSubmit, formState: { errors }, setValue, watch, onBlur } = useForm({
+    defaultValues: {
       pharmacologicalName: '',
-      brandName: '',
+      brandName: null,
       batchNo: '',
       hsnCode: '',
       price: '',
       quantity: '',
+      total: '',
       discount: '',
       amount: ''
-    });
+    }
+  });
+  const watchFields = watch(["price", "quantity", "discount"]);
+  const onSubmit = (data) => {
+    const { price, quantity, discount } = data;
+    const total = price * quantity;
+    const discountedValue = total - ((total * discount) / 100);
+
+      setValue('total', total);
+      setValue('amount', discountedValue);
   };
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <input type="text" name="pharmacologicalName" value={formData.pharmacologicalName} onChange={handleChange} placeholder="Pharmacological Name" />
-      <input type="text" name="brandName" value={formData.brandName} onChange={handleChange} placeholder="Brand Name" />
-      <input type="text" name="batchNo" value={formData.batchNo} onChange={handleChange} placeholder="Batch Number" />
-      <input type="number" name="hsnCode" value={formData.hsnCode} onChange={handleChange} placeholder="HSN Code" />
-      <input type="number" name="price" value={formData.price} onChange={handleChange} placeholder="Price" />
-      <input type="number" name="quantity" value={formData.quantity} onChange={handleChange} placeholder="Quantity" />
-      <input type="number" name="discount" value={formData.discount} onChange={handleChange} placeholder="Discount" />
-      <input type="number" name="amount" value={formData.amount} onChange={handleChange} placeholder="Amount" />
-      <button type="submit">Submit</button>
-    </form>
-  );
-};
+  useEffect(() => {
+    const subscription = watch(["price", "quantity", "discount"], (value, { name }) => {
+      if (name === "price" || name === "quantity" || name === "discount") {
+        const { price, quantity, discount } = value;
+        const totalPrice = price * quantity; 
+        const discountedValue = totalPrice - (totalPrice * discount) / 100; 
+        setValue('total', totalPrice);
+        setValue('amount', discountedValue);
+      }
+    });
+  }, [watchFields]);
+  
 
-export default MedicineForm;
+  const alertState = () => {
+    setNotification(!notification);
+  };
+  return (
+    <FormContainer onSubmit={handleSubmit(onSubmit)}>
+      <div>
+        <label>{FORM_LABELS.PHARMACOLOGICAL_NAME}</label>
+        <Controller
+          {...register("pharmacologicalName", { required: true })}
+          name="pharmacologicalName"
+          control={control}
+          defaultValue=""
+          render={({ field }) => (
+            <CreatableSelect
+              {...field}
+              options={pData?.map(option => ({ value: option?.value, label: option?.name }))}
+              onChange={(newValue, actionMeta) => {
+                field.onChange(newValue);
+
+                // If the clear action is triggered, set the field value to null
+                if (actionMeta.action === 'clear') {
+                  field.onChange(null);
+                }
+
+                // Optionally, trigger validation
+                field.onBlur();
+              }}
+              styles={{
+                container: (provided) => ({
+                  ...provided,
+                  width: 150,
+                })
+              }}
+            />
+          )}
+        />
+        {errors.pharmacologicalName && <p>{errors.pharmacologicalName.message}</p>}
+      </div>
+
+      <div>
+        <label>{FORM_LABELS.BRAND_NAME}</label>
+        <Controller
+          {...register("brandName", { required: true })}
+          name='brandName'
+          control={control}
+          defaultValue=""
+          render={({ field }) => (
+            <CreatableSelect
+              {...field}
+              options={bData?.map(option => ({ value: option?.value, label: option?.name }))}
+              onChange={(newValue, actionMeta) => {
+                field.onChange(newValue);
+
+                // If the clear action is triggered, set the field value to null
+                if (actionMeta.action === 'clear') {
+                  field.onChange(null);
+                }
+
+                // Optionally, trigger validation
+                field.onBlur();
+              }}
+              styles={{
+                container: (provided) => ({
+                  ...provided,
+                  width: 150,
+                })
+              }}
+            />
+          )}
+        />
+      </div>
+
+      {errors['brandName'] && <span className='red-text'>{errors['brandName'][`message`]}</span>}
+      <div>
+        <label>{FORM_LABELS.BATCH_NO}</label>
+        <input {...register("batchNo", { required: true })} type="text" />
+        {errors['batchNo'] && <span className='red-text'>{errors['batchNo'][`message`]}</span>}
+      </div>
+
+      <div>
+        <label>{FORM_LABELS.HSN_CODE}</label>
+        <input {...register("hsnCode", { required: true })} type="text" />
+        {errors['hsnCode'] && <span className='red-text'>{errors['hsnCode'][`message`]}</span>}
+      </div>
+
+      <div>
+        <label>{FORM_LABELS.PRICE}</label>
+        <input {...register("price", { required: true })} type="number" />
+        {errors['price'] && <span className='red-text'>{errors['price'][`message`]}</span>}
+      </div>
+
+      <div>
+        <label>{FORM_LABELS.QUANTITY}</label>
+        <input {...register("quantity", { required: true })} type="text" />
+        {errors['quantity'] && <span className='red-text'>{errors['quantity'][`message`]}</span>}
+      </div>
+
+      <div>
+        <label>{FORM_LABELS.TOTAL}</label>
+        <input {...register("total")} type="number" readOnly />
+        {errors['total'] && <span className='red-text'>{errors['total'][`message`]}</span>}
+      </div>
+      <div>
+        <label>{FORM_LABELS.DISCOUNT}</label>
+        <input {...register("discount", { required: true })} type="number" />
+        {errors['discount'] && <span className='red-text'>{errors['discount'][`message`]}</span>}
+      </div>
+      <div>
+        <label>{FORM_LABELS.AMOUNT}</label>
+        <input disabled {...register("amount")} type="number" />
+        {errors['amount'] && <span className='red-text'>{errors['amount'][`message`]}</span>}
+      </div>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center'
+      }}>
+        <div style={{ display: 'flex' }}>
+          <input type="submit" style={{ padding: '10px', marginRight: '10px' }} />
+          <input type="reset" style={{ padding: '10px' }} />
+        </div>
+      </div>
+      {notification && <Notification notificationState={notification} severity={notificationMsg?.severity} message={notificationMsg?.message} action={alertState} />}
+    </FormContainer >
+  );
+}

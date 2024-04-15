@@ -14,3 +14,16 @@ export const InvalidInput = styled.input`
     border: 1px solid red;
     
 `
+
+export const FormContainer = styled.form`
+display: flex;
+gap: 28px 30px;
+background-color: #eef0f3;
+border-radius: 4px;
+padding: 16px;
+margin-top: 5px;
+`;
+
+export const Container = styled.div`
+
+`;
