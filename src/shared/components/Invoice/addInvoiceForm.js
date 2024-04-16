@@ -4,7 +4,7 @@ import CreatableSelect from 'react-select/creatable';
 import { FormContainer } from './AddInvoice.styles'
 import { FORM_LABELS } from "../../Constants/index";
 import { Notification } from '../Notification/index';
-export const AddInvoiceForm = ({ pData = [], bData = [], onSubmit }) => {
+export const AddInvoiceForm = ({ pData = [], bData = [], onSubmit, resetForm }) => {
     const [notification, setNotification] = useState(false);
     const [notificationMsg, setNotificationMsg] = useState({
         message: '',
@@ -57,7 +57,9 @@ export const AddInvoiceForm = ({ pData = [], bData = [], onSubmit }) => {
         return () => subscription.unsubscribe();
     }, [watchFields]);
 
-
+    useEffect(() => {
+        if (resetForm) reset();
+    }, [resetForm]);
     const alertState = () => {
         setNotification(!notification);
     };
@@ -73,6 +75,7 @@ export const AddInvoiceForm = ({ pData = [], bData = [], onSubmit }) => {
                 <label>{FORM_LABELS.PHARMACOLOGICAL_NAME}</label>
                 <Controller
                     {...register("pharmacologicalName", { required: true })}
+
                     name="pharmacologicalName"
                     control={control}
                     defaultValue=""

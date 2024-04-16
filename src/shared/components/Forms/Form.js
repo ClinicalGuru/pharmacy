@@ -15,7 +15,6 @@ export const Form = ({
     onValidate = () => { },
 }) => {
     const [prevWatchValues, setPrevWatchValues] = useState({});
-    // const [selectOption, setSelectedOption] = useState({});
     let { control, register, handleSubmit, watch, setError, clearErrors, formState: { errors }, reset } = useForm({
         mode: "onChange"
     });
@@ -30,9 +29,6 @@ export const Form = ({
             setPrevWatchValues(watchValues);
         }
     }, [watchValues, prevWatchValues, onValidate]);
-    // const handleVendorChange = (selectedOption) => {
-    //     setSelectedOption(selectedOption);
-    // };
 
     const renderFields = (fields) => {
         return fields.map(field => {
@@ -188,7 +184,7 @@ export const Form = ({
             )
         })
     };
-
+    
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             {title && <h4>{title}</h4>}

@@ -1,27 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import { AddInvoiceForm } from './addInvoiceForm';
 
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { Form } from "../Forms/index";
-// import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
-// import { AddVendor } from "./AddVendorModal";
 import PurchaseService from "../../services/Purchase.service";
 import { EditableTable } from "../EditableTable/index";
-import { Container } from './AddInvoice.styles'
-import { useNavigate } from 'react-router-dom';
-
-
+import { Container } from './AddInvoice.styles';
 
 export const AddInvoice = () => {
-    const navigate = useNavigate();
     const [vendorDetails, SetVendorDetails] = useState([]);
-    let [passing_data_from_addinvoice_to_pharmacyinventory, setpdfatp] = useState([]);
     const [rows, setRows] = useState([]);
     const [dataFetched, setDataFetched] = useState(false);
     const [invoiceDetails, setInvoiceDetails] = useState({});
+    const [reset, setRestForm] = useState(false);
     const columns = [
         {
             'Header': 'Medicine Details',
@@ -180,7 +172,6 @@ export const AddInvoice = () => {
     const vendor_details_style = {
         display: "flex",
         gap: "28px 30px",
-        // justifyContent: "space-around"
     };
 
     const handleButtonClick = (action, row) => {
@@ -211,8 +202,6 @@ export const AddInvoice = () => {
             ...invoiceDetails,
             rows
         }
-        // console.log('save method', passing_data_from_addinvoice_to_pharmacyinventory);
-        // navigate("/landing/inventory/pharmacyInventory", { state: { passing_data_from_addinvoice_to_pharmacyinventory: passing_data_from_addinvoice_to_pharmacyinventory } })
     }
     const validate = (watchValues, errorMethods) => {
         const invoiceInfo = {
@@ -242,11 +231,8 @@ export const AddInvoice = () => {
             brandName: brandName?.label,
             pharmacologicalName: pharmacologicalName?.label
         };
-        // const updateRows = {
-        //     medicineDetails: [...rows, transformedObject]
-        // }
         setRows([...rows, transformedObject]);
-        // console.log(updateRows, 'updatedRows');
+        setRestForm(true);
     }
 
     useEffect(() => {
@@ -270,18 +256,9 @@ export const AddInvoice = () => {
             <Container>
                 <AddInvoiceForm
                     onSubmit={invoiceHandler}
+                    resetForm={reset}
                 />
             </Container>
-            <Box
-                sx={{
-                    backgroundColor: '#eef0f3',
-                    borderRadius: '4px',
-                    padding: 2,
-                    marginTop: '5px'
-                }}
-            >
-
-            </Box>
             <Box sx={{ marginTop: 3 }}>
                 <EditableTable
                     columns={columns}
