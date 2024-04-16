@@ -6,10 +6,8 @@ import { FORM_LABELS } from "../../Constants/index";
 
 //material ui
 import { Box } from "@mui/material";
-import Button from '@mui/material/Button';
 import { Form } from "../Forms/index";
 import { EditableTable } from "../EditableTable";
-import PurchaseService from "../../services/Purchase.service";
 import { Loader } from "../Loader/index";
 import { SalesForm } from "./SalesForm";
 
@@ -20,10 +18,15 @@ export const Sales = () => {
     const [dataFetched, setDataFetched] = useState(false);
     const [showLoader, setShowLoader] = useState(false);
     const [rows, setRows] = useState([]);
-   
-
-
-    // console.log(jsonData, 'jsonDataOfMedicines');
+    const [billDetails, setBillDetails] = useState({
+        discount: 0,
+        gst: 0,
+        netPrice: 0,
+        roundOff: 0,
+        billAmount: 0,
+        paymentMode: "",
+        remarks: ""
+    });
 
     const columns = [
         {
@@ -60,8 +63,6 @@ export const Sales = () => {
             'Header': 'Total',
             'accessor': 'total',
             editEnable: false,
-
-            Cell: ({ row }) => <TotalCalculation price={row.original.price} quantity={row.original.quantity} />,
         },
         {
             'Header': 'Discount',
@@ -121,7 +122,7 @@ export const Sales = () => {
             {
                 title: 'Patient Name',
                 type: 'text',
-                name: 'text',
+                name: 'patientName',
                 validationProps: {
                     required: "Patient Name is required"
                 },
@@ -195,11 +196,11 @@ export const Sales = () => {
                 options: [
                     {
                         value: "otc",
-                        option: "OTC"
+                        name: "OTC"
                     },
                     {
                         value: "rx",
-                        option: "Rx"
+                        name: "Rx"
                     }
                 ],
                 style: {
@@ -209,132 +210,6 @@ export const Sales = () => {
             },
         ],
     };
-
-
-
-    // const medicine_details_template = {
-    //     title: '',
-    //     submitButttonText: '+ Add',
-    //     clearFormBtnText: "Clear",
-    //     formStyles: {
-    //         backgroundColor: "#FFFFFF",
-    //     },
-    //     fields: [
-    //         {
-    //             title: FORM_LABELS.PHARMACOLOGICAL_NAME,
-    //             type: 'autoComplete',
-    //             name: 'pharmacologicalName',
-    //             validationProps: {
-    //                 required: `${FORM_LABELS.PHARMACOLOGICAL_NAME} is required`
-    //             },
-    //             style: {
-    //                 width: "170px",
-    //                 marginRight: "5px"
-    //             },
-    //             options: [...pharmacologicalNames]
-    //         },
-    //         {
-
-    //             title: FORM_LABELS.MEDICINE_NAME,
-    //             type: 'autoComplete',
-    //             name: 'brandName',
-    //             validationProps: {
-    //                 required: ` ${FORM_LABELS.MEDICINE_NAME} is required`
-    //             },
-    //             style: {
-    //                 width: "170px",
-    //                 marginRight: "5px"
-    //             },
-    //             options: [...brandNames]
-    //         },
-    //         {
-    //             title: FORM_LABELS.BATCH_NO,
-    //             type: 'text',
-    //             name: 'batchNo',
-    //             validationProps: {
-    //                 required: ` ${FORM_LABELS.BATCH_NO} is required`
-    //             },
-    //             style: {
-    //                 width: "80px"
-    //             }
-    //         },
-    //         {
-    //             title: FORM_LABELS.HSN_CODE,
-    //             type: 'number',
-    //             name: 'hsnCode',
-    //             validationProps: {
-    //                 required: `${FORM_LABELS.HSN_CODE} is required`
-    //             },
-    //             style: {
-    //                 width: "80px"
-    //             }
-    //         },
-    //         {
-    //             title: FORM_LABELS.PRICE,
-    //             type: 'number',
-    //             name: 'price',
-    //             validationProps: {
-    //                 required: `${FORM_LABELS.PRICE} is required`
-    //             },
-    //             style: {
-    //                 width: "80px"
-    //             }
-    //         },
-    //         {
-    //             title: FORM_LABELS.QUANTITY,
-    //             type: 'number',
-    //             name: 'quantity',
-    //             validationProps: {
-    //                 required: `${FORM_LABELS.QUANTITY} is required`
-    //             },
-    //             style: {
-    //                 width: "80px"
-    //             }
-    //         },
-    //         {
-    //             title: FORM_LABELS.TOTAL,
-    //             type: 'number',
-    //             name: 'total',
-    //             validationProps: {
-    //                 required: `${FORM_LABELS.TOTAL} is required`
-    //             },
-    //             style: {
-    //                 width: "80px"
-    //             },
-    //             value: total
-    //         },
-    //         {
-    //             title: FORM_LABELS.DISCOUNT,
-    //             type: 'number',
-    //             name: 'discount',
-    //             validationProps: {
-    //                 required: `${FORM_LABELS.DISCOUNT} is required`
-    //             },
-    //             style: {
-    //                 width: "80px"
-    //             }
-    //         },
-    //         {
-    //             title: FORM_LABELS.AMOUNT,
-    //             type: 'number',
-    //             name: 'amount',
-    //             validationProps: {
-    //                 required: `${FORM_LABELS.AMOUNT} is required`
-    //             },
-    //             style: {
-    //                 width: "80px"
-    //             }
-    //         },
-    //     ],
-    //     btns: [
-    //         {
-    //             btn_text: "+ Add",
-    //         },
-    //         {
-    //             btn_text: "Clear",
-    //         }
-    //     ]
-    // };
     const bill_details = {
         title: '',
         submitButttonText: 'Save',
@@ -346,7 +221,9 @@ export const Sales = () => {
             {
                 title: FORM_LABELS.DISCOUNT,
                 type: 'number',
-                name: FORM_LABELS.DISCOUNT,
+                name: 'discount',
+                value: billDetails.discount,
+                onChange: (e) => setBillDetails({...billDetails, discount: e.target.value}),
                 style: {
                     width: "150px"
                 }
@@ -355,7 +232,9 @@ export const Sales = () => {
 
                 title: FORM_LABELS.GST,
                 type: 'number',
-                name: FORM_LABELS.GST,
+                name: 'gst',
+                value: billDetails.gst,
+                onChange: (e) => setBillDetails({...billDetails, gst: e.target.value}),
                 style: {
                     width: "100px"
                 }
@@ -363,7 +242,8 @@ export const Sales = () => {
             {
                 title: FORM_LABELS.NET_PRICE,
                 type: 'number',
-                name: FORM_LABELS.NET_PRICE,
+                name: 'netPrice',
+                value: billDetails.netPrice,
                 validationProps: {
                     required: ` ${FORM_LABELS.NET_PRICE} is required`
                 },
@@ -371,12 +251,14 @@ export const Sales = () => {
             {
                 title: FORM_LABELS.ROUND_OFF,
                 type: 'number',
-                name: FORM_LABELS.ROUND_OFF
+                name: 'roundOff',
+                value: billDetails.roundOff
             },
             {
                 title: FORM_LABELS.BILL_AMOUNT,
                 type: 'number',
-                name: FORM_LABELS.BILL_AMOUNT
+                name: 'billAmount',
+                value: billDetails.billAmount
             },
             {
                 title: FORM_LABELS.PAYMENT_MODE,
@@ -417,8 +299,8 @@ export const Sales = () => {
     };
     const patient_details_style = {
         display: "flex",
-        gap: "28px 10px",
-        justifyContent: "space-around"
+        // gap: "28px 10px",
+        justifyContent: "space-between"
     };
     const bill_details_styles = {
         display: "grid",
@@ -434,28 +316,37 @@ export const Sales = () => {
         // console.log(watchValues, 'watchValues')
     };
 
-    // const onAddMedicine = (formData) => {
-    //     // setShowLoader(true);
-    //     console.log(formData, 'formData');
-    //     const { price, total, discount, amount, batchNo, hsnCode, quantity, pharmacologicalName, brandName } = formData;
-    //     // const total = calculateTotal(price, quantity);
-    //     console.log(total, 'djnenfjefniewsnjikewsnfjsnejkn');
-    //     const transformedObject = {
-    //         price,
-    //         total,
-    //         discount,
-    //         amount,
-    //         batchNo,
-    //         hsnCode,
-    //         quantity,
-    //         pharmacologicalName: pharmacologicalName?.label,
-    //         brandName: brandName?.label,
-    //         medicineId: brandName?.value
-    //     };
-    //     setRows([...rows, transformedObject]);
-    //     resetMedicineForm();
-    // };
+    const handleSubmitForm = (formData) => {
+        const { pharmacologicalName, brandName } = formData;
+        const transformedObject = {
+            ...formData,
+            pharmacologicalName: pharmacologicalName?.label,
+            brandName: brandName?.label,
+        };
+        setRows([...rows, transformedObject]);
 
+    };
+    useEffect(() => {
+        let netPrice = 0;
+        let roundOff = 0;
+        rows.forEach((row) => {
+            netPrice += row.amount;
+        });
+
+        const discountAmount = (netPrice * (billDetails.discount / 100));
+        const gstAmount = (netPrice * (billDetails.gst / 100));
+        const totalDiscountedPrice = netPrice - discountAmount;
+        const totalAmountAfterGST = totalDiscountedPrice + gstAmount;
+        const roundOffAmount = Math.round(totalAmountAfterGST);
+
+        const updatedBillDetails = {
+            ...billDetails,
+            netPrice: totalAmountAfterGST,
+            roundOff: roundOffAmount
+        };
+
+        setBillDetails(updatedBillDetails);
+    }, [rows, billDetails.discount, billDetails.gst]);
 
     const onSubmit = (form, formType) => {
         if (formType === "medicine_details_template") {
@@ -465,24 +356,6 @@ export const Sales = () => {
             console.log(form);
         }
     };
-
-    // const getMedicines = async () => {
-    //     setShowLoader(true);
-    //     try {
-    //         let data = await PurchaseService.getAllMedicines();
-    //         const result = data?.docs?.map((doc) => ({ ...doc?.data(), id: doc?.id }));
-    //         console.log(result, 'medicinesData');
-    //         setPharmacologicalNames(result?.map((item) => ({ value: item?.id, name: item?.pharmacologicalName })));
-    //         setBrandNames(result?.map((item) => ({ value: item?.id, name: item?.brandName })));
-    //         setShowLoader(false);
-    //     } catch (e) {
-    //         console.log(e, 'error allVendors');
-    //         setShowLoader(false);
-    //     }
-    // }
-    // useEffect(() => {
-    //     getMedicines();
-    // }, []);
 
     return (
         <Box sx={{
@@ -503,11 +376,11 @@ export const Sales = () => {
                 }}>
                 <Box
                     sx={{
-                        flexBasis: 3,
+                        flex: "4",
                         marginRight: "50px"
                     }}>
                     <Container>
-                        <SalesForm />
+                        <SalesForm onSubmitForm={handleSubmitForm} />
                     </Container>
 
                     <Box sx={{ marginTop: 3 }}>
@@ -525,7 +398,7 @@ export const Sales = () => {
                     borderRadius: '4px',
                     padding: 2,
                     marginTop: '4px',
-                    flexBasis: 1
+                    flex: 1
                 }}>
                     <Form
                         template={bill_details}

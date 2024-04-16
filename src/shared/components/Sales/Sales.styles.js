@@ -17,10 +17,10 @@ export const InvalidInput = styled.input`
 
 export const FormContainer = styled.form`
 display: flex;
-gap: 28px 30px;
+gap: 15px 15px;
 background-color: #eef0f3;
 border-radius: 4px;
-padding: 16px;
+padding: 10px;
 margin-top: 5px;
 `;
 

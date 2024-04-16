@@ -21,7 +21,7 @@ export const Form = ({
     });
     let { title, fields, value, formStyles, btns, isBlockLevelBtns = true } = template;
     let watchValues = watch(watchFields);
-    console.log(watchValues, 'watchValues')
+    // console.log(watchValues, 'watchValues')
     // onValidate(watchValues, { setError, clearErrors });
     useEffect(() => {
         // Check if watchValues have changed before updating state
@@ -36,7 +36,7 @@ export const Form = ({
 
     const renderFields = (fields) => {
         return fields.map(field => {
-            let { title, type, value, name, validationProps, dynamic, options = [], style } = field;
+            let { title, type, value = '', name, validationProps, dynamic, options = [], style } = field;
             // console.log(options, 'options')
 
             let finalStyle = { ...style, ...formStyles };
@@ -74,7 +74,7 @@ export const Form = ({
                         }}>
                             <div key={name}>
                                 <Box component="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
-                                <input className='makefieldsempty3' style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
+                                <input className='makefieldsempty3' value={value} style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
                                 {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
                             </div>
                         </Box>)

@@ -4,13 +4,15 @@ import CreatableSelect from 'react-select/creatable';
 import { FormContainer } from './Sales.styles'
 import { FORM_LABELS } from "../../Constants/index";
 import { Notification } from '../Notification/index';
-export const SalesForm = ({ pData = [], bData = [] }) => {
+export const SalesForm = ({ pData = [], bData = [], onSubmitForm }) => {
+
+
   const [notification, setNotification] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState({
     message: '',
     severity: ''
   });
-  const { control, register, handleSubmit, formState: { errors }, setValue, watch, onBlur } = useForm({
+  const { control, register, handleSubmit, reset, formState: { errors }, setValue, watch, onBlur } = useForm({
     defaultValues: {
       pharmacologicalName: '',
       brandName: null,
@@ -25,26 +27,23 @@ export const SalesForm = ({ pData = [], bData = [] }) => {
   });
   const watchFields = watch(["price", "quantity", "discount"]);
   const onSubmit = (data) => {
-    const { price, quantity, discount } = data;
-    const total = price * quantity;
-    const discountedValue = total - ((total * discount) / 100);
-
-      setValue('total', total);
-      setValue('amount', discountedValue);
+    onSubmitForm(data);
+    reset();
   };
 
   useEffect(() => {
-    const subscription = watch(["price", "quantity", "discount"], (value, { name }) => {
+    const subscription = watch((value, { name, type }) => {
       if (name === "price" || name === "quantity" || name === "discount") {
         const { price, quantity, discount } = value;
-        const totalPrice = price * quantity; 
-        const discountedValue = totalPrice - (totalPrice * discount) / 100; 
+        const totalPrice = price * quantity;
+        const discountedValue = totalPrice - (totalPrice * discount) / 100;
         setValue('total', totalPrice);
         setValue('amount', discountedValue);
       }
     });
+    return () => subscription.unsubscribe();
   }, [watchFields]);
-  
+
 
   const alertState = () => {
     setNotification(!notification);
@@ -145,7 +144,7 @@ export const SalesForm = ({ pData = [], bData = [] }) => {
 
       <div>
         <label>{FORM_LABELS.TOTAL}</label>
-        <input {...register("total")} type="number" readOnly />
+        <input disabled {...register("total")} type="number" readOnly />
         {errors['total'] && <span className='red-text'>{errors['total'][`message`]}</span>}
       </div>
       <div>
@@ -158,6 +157,7 @@ export const SalesForm = ({ pData = [], bData = [] }) => {
         <input disabled {...register("amount")} type="number" />
         {errors['amount'] && <span className='red-text'>{errors['amount'][`message`]}</span>}
       </div>
+
       <div style={{
         display: 'flex',
         alignItems: 'center'
@@ -167,6 +167,7 @@ export const SalesForm = ({ pData = [], bData = [] }) => {
           <input type="reset" style={{ padding: '10px' }} />
         </div>
       </div>
+
       {notification && <Notification notificationState={notification} severity={notificationMsg?.severity} message={notificationMsg?.message} action={alertState} />}
     </FormContainer >
   );
