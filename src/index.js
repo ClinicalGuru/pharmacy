@@ -6,6 +6,6 @@ import { Provider } from 'react-redux';
 import store from './shared/services/redux/store';
 const container = document.getElementById('root');
 const root = createRoot(container); 
-// root.render(<App />);
-root.render( <Provider store={store}><App /></Provider> );
+root.render(<App />);
+// root.render( <Provider store={store}><App /></Provider> );
 reportWebVitals();
