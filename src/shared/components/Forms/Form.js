@@ -5,7 +5,6 @@ import { Box, Typography, Button } from "@mui/material";
 import { AutoComplete } from "../autoComplete/index";
 import CreatableSelect from 'react-select/creatable';
 import "./Form.css";
-
 export const Form = ({
     template,
     onSubmit,

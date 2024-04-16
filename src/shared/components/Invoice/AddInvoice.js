@@ -1,19 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { AddInvoiceForm } from './addInvoiceForm';
-
+import { Notification } from '../Notification/index';
 import { Box } from "@mui/material";
 import { Form } from "../Forms/index";
 import Button from '@mui/material/Button';
 import PurchaseService from "../../services/Purchase.service";
+import InventoryService from "../../services/inventory.service";
 import { EditableTable } from "../EditableTable/index";
 import { Container } from './AddInvoice.styles';
+import { getUndefinded } from '../../../utils/helper'
+import { Loader } from "../Loader/index";
 
 export const AddInvoice = () => {
+    const [loader, setLoader] = useState(false);
     const [vendorDetails, SetVendorDetails] = useState([]);
     const [rows, setRows] = useState([]);
     const [dataFetched, setDataFetched] = useState(false);
     const [invoiceDetails, setInvoiceDetails] = useState({});
     const [reset, setRestForm] = useState(false);
+    const [notification, setNotification] = useState(false);
+    const [notificationMsg, setNotificationMsg] = useState({
+        message: '',
+        severity: ''
+    });
     const columns = [
         {
             'Header': 'Medicine Details',
@@ -196,35 +205,70 @@ export const AddInvoice = () => {
 
 
     };
-
-    const saveInvoice = () => {
+    const alertState = () => {
+        setNotification(!notification);
+    };
+    const saveInvoice = async () => {
+        const rslt = getUndefinded(invoiceDetails)
+        if (rslt?.length > 0) {
+            setNotification(true);
+            setNotificationMsg({
+                message: `Please fill manditory fields ${rslt.join(',')}`,
+                severity: "error"
+            });
+            return;
+        }
         const data = {
             ...invoiceDetails,
-            rows
+            medicines: rows
+        }
+        setLoader(true);
+        try {
+            await InventoryService.addInvoice(data);
+            await InventoryService.addInventory(rows);
+            setNotification(true);
+            setNotificationMsg({
+                message: 'Invoice created successfully',
+                severity: 'success'
+            });
+            setNotificationMsg({
+                message: 'Medicines added to inventory',
+                severity: 'success'
+            });
+            setLoader(false);
+        } catch (err) {
+            setLoader(false);
+            setNotificationMsg({
+                message: 'Something went wrong',
+                severity: 'error'
+            });
+            console.log(err, 'error while saving invoive data!');
         }
     }
     const validate = (watchValues, errorMethods) => {
         const invoiceInfo = {
             "invoiceDate": watchValues?.invoiceDate,
-            "poNumber": watchValues?.poNumber,
-            "vendorId": watchValues?.vendorId,
-            "invoiceNumber": watchValues?.invoiceNumber
+            "poNumber": watchValues?.poNumber?.value,
+            "vendorId": watchValues?.vendorId?.value,
+            "invoiceNumber": watchValues?.invoiceNumber?.value
         };
         setInvoiceDetails(invoiceInfo);
     };
 
     const getVendors = async () => {
-        // setLoader(true);
+        setLoader(true);
         try {
             let data = await PurchaseService.getAllVendors();
             const result = data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }));
             SetVendorDetails(result);
+            setLoader(false);
         } catch (e) {
-            // setLoader(false);
+            setLoader(false);
             console.log(e, 'error allVendors')
         }
     };
     const invoiceHandler = (formData) => {
+        setLoader(true);
         const { brandName, pharmacologicalName } = formData;
         const transformedObject = {
             ...formData,
@@ -233,6 +277,7 @@ export const AddInvoice = () => {
         };
         setRows([...rows, transformedObject]);
         setRestForm(true);
+        setLoader(false);
     }
 
     useEffect(() => {
@@ -273,8 +318,9 @@ export const AddInvoice = () => {
                         <Button variant="contained" onClick={() => saveInvoice()}>Save</Button>
                     </Box>
                 )}
-
             </div>
+            <Loader open={loader} />
+            {notification && <Notification severity={notificationMsg?.severity} message={notificationMsg?.message} action={alertState} />}
         </Box>
     )
 }
