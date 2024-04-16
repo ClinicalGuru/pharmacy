@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import { AddInvoiceForm } from './addInvoiceForm';
-
-import { Box, Typography } from "@mui/material";
+import { Notification } from '../Notification/index';
+import { Box } from "@mui/material";
 import { Form } from "../Forms/index";
-// import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
-// import { AddVendor } from "./AddVendorModal";
 import PurchaseService from "../../services/Purchase.service";
+import InventoryService from "../../services/inventory.service";
 import { EditableTable } from "../EditableTable/index";
-import { Container } from './AddInvoice.styles'
-import { useNavigate } from 'react-router-dom';
-
-
+import { Container } from './AddInvoice.styles';
+import { getUndefinded } from '../../../utils/helper'
+import { Loader } from "../Loader/index";
 
 export const AddInvoice = () => {
-    const navigate = useNavigate();
+    const [loader, setLoader] = useState(false);
     const [vendorDetails, SetVendorDetails] = useState([]);
-    let [passing_data_from_addinvoice_to_pharmacyinventory, setpdfatp] = useState([]);
     const [rows, setRows] = useState([]);
     const [dataFetched, setDataFetched] = useState(false);
     const [invoiceDetails, setInvoiceDetails] = useState({});
+    const [reset, setRestForm] = useState(false);
+    const [notification, setNotification] = useState(false);
+    const [notificationMsg, setNotificationMsg] = useState({
+        message: '',
+        severity: ''
+    });
     const columns = [
         {
             'Header': 'Medicine Details',
@@ -180,7 +181,6 @@ export const AddInvoice = () => {
     const vendor_details_style = {
         display: "flex",
         gap: "28px 30px",
-        // justifyContent: "space-around"
     };
 
     const handleButtonClick = (action, row) => {
@@ -205,48 +205,79 @@ export const AddInvoice = () => {
 
 
     };
-
-    const saveInvoice = () => {
+    const alertState = () => {
+        setNotification(!notification);
+    };
+    const saveInvoice = async () => {
+        const rslt = getUndefinded(invoiceDetails)
+        if (rslt?.length > 0) {
+            setNotification(true);
+            setNotificationMsg({
+                message: `Please fill manditory fields ${rslt.join(',')}`,
+                severity: "error"
+            });
+            return;
+        }
         const data = {
             ...invoiceDetails,
-            rows
+            medicines: rows
         }
-        // console.log('save method', passing_data_from_addinvoice_to_pharmacyinventory);
-        // navigate("/landing/inventory/pharmacyInventory", { state: { passing_data_from_addinvoice_to_pharmacyinventory: passing_data_from_addinvoice_to_pharmacyinventory } })
+        setLoader(true);
+        try {
+            await InventoryService.addInvoice(data);
+            await InventoryService.addInventory(rows);
+            setNotification(true);
+            setNotificationMsg({
+                message: 'Invoice created successfully',
+                severity: 'success'
+            });
+            setNotificationMsg({
+                message: 'Medicines added to inventory',
+                severity: 'success'
+            });
+            setLoader(false);
+        } catch (err) {
+            setLoader(false);
+            setNotificationMsg({
+                message: 'Something went wrong',
+                severity: 'error'
+            });
+            console.log(err, 'error while saving invoive data!');
+        }
     }
     const validate = (watchValues, errorMethods) => {
         const invoiceInfo = {
             "invoiceDate": watchValues?.invoiceDate,
-            "poNumber": watchValues?.poNumber,
-            "vendorId": watchValues?.vendorId,
-            "invoiceNumber": watchValues?.invoiceNumber
+            "poNumber": watchValues?.poNumber?.value,
+            "vendorId": watchValues?.vendorId?.value,
+            "invoiceNumber": watchValues?.invoiceNumber?.value
         };
         setInvoiceDetails(invoiceInfo);
     };
 
     const getVendors = async () => {
-        // setLoader(true);
+        setLoader(true);
         try {
             let data = await PurchaseService.getAllVendors();
             const result = data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }));
             SetVendorDetails(result);
+            setLoader(false);
         } catch (e) {
-            // setLoader(false);
+            setLoader(false);
             console.log(e, 'error allVendors')
         }
     };
     const invoiceHandler = (formData) => {
+        setLoader(true);
         const { brandName, pharmacologicalName } = formData;
         const transformedObject = {
             ...formData,
             brandName: brandName?.label,
             pharmacologicalName: pharmacologicalName?.label
         };
-        // const updateRows = {
-        //     medicineDetails: [...rows, transformedObject]
-        // }
         setRows([...rows, transformedObject]);
-        // console.log(updateRows, 'updatedRows');
+        setRestForm(true);
+        setLoader(false);
     }
 
     useEffect(() => {
@@ -270,18 +301,9 @@ export const AddInvoice = () => {
             <Container>
                 <AddInvoiceForm
                     onSubmit={invoiceHandler}
+                    resetForm={reset}
                 />
             </Container>
-            <Box
-                sx={{
-                    backgroundColor: '#eef0f3',
-                    borderRadius: '4px',
-                    padding: 2,
-                    marginTop: '5px'
-                }}
-            >
-
-            </Box>
             <Box sx={{ marginTop: 3 }}>
                 <EditableTable
                     columns={columns}
@@ -296,8 +318,9 @@ export const AddInvoice = () => {
                         <Button variant="contained" onClick={() => saveInvoice()}>Save</Button>
                     </Box>
                 )}
-
             </div>
+            <Loader open={loader} />
+            {notification && <Notification severity={notificationMsg?.severity} message={notificationMsg?.message} action={alertState} />}
         </Box>
     )
 }

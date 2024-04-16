@@ -2,7 +2,7 @@ import * as React from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
-export const Notification = ({ type, message, notificationState, action, severity="success" }) => {
+export const Notification = ({ type = '', message, notificationState = '', action, severity = "success" }) => {
     // const [open, setOpen] = React.useState(false);
 
     // const handleClose = () => {
