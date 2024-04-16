@@ -4,6 +4,8 @@ import CreatableSelect from 'react-select/creatable';
 import { FormContainer } from './AddInvoice.styles'
 import { FORM_LABELS } from "../../Constants/index";
 import { Notification } from '../Notification/index';
+import './addinvoiceform.css'
+
 export const AddInvoiceForm = ({ pData = [], bData = [], onSubmit }) => {
     const [notification, setNotification] = useState(false);
     const [notificationMsg, setNotificationMsg] = useState({
@@ -69,6 +71,7 @@ export const AddInvoiceForm = ({ pData = [], bData = [], onSubmit }) => {
     }
     return (
         <FormContainer onSubmit={handleSubmit(onSubmit)}>
+            <div className={"addInvoiceForm"}>
             <div>
                 <label>{FORM_LABELS.PHARMACOLOGICAL_NAME}</label>
                 <Controller
@@ -94,7 +97,7 @@ export const AddInvoiceForm = ({ pData = [], bData = [], onSubmit }) => {
                             styles={{
                                 container: (provided) => ({
                                     ...provided,
-                                    width: 150,
+                                    width: 180,
                                 })
                             }}
                         />
@@ -128,7 +131,7 @@ export const AddInvoiceForm = ({ pData = [], bData = [], onSubmit }) => {
                             styles={{
                                 container: (provided) => ({
                                     ...provided,
-                                    width: 150,
+                                    width: 180,
                                 })
                             }}
                         />
@@ -173,42 +176,56 @@ export const AddInvoiceForm = ({ pData = [], bData = [], onSubmit }) => {
                 {errors['freeStrips'] && <span className='red-text'>{errors['freeStrips'][`message`]}</span>}
             </div>
 
-            <div>
+            <div style={{minWidth:'150px'}}>
                 <label>{FORM_LABELS.MRP_PER_STRIP}</label>
                 <input onBlur={() => onBlur(mrpPerStripHandler())} {...register("mrpPerStrip", { required: true })} type="number" />
                 {errors['mrpPerStrip'] && <span className='red-text'>{errors['mrpPerStrip'][`message`]}</span>}
             </div>
-            <div>
+            <div style={{minWidth:'150px'}}>
                 <label>{FORM_LABELS.PRICE_PER_STRIP}</label>
                 <input onBlur={() => onBlur(pricePerStripHandler())} {...register("pricePerStrip", { required: true })} type="number" />
                 {errors['pricePerStrip'] && <span className='red-text'>{errors['pricePerStrip'][`message`]}</span>}
             </div>
-            <div>
+            <div style={{minWidth:'150px'}}>
                 <label>{FORM_LABELS.DISCOUNT}</label>
                 <input {...register("discount", { required: true })} type="number" />
                 {errors['discount'] && <span className='red-text'>{errors['discount'][`message`]}</span>}
             </div>
-            <div>
+            <div style={{minWidth:'150px'}}>
                 <label>{FORM_LABELS.GST}</label>
                 <input {...register("gst")} type="number" />
                 {errors['gst'] && <span className='red-text'>{errors['gst'][`message`]}</span>}
             </div>
-            <div>
+            <div style={{minWidth:'150px'}}>
                 <label>{FORM_LABELS.NET_PRICE}</label>
                 <input disabled {...register("netPrice", { required: true })} type="number" />
                 {errors['netPrice'] && <span className='red-text'>{errors['netPrice'][`message`]}</span>}
             </div>
-            <div style={{
-                display: 'flex',
-                alignItems: 'center'
-            }}>
-                <div style={{ display: 'flex' }}>
-                    <button type="submit">Submit</button>
+            <div>
+                <div style={{ display: 'flex',marginLeft:'100px' }}>
+                    <div style={{position:'absolute'}}>
+                    <button style={{height:'35px',marginTop:'5px'}} type="submit">Submit</button>
+                    </div>
+                    <div style={{position:'absolute',marginLeft:'70px'}}>
+                    <input type="reset" style={{ padding: '10px',height:'35px',marginTop:'5px' }} />
+                    </div>
+                    
                     {/* <input type="submit" style={{ padding: '10px', marginRight: '10px' }} /> */}
-                    <input type="reset" style={{ padding: '10px' }} />
+                    
                 </div>
             </div>
+            </div>
+            
             {notification && <Notification notificationState={notification} severity={notificationMsg?.severity} message={notificationMsg?.message} action={alertState} />}
+            {/* <div style={{
+                display: 'flex',
+                alignItems: 'end'
+            }}> */}
+                {/* <div style={{ display: 'flex'}}>
+                    <input type="submit" style={{ padding: '10px', marginRight: '10px' }} />
+                    <input type="reset" style={{ padding: '10px' }} />
+                </div> */}
+            {/* </div> */}
         </FormContainer >
     );
 }

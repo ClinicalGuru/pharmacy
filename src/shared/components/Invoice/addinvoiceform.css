@@ -1,0 +1,7 @@
+.addInvoiceForm > div{
+    /* min-width: 100px; */
+    width: 100px;
+    padding: 8px 10px;
+    /* float:left; */
+    display:inline-table;
+}
