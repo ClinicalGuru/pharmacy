@@ -210,14 +210,6 @@ export const PharmacyInventory = () => {
     };
     const location = useLocation();
     let state = location.state
-    useEffect(() => {
-        // passing_data_from_addinvoice_to_pharmacyinventory
-        if(state.passing_data_from_addinvoice_to_pharmacyinventory){
-            // rows=state.passing_data_from_addinvoice_to_pharmacyinventory;
-            setRows(rows=state.passing_data_from_addinvoice_to_pharmacyinventory)
-        }
-        
-    })
     
     const vendor_details_style = {
         display: "flex",

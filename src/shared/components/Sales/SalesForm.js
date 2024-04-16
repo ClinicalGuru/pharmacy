@@ -163,7 +163,7 @@ export const SalesForm = ({ pData = [], bData = [], onSubmitForm }) => {
         alignItems: 'center'
       }}>
         <div style={{ display: 'flex' }}>
-          <input type="submit" style={{ padding: '10px', marginRight: '10px' }} />
+          <input type="submit" value="+ Add" style={{ padding: '10px', marginRight: '10px' }} />
           <input type="reset" style={{ padding: '10px' }} />
         </div>
       </div>

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 import { useForm } from 'react-hook-form'
 import { FORM_LABELS } from "../../Constants/index";
-// import jsonData from "../../../../src/mock/medicines.json"
+import { BillingSummaryForm } from "./BillingSummaryForm"
 
 //material ui
 import { Box } from "@mui/material";
@@ -18,6 +18,7 @@ export const Sales = () => {
     const [dataFetched, setDataFetched] = useState(false);
     const [showLoader, setShowLoader] = useState(false);
     const [rows, setRows] = useState([]);
+    const [netPrice, setNetprice] = useState(0);
     const [billDetails, setBillDetails] = useState({
         discount: 0,
         gst: 0,
@@ -223,7 +224,6 @@ export const Sales = () => {
                 type: 'number',
                 name: 'discount',
                 value: billDetails.discount,
-                onChange: (e) => setBillDetails({...billDetails, discount: e.target.value}),
                 style: {
                     width: "150px"
                 }
@@ -234,7 +234,6 @@ export const Sales = () => {
                 type: 'number',
                 name: 'gst',
                 value: billDetails.gst,
-                onChange: (e) => setBillDetails({...billDetails, gst: e.target.value}),
                 style: {
                     width: "100px"
                 }
@@ -309,9 +308,6 @@ export const Sales = () => {
     }
     const btn_styles = { display: "flex", gap: "20px 20px", justifyContent: "end" };
 
-    const resetMedicineForm = () => {
-        setMedicineFormValues(null);
-    };
     const validate = (watchValues, errorMethods) => {
         // console.log(watchValues, 'watchValues')
     };
@@ -324,37 +320,22 @@ export const Sales = () => {
             brandName: brandName?.label,
         };
         setRows([...rows, transformedObject]);
-
     };
+
     useEffect(() => {
-        let netPrice = 0;
-        let roundOff = 0;
-        rows.forEach((row) => {
-            netPrice += row.amount;
-        });
-
-        const discountAmount = (netPrice * (billDetails.discount / 100));
-        const gstAmount = (netPrice * (billDetails.gst / 100));
-        const totalDiscountedPrice = netPrice - discountAmount;
-        const totalAmountAfterGST = totalDiscountedPrice + gstAmount;
-        const roundOffAmount = Math.round(totalAmountAfterGST);
-
-        const updatedBillDetails = {
-            ...billDetails,
-            netPrice: totalAmountAfterGST,
-            roundOff: roundOffAmount
-        };
-
-        setBillDetails(updatedBillDetails);
-    }, [rows, billDetails.discount, billDetails.gst]);
+        const totalNetPrice = rows.reduce((accumulator, currentRow) => {
+            return accumulator + currentRow.amount;
+        }, 0);
+        setNetprice(totalNetPrice);
+    }, [rows]);
 
     const onSubmit = (form, formType) => {
-        if (formType === "medicine_details_template") {
-            onAddMedicine(form);
-            resetMedicineForm();
-        } else {
-            console.log(form);
-        }
+        // if (formType === "medicine_details_template") {
+        //     // onAddMedicine(form);
+        //     resetMedicineForm();
+        // } else {
+        //     console.log(form);
+        // }
     };
 
     return (
@@ -400,15 +381,7 @@ export const Sales = () => {
                     marginTop: '4px',
                     flex: 1
                 }}>
-                    <Form
-                        template={bill_details}
-                        onSubmit={onSubmit}
-                        validate={validate}
-                        showSubmitButton={true}
-                        showClearFormButton={true}
-                        form_styles={bill_details_styles}
-                        btn_styles={btn_styles}
-                    />
+                    <BillingSummaryForm netPrice={netPrice} />
                 </Box>
             </Box>
             <Loader open={showLoader} />
