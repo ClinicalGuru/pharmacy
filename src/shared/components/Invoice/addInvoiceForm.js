@@ -71,7 +71,7 @@ export const AddInvoiceForm = ({ pData = [], bData = [], onSubmit }) => {
     }
     return (
         <FormContainer onSubmit={handleSubmit(onSubmit)}>
-            {/* <div className={"addInvoiceForm"}> */}
+            <div className={"addInvoiceForm"}>
             <div>
                 <label>{FORM_LABELS.PHARMACOLOGICAL_NAME}</label>
                 <Controller
@@ -201,15 +201,19 @@ export const AddInvoiceForm = ({ pData = [], bData = [], onSubmit }) => {
                 <input disabled {...register("netPrice", { required: true })} type="number" />
                 {errors['netPrice'] && <span className='red-text'>{errors['netPrice'][`message`]}</span>}
             </div>
-            <div style={{
-                display: 'flex',
-                alignItems: 'center'
-            }}>
-                <div style={{ display: 'flex' }}>
-                    <button type="submit">Submit</button>
+            <div>
+                <div style={{ display: 'flex',marginLeft:'100px' }}>
+                    <div style={{position:'absolute'}}>
+                    <button style={{height:'35px',marginTop:'5px'}} type="submit">Submit</button>
+                    </div>
+                    <div style={{position:'absolute',marginLeft:'70px'}}>
+                    <input type="reset" style={{ padding: '10px',height:'35px',marginTop:'5px' }} />
+                    </div>
+                    
                     {/* <input type="submit" style={{ padding: '10px', marginRight: '10px' }} /> */}
-                    <input type="reset" style={{ padding: '10px' }} />
+                    
                 </div>
+            </div>
             </div>
             
             {notification && <Notification notificationState={notification} severity={notificationMsg?.severity} message={notificationMsg?.message} action={alertState} />}
