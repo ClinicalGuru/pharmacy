@@ -1,0 +1,118 @@
+[
+    {
+        "name": "Purchase",
+        "id": 13,
+        "children": [
+            {
+                "name": "Purchase Requisition",
+                "url": "purchase/requisition",
+                "id": 14
+            },
+            {
+                "name": "Quotation",
+                "url": "purchase/quotation",
+                "id": 15
+            },
+            {
+                "name": "MasterList",
+                "url": "purchase/masterList",
+                "id": 16
+            },
+            {
+                "name": "Purchase Order",
+                "url": "purchase/order",
+                "id": 17
+            }
+        ]
+    },
+    {
+        "name": "Inventory",
+        "id": 18,
+        "children": [
+            {
+                "name": "Add Invoice",
+                "url": "inventory/invoice",
+                "id": 19
+            },
+            {
+                "name": "Pharmacy inventory",
+                "url": "inventory/pharmacyInventory",
+                "id": 20
+            }
+        ]
+    },
+    {
+        "name": "Sales",
+        "id": 21,
+        "children": [
+            {
+                "name": "Billing",
+                "url": "sales/billing",
+                "id": 22
+            },
+            {
+                "name": "List of all Bills",
+                "url": "sales/allBills",
+                "id": 23
+            }
+        ]
+    },
+    {
+        "name": "Reports",
+        "id": 24,
+        "children": [
+            {
+                "id": 39,
+                "name": "Purchase report",
+                "children": [
+                    {
+                        "name": "Purchase Requisition List",
+                        "url": "reports/purchase/requisitionList",
+                        "id": 40
+                    },
+                    {
+                        "name": "Purchase Quotation List",
+                        "url": "reports/purchase/quotationList",
+                        "id": 41
+                    },
+                    {
+                        "name": "Purchase Order List",
+                        "url": "reports/purchase/orderList",
+                        "id": 42
+                    },
+                    {
+                        "name": "Purchase Return List",
+                        "url": "reports/purchase/returnList",
+                        "id": 49
+                    },
+                    {
+                        "name": "Purchase Payments List",
+                        "url": "reports/purchase/paymentsList",
+                        "id": 44
+                    },
+                    
+                    {
+                        "name": "Invoice List",
+                        "url": "reports/purchase/invoiceList",
+                        "id": 45
+                    }
+                ]
+            },
+            {
+                "name": "Inventory report",
+                "url": "reports/inventory",
+                "id": 46
+            },
+            {
+                "name": "Sales report",
+                "url": "reports/sales",
+                "id": 47
+            },
+            {
+                "name": "Important report",
+                "url": "reports/important",
+                "id": 48
+            }
+        ]
+    }
+]

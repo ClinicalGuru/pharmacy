@@ -5,14 +5,15 @@ import { FormContainer } from './AddInvoice.styles'
 import { FORM_LABELS } from "../../Constants/index";
 import { Notification } from '../Notification/index';
 import './addinvoiceform.css'
-export const AddInvoiceForm = ({ pData = [], bData = [] }) => {
+
+export const AddInvoiceForm = ({ pData = [], bData = [], onSubmit }) => {
     const [notification, setNotification] = useState(false);
     const [notificationMsg, setNotificationMsg] = useState({
         message: '',
         severity: ''
     });
     const currentDate = new Date().toISOString().split("T")[0];
-    const { control, register, handleSubmit, formState: { errors }, setValue, watch, onBlur } = useForm({
+    const { control, register, handleSubmit, formState: { errors }, setValue, watch, onBlur, reset } = useForm({
         defaultValues: {
             pharmacologicalName: '',
             brandName: null,
@@ -29,12 +30,13 @@ export const AddInvoiceForm = ({ pData = [], bData = [] }) => {
         }
     });
     const watchFields = watch(["noOfStrips", "pricePerStrip", "gst", "discount", "mrpPerStrip"]);
-    const onSubmit = (data) => {
-        const { noOfStrips, pricePerStrip, gst, discount } = data;
-        const discountedValue = (noOfStrips * pricePerStrip) - ((noOfStrips * pricePerStrip * discount) / 100);
-        const netPrice = discountedValue + ((gst * discountedValue) / 100);
-        setValue('netPrice', netPrice);
-    };
+    // const onSubmit = (data) => console.log(data)
+    // const onSubmit = (data) => {
+    //     const { noOfStrips, pricePerStrip, gst, discount } = data;
+    //     const discountedValue = (noOfStrips * pricePerStrip) - ((noOfStrips * pricePerStrip * discount) / 100);
+    //     const netPrice = discountedValue + ((gst * discountedValue) / 100);
+    //     setValue('netPrice', netPrice);
+    // };
     useEffect(() => {
         const subscription = watch((value, { name, type }) => {
             if (name === "noOfStrips" || name === "pricePerStrip" || name === "gst" || name === "discount" || name === "mrpPerStrip") {
@@ -69,7 +71,7 @@ export const AddInvoiceForm = ({ pData = [], bData = [] }) => {
     }
     return (
         <FormContainer onSubmit={handleSubmit(onSubmit)}>
-            <div className={"addInvoiceForm"}>
+            {/* <div className={"addInvoiceForm"}> */}
             <div>
                 <label>{FORM_LABELS.PHARMACOLOGICAL_NAME}</label>
                 <Controller
@@ -107,12 +109,12 @@ export const AddInvoiceForm = ({ pData = [], bData = [] }) => {
             <div>
                 <label>{FORM_LABELS.BRAND_NAME}</label>
                 <Controller
-                    {...register("brandName", { required: true })}
                     name='brandName'
                     control={control}
                     defaultValue=""
                     render={({ field }) => (
                         <CreatableSelect
+                            {...register("brandName", { required: true })}
                             {...field}
                             options={bData?.map(option => ({ value: option?.value, label: option?.name }))}
                             onChange={(newValue, actionMeta) => {
@@ -199,12 +201,14 @@ export const AddInvoiceForm = ({ pData = [], bData = [] }) => {
                 <input disabled {...register("netPrice", { required: true })} type="number" />
                 {errors['netPrice'] && <span className='red-text'>{errors['netPrice'][`message`]}</span>}
             </div>
-            <div>
-                    <input type="submit" style={{ padding: '10px', marginTop: '10px' }} />
-                    
-                </div>
-                <div>
-                <input type="reset" style={{ padding: '10px' }} />
+            <div style={{
+                display: 'flex',
+                alignItems: 'center'
+            }}>
+                <div style={{ display: 'flex' }}>
+                    <button type="submit">Submit</button>
+                    {/* <input type="submit" style={{ padding: '10px', marginRight: '10px' }} /> */}
+                    <input type="reset" style={{ padding: '10px' }} />
                 </div>
             </div>
             

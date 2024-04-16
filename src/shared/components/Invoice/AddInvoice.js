@@ -9,7 +9,7 @@ import { Form } from "../Forms/index";
 import Button from '@mui/material/Button';
 // import { AddVendor } from "./AddVendorModal";
 import PurchaseService from "../../services/Purchase.service";
-import { Table } from "../Table";
+import { EditableTable } from "../EditableTable/index";
 import { Container } from './AddInvoice.styles'
 import { useNavigate } from 'react-router-dom';
 
@@ -18,58 +18,82 @@ import { useNavigate } from 'react-router-dom';
 export const AddInvoice = () => {
     const navigate = useNavigate();
     const [vendorDetails, SetVendorDetails] = useState([]);
+    let [passing_data_from_addinvoice_to_pharmacyinventory, setpdfatp] = useState([]);
     const [rows, setRows] = useState([]);
-    const headArray = [
+    const [dataFetched, setDataFetched] = useState(false);
+    const [invoiceDetails, setInvoiceDetails] = useState({});
+    const columns = [
         {
-            'head': 'Medicine Details',
-            'fieldName': 'medicineName'
+            'Header': 'Medicine Details',
+            'accessor': 'brandName',
+            editEnable: true,
         },
         {
-            'head': 'HSN Code',
-            'fieldName': 'hsnCode'
+            'Header': 'HSN Code',
+            'accessor': 'hsnCode',
+            editEnable: true,
         },
         {
-            'head': 'Expiry ',
-            'fieldName': 'expiry'
+            'Header': 'Expiry',
+            'accessor': 'expiry',
+            editEnable: true,
         },
         {
-            'head': 'Units / Strips',
-            'fieldName': 'quantity'
+            'Header': 'Units / Strips',
+            'accessor': 'quantity',
+            editEnable: true,
         },
         {
-            'head': 'Total Strips',
-            'fieldName': 'totalStrips'
+            'Header': 'Total Strips',
+            'accessor': 'noOfStrips',
+            editEnable: true,
         },
         {
-            'head': 'MRP per Strip',
-            'fieldName': 'mrpPerStrip'
+            'Header': 'MRP per Strip',
+            'accessor': 'mrpPerStrip',
+            editEnable: true,
         },
         {
-            'head': 'Discount',
-            'fieldName': 'discount'
+            'Header': 'Price per Strip',
+            'accessor': 'pricePerStrip',
+            editEnable: true,
         },
         {
-            'head': 'Price per Strip',
-            'fieldName': 'pricePerStrip'
+            'Header': 'GST',
+            'accessor': 'gst',
+            editEnable: true,
         },
         {
-            'head': 'GST',
-            'fieldName': 'gst'
+            'Header': 'Tax in',
+            'accessor': '',
+            editEnable: true,
         },
         {
-            'head': 'Tax in (rs)',
-            'fieldName': 'tax'
+            'Header': 'Total Price',
+            'accessor': 'netPrice',
+            editEnable: true,
         },
         {
-            'head': 'Total Price',
-            'fieldName': 'totalPrice'
+            Header: "Actions",
+            id: "actions",
+            disableSortBy: true,
+            Cell: ({ row, column, cell }) =>
+                row.original.isEditing ? (
+                    <>
+                        <button onClick={() => handleButtonClick("save", row.original)}>
+                            Save
+                        </button>
+                        <button onClick={() => handleButtonClick("cancel", row.original)}>
+                            Cancel
+                        </button>
+                    </>
+                ) : (
+                    <button disabled={dataFetched} onClick={() => handleButtonClick("edit", row.original)}>
+                        Edit
+                    </button>
+                ),
         },
-        {
-            'head': 'Action',
-            'fieldName': ''
-        }
     ];
-
 
     let vendor_details_template = {
         title: '',
@@ -77,12 +101,13 @@ export const AddInvoice = () => {
         formStyles: {
             backgroundColor: "#eee",
         },
+        watchFields: ['invoiceDate', 'invoiceNumber', 'poNumber', 'vendorName'],
         fields: [
             {
 
                 title: 'Invoice Number',
-                type: 'select',
-                name: 'select',
+                type: 'autoComplete',
+                name: 'invoiceNumber',
                 options: [
                     {
                         value: "none",
@@ -99,8 +124,8 @@ export const AddInvoice = () => {
             {
 
                 title: 'PO Number',
-                type: 'select',
-                name: 'select',
+                type: 'autoComplete',
+                name: 'poNumber',
                 options: [
                     {
                         value: "none",
@@ -117,8 +142,8 @@ export const AddInvoice = () => {
             {
 
                 title: 'Vendor Name',
-                type: 'select',
-                name: 'select',
+                type: 'autoComplete',
+                name: 'vendorId',
                 options: [
                     {
                         value: "none",
@@ -126,7 +151,7 @@ export const AddInvoice = () => {
                     },
                     ...vendorDetails.map(vendor => ({
                         value: vendor.id,
-                        name: vendor.name,
+                        label: vendor.name,
                         ...vendor
                     }))
                 ],
@@ -140,7 +165,7 @@ export const AddInvoice = () => {
             {
                 title: 'Invoice Date',
                 type: 'date',
-                name: 'date',
+                name: 'invoiceDate',
                 validationProps: {
                     required: "Date is required"
                 },
@@ -158,50 +183,76 @@ export const AddInvoice = () => {
         // justifyContent: "space-around"
     };
 
+    const handleButtonClick = (action, row) => {
+        const newData = rows.map((rowData) => {
+            if (rowData.id === row.id) {
+                if (action === "edit") {
+                    return { ...rowData, isEditing: true, prevData: { ...rowData } };
+                } else if (action === "cancel") {
+                    return { ...rowData, isEditing: false, ...rowData.prevData };
+                } else if (action === "save") {
+                    const { prevData, ...updatedRowData } = rowData;
+                    return { ...updatedRowData, isEditing: false };
+                }
+            }
+            return rowData;
+        });
+        setRows(newData);
+    };
+
     const btn_styles = { display: "flex", justifyContent: "end" };
-    const onSubmit = (form) => {
-        console.log(form);
+    const onSubmit = (formData) => {
+
+
     };
-    let [passing_data_from_addinvoice_to_pharmacyinventory, setpdfatp] = useState([])
-    const onAddMedicine = (formData) => {
-        // Check if the HSN code already exists in the rows
-        const isDuplicate = rows.some(row => row.hsnCode === formData.hsnCode);
-        if (isDuplicate) {
-            alert("Duplicates detected. This HSN code already exists.");
-        } else {
-            // If not a duplicate, add the medicine data to rows
-            formData['medicineName'] = formData['brandName']
-            const updatedRows = [...rows, formData];
-            setpdfatp(passing_data_from_addinvoice_to_pharmacyinventory = updatedRows);
-            setRows(updatedRows);
+
+    const saveInvoice = () => {
+        const data = {
+            ...invoiceDetails,
+            rows
         }
-    };
-    function save() {
-        console.log('save method', passing_data_from_addinvoice_to_pharmacyinventory);
-        navigate("/landing/inventory/pharmacyInventory", { state: { passing_data_from_addinvoice_to_pharmacyinventory: passing_data_from_addinvoice_to_pharmacyinventory } })
+        // console.log('save method', passing_data_from_addinvoice_to_pharmacyinventory);
+        // navigate("/landing/inventory/pharmacyInventory", { state: { passing_data_from_addinvoice_to_pharmacyinventory: passing_data_from_addinvoice_to_pharmacyinventory } })
     }
     const validate = (watchValues, errorMethods) => {
-        // console.log(watchValues, 'watchValues')
+        const invoiceInfo = {
+            "invoiceDate": watchValues?.invoiceDate,
+            "poNumber": watchValues?.poNumber,
+            "vendorId": watchValues?.vendorId,
+            "invoiceNumber": watchValues?.invoiceNumber
+        };
+        setInvoiceDetails(invoiceInfo);
     };
+
     const getVendors = async () => {
         // setLoader(true);
         try {
             let data = await PurchaseService.getAllVendors();
             const result = data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }));
             SetVendorDetails(result);
-            console.log(vendor_details_template, 'vendor_details_template', result)
-            // setAllVendors(data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id })));
-            // setLoader(false);
-            // console.log(allVendors, 'allVendors');
         } catch (e) {
             // setLoader(false);
             console.log(e, 'error allVendors')
         }
     };
+    const invoiceHandler = (formData) => {
+        const { brandName, pharmacologicalName } = formData;
+        const transformedObject = {
+            ...formData,
+            brandName: brandName?.label,
+            pharmacologicalName: pharmacologicalName?.label
+        };
+        // const updateRows = {
+        //     medicineDetails: [...rows, transformedObject]
+        // }
+        setRows([...rows, transformedObject]);
+        // console.log(updateRows, 'updatedRows');
+    }
 
     useEffect(() => {
         getVendors();
     }, []);
+
     return (
         <Box sx={{
             padding: 2,
@@ -210,14 +261,16 @@ export const AddInvoice = () => {
                 <Form
                     template={vendor_details_template}
                     onSubmit={onSubmit}
-                    validate={validate}
+                    onValidate={validate}
                     showSubmitButton={false}
                     form_styles={vendor_details_style}
                     btn_styles={btn_styles}
                 />
             </Container>
             <Container>
-                <AddInvoiceForm />
+                <AddInvoiceForm
+                    onSubmit={invoiceHandler}
+                />
             </Container>
             <Box
                 sx={{
@@ -230,12 +283,17 @@ export const AddInvoice = () => {
 
             </Box>
             <Box sx={{ marginTop: 3 }}>
-                <Table headArray={headArray} gridArray={rows} />
+                <EditableTable
+                    columns={columns}
+                    data={rows}
+                    setData={setRows}
+                    handleButtonClick={handleButtonClick}
+                />
             </Box>
             <div>
                 {rows.length > 0 && (
                     <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px ' }}>
-                        <Button variant="contained" onClick={() => save()}>Save</Button>
+                        <Button variant="contained" onClick={() => saveInvoice()}>Save</Button>
                     </Box>
                 )}
 
