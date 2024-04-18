@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 
 import { useForm } from 'react-hook-form'
-import { FORM_LABELS } from "../../Constants/index";
 import { BillingSummaryForm } from "./BillingSummaryForm"
 
 //material ui
@@ -11,7 +10,9 @@ import { EditableTable } from "../EditableTable";
 import { Loader } from "../Loader/index";
 import { SalesForm } from "./SalesForm";
 
+import { Notification } from '../Notification/index';
 import { Container } from './Sales.styles'
+import SalesService from '../../services/sales.service'
 
 export const Sales = () => {
     const { watch, formState: { errors } } = useForm();
@@ -19,14 +20,11 @@ export const Sales = () => {
     const [showLoader, setShowLoader] = useState(false);
     const [rows, setRows] = useState([]);
     const [netPrice, setNetprice] = useState(0);
-    const [billDetails, setBillDetails] = useState({
-        discount: 0,
-        gst: 0,
-        netPrice: 0,
-        roundOff: 0,
-        billAmount: 0,
-        paymentMode: "",
-        remarks: ""
+    const [patientDetails, setPatientDetails] = useState([]);
+    const [notification, setNotification] = useState(false);
+    const [notificationMsg, setNotificationMsg] = useState({
+        message: '',
+        severity: ''
     });
 
     const columns = [
@@ -119,6 +117,7 @@ export const Sales = () => {
         formStyles: {
             backgroundColor: "#eee",
         },
+        watchFields: ['patientName', 'gender', 'age', 'phone', 'email', 'referredDoctor', 'otc'],
         fields: [
             {
                 title: 'Patient Name',
@@ -148,7 +147,7 @@ export const Sales = () => {
                 ],
                 style: {
                     width: "100px",
-                    height: "35px"
+                    height: "38px"
                 }
             },
             {
@@ -184,7 +183,7 @@ export const Sales = () => {
             {
                 title: 'Referred Doctor',
                 type: 'text',
-                name: 'referred doctor',
+                name: 'referredDoctor',
                 style: {
                     width: "194px"
                 }
@@ -193,7 +192,7 @@ export const Sales = () => {
 
                 title: 'OTC/Rx',
                 type: 'select',
-                name: 'select',
+                name: 'otc',
                 options: [
                     {
                         value: "otc",
@@ -206,110 +205,20 @@ export const Sales = () => {
                 ],
                 style: {
                     width: "100px",
-                    height: "35px"
+                    height: "38px"
                 }
             },
         ],
-    };
-    const bill_details = {
-        title: '',
-        submitButttonText: 'Save',
-        clearFormBtnText: "Print",
-        formStyles: {
-            backgroundColor: "#FFFFFF",
-        },
-        fields: [
-            {
-                title: FORM_LABELS.DISCOUNT,
-                type: 'number',
-                name: 'discount',
-                value: billDetails.discount,
-                style: {
-                    width: "150px"
-                }
-            },
-            {
-
-                title: FORM_LABELS.GST,
-                type: 'number',
-                name: 'gst',
-                value: billDetails.gst,
-                style: {
-                    width: "100px"
-                }
-            },
-            {
-                title: FORM_LABELS.NET_PRICE,
-                type: 'number',
-                name: 'netPrice',
-                value: billDetails.netPrice,
-                validationProps: {
-                    required: ` ${FORM_LABELS.NET_PRICE} is required`
-                },
-            },
-            {
-                title: FORM_LABELS.ROUND_OFF,
-                type: 'number',
-                name: 'roundOff',
-                value: billDetails.roundOff
-            },
-            {
-                title: FORM_LABELS.BILL_AMOUNT,
-                type: 'number',
-                name: 'billAmount',
-                value: billDetails.billAmount
-            },
-            {
-                title: FORM_LABELS.PAYMENT_MODE,
-                type: 'select',
-                name: FORM_LABELS.PAYMENT_MODE,
-                validationProps: {
-                    required: `${FORM_LABELS.PAYMENT_MODE} is required`
-                },
-                options: [
-                    {
-                        value: "cash",
-                        name: "Cash"
-                    },
-                    {
-                        value: "card",
-                        name: "Card"
-                    },
-                    {
-                        value: "upi",
-                        name: "UPI"
-                    }
-                ],
-                style: {
-                    height: "35px"
-                }
-            },
-            {
-                title: FORM_LABELS.ADD_REMARKS,
-                type: 'text',
-                name: FORM_LABELS.ADD_REMARKS
-            },
-        ],
-        btns: [
-            {
-                btn_text: "Save & Print",
-            }
-        ]
     };
     const patient_details_style = {
         display: "flex",
-        // gap: "28px 10px",
         justifyContent: "space-between"
     };
-    const bill_details_styles = {
-        display: "grid",
-        columnGap: "20px",
-        gridTemplateColumns: "auto auto",
-    }
+    
     const btn_styles = { display: "flex", gap: "20px 20px", justifyContent: "end" };
 
     const validate = (watchValues, errorMethods) => {
-        // console.log(watchValues, 'watchValues')
+        setPatientDetails(watchValues);
     };
 
     const handleSubmitForm = (formData) => {
@@ -329,62 +238,90 @@ export const Sales = () => {
         setNetprice(totalNetPrice);
     }, [rows]);
 
+    const alertState = () => {
+        setNotification(!notification);
+    };
+
+    const addPatient = async (patientDetails, data) => {
+        try {
+            const patientId = await SalesService.addPatient(patientDetails);
+            console.log(patientId, 'sndsncnsdc');
+            const billDetails = {
+                patientId: patientId,
+                medicineDetails: rows,
+                ...data
+            }
+            SalesService.addPharmacyBilling(billDetails).then(() => {
+                console.log('success saving')
+            })
+        }
+        catch(err) {
+            console.log(err, 'err adding medicine data');
+        }
+    }
+
+    const handleSubmitBillingForm = (data) => {
+        console.log(data, 'billDta');
+        if (patientDetails?.patientName === '') {
+            setNotification(true);
+            setNotificationMsg({
+                message: `Please fill Patient name`,
+                severity: "error"
+            });
+            return;
+        };
+        addPatient(patientDetails, data);
+    }
+
     const onSubmit = (form, formType) => {
-        // if (formType === "medicine_details_template") {
-        //     // onAddMedicine(form);
-        //     resetMedicineForm();
-        // } else {
-        //     console.log(form);
-        // }
+        
     };
 
     return (
         <Box sx={{
             padding: 2,
-            backgroundColor: "#c0a6a614"
+            backgroundColor: "#c0a6a614",
+            display: "flex"
         }}>
-            <Form
-                template={patient_details_template}
-                onSubmit={onSubmit}
-                validate={validate}
-                showSubmitButton={false}
-                form_styles={patient_details_style}
-                btn_styles={btn_styles}
-            />
             <Box
                 sx={{
-                    display: "flex"
+                    flex: "4",
+                    marginRight: "50px"
                 }}>
-                <Box
-                    sx={{
-                        flex: "4",
-                        marginRight: "50px"
-                    }}>
-                    <Container>
-                        <SalesForm onSubmitForm={handleSubmitForm} />
-                    </Container>
+                <Form
+                    template={patient_details_template}
+                    onSubmit={onSubmit}
+                    onValidate={validate}
+                    showSubmitButton={false}
+                    form_styles={patient_details_style}
+                    btn_styles={btn_styles}
 
-                    <Box sx={{ marginTop: 3 }}>
-                        <EditableTable
-                            columns={columns}
-                            data={rows}
-                            setData={setRows}
-                            handleButtonClick={handleButtonClick}
-                        />
-                    </Box>
+                />
+                <Container>
+                    <SalesForm onSubmitForm={handleSubmitForm} />
+                </Container>
 
+                <Box sx={{ marginTop: 3 }}>
+                    <EditableTable
+                        columns={columns}
+                        data={rows}
+                        setData={setRows}
+                        handleButtonClick={handleButtonClick}
+                    />
                 </Box>
-                <Box sx={{
-                    backgroundColor: '#eef0f3',
-                    borderRadius: '4px',
-                    padding: 2,
-                    marginTop: '4px',
-                    flex: 1
-                }}>
-                    <BillingSummaryForm netPrice={netPrice} />
-                </Box>
+
+            </Box>
+            <Box sx={{
+                backgroundColor: '#eef0f3',
+                borderRadius: '4px',
+                padding: 2,
+                marginTop: '4px',
+                flex: 1
+            }}>
+                <BillingSummaryForm netPrice={netPrice} onSubmitBillingForm={handleSubmitBillingForm} />
             </Box>
             <Loader open={showLoader} />
+            {notification && <Notification severity={notificationMsg?.severity} message={notificationMsg?.message} action={alertState} />}
         </Box>
     )
 }

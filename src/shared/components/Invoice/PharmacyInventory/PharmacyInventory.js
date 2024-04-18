@@ -1,126 +1,13 @@
 
 
-import React, { useState, useEffect, props } from 'react';
-import { Box,  } from "@mui/material";
+import React, { useState, useEffect } from 'react';
+import { Box, } from "@mui/material";
 import { Form } from "../../Forms/index";
-// import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
-// import { AddVendor } from "./AddVendorModal";
-import PurchaseService from "../../../services/Purchase.service";
+import InventoryService from "../../../services/inventory.service";
 import { Table } from "../../Table";
 import { Container } from "./PharmacyInventory.styles";
 import { useLocation } from 'react-router-dom';
-
-
-
-
-// export const PharmacyInventory = () => {
-//     const [rows, updateRows] = useState([]);
-//     const {
-//         register: inventoryDetails,
-//         handleSubmit: handleInventoryDetails,
-//         watch,
-//         formState: { errors },
-//     } = useForm();
-
-//     const onSubmit = (data) => console.log(watch);;
-
-//     return (
-//             <Box sx={{
-//                 padding: 2,
-//             }}>
-//                 <Box sx={{
-//                     display: "flex",
-//                     justifyContent: "space-between",
-//                     alignItems: "center"
-//                 }}>
-//                     <form onSubmit={handleInventoryDetails(onSubmit)}>
-//                         <Box sx={{
-//                             display: 'flex',
-//                         }}>
-//                             <Box sx={{
-//                                 display: 'flex',
-//                                 alignItems: 'baseline',
-//                                 justifyContent: 'flex-start'
-//                             }}>
-//                                 <LocalizationProvider dateAdapter={AdapterDayjs} >
-//                                     <DemoContainer components={['DatePicker']} sx={{ marginRight: '25px' }}>
-//                                         <DatePicker
-//                                             size="small"
-//                                             sx={{
-//                                                 '& .MuiFormLabel-root': {
-//                                                     top: -6
-//                                                 },
-//                                                 '& .MuiOutlinedInput-input': {
-//                                                     padding: '8.5px 14px'
-//                                                 }
-//                                             }}
-//                                             label="Total Qty & Value" />
-//                                     </DemoContainer>
-//                                 </LocalizationProvider>
-//                                 <LocalizationProvider dateAdapter={AdapterDayjs} >
-//                                     <DemoContainer components={['DatePicker']} sx={{ marginRight: '25px' }}>
-//                                         <DatePicker
-//                                             size="small"
-//                                             sx={{
-//                                                 '& .MuiFormLabel-root': {
-//                                                     top: -6
-//                                                 },
-//                                                 '& .MuiOutlinedInput-input': {
-//                                                     padding: '8.5px 14px'
-//                                                 }
-//                                             }}
-//                                             label="Consumption Qty & Value" />
-//                                     </DemoContainer>
-//                                 </LocalizationProvider>
-//                                 <input type="submit" value={`Minimal Quantity`} />
-//                             </Box>
-
-//                         </Box>
-
-//                         {/* <input type="submit" value="Add"/> */}
-//                     </form>
-
-//                 </Box>
-//                 <Box sx={{ marginTop: 3 }}>
-//                     <TableContainer component={Paper}>
-//                         <Table sx={{ minWidth: 700 }} aria-label="customized table">
-//                             <TableHead>
-//                                 <TableRow>
-//                                     <StyledTableCell>S No</StyledTableCell>
-//                                     <StyledTableCell align="center">Medicine Name</StyledTableCell>
-//                                     <StyledTableCell align="center">Invoice No</StyledTableCell>
-//                                     <StyledTableCell align="center">Batch No</StyledTableCell>
-//                                     <StyledTableCell align="center">Expiry</StyledTableCell>
-//                                     <StyledTableCell align="center">MRP Per Pack</StyledTableCell>
-//                                     <StyledTableCell align="center">Discount(%)</StyledTableCell>
-//                                     <StyledTableCell align="center">Price Per Pack</StyledTableCell>
-//                                     <StyledTableCell align="center">Units Per Pack</StyledTableCell>
-//                                     <StyledTableCell align="center">Price per Unit</StyledTableCell>
-//                                     <StyledTableCell align="center">Units in Stock</StyledTableCell>
-//                                     <StyledTableCell align="center">GST(%)</StyledTableCell>
-//                                     <StyledTableCell align="center">Return</StyledTableCell>
-//                                 </TableRow>
-//                             </TableHead>
-//                             <TableBody>
-//                                 {rows.map((row, index) => (
-//                                     <StyledTableRow key={row.index}>
-//                                         <StyledTableCell>
-//                                             {index + 1}
-//                                         </StyledTableCell>
-//                                         <StyledTableCell align="center">{row.pharmacologicalName},&nbsp;{row.brandName}</StyledTableCell>
-
-//                                     </StyledTableRow>
-//                                 ))}
-//                             </TableBody>
-//                         </Table>
-//                     </TableContainer>
-//                 </Box>
-//             </Box >
-
-//     )
-// }
-
 
 export const PharmacyInventory = () => {
     const [modalOpen, setModalOpen] = useState(false);
@@ -130,15 +17,15 @@ export const PharmacyInventory = () => {
     const headArray = [
         {
             'head': 'Medicine Details',
-            'fieldName': 'medicineName'
+            'fieldName': 'brandName'
         },
-        {
-            'head': 'Invoice No',
-            'fieldName': 'invoiceNo'
-        },
+        // {
+        //     'head': 'Invoice No',
+        //     'fieldName': 'invoiceNo'
+        // },
         {
             'head': 'Batch No',
-            'fieldName': 'batchNo'  
+            'fieldName': 'batchNo'
         },
         {
             'head': 'Expiry ',
@@ -158,7 +45,7 @@ export const PharmacyInventory = () => {
         },
         {
             'head': 'Units per Pack',
-            'fieldName': 'unitsPerPack'
+            'fieldName': 'quantity'
         },
         {
             'head': 'Price per Unit',
@@ -210,7 +97,7 @@ export const PharmacyInventory = () => {
     };
     const location = useLocation();
     let state = location.state
-    
+
     const vendor_details_style = {
         display: "flex",
         gap: "28px 30px",
@@ -220,7 +107,7 @@ export const PharmacyInventory = () => {
     const onSubmit = (form) => {
         console.log(form);
     };
-    
+
     const validate = (watchValues, errorMethods) => {
         // console.log(watchValues, 'watchValues')
     };
@@ -232,9 +119,26 @@ export const PharmacyInventory = () => {
         setRowToEdit(idx);
         setModalOpen(true);
     };
-    
-   
-    
+
+    useEffect(() => {
+        const getInventory = async () => {
+            try {
+                let data = await InventoryService.getInventory();
+                const result = data?.docs?.map((doc) => ({ ...doc?.data(), id: doc?.id }));
+                result.forEach(item => {
+                    item['unitsInStock'] = (item?.quantity * (Number(item?.noOfStrips) + Number(item?.freeStrips)))
+                })
+                console.log(result, 'inventory');
+                setRows(result)
+            } catch (err) {
+
+            }
+        }
+        getInventory();
+        // const data = InventoryService.getInventory();
+        // console.log(data, 'inventory');
+    }, [])
+
     return (
         <Box sx={{
             padding: 2,
@@ -258,11 +162,11 @@ export const PharmacyInventory = () => {
             </Box>
             <div>
                 {rows.length > 0 && (
-                    <Box sx ={{display: 'flex',justifyContent: 'end', marginTop: '10px'}}>
+                    <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px' }}>
                         <Button variant="contained">Save</Button>
                     </Box>
                 )}
-                
+
             </div>
         </Box>
 

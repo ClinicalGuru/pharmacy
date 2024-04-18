@@ -6,12 +6,13 @@ import { Notification } from '../Notification/index';
 // import './addinvoiceform.css'
 
 export const BillingSummaryForm = ({
-    onSubmit,
+    onSubmitBillingForm,
     resetForm,
     netPrice
 }) => {
     console.log(netPrice, 'netPrice')
     const [notification, setNotification] = useState(false);
+    const [isButtonDisabled, setButtonDisabled] = useState(netPrice === 0);
     const [notificationMsg, setNotificationMsg] = useState({
         message: '',
         severity: ''
@@ -68,37 +69,55 @@ export const BillingSummaryForm = ({
     }, [netPrice]);
 
     useEffect(() => {
-        if (resetForm) reset();
+        setButtonDisabled(netPrice === 0);
+    }, [netPrice]);
+
+    useEffect(() => {
+        if (resetForm) reset();        
     }, [onSubmit]);
 
     const alertState = () => {
         setNotification(!notification);
     };
 
+    const onSubmit = (data) => {
+        onSubmitBillingForm(data);
+    }
+
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className={"addInvoiceForm"}>
                 <div>
                     <label>{FORM_LABELS.DISCOUNT}</label>
-                    <input {...register("discount", { required: true })} type="text" />
+                    <input {...register("discount", {
+                        pattern: {
+                            value: /^[0-9]*$/,
+                            message: ""
+                        }
+                    })} type="number" />
                     {errors['discount'] && <span className='red-text'>{errors['discount'][`message`]}</span>}
                 </div>
 
                 <div>
                     <label>{FORM_LABELS.GST}</label>
-                    <input {...register("gst", { required: true })} type="text" />
+                    <input {...register("gst", {
+                        pattern: {
+                            value: /^[0-9]*$/,
+                            message: ""
+                        }
+                    })} type="number" />
                     {errors['gst'] && <span className='red-text'>{errors['gst'][`message`]}</span>}
                 </div>
 
                 <div>
                     <label>{FORM_LABELS.NET_PRICE}</label>
-                    <input {...register("netPrice", { required: true })} type="number" />
+                    <input disabled {...register("netPrice", { required: true })} type="number" />
                     {errors['netPrice'] && <span className='red-text'>{errors['netPrice'][`message`]}</span>}
                 </div>
 
                 <div>
                     <label>{FORM_LABELS.ROUND_OFF}</label>
-                    <input {...register("roundOff", { required: true })} type="text" />
+                    <input {...register("roundOff", { required: true })} type="number" />
                     {errors['roundOff'] && <span className='red-text'>{errors['roundOff'][`message`]}</span>}
                 </div>
 
@@ -111,7 +130,7 @@ export const BillingSummaryForm = ({
                 <div>
                     <label>{FORM_LABELS.PAYMENT_MODE}</label>
                     {/* <input {...register("paymentMode")} type="number" /> */}
-                    <select>
+                    <select {...register("paymentMode")}>
                         <option>--Select--</option>
                         <option value="upi">UPI</option>
                         <option value="card">Card</option>
@@ -125,15 +144,8 @@ export const BillingSummaryForm = ({
                     <textarea {...register("remarks")} ></textarea>
                     {errors['remarks'] && <span className='red-text'>{errors['remarks'][`message`]}</span>}
                 </div>
-                <div>
-                    <div style={{ display: 'flex', marginLeft: '100px' }}>
-                        <div style={{ position: 'absolute' }}>
-                            <button style={{ height: '35px', marginTop: '5px' }} type="submit">Save & Print</button>
-                        </div>
-
-                        {/* <input type="submit" style={{ padding: '10px', marginRight: '10px' }} /> */}
-
-                    </div>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginLeft: 'auto'  }}>
+                    <button style={{ height: '35px', marginTop: '5px', backgroundColor: "#4ceaff", border: '1px solid #bdbcbc', borderRadius: '4px' }} type="submit" disabled={isButtonDisabled}>Save & Print</button>
                 </div>
             </div>
             {notification && <Notification notificationState={notification} severity={notificationMsg?.severity} message={notificationMsg?.message} action={alertState} />}

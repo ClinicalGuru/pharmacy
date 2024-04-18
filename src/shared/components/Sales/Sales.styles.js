@@ -22,6 +22,7 @@ background-color: #eef0f3;
 border-radius: 4px;
 padding: 10px;
 margin-top: 5px;
+align-items: end;
 `;
 
 export const Container = styled.div`

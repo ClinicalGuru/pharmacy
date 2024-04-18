@@ -10,11 +10,10 @@ export const Form = ({
     onSubmit,
     form_styles,
     btn_styles,
-    watchFields,
     onValidate = () => { },
 }) => {
     const [prevWatchValues, setPrevWatchValues] = useState({});
-    let { control, register, handleSubmit, watch, setError, clearErrors, formState: { errors }, reset } = useForm({
+    let { control, register, handleSubmit, watch, setError, clearErrors, formState: { errors }, reset,watchFields  } = useForm({
         mode: "onChange"
     });
     let { title, fields, value, formStyles, btns, isBlockLevelBtns = true } = template;
@@ -69,7 +68,7 @@ export const Form = ({
                         }}>
                             <div key={name}>
                                 <Box component="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
-                                <input className='makefieldsempty3' value={value} style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
+                                <input className='makefieldsempty3' style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
                                 {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
                             </div>
                         </Box>)
