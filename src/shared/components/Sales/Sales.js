@@ -9,10 +9,9 @@ import { Form } from "../Forms/index";
 import { EditableTable } from "../EditableTable";
 import { Loader } from "../Loader/index";
 import { SalesForm } from "./SalesForm";
-
 import { Notification } from '../Notification/index';
-import { Container } from './Sales.styles'
-import SalesService from '../../services/sales.service'
+import { Container } from './Sales.styles';
+import SalesService from '../../services/sales.service';
 
 export const Sales = () => {
     const { watch, formState: { errors } } = useForm();
@@ -318,7 +317,7 @@ export const Sales = () => {
                 marginTop: '4px',
                 flex: 1
             }}>
-                <BillingSummaryForm netPrice={netPrice} onSubmitBillingForm={handleSubmitBillingForm} />
+                <BillingSummaryForm netPrice={netPrice} onSubmitBillingForm={handleSubmitBillingForm} patientDetails={patientDetails} medicineDetails={rows}/>
             </Box>
             <Loader open={showLoader} />
             {notification && <Notification severity={notificationMsg?.severity} message={notificationMsg?.message} action={alertState} />}
