@@ -25,5 +25,9 @@ class InventoryService {
             console.error('Error adding data to medicine inventory Firestore: ', error);
         }
     }
+
+    getAllInventory = () => {
+        return getDocs(inventoryRef);
+    }
 }
 export default new InventoryService();
