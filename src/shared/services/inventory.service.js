@@ -17,13 +17,16 @@ class InventoryService {
             const docRef = inventoryRef;
             batch.push(addDoc(docRef, object));
         });
-
         try {
             await Promise.all(batch);
             console.log('Medicine inventory data added to Firestore successfully!');
         } catch (error) {
             console.error('Error adding data to medicine inventory Firestore: ', error);
         }
+    }
+
+    getInventory = async () => {
+        return await getDocs(inventoryRef);
     }
 }
 export default new InventoryService();

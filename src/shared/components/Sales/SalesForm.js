@@ -21,7 +21,7 @@ export const SalesForm = ({ pData = [], bData = [], onSubmitForm }) => {
       price: '',
       quantity: '',
       total: '',
-      discount: '',
+      discount: 0,
       amount: ''
     }
   });
@@ -53,7 +53,13 @@ export const SalesForm = ({ pData = [], bData = [], onSubmitForm }) => {
       <div>
         <label>{FORM_LABELS.PHARMACOLOGICAL_NAME}</label>
         <Controller
-          {...register("pharmacologicalName", { required: true })}
+          {...register("pharmacologicalName", {
+            required: true,
+            pattern: {
+              value: /^[a-zA-Z0-9\s]*$/,
+              message: "Please enter only letters, numbers, or spaces"
+            }
+          })}
           name="pharmacologicalName"
           control={control}
           defaultValue=""
@@ -87,7 +93,12 @@ export const SalesForm = ({ pData = [], bData = [], onSubmitForm }) => {
       <div>
         <label>{FORM_LABELS.BRAND_NAME}</label>
         <Controller
-          {...register("brandName", { required: true })}
+          {...register("brandName", {
+            required: true, pattern: {
+              value: /^[a-zA-Z0-9\s]*$/,
+              message: "Please enter only letters, numbers, or spaces"
+            }
+          })}
           name='brandName'
           control={control}
           defaultValue=""
@@ -120,25 +131,45 @@ export const SalesForm = ({ pData = [], bData = [], onSubmitForm }) => {
       {errors['brandName'] && <span className='red-text'>{errors['brandName'][`message`]}</span>}
       <div>
         <label>{FORM_LABELS.BATCH_NO}</label>
-        <input {...register("batchNo", { required: true })} type="text" />
+        <input {...register("batchNo", {
+          required: true,
+        })} type="text" onInput={(e) => {
+          e.target.value = e.target.value.replace(/[^\w\s]/gi, '');
+        }} />
         {errors['batchNo'] && <span className='red-text'>{errors['batchNo'][`message`]}</span>}
       </div>
 
+
       <div>
         <label>{FORM_LABELS.HSN_CODE}</label>
-        <input {...register("hsnCode", { required: true })} type="text" />
+        <input {...register("hsnCode", {
+          required: true, pattern: {
+            value: /^[0-9]*$/,
+            message: "Please enter a valid HSN code"
+          }
+        })} type="number" />
         {errors['hsnCode'] && <span className='red-text'>{errors['hsnCode'][`message`]}</span>}
       </div>
 
       <div>
         <label>{FORM_LABELS.PRICE}</label>
-        <input {...register("price", { required: true })} type="number" />
+        <input {...register("price", {
+          required: true, pattern: {
+            value: /^[0-9]*$/,
+            message: ""
+          }
+        })} type="number" />
         {errors['price'] && <span className='red-text'>{errors['price'][`message`]}</span>}
       </div>
 
       <div>
         <label>{FORM_LABELS.QUANTITY}</label>
-        <input {...register("quantity", { required: true })} type="text" />
+        <input {...register("quantity", {
+          required: true, pattern: {
+            value: /^[0-9]*$/,
+            message: ""
+          }
+        })} type="number" />
         {errors['quantity'] && <span className='red-text'>{errors['quantity'][`message`]}</span>}
       </div>
 
@@ -149,7 +180,12 @@ export const SalesForm = ({ pData = [], bData = [], onSubmitForm }) => {
       </div>
       <div>
         <label>{FORM_LABELS.DISCOUNT}</label>
-        <input {...register("discount", { required: true })} type="number" />
+        <input {...register("discount", {
+          pattern: {
+            value: /^[0-9]*$/,
+            message: ""
+          }
+        })} type="number" />
         {errors['discount'] && <span className='red-text'>{errors['discount'][`message`]}</span>}
       </div>
       <div>
