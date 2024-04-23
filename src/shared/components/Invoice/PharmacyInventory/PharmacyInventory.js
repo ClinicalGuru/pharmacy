@@ -1,16 +1,15 @@
 
 
-import React, { useState, useEffect, props } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, } from "@mui/material";
 import { Form } from "../../Forms/index";
-// import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 // import { AddVendor } from "./AddVendorModal";
 import PurchaseService from "../../../services/inventory.service";
 import EnhancedTable from './denseTable'
 import { Container } from "./PharmacyInventory.styles";
 import { useLocation } from 'react-router-dom';
-import inventoryService from '../../../services/inventory.service';
+import InventoryService from '../../../services/inventory.service';
 
 export const PharmacyInventory = () => {
     const [modalOpen, setModalOpen] = useState(false);
@@ -20,12 +19,12 @@ export const PharmacyInventory = () => {
     const headArray = [
         {
             'head': 'Medicine Details',
-            'fieldName': 'medicineName'
+            'fieldName': 'brandName'
         },
-        {
-            'head': 'Invoice No',
-            'fieldName': 'invoiceNo'
-        },
+        // {
+        //     'head': 'Invoice No',
+        //     'fieldName': 'invoiceNo'
+        // },
         {
             'head': 'Batch No',
             'fieldName': 'batchNo'
@@ -48,7 +47,7 @@ export const PharmacyInventory = () => {
         },
         {
             'head': 'Units per Pack',
-            'fieldName': 'unitsPerPack'
+            'fieldName': 'quantity'
         },
         {
             'head': 'Price per Unit',
@@ -123,20 +122,24 @@ export const PharmacyInventory = () => {
         setModalOpen(true);
     };
 
-
     useEffect(() => {
         const getInventory = async () => {
             try {
-                const data = await inventoryService.getAllInventory();
-                const result = data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }));
-                setRows(result);
+                let data = await InventoryService.getInventory();
+                const result = data?.docs?.map((doc) => ({ ...doc?.data(), id: doc?.id }));
+                result.forEach(item => {
+                    item['unitsInStock'] = (item?.quantity * (Number(item?.noOfStrips) + Number(item?.freeStrips)))
+                })
+                console.log(result, 'inventory');
+                setRows(result)
             } catch (err) {
-                console.log(err, 'error getting inventory')
+
             }
         }
         getInventory();
+        // const data = InventoryService.getInventory();
+        // console.log(data, 'inventory');
     }, [])
-
 
     return (
         <Box sx={{
