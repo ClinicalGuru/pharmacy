@@ -275,6 +275,27 @@ export const AddInvoice = () => {
             brandName: brandName?.label,
             pharmacologicalName: pharmacologicalName?.label
         };
+        if (transformedObject.pricePerStrip > transformedObject.mrpPerStrip) {
+            alert('Price per strip canbot be more than Mrp per strip');
+            setLoader(false);
+            return;
+        }
+        const isDuplicate = rows.some(row =>
+            row.pharmacologicalName === transformedObject.pharmacologicalName &&
+            row.brandName === transformedObject.brandName &&
+            row.batchNo === transformedObject.batchNo &&
+            row.hsnCode === transformedObject.hsnCode
+        );
+
+        if (isDuplicate) {
+            setNotification(true);
+            setNotificationMsg({
+                message: 'Duplicate data cannot be added.',
+                severity: 'error'
+            });
+            setLoader(false);
+            return;
+        }
         setRows([...rows, transformedObject]);
         setRestForm(true);
         setLoader(false);
