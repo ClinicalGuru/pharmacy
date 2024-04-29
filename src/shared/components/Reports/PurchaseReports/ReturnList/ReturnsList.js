@@ -10,7 +10,7 @@ import Button from '@mui/material/Button';
 // import { AddVendor } from "./AddVendorModal";
 import PurchaseService from "../../../../services/Purchase.service";
 import { Table } from "../../../Table";
-import { Container } from './PaymentsList.styles'
+import { Container } from './ReturnsList.styles'
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -22,7 +22,7 @@ const VisuallyHiddenInput = styled('input')({
     whiteSpace: 'nowrap',
     width: 1,
   });
-export const PaymentsList = () => {
+export const ReturnList = () => {
    
     const [modalOpen, setModalOpen] = useState(false);
     const [vendorDetails, SetVendorDetails] = useState([]);
@@ -35,45 +35,38 @@ export const PaymentsList = () => {
             'fieldName': 'vendorName'
         },
         {
+            'head': 'Return Date',
+            'fieldName': 'returnDate'
+        },
+        {
             'head': 'Invoice No',
             'fieldName': 'invoiceNo'
         },
+        // {
+        //     'head': 'Medicine Details',
+        //     'fieldName': 'medicine'
+        // },
         {
-            'head': 'Invoice Amount',
-            'fieldName': 'invoiceAmount'
+            'head': 'Return Qty',
+            'fieldName': 'quantity'
         },
         {
-            'head': 'Paid Amount',
-            'fieldName': 'paidAmount'
-        },
-        {
-            'head': 'Due Amount',
-            'fieldName': 'dueAmount'
-        },
-        {
-            'head': 'Invoice Due Date',
-            'fieldName': 'invoiceDueDate'
+            'head': 'Return Amount',
+            'fieldName': 'returnAmount'
         },
         // {
-        //     'head': 'Paid Date',
-        //     'fieldName': 'paidDate'
+        //     'head': 'MRP per Strip',
+        //     'fieldName': 'mrpPerStrip'
         // },
         // {
-        //     'head': 'Payment Mode',
-        //     'fieldName': 'paymentMode'
+        //     'head': 'Price per Strip',
+        //     'fieldName': 'pricePerStrip'
         // },
         // {
-        //     'head': 'UTR No',
-        //     'fieldName': 'utrNo'
+        //     'head': 'Return Reason',
+        //     'fieldName': 'reason'
         // },
-        // {
-        //     'head': 'Reference',
-        //     'fieldName': 'reference'
-        // },
-        // {
-        //     'head': 'Collected By',
-        //     'fieldName': 'collectedBy'
-        // },
+
         // {
         //     'head': 'Action',
         //     'fieldName': ''

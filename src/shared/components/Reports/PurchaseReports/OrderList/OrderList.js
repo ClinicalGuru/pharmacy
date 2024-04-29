@@ -41,22 +41,22 @@ export const OrderList = () => {
             'head': 'Purchase Order ID',
             'fieldName': 'purchaseOrderId'
         },
-        {
-            'head': 'Quotation ID',
-            'fieldName': 'quotationId'
-        },
+        // {
+        //     'head': 'Quotation ID',
+        //     'fieldName': 'quotationId'
+        // },
         {
             'head': 'Status',
             'fieldName': 'status'
         },
-        {
-            'head': 'Remarks',
-            'fieldName': 'remarks'
-        },
-        {
-            'head': 'Action',
-            'fieldName': ''
-        }
+        // {
+        //     'head': 'Remarks',
+        //     'fieldName': 'remarks'
+        // },
+        // {
+        //     'head': 'Action',
+        //     'fieldName': ''
+        // }
     ]
     let purchaseReports_details_template = {
         title: '',

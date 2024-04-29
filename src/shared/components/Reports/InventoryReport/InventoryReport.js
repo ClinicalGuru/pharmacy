@@ -120,7 +120,35 @@ export const InventoryReport = () => {
                 options: [
                     {
                         value: "none",
-                        name: "None",
+                        name: "Total Quantity",
+                    },
+                    {
+                        value: "none",
+                        name: "Daily Consumption",
+                    },
+                    {
+                        value: "none",
+                        name: "Minimal Order Qty",
+                    },
+                    {
+                        value: "none",
+                        name: "Daily/Monthly Physical Audit",
+                    },
+                    {
+                        value: "none",
+                        name: "Stock Adjustment",
+                    },
+                    {
+                        value: "none",
+                        name: "GST",
+                    },
+                    {
+                        value: "none",
+                        name: "Vendor List",
+                    },
+                    {
+                        value: "none",
+                        name: "Near Expiry",
                     },
                 ],
                 validationProps: {
@@ -184,12 +212,18 @@ export const InventoryReport = () => {
                     showSubmitButton={false}
                     form_styles={vendor_details_style}
                     btn_styles={btn_styles}
+                    
                 />
-                <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                <Button style={{marginRight: '450px'}} variant="contained" >
+                    Go
+                </Button>
+                
+                <Button   component="label" variant="contained" startIcon={<CloudUploadIcon />}>
                     Export as Excel
                     <VisuallyHiddenInput type="file" />
                 </Button>
             </Container>
+            
             <Box sx={{ marginTop: 3 }}>
                 <Table headArray={headArray} gridArray={rows} />
             </Box>

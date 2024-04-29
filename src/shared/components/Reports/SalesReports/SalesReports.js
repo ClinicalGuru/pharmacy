@@ -10,7 +10,7 @@ import Button from '@mui/material/Button';
 // import { AddVendor } from "./AddVendorModal";
 import PurchaseService from "../../../services/Purchase.service";
 import { Table } from "../../Table";
-import { Container } from './SalesReports.styles'
+import { Container, InvalidInput } from './SalesReports.styles'
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -116,8 +116,33 @@ export const SalesReports = () => {
                 options: [
                     {
                         value: "none",
-                        name: "None",
+                        name: "OTC/Rx",
                     },
+                    {
+                        value: "none",
+                        name: "margin",
+                    },
+                    {
+                        value: "none",
+                        name: "Discount",
+                    },
+                    {
+                        value: "none",
+                        name: "Patient List( all patients list is there)",
+                    },
+                    {
+                        value: "none",
+                        name: "Cash",
+                    },
+                    {
+                        value: "none",
+                        name: "UPI",
+                    },
+                    {
+                        value: "none",
+                        name: "Sales return",
+                    },
+                    
                 ],
                 validationProps: {
                     required: ""
@@ -181,6 +206,10 @@ export const SalesReports = () => {
                     form_styles={vendor_details_style}
                     btn_styles={btn_styles}
                 />
+                <Button style={{marginRight:'450px'}} variant="contained">
+                    Go
+                </Button>
+                
                 <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
                     Export as Excel
                     <VisuallyHiddenInput type="file" />

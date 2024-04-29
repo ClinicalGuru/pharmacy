@@ -45,14 +45,14 @@ export const QuotationList = () => {
             'head': 'Quotation ID',
             'fieldName': 'quotationId'
         },
-        {
-            'head': 'Remarks',
-            'fieldName': 'remarks'
-        },
-        {
-            'head': 'Action',
-            'fieldName': ''
-        }
+        // {
+        //     'head': 'Remarks',
+        //     'fieldName': 'remarks'
+        // },
+        // {
+        //     'head': 'Action',
+        //     'fieldName': ''
+        // }
     ]
     let purchaseReports_details_template = {
         title: '',

@@ -153,6 +153,9 @@ export const ImportantReports = () => {
                     form_styles={vendor_details_style}
                     btn_styles={btn_styles}
                 />
+                <Button style={{marginRight:'400px'}} variant="contained">
+                    Go
+                </Button>
                 <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
                     Export as Excel
                     <VisuallyHiddenInput type="file" />

@@ -1,6 +1,10 @@
 import React, { useState, forwardRef } from "react";
 import { useTable, useRowSelect } from "react-table";
-
+import Modal from 'react-modal';
+import "./EditableTable.css"
+import { IoClose } from "react-icons/io5";
+import PaymentDetails from "../Purchases/PaymentDetails/PaymentDetails";
+import { VendorList } from "../Reports/PurchaseReports/VendorList";
 export const EditableTable = ({ columns, data, setData, handleButtonClick, hideColumns = [], selectedRows = () => {} }) => {
 
   const IndeterminateCheckbox = forwardRef(
@@ -19,6 +23,8 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick, hideC
       )
     }
   )
+  
+  
   // console.log(hideColumns, 'hideColumns = []')
   const {
     getTableProps,
@@ -60,7 +66,26 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick, hideC
       ])
     }
   );
+  const [isOpen, setIsOpen] = useState(false);
 
+  const openModal = () => {
+    console.log("popup init")
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+  function cellEvent(e,data)
+  {
+    console.log("data => ",data.column.popup)
+    if(data.column.popup == 'popup')
+    {
+      openModal()
+    }
+  }
+  
+  console.log("data from editable table rows => ",rows,columns)
   const handleInputChange = (event, row, columnId) => {
     // console.log(data, 'editable table')
     const newData = data.map((rowData) => {
@@ -73,7 +98,28 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick, hideC
   };
   selectedRows(selectedRowIds);
   return (
-    <table {...getTableProps()} style={{
+    <div>
+      <div>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={closeModal}
+        contentLabel="Example Modal"
+        className="Modal"
+        overlayClassName="Overlay"
+      >
+        <div>
+          <div className="popup-heading-x">
+            <div className="popup-heading">Payment Details</div>
+            <div className="popup-x"><IoClose onClick={closeModal}/></div>
+          </div>
+          <div>
+            <PaymentDetails/>
+    
+          </div>
+        </div>
+      </Modal>
+      </div>
+      <table {...getTableProps()} style={{
       overflow: 'hidden',
       tableLayout: 'fixed',
       borderCollapse: 'collapse',
@@ -129,6 +175,7 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick, hideC
                 return (
                   <td
                     {...cell.getCellProps()}
+                    onClick={(e) =>{cellEvent(e,cell)}}
                     style={{
                       padding: "10px",
                       textAlign:"center"
@@ -139,6 +186,7 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick, hideC
                     {cell.column.editEnable ? (
                       row.original.isEditing ? (
                         <input
+                          
                           type="text"
                           defaultValue={cell.value}
                           onChange={(e) => handleInputChange(e, row, cell.column.id)}
@@ -157,5 +205,6 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick, hideC
         })}
       </tbody>
     </table>
+    </div>
   );
 };
