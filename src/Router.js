@@ -7,6 +7,7 @@ import { PurchaseOrders } from "./shared/components/Purchases/PurchaseOrders";
 import { MasterList } from "./shared/components/Purchases/MasterList";
 import { AddInvoice } from "./shared/components/Invoice";
 import { Payments} from "./shared/components/Purchases/PurchasePayments/index";
+import { OrderList } from './shared/components/Reports/PurchaseReports/OrderList/OrderList';
 
 import { PurchaseReports} from "./shared/components/Reports/PurchaseReports/index";
 import { ImportantReports} from "./shared/components/Reports/ImportantReport/index";
@@ -19,6 +20,11 @@ import { Sales } from "./shared/components/Sales";
 import { SignIn } from "./shared/components/SignIn";
 import { RequisitionList } from "./shared/components/Reports/PurchaseReports/RequisitionList/index";
 import { QuotationList } from "./shared/components/Reports/PurchaseReports/QuotationList";
+import { ReturnList } from './shared/components/Reports/PurchaseReports/ReturnList/ReturnsList';
+import { InvoiceList } from './shared/components/Reports/PurchaseReports/InvoiceList/InvoiceList';
+import { PaymentsList } from './shared/components/Reports/PurchaseReports/PaymentsList';
+import { RefreshVendorsDetailsContext } from './context/RefreshVendorDetailsContext';
+import { VendorList } from './shared/components/Reports/PurchaseReports/VendorList';
 const Router = createBrowserRouter([
     {
         path: "/",
@@ -110,6 +116,26 @@ const Router = createBrowserRouter([
                                 path: "quotationList",
                                 element: <QuotationList />,
                             },
+                            {
+                                path:"returnList",
+                                element:<ReturnList />,
+                            },
+                            {
+                                path: "paymentsList",
+                                element: <PaymentsList />,
+                            },
+                            {
+                                path:"orderList",
+                                element:<OrderList />,
+                            },
+                            {
+                                path:"invoiceList",
+                                element:<InvoiceList />
+                            },
+                            {
+                                path:"vendorList",
+                                element:<VendorList />
+                            },
                         ]  
                     },
                     {
@@ -124,6 +150,7 @@ const Router = createBrowserRouter([
                         path: "Important",
                         element: <ImportantReports />
                     },
+
                 ]
             },
         ]

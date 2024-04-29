@@ -179,6 +179,11 @@ export const BillingSummaryForm = ({
         setValue('billAmount', payableAmount);
     }, [netPrice]);
 
+    const onSubmit = (data) => {
+        // event.preventDefault();
+        onSubmitBillingForm(data);
+    }
+
     useEffect(() => {
         setButtonDisabled(netPrice === 0);
     }, [netPrice]);
@@ -191,9 +196,7 @@ export const BillingSummaryForm = ({
         setNotification(!notification);
     };
 
-    const onSubmit = (data) => {
-        onSubmitBillingForm(data);
-    }
+   
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>

@@ -1,0 +1,113 @@
+.popup-body
+{
+  margin:10px 50px 10px 50px;
+  /* border: 2px solid red; */
+  height:300px;
+}
+
+.popup-heading-x
+{
+  display: grid;
+  grid-template-columns: 95% 5%;
+}
+
+.popup-heading
+{
+  font-size: 35px;
+  font-weight: 900;
+  margin-left:50px;
+  /* text-decoration: underline; */
+  border-bottom: 3px solid lightgray;
+}
+.clear,.add-payment{
+    background-color: aquamarine;
+    width: fit-content;
+    text-align: center;
+    padding: 4px 10px;
+    border-radius: 5px;
+}
+
+.popup-x
+{
+  font-size: 35px;
+}
+.lhshead
+{
+    font-weight: 700;
+}
+.pd-r1{
+    display: grid;
+    grid-template-columns: 25% 30% 45%;
+    /* border: 2px solid green; */
+}
+.pd-c1 > div > div{
+    display: flex;
+    padding:15px;
+}
+.pd-r2{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* grid-template-columns: 33% 33% 33%; */
+    /* border: 2px solid green; */
+    /* padding:15px; */
+    padding-top:10px;
+    text-align: center;
+}
+.pd-c2{
+   display: flex;
+   justify-content: center;
+}
+.pd-c2 > div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 225px;
+    height:60px;
+    background-color: #efe9e9;
+}
+.pd-r3{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* grid-template-columns: 33% 33% 33%; */
+    /* border: 2px solid green; */
+    padding-top:25px;
+    /* text-align: center; */
+}
+.pd-c3,.pd-c4{
+    display: flex;
+    justify-content: center;
+ }
+ .pd-c3 > div,.pd-c4 > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 240px;
+ } 
+ .lhshead3{
+    font-weight: 700;
+ }
+ .rhsval
+ {
+    text-align: left;
+    width: 210px;
+    padding:5px 5px 5px 15px;
+    background-color:  #efe9e9;
+ }
+.pd-r4{
+    display: grid;
+    /* grid-template-columns: 50% 50%; */
+    /* border: 2px solid green; */
+    grid-template-columns: repeat(3, 1fr);
+    /* grid-template-columns: 33% 33% 33%; */
+    /* border: 2px solid green; */
+    padding-top:25px;
+}
+
+.pd-r5
+{
+    
+    display: grid;
+    grid-template-columns: 70% 10% 20%;
+    padding-top:25px;
+    /* border: 2px solid green; */
+}

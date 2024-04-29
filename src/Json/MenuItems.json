@@ -22,6 +22,11 @@
                 "name": "Purchase Order",
                 "url": "purchase/order",
                 "id": 17
+            },
+            {
+                "name": "Purchase Payments",
+                "url": "purchase/payments",
+                "id": 18
             }
         ]
     },
@@ -83,7 +88,7 @@
                     {
                         "name": "Purchase Return List",
                         "url": "reports/purchase/returnList",
-                        "id": 49
+                        "id": 43
                     },
                     {
                         "name": "Purchase Payments List",
@@ -95,23 +100,28 @@
                         "name": "Invoice List",
                         "url": "reports/purchase/invoiceList",
                         "id": 45
+                    },
+                    {
+                        "name": "Vendor List",
+                        "url": "reports/purchase/VendorList",
+                        "id": 46
                     }
                 ]
             },
             {
                 "name": "Inventory report",
                 "url": "reports/inventory",
-                "id": 46
+                "id": 47
             },
             {
                 "name": "Sales report",
                 "url": "reports/sales",
-                "id": 47
+                "id": 48
             },
             {
                 "name": "Important report",
                 "url": "reports/important",
-                "id": 48
+                "id": 49
             }
         ]
     }
