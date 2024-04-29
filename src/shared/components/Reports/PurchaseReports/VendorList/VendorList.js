@@ -10,7 +10,7 @@ import Button from '@mui/material/Button';
 // import { AddVendor } from "./AddVendorModal";
 import PurchaseService from "../../../../services/Purchase.service";
 import { Table } from "../../../Table";
-import { Container } from './PaymentsList.styles'
+import { Container } from './VendorList.styles'
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -22,65 +22,32 @@ const VisuallyHiddenInput = styled('input')({
     whiteSpace: 'nowrap',
     width: 1,
   });
-export const PaymentsList = () => {
+export const VendorList = () => {
    
     const [modalOpen, setModalOpen] = useState(false);
     const [vendorDetails, SetVendorDetails] = useState([]);
     const [rowToEdit, setRowToEdit] = useState(null);
     const [rows, setRows] = useState([]);
     const headArray = [
-        
         {
             'head': 'Vendor Name',
             'fieldName': 'vendorName'
         },
         {
-            'head': 'Invoice No',
-            'fieldName': 'invoiceNo'
+            'head': 'GST Number',
+            'fieldName': 'gst number'
         },
         {
-            'head': 'Invoice Amount',
-            'fieldName': 'invoiceAmount'
+            'head': 'Mail Id',
+            'fieldName': 'mail id'
         },
         {
-            'head': 'Paid Amount',
-            'fieldName': 'paidAmount'
+            'head': 'Address',
+            'fieldName': 'address'
         },
         {
-            'head': 'Due Amount',
-            'fieldName': 'dueAmount'
-        },
-        {
-            'head': 'Invoice Due Date',
-            'fieldName': 'invoiceDueDate'
-        },
-        // {
-        //     'head': 'Paid Date',
-        //     'fieldName': 'paidDate'
-        // },
-        // {
-        //     'head': 'Payment Mode',
-        //     'fieldName': 'paymentMode'
-        // },
-        // {
-        //     'head': 'UTR No',
-        //     'fieldName': 'utrNo'
-        // },
-        // {
-        //     'head': 'Reference',
-        //     'fieldName': 'reference'
-        // },
-        // {
-        //     'head': 'Collected By',
-        //     'fieldName': 'collectedBy'
-        // },
-        // {
-        //     'head': 'Action',
-        //     'fieldName': ''
-        // }
-        {
-            'head': 'View',
-            'fieldName': 'view'
+            'head': 'Actions',
+            'fieldName': 'actions'
         },
     ]
     let purchaseReports_details_template = {
@@ -98,39 +65,39 @@ export const PaymentsList = () => {
                     required: ""
                 },
                 style: {
-                    width: "194px"
+                    width: "200px"
                 }
             },
-            {
-                title: 'Select Date',
-                type: 'date',
-                name: 'date',
-                validationProps: {
-                    required: "Date is required"
-                },
-                style: {
-                    width: "194px"
-                }
-            },
+            // {
+            //     title: 'Select Date',
+            //     type: 'date',
+            //     name: 'date',
+            //     validationProps: {
+            //         required: "Date is required"
+            //     },
+            //     style: {
+            //         width: "194px"
+            //     }
+            // },
 
-            {
+            // {
 
-                title: 'Select Options',
-                type: 'select',
-                name: 'select',
-                options: [
-                    {
-                        value: "none",
-                        name: "None",
-                    },
-                ],
-                validationProps: {
-                    required: ""
-                },
-                style: {
-                    width: "194px"
-                }
-            },
+            //     title: 'Select Options',
+            //     type: 'select',
+            //     name: 'select',
+            //     options: [
+            //         {
+            //             value: "none",
+            //             name: "None",
+            //         },
+            //     ],
+            //     validationProps: {
+            //         required: ""
+            //     },
+            //     style: {
+            //         width: "194px"
+            //     }
+            // },
 
         ],
     };
@@ -194,14 +161,14 @@ export const PaymentsList = () => {
             <Box sx={{ marginTop: 3 }}>
                 <Table headArray={headArray} gridArray={rows} />
             </Box>
-            <div>
+            {/* <div>
                 {rows.length > 0 && (
                     <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px' }}>
                         <Button variant="contained">Save</Button>
                     </Box>
                 )}
 
-            </div>
+            </div> */}
         </Box>
 
     )

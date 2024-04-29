@@ -35,41 +35,46 @@ export const ReturnList = () => {
             'fieldName': 'vendorName'
         },
         {
-            'head': 'Reutn Date',
+            'head': 'Return Date',
             'fieldName': 'returnDate'
         },
         {
             'head': 'Invoice No',
             'fieldName': 'invoiceNo'
         },
+        // {
+        //     'head': 'Medicine Details',
+        //     'fieldName': 'medicine'
+        // },
         {
-            'head': 'Medicine Details',
-            'fieldName': 'medicine'
-        },
-        {
-            'head': 'Reyurn Qty',
+            'head': 'Return Qty',
             'fieldName': 'quantity'
         },
         {
             'head': 'Return Amount',
             'fieldName': 'returnAmount'
         },
+        // {
+        //     'head': 'MRP per Strip',
+        //     'fieldName': 'mrpPerStrip'
+        // },
+        // {
+        //     'head': 'Price per Strip',
+        //     'fieldName': 'pricePerStrip'
+        // },
+        // {
+        //     'head': 'Return Reason',
+        //     'fieldName': 'reason'
+        // },
+
+        // {
+        //     'head': 'Action',
+        //     'fieldName': ''
+        // }
         {
-            'head': 'MRP per Strip',
-            'fieldName': 'mrpPerStrip'
+            'head': 'View',
+            'fieldName': 'view'
         },
-        {
-            'head': 'Price per Strip',
-            'fieldName': 'pricePerStrip'
-        },
-        {
-            'head': 'Reyurn Reason',
-            'fieldName': 'reason'
-        },
-        {
-            'head': 'Action',
-            'fieldName': ''
-        }
     ]
     let purchaseReports_details_template = {
         title: '',

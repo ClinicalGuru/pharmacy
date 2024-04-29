@@ -72,6 +72,11 @@ export const BillingSummaryForm = ({
         setNetPriceValue(Number(totalAmountAfterGST))
     }, [netPrice]);
 
+    const onSubmit = (data) => {
+        // event.preventDefault();
+        onSubmitBillingForm(data);
+    }
+
     useEffect(() => {
         // setButtonDisabled(netPrice === 0);
     }, [netPrice]);
@@ -83,11 +88,6 @@ export const BillingSummaryForm = ({
     const alertState = () => {
         setNotification(!notification);
     };
-
-    const onSubmit = (data) => {
-        console.log(data)
-        onSubmitBillingForm(data);
-    }
 
     return (
         <>

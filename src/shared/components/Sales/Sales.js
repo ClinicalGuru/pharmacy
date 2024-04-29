@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import { useForm } from 'react-hook-form'
 import { BillingSummaryForm } from "./BillingSummaryForm"
-import {PrintBill} from "./PrintBill"
+import { PrintBill } from "./PrintBill"
 //material ui
 import { Form } from "../Forms/index";
 import { Table } from "../Table/index";
@@ -211,12 +211,23 @@ export const Sales = () => {
             pharmacologicalName: pharmacologicalName?.label,
             brandName: brandName?.label,
         };
+        const isDuplicate = rows.some(row =>
+            row.pharmacologicalName === transformedObject.pharmacologicalName &&
+            row.brandName === transformedObject.brandName
+        );
+        if (isDuplicate) {
+            alert('Duplicate data cannot be added.');
+            setShowLoader(false);
+            return;
+        }
         if (editingIndex !== -1) {
             let newArray = [...rows.slice(0, editingIndex), transformedObject, ...rows.slice(editingIndex + 1)];
             setRows([...newArray]);
         } else {
             setRows([...rows, transformedObject]);
         }
+
+        setRows([...rows, transformedObject]);
         setEditngIndex(-1);
     };
 
@@ -250,7 +261,7 @@ export const Sales = () => {
     const addPatient = async (patientDetails, data) => {
         try {
             const patientId = await SalesService.addPatient(patientDetails);
-            console.log(patientId, 'sndsncnsdc');
+            // console.log(patientId, 'patientId');
             const billDetails = {
                 patientId: patientId,
                 medicineDetails: rows,

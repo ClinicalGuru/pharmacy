@@ -171,7 +171,7 @@ export const AddInvoiceForm = ({
 
                 <div>
                     <label>{FORM_LABELS.EXPIRY}</label>
-                    <input {...register("expiry", { required: true })} type="date" min={currentDate} />
+                    <input {...register("expiry", { required: true })} type="month" min={currentDate} />
                     {errors['expiry'] && <span className='red-text'>{errors['expiry'][`message`]}</span>}
                 </div>
 
@@ -195,12 +195,12 @@ export const AddInvoiceForm = ({
 
                 <div style={{ minWidth: '150px' }}>
                     <label>{FORM_LABELS.MRP_PER_STRIP}</label>
-                    <input onBlur={() => onBlur(mrpPerStripHandler())} {...register("mrpPerStrip", { required: true })} type="number" step=".01" />
+                    <input onBlur={() => onBlur(mrpPerStripHandler())} {...register("mrpPerStrip", { required: true })} type="number" step={"any"} />
                     {errors['mrpPerStrip'] && <span className='red-text'>{errors['mrpPerStrip'][`message`]}</span>}
                 </div>
                 <div style={{ minWidth: '150px' }}>
                     <label>{FORM_LABELS.PRICE_PER_STRIP}</label>
-                    <input onBlur={() => onBlur(pricePerStripHandler())} {...register("pricePerStrip", { required: true })} type="number" step=".01" />
+                    <input onBlur={() => onBlur(pricePerStripHandler())} {...register("pricePerStrip", { required: true })} type="number" step={"any"} />
                     {errors['pricePerStrip'] && <span className='red-text'>{errors['pricePerStrip'][`message`]}</span>}
                 </div>
                 <div style={{ minWidth: '150px' }}>

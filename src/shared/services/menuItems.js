@@ -2,7 +2,7 @@ export const menuItems = [
     {
         title: 'Purchase',
         url: '',
-        id: 'purchages',
+        id: 'purchases',
         submenu: [
             {
                 title: 'Purchase Requisition',
@@ -20,10 +20,10 @@ export const menuItems = [
                 title: 'Purchase Order',
                 url: 'purchase/order',
             },
-            // {
-            //     title: 'Purchase Payments',
-            //     url: 'purchase/payments',
-            // },
+            {
+                title: 'Purchase Payments',
+                url: 'purchase/payments',
+            },
             // {
             //     title: 'Backend',
             //     submenu: [
@@ -45,16 +45,16 @@ export const menuItems = [
         url: '',
         submenu: [
             {
-                title: "Add Invoice",
-                url: "inventory/invoice",
+                title: 'Add Invoice',
+                url: 'inventory/invoice',
             },
             {
-                title: "Pharmacy inventory",
-                url: "inventory/pharmacyInventory",
+                title: 'Pharmacy inventory',
+                url: 'inventory/pharmacyInventory',
             },
             // {
-            //     title: "Add Manufacturer",
-            //     url: "inventory/addManufacturer",
+            //     title: 'Add Manufacturer',
+            //     url: 'inventory/addManufacturer',
             // }
         ]
     },
@@ -107,6 +107,10 @@ export const menuItems = [
                         title: 'Invoice List',
                         url: 'reports/purchase/invoiceList',
                     },
+                    {
+                        title: 'Vendor List',
+                        url: 'reports/purchase/vendorList',
+                    }
                 ],
             },
             {

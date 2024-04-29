@@ -240,6 +240,27 @@ export const AddInvoice = () => {
             pharmacologicalName: pharmacologicalName?.label,
             medicineId: brandName?.value
         };
+        if (transformedObject.pricePerStrip > transformedObject.mrpPerStrip) {
+            alert('Price per strip canbot be more than Mrp per strip');
+            setLoader(false);
+            return;
+        }
+        const isDuplicate = rows.some(row =>
+            row.pharmacologicalName === transformedObject.pharmacologicalName &&
+            row.brandName === transformedObject.brandName &&
+            row.batchNo === transformedObject.batchNo &&
+            row.hsnCode === transformedObject.hsnCode
+        );
+
+        if (isDuplicate) {
+            setNotification(true);
+            setNotificationMsg({
+                message: 'Duplicate data cannot be added.',
+                severity: 'error'
+            });
+            setLoader(false);
+            return;
+        }
         if (editingIndex !== -1) {
             let newArray = [...rows.slice(0, editingIndex), transformedObject, ...rows.slice(editingIndex + 1)];
             setRows([...newArray]);
