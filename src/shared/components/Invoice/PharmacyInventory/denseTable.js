@@ -33,22 +33,6 @@ function createData(id, name, calories, fat, carbs, protein) {
   };
 }
 
-const rows = [
-  createData(1, 'Cupcake', 305, 3.7, 67, 4.3),
-  createData(2, 'Donut', 452, 25.0, 51, 4.9),
-  createData(3, 'Eclair', 262, 16.0, 24, 6.0),
-  createData(4, 'Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData(5, 'Gingerbread', 356, 16.0, 49, 3.9),
-  createData(6, 'Honeycomb', 408, 3.2, 87, 6.5),
-  createData(7, 'Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData(8, 'Jelly Bean', 375, 0.0, 94, 0.0),
-  createData(9, 'KitKat', 518, 26.0, 65, 7.0),
-  createData(10, 'Lollipop', 392, 0.2, 98, 0.0),
-  createData(11, 'Marshmallow', 318, 0, 81, 2.0),
-  createData(12, 'Nougat', 360, 19.0, 9, 37.0),
-  createData(13, 'Oreo', 437, 18.0, 63, 4.0),
-];
-
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -107,22 +91,28 @@ const headCells = [
     label: 'Expiry',
   },
   {
+    id: 'mrp',
+    numeric: true,
+    disablePadding: false,
+    label: 'MRP',
+  },
+  {
     id: 'discount',
     numeric: true,
     disablePadding: false,
     label: 'Discount % ',
   },
   {
-    id: 'pricePerpack',
+    id: 'price',
     numeric: false,
     disablePadding: true,
-    label: 'Price Per Pack',
+    label: 'Price',
   },
   {
-    id: 'unitsPerpack',
+    id: 'unitsPerStrip',
     numeric: true,
     disablePadding: false,
-    label: 'Units Per Pack',
+    label: 'Units Per Strip',
   },
   {
     id: 'pricePerUnit',
@@ -155,7 +145,7 @@ function EnhancedTableHead(props) {
     <TableHead>
       <TableRow>
         <TableCell padding="checkbox">
-          <Checkbox
+          {/* <Checkbox
             color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
@@ -163,12 +153,12 @@ function EnhancedTableHead(props) {
             inputProps={{
               'aria-label': 'select all desserts',
             }}
-          />
+          /> */}
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
+            align='left'
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -214,7 +204,7 @@ function EnhancedTableToolbar(props) {
         }),
       }}
     >
-      {numSelected > 0 ? (
+      {/* {numSelected > 0 ? (
         <Typography
           sx={{ flex: '1 1 100%' }}
           color="inherit"
@@ -232,7 +222,7 @@ function EnhancedTableToolbar(props) {
         >
           Nutrition
         </Typography>
-      )}
+      )} */}
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
@@ -272,7 +262,7 @@ export default function EnhancedTable({data}) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.id);
+      const newSelected = data.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -315,11 +305,11 @@ export default function EnhancedTable({data}) {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 
   const visibleRows = React.useMemo(
     () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
+      stableSort(data, getComparator(order, orderBy)).slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage,
       ),
@@ -342,7 +332,7 @@ export default function EnhancedTable({data}) {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={data.length}
             />
             <TableBody>
               {data?.map((row, index) => {
@@ -377,14 +367,17 @@ export default function EnhancedTable({data}) {
                     >
                       {row.name}
                     </TableCell>
-                    <TableCell align="right">{row?.brandName}</TableCell>
-                    <TableCell align="right">{row?.invoiceNumber}</TableCell>
-                    <TableCell align="right">{row?.batchNo}</TableCell>
-                    <TableCell align="right">{row?.expiry}</TableCell>
-                    <TableCell align="right">{row?.discount}</TableCell>
-                    <TableCell align="right">{row?.pricePerStrip}</TableCell>
-                    <TableCell align="right">{row?.quantity}</TableCell>
-                    <TableCell align="right">{row?.expiry}</TableCell>
+                    <TableCell align="left">{row?.brandName}</TableCell>
+                    <TableCell align="left">{row?.invoiceNumber}</TableCell>
+                    <TableCell align="left">{row?.batchNo}</TableCell>
+                    <TableCell align="left">{row?.expiry}</TableCell>
+                    <TableCell align="left">{row?.mrpPerStrip}</TableCell>
+                    <TableCell align="left">{row?.discount}</TableCell>
+                    <TableCell align="left">{row?.pricePerStrip}</TableCell>
+                    <TableCell align="left">{row?.quantity}</TableCell>
+                    <TableCell align="left">{row?.pricePerUnit?.toFixed(2)}</TableCell>
+                    <TableCell align="left">{row?.unitsInStock}</TableCell>
+                    <TableCell align="left">{row?.gst}</TableCell>
                   </TableRow>
                 );
               })}
@@ -403,17 +396,13 @@ export default function EnhancedTable({data}) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={data.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
     </Box>
   );
 }

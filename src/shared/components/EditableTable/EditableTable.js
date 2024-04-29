@@ -2,7 +2,7 @@ import React, { useState, forwardRef } from "react";
 import { useTable, useRowSelect } from "react-table";
 
 export const EditableTable = ({ columns, data, setData, handleButtonClick, hideColumns = [], selectedRows = () => {} }) => {
-
+console.log(data, 'editable table.js')
   const IndeterminateCheckbox = forwardRef(
     ({ indeterminate, ...rest }, ref) => {
       const defaultRef = React.useRef()
