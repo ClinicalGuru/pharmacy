@@ -89,6 +89,11 @@ export const BillingSummaryForm = ({
         setNotification(!notification);
     };
 
+    const handleBlur = (e) => {
+        const value = parseFloat(e.target.value).toFixed(3); // Convert to float and fix to 2 decimal places
+        setValue("roundOff", value); // Update the form value with the restricted value
+    };
+
     return (
         <>
             <BillingForm onSubmit={handleSubmit(onSubmit)}>
@@ -120,7 +125,7 @@ export const BillingSummaryForm = ({
                 </div>
                 <div>
                     <label>{FORM_LABELS.ROUND_OFF}</label>
-                    <input {...register("roundOff", { required: true })} type="number" />
+                    <input onBlur={handleBlur} {...register("roundOff", { required: true })} type="number" step= "0.001" />
                     {errors['roundOff'] && <span className='red-text'>{errors['roundOff'][`message`]}</span>}
                 </div>
                 <div>
@@ -132,21 +137,21 @@ export const BillingSummaryForm = ({
                     <label>{FORM_LABELS.PAYMENT_MODE}</label>
                     {/* <input {...register("paymentMode")} type="number" /> */}
                     <select {...register("paymentMode")}>
-                        <option value="upi">UPI</option>
-                        <option value="card">Card</option>
-                        <option value="cash">Cash</option>
+                        <option value="upi"> UPI </option>
+                        <option value="card"> Card </option>
+                        <option value="cash"> Cash </option>
                     </select>
                     {errors['paymentMode'] && <span className='red-text'>{errors['paymentMode'][`message`]}</span>}
                 </div>
 
-                <div style={{ minWidth: '150px' }}>
+                <div style={{ minWidth: '150px', display: 'flex', alignItems: 'center' }}>
                     <label>{FORM_LABELS.ADD_REMARKS}</label>
-                    <textarea {...register("remarks")} ></textarea>
+                    <textarea {...register("remarks")}></textarea>
                     {errors['remarks'] && <span className='red-text'>{errors['remarks'][`message`]}</span>}
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'flex-end', marginLeft: 'auto' }}>
-                    <button disabled={netPriceValue === 0} style={{ height: '35px', marginTop: '5px', backgroundColor: "#4ceaff", border: '1px solid #bdbcbc', borderRadius: '4px' }}
-                        type="submit">Save</button>
+                    <button disabled={netPriceValue === 0} style={{ height: '35px', marginTop: '5px', backgroundColor: "#4ceaff", border: '1px solid #bdbcbc', borderRadius: '4px', marginRight:'10px' }}
+                        type="submit"> Save </button>
                     <button disabled={netPriceValue === 0} style={{ height: '35px', marginTop: '5px', backgroundColor: "#4ceaff", border: '1px solid #bdbcbc', borderRadius: '4px' }}
                         type="submit" >Save & Print</button>
                 </div>
