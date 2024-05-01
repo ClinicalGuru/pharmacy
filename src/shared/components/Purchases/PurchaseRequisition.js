@@ -2,7 +2,8 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { FORM_LABELS } from "../../Constants/index";
 import { Box } from "@mui/material";
 import { Form } from "../Forms/index";
-import Button from '@mui/material/Button';
+// import Button from '@mui/material/Button';
+import { CButton } from "../Button/index"
 import { Container } from "./PurchaseRequisition.styles";
 import { AddVendor } from "./AddVendorModal";
 import PurchaseService from "../../services/Purchase.service";
@@ -120,11 +121,11 @@ export const PurchaseRequisition = () => {
             },
             {
 
-                title: FORM_LABELS.MEDICINE_NAME,
+                title: FORM_LABELS.BRAND_NAME,
                 type: 'autoComplete',
                 name: 'brandName',
                 validationProps: {
-                    required: ` ${FORM_LABELS.MEDICINE_NAME} is required`
+                    required: ` ${FORM_LABELS.BRAND_NAME} is required`
                 },
                 style: {
                     width: "200px"
@@ -203,6 +204,17 @@ export const PurchaseRequisition = () => {
             brandName: brandName?.label,
             medicineId: brandName?.value
         };
+        const isDuplicate = rows.some(row =>
+            row.pharmacologicalName === transformedObject.pharmacologicalName &&
+            row.brandName === transformedObject.brandName &&
+            row.form === transformedObject.form
+        );
+
+        if (isDuplicate) {
+            alert('Duplicate data cannot be added.');
+            setShowLoader(false);
+            return;
+        }
         try {
             await PurchaseService.getAllMedicinesByFilter(transformedObject).then((data) => {
                 if (data?.length === 0) {
@@ -299,7 +311,13 @@ export const PurchaseRequisition = () => {
                     {modalOpen && <AddVendor requisitions={rows} showModal={modalOpen} action={() => setModalOpen(!modalOpen)} />}
                 </RefreshVendorsDetailsContext.Provider>
                 <div>
-                    <Button variant="contained" onClick={() => setModalOpen(true)}>+ Add Vendor</Button>
+                    < CButton
+                        type="button"
+                        variant='contained'
+                        buttonHandler={() => setModalOpen(true)}
+                        text="+ Add Vendor"
+                    />
+                    {/* <button variant="contained" onClick={() => setModalOpen(true)}></button> */}
                 </div>
             </Container>
 
@@ -333,7 +351,14 @@ export const PurchaseRequisition = () => {
             <div>
                 {rows.length > 0 && (
                     <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px ' }}>
-                        <Button variant="contained" onClick={() => onSaveData()} disabled={dataFetched}>Create purchage requisition</Button>
+                        < CButton
+                            type="button"
+                            variant='contained'
+                            disabled={dataFetched}
+                            buttonHandler={() => onSaveData()}
+                            text="Create purchase requisition"
+                        />
+                        {/* <button variant="contained" onClick={() => onSaveData()} disabled={dataFetched}>Create purchage requisition</button> */}
                     </Box>
                 )}
             </div>
