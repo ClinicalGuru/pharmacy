@@ -1,8 +1,5 @@
 .addInvoiceForm > div{
-    /* min-width: 100px; */
-    width: 100px;
     padding: 8px 10px;
-    /* float:left; */
     display:inline-table;
 }
 .calendarIconClassName-expiry{
@@ -34,3 +31,13 @@
     background-color: transparent;
   }
  
+
+/* .addInvoiceForm {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+} */
+
+.addInvoiceForm >div > input {
+    width: 100px!important;
+}

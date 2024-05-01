@@ -13,6 +13,8 @@ import PurchaseService from "../../../services/Purchase.service";
 import { Loader } from "../../../components/Loader";
 import { RefreshVendorsDetailsContext } from "../../../../context/RefreshVendorDetailsContext";
 import { CButton } from '../../Button/index';
+import TextField from '@mui/material/TextField';
+
 
 export const AddVendor = ({ showModal, action }) => {
     const { setRefreshVDetails } = useContext(RefreshVendorsDetailsContext);
@@ -72,40 +74,47 @@ export const AddVendor = ({ showModal, action }) => {
                 </IconButton>
                 <form onSubmit={handleVendorDetails(onSubmitVendorDetails)} onReset={resetForm}>
                     <DialogContent dividers>
-                        <Box>
-                            <div style={{ display: 'flex', marginBottom: '1rem' }}>
-                                <div style={{ marginRight: '1rem' }}>
+                        <Box sx={{ display: 'flex', marginBottom: '1rem' }}>
+                            <div style={{ marginRight: '1rem' }}>
+                                <div style={{ marginBottom: '10px' }}>
                                     <label>Vendor Name</label>
                                     <Input error={vendorDetailsErrors.vendorName?.type === "required"} id="outlined-basic"  {...vendorDetails("name", { required: true })} label={FORM_LABELS.VENDOR_NAME} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
                                 </div>
-
-                                <div>
+                                <div style={{ marginBottom: '10px' }}>
                                     <label>GST</label>
                                     <Input error={vendorDetailsErrors.gst?.type === "required"} id="outlined-basic"  {...vendorDetails("gst", { required: true })} label={FORM_LABELS.GST} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
-                                </div>
-                            </div>
-                            <div style={{ display: 'flex', marginBottom: '1rem' }}>
-                                <div style={{ marginRight: '1rem' }}>
-                                    <label>Email</label>
-                                    <Input error={vendorDetailsErrors.vendorName?.type === "required"} id="outlined-basic"  {...vendorDetails("email", { required: true })} label={FORM_LABELS.EMAIL} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
                                 </div>
                                 <div>
                                     <label>Mobile Number</label>
                                     <Input type='number' error={vendorDetailsErrors.phone?.type === "required"} id="outlined-basic"
-                                        {...vendorDetails("phone", { required: true, max: 10 })} label={FORM_LABELS.PHONE} variant="outlined"
+                                        {...vendorDetails("phone", { required: true, maxLength: 10 })} label={FORM_LABELS.PHONE} variant="outlined"
                                         size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
                                 </div>
                             </div>
                             <div>
-                                <label>Address</label> <br />
-                                <textarea error={vendorDetailsErrors.address?.type === "required"} id="outlined-basic"  {...vendorDetails("address", { required: true })} label={FORM_LABELS.ADDRESS} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} ></textarea>
+                                <div style={{ marginBottom: '10px' }}>
+                                    <label>Email</label>
+                                    <Input error={vendorDetailsErrors.vendorName?.type === "required"} id="outlined-basic"  {...vendorDetails("email", { required: true })} label={FORM_LABELS.EMAIL} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
+                                </div>
+                                <div >
+                                    <label>Address</label> <br />
+                                    <TextField error={vendorDetailsErrors.address?.type === "required"} {...vendorDetails("address", { required: true })}
+                                        id="outlined-multiline-static"
+                                        // label={FORM_LABELS.ADDRESS}
+                                        multiline
+                                        rows={3}
+                                        sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }}
+                                    />
+                                </div>
                             </div>
+
+
                         </Box>
 
                     </DialogContent>
                     <DialogActions>
                         <Box sx={{ display: 'flex' }}>
-                            < CButton type="submit" variant='contained' style={{marginRight: '10px'}} text="+ Add" />
+                            < CButton type="submit" variant='contained' style={{ marginRight: '10px' }} text="+ Add" />
                             < CButton type="reset" variant='outlined' text="Close" />
                             {/* <input type="submit" value={`+ Add`} style={{ marginRight: '15px' }} /> */}
                         </Box>
