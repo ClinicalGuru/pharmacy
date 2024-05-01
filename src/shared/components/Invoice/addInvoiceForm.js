@@ -10,13 +10,17 @@ import { CiCalendarDate } from "react-icons/ci";
 import './addinvoiceform.css'
 import MonthYearCalendarPopup from "../Calendar/MonthYearCalendarPopup";
 import Modal from 'react-modal';
+
 import CloseIcon from '@mui/icons-material/Close';
+
+import isEmpty from 'lodash/isEmpty';
 
 export const AddInvoiceForm = ({
     pData = [],
     bData = [],
     onSubmit,
-    resetForm
+    resetForm = {},
+    data
 }) => {
     const [notification, setNotification] = useState(false);
     const [notificationMsg, setNotificationMsg] = useState({
@@ -46,28 +50,21 @@ export const AddInvoiceForm = ({
             mrpPerStrip: '',
             discount: '',
             pricePerStrip: '',
-            netPrice: ''
+            netPrice: '',
+            pricePerUnit: ''
         }
     });
+
     const watchFields = watch(["noOfStrips", "pricePerStrip", "gst", "discount", "mrpPerStrip"]);
-    const [startDate, setStartDate] = useState(null);//new Date()
     useEffect(() => {
         const subscription = watch((value, { name, type }) => {
-            if (name === "noOfStrips" || name === "pricePerStrip" || name === "gst" || name === "discount" || name === "mrpPerStrip") {
-                const { noOfStrips, pricePerStrip, gst, discount, mrpPerStrip } = value;
-                // if (pricePerStrip < mrpPerStrip) {
-                //     setNotification(true);
-                //     setNotificationMsg({
-                //         message: 'MRP per strip cannot be less than Cost Price',
-                //         severity: 'info'
-                //     })
-                //     setValue('mrpPerStrip', '');
-                //     return;
-                // }
-
+            if (name === "noOfStrips" || name === "pricePerStrip" || name === "gst" || name === "discount" || name === "mrpPerStrip" || name === "quantity") {
+                const { noOfStrips, pricePerStrip, gst, discount, mrpPerStrip, quantity } = value;
                 const discountedValue = (noOfStrips * pricePerStrip) - ((noOfStrips * pricePerStrip * discount) / 100);
                 const netPrice = discountedValue + ((gst * discountedValue) / 100);
+                const pricePerUnit = mrpPerStrip / quantity;
                 setValue('netPrice', netPrice);
+                setValue('pricePerUnit', pricePerUnit);
             }
         });
         return () => subscription.unsubscribe();
@@ -78,6 +75,16 @@ export const AddInvoiceForm = ({
         if (resetForm) reset();
     }, [onSubmit]);
 
+    useEffect(() => {
+        if (!isEmpty(data)) {
+            for (let key in data) {
+                setValue(key, data[key]);
+            }
+            setValue('pharmacologicalName',{value:data?.medicineId, label: data?.pharmacologicalName});
+            setValue('brandName', {value:data?.medicineId, label: data?.brandName});
+        }
+    }, [data]);
+
     const alertState = () => {
         setNotification(!notification);
     };
@@ -87,8 +94,7 @@ export const AddInvoiceForm = ({
     const pricePerStripHandler = (e) => {
         console.log(e, 'price er strip')
     }
-   
-      const [expiryDate, setExpiryDate] = useState("");
+    const [expiryDate, setExpiryDate] = useState("");
 
      
       const [modalIsOpen, setIsOpen] = useState(false);
@@ -204,6 +210,7 @@ export const AddInvoiceForm = ({
 
                 <div>
                     <label>{FORM_LABELS.EXPIRY}</label>
+                   
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
@@ -266,12 +273,12 @@ export const AddInvoiceForm = ({
                 </div>
                 <div style={{ minWidth: '150px' }}>
                     <label>{FORM_LABELS.DISCOUNT}</label>
-                    <input {...register("discount", { required: true })} type="number" />
+                    <input {...register("discount", { required: true })} type="number" step=".01" />
                     {errors['discount'] && <span className='red-text'>{errors['discount'][`message`]}</span>}
                 </div>
                 <div style={{ minWidth: '150px' }}>
                     <label>{FORM_LABELS.GST}</label>
-                    <input {...register("gst")} type="number" />
+                    <input {...register("gst")} type="number" step=".01" />
                     {errors['gst'] && <span className='red-text'>{errors['gst'][`message`]}</span>}
                 </div>
                 <div style={{ minWidth: '150px' }}>
