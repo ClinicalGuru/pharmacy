@@ -203,17 +203,6 @@ export const PurchaseRequisition = () => {
             brandName: brandName?.label,
             medicineId: brandName?.value
         };
-        const isDuplicate = rows.some(row => 
-            row.pharmacologicalName === transformedObject.pharmacologicalName &&
-            row.brandName === transformedObject.brandName &&
-            row.form === transformedObject.form
-        );
-    
-        if (isDuplicate) {
-            alert('Duplicate data cannot be added.');
-            setShowLoader(false);
-            return;
-        }
         try {
             await PurchaseService.getAllMedicinesByFilter(transformedObject).then((data) => {
                 if (data?.length === 0) {

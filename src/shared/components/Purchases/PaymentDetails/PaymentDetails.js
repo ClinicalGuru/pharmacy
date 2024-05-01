@@ -9,8 +9,6 @@ const PaymentDetails = () => {
         [{ "title": "Payment Date", "value": "26-04-2024","classh":"lhshead3","classv":"rhsval"  }, { "title": "Remarks", "value": "123456","classh":"lhshead3","classv":"rhsval"  }],
         [{"title":""},{"title":"clear","classh":"clear"},{"title":"add payment","classh":"add-payment"}]
     ]);
-    
-
 
     return (
         <div>

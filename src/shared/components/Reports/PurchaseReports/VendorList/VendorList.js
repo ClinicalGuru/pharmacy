@@ -29,6 +29,10 @@ export const VendorList = () => {
     const [rowToEdit, setRowToEdit] = useState(null);
     const [rows, setRows] = useState([]);
     const headArray = [
+        // {
+        //     'head': 'Date',
+        //     'fieldName': 'date'
+        // },
         {
             'head': 'Vendor Name',
             'fieldName': 'vendorName'

@@ -227,16 +227,6 @@ export const Sales = () => {
             pharmacologicalName: pharmacologicalName?.label,
             brandName: brandName?.label,
         };
-        const isDuplicate = rows.some(row => 
-            row.pharmacologicalName === transformedObject.pharmacologicalName &&
-            row.brandName === transformedObject.brandName
-        );
-    
-        if (isDuplicate) {
-            alert('Duplicate data cannot be added.');
-            setShowLoader(false);
-            return;
-        }
         setRows([...rows, transformedObject]);
     };
 
@@ -254,14 +244,14 @@ export const Sales = () => {
     const addPatient = async (patientDetails, data) => {
         try {
             const patientId = await SalesService.addPatient(patientDetails);
-            // console.log(patientId, 'patientId');
+            console.log(patientId, 'sndsncnsdc');
             const billDetails = {
                 patientId: patientId,
                 medicineDetails: rows,
                 ...data
             }
             SalesService.addPharmacyBilling(billDetails).then(() => {
-                // console.log('success saving')
+                console.log('success saving')
             })
         }
         catch(err) {
@@ -270,7 +260,7 @@ export const Sales = () => {
     }
 
     const handleSubmitBillingForm = (data) => {
-        // console.log(data, 'billDta');
+        console.log(data, 'billDta');
         if (patientDetails?.patientName === '') {
             setNotification(true);
             setNotificationMsg({

@@ -4,7 +4,6 @@ import Modal from 'react-modal';
 import "./EditableTable.css"
 import { IoClose } from "react-icons/io5";
 import PaymentDetails from "../Purchases/PaymentDetails/PaymentDetails";
-import { VendorList } from "../Reports/PurchaseReports/VendorList";
 export const EditableTable = ({ columns, data, setData, handleButtonClick, hideColumns = [], selectedRows = () => {} }) => {
 
   const IndeterminateCheckbox = forwardRef(
@@ -114,7 +113,6 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick, hideC
           </div>
           <div>
             <PaymentDetails/>
-    
           </div>
         </div>
       </Modal>

@@ -33,8 +33,8 @@ export const Payments = () => {
           paidAmount: 500,
           dueAmount: 500,
           paymentStatus: 'Pending',
-          addPaymentdetails:"add payment details",
-          paymenthistory:"payment history"
+          addPaymentdetails:<a href='#'>add payment details</a>,
+          paymenthistory:<a href='#'>payment history</a>
         },
         {
           dueInvoiceNo: 'INV002',
@@ -44,8 +44,8 @@ export const Payments = () => {
           paidAmount: 1500,
           dueAmount: 0,
           paymentStatus: 'Paid',
-          addPaymentdetails:"add payment details",
-          paymenthistory:"payment history"
+          addPaymentdetails:<a href='#'>add payment details</a>,
+          paymenthistory:<a href='#'>payment history</a>
         },
         // Add more objects as needed
       ];

@@ -4,8 +4,13 @@ import CreatableSelect from 'react-select/creatable';
 import { FormContainer } from './AddInvoice.styles'
 import { FORM_LABELS } from "../../Constants/index";
 import { Notification } from '../Notification/index';
+// import DatePicker from "react-datepicker";
+// import "react-datepicker/dist/react-datepicker.css";
+import { CiCalendarDate } from "react-icons/ci";
 import './addinvoiceform.css'
-
+import MonthYearCalendarPopup from "../Calendar/MonthYearCalendarPopup";
+import Modal from 'react-modal';
+import { IoClose } from "react-icons/io5";
 export const AddInvoiceForm = ({
     pData = [],
     bData = [],
@@ -44,6 +49,7 @@ export const AddInvoiceForm = ({
         }
     });
     const watchFields = watch(["noOfStrips", "pricePerStrip", "gst", "discount", "mrpPerStrip"]);
+    const [startDate, setStartDate] = useState(null);//new Date()
     useEffect(() => {
         const subscription = watch((value, { name, type }) => {
             if (name === "noOfStrips" || name === "pricePerStrip" || name === "gst" || name === "discount" || name === "mrpPerStrip") {
@@ -67,6 +73,7 @@ export const AddInvoiceForm = ({
     }, [watchFields]);
 
     useEffect(() => {
+        setValue("expiry","MM/YY")
         if (resetForm) reset();
     }, [onSubmit]);
 
@@ -79,6 +86,37 @@ export const AddInvoiceForm = ({
     const pricePerStripHandler = (e) => {
         console.log(e, 'price er strip')
     }
+   
+      const [expiryDate, setExpiryDate] = useState("");
+
+     
+      const [modalIsOpen, setIsOpen] = useState(false);
+
+      function openModal() {
+        setIsOpen(true);
+      }
+    
+     
+    
+      function closeModal() {
+        setIsOpen(false);
+      }
+      const customStyles = {
+        content: {
+          top: '50%',
+          left: '50%',
+          right: 'auto',
+          bottom: 'auto',
+          marginRight: '-50%',
+          transform: 'translate(-50%, -50%)',
+        },
+      };
+      let [MMYY,setMMYY] = useState("MM/YY")
+      const handleSelect = (month, year) => {
+        console.log(`Selected Month: ${month}, Selected Year: ${year}`);
+        setIsOpen(false);
+        setValue("expiry",`${month}/${year}`)
+      };
     return (
         <FormContainer onSubmit={handleSubmit(onSubmit)}>
             <div className={"addInvoiceForm"}>
@@ -165,7 +203,35 @@ export const AddInvoiceForm = ({
 
                 <div>
                     <label>{FORM_LABELS.EXPIRY}</label>
-                    <input {...register("expiry", { required: true })} type="month" min={currentDate} />
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel="Example Modal"
+        className="month-year-Modal"
+        overlayClassName="Overlay"
+      >
+       <div>
+       <IoClose onClick={closeModal} style={{float:'right',margin:'5px'}} />
+       </div>
+       <div style={{clear:'both'}}></div>
+        <MonthYearCalendarPopup onSelect={handleSelect} />
+      </Modal>
+      <div style={{ position: 'relative' }}>
+      <input
+        {...register("expiry", { required: true })}
+        placeholder="MM/YY"
+        
+        style={{ paddingLeft: '30px' }}
+        type="text"
+        min={currentDate}
+      />
+      <div style={{ position: 'absolute', left: '8px', top: '50%', transform: 'translateY(-50%)' }}>
+        <CiCalendarDate onClick={openModal} style={{ color: '#888', fontSize: '1.2em' }} />
+      </div>
+    </div> 
+                    {/* <input {...register("expiry", { required: true })} placeholder="MM/YY"
+                     onClick={openModal} style={{paddingLeft:'30px'}} type="text" min={currentDate} /> */}
                     {errors['expiry'] && <span className='red-text'>{errors['expiry'][`message`]}</span>}
                 </div>
 
