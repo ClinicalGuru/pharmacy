@@ -20,7 +20,7 @@ export const InvalidInput = styled.input`
 export const Container = styled.div`
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: end;
 `;
 
 export const BootstrapDialog = styled(Dialog)(({ theme }) => ({

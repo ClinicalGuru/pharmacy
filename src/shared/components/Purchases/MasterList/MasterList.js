@@ -9,6 +9,7 @@ import { EditableTable } from "../../EditableTable";
 import { useNavigate } from 'react-router-dom';
 import CreatableSelect from 'react-select/creatable';
 import { Notification } from '../../Notification/index';
+import { CButton } from "../../Button/index"
 
 export const MasterList = () => {
     const [showLoader, setShowLoader] = useState(false);
@@ -71,17 +72,17 @@ export const MasterList = () => {
             editEnable: false,
         },
         {
-            'Header': 'pts',
+            'Header': 'PTS',
             'accessor': 'pts',
             editEnable: false,
         },
         {
-            'Header': 'GST',
+            'Header': 'GST %',
             'accessor': 'gst',
             editEnable: false,
         },
         {
-            'Header': 'Discount',
+            'Header': 'Discount %',
             'accessor': 'discount',
             editEnable: false,
         },
@@ -308,9 +309,7 @@ export const MasterList = () => {
                     </div> */}
                 </form>}
             </Container>
-            <Box sx={{ marginTop: 3 }}>
-                {/* <Table headArray={headArray} gridArray={rows} /> */}
-                <Box sx={{ marginTop: 3 }}>
+                <Box sx={{ marginTop: '15px'}}>
                     <EditableTable
                         columns={columns}
                         data={rows}
@@ -319,11 +318,15 @@ export const MasterList = () => {
                         hideColumns={columnsToHide}
                     />
                 </Box>
-            </Box>
             <div>
                 {rows.length > 0 && (
-                    <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px' }}>
-                        <Button variant="contained" onClick={onCreatePurchageOrder}>Go to purchase orders</Button>
+                    <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '15px' }}>
+                        < CButton
+                            type="button"
+                            variant='contained'
+                            buttonHandler={onCreatePurchageOrder}
+                            text="Go to purchase orders"
+                        />
                     </Box>
                 )}
             </div>

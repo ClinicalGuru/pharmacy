@@ -148,7 +148,7 @@ export const Form = ({
                                         styles={{
                                             container: (provided) => ({
                                                 ...provided,
-                                                width: 300,
+                                                width: 250,
                                                 // marginRight: 10
                                             })
                                         }}
