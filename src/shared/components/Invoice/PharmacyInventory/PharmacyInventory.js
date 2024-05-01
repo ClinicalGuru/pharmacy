@@ -4,12 +4,66 @@ import React, { useState, useEffect } from 'react';
 import { Box, } from "@mui/material";
 import { Form } from "../../Forms/index";
 import Button from '@mui/material/Button';
-import EnhancedTable from './denseTable'
+import InventoryService from "../../../services/inventory.service";
+import { Table } from "../../Table";
 import { Container } from "./PharmacyInventory.styles";
-import InventoryService from '../../../services/inventory.service';
+import { useLocation } from 'react-router-dom';
 
 export const PharmacyInventory = () => {
+    const [modalOpen, setModalOpen] = useState(false);
+    const [vendorDetails, SetVendorDetails] = useState([]);
+    const [rowToEdit, setRowToEdit] = useState(null);
     let [rows, setRows] = useState([]);
+    const headArray = [
+        {
+            'head': 'Medicine Details',
+            'fieldName': 'brandName'
+        },
+        // {
+        //     'head': 'Invoice No',
+        //     'fieldName': 'invoiceNo'
+        // },
+        {
+            'head': 'Batch No',
+            'fieldName': 'batchNo'
+        },
+        {
+            'head': 'Expiry ',
+            'fieldName': 'expiry'
+        },
+        {
+            'head': 'MRP per Pack',
+            'fieldName': 'mrpPerStrip'
+        },
+        {
+            'head': 'Discount(%)',
+            'fieldName': 'discount'
+        },
+        {
+            'head': 'Price per Pack',
+            'fieldName': 'pricePerStrip'
+        },
+        {
+            'head': 'Units per Pack',
+            'fieldName': 'quantity'
+        },
+        {
+            'head': 'Price per Unit',
+            'fieldName': 'pricePerUnit'
+        },
+        {
+            'head': 'Units in Stock',
+            'fieldName': 'unitsInStock'
+        },
+        {
+            'head': 'GST',
+            'fieldName': 'gst'
+        },
+        {
+            'head': 'Return',
+            'fieldName': ''
+        }
+    ];
     let vendor_details_template = {
         title: '',
         submitButttonText: 'Log in',
@@ -41,6 +95,8 @@ export const PharmacyInventory = () => {
             },
         ],
     };
+    const location = useLocation();
+    let state = location.state
 
     const vendor_details_style = {
         display: "flex",
@@ -55,9 +111,14 @@ export const PharmacyInventory = () => {
     const validate = (watchValues, errorMethods) => {
         // console.log(watchValues, 'watchValues')
     };
-    // const handleDeleteRow = (targetIndex) => {
-    //     setRows(rows.filter((_, idx) => idx !== targetIndex));
-    // };
+    const handleDeleteRow = (targetIndex) => {
+        setRows(rows.filter((_, idx) => idx !== targetIndex));
+    };
+
+    const handleEditRow = (idx) => {
+        setRowToEdit(idx);
+        setModalOpen(true);
+    };
 
     useEffect(() => {
         const getInventory = async () => {
@@ -65,7 +126,7 @@ export const PharmacyInventory = () => {
                 let data = await InventoryService.getInventory();
                 const result = data?.docs?.map((doc) => ({ ...doc?.data(), id: doc?.id }));
                 result.forEach(item => {
-                    item['unitsInStock'] = (item?.quantity * (Number(item?.noOfStrips) + Number(item?.freeStrips)));
+                    item['unitsInStock'] = (item?.quantity * (Number(item?.noOfStrips) + Number(item?.freeStrips)))
                 })
                 console.log(result, 'inventory');
                 setRows(result)
@@ -97,8 +158,17 @@ export const PharmacyInventory = () => {
                 </div>
             </Container>
             <Box sx={{ marginTop: 3 }}>
-                <EnhancedTable data = {rows}/>
+                <Table headArray={headArray} gridArray={rows} />
             </Box>
+            <div>
+                {rows.length > 0 && (
+                    <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px' }}>
+                        <Button variant="contained">Save</Button>
+                    </Box>
+                )}
+
+            </div>
         </Box>
+
     )
 }

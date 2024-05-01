@@ -6,22 +6,19 @@ import { Form } from "../Forms/index";
 import Button from '@mui/material/Button';
 import PurchaseService from "../../services/Purchase.service";
 import InventoryService from "../../services/inventory.service";
+import { EditableTable } from "../EditableTable/index";
 import { Container } from './AddInvoice.styles';
 import { getUndefinded } from '../../../utils/helper'
 import { Loader } from "../Loader/index";
-import { Table } from '../Table/index'
 
 export const AddInvoice = () => {
     const [loader, setLoader] = useState(false);
     const [vendorDetails, SetVendorDetails] = useState([]);
     const [rows, setRows] = useState([]);
+    const [dataFetched, setDataFetched] = useState(false);
     const [invoiceDetails, setInvoiceDetails] = useState({});
     const [reset, setRestForm] = useState(false);
     const [notification, setNotification] = useState(false);
-    const [pharmacologicalNames, setPharmacologicalNames] = useState([]);
-    const [brandNames, setBrandNames] = useState([]);
-    const [editingRow, setEditngRow] = useState({});
-    const [editingIndex, setEditngIndex] = useState(-1);
     const [notificationMsg, setNotificationMsg] = useState({
         message: '',
         severity: ''
@@ -30,62 +27,72 @@ export const AddInvoice = () => {
         {
             'Header': 'Medicine Details',
             'accessor': 'brandName',
+            editEnable: true,
         },
         {
             'Header': 'HSN Code',
             'accessor': 'hsnCode',
+            editEnable: true,
         },
         {
             'Header': 'Expiry',
             'accessor': 'expiry',
+            editEnable: true,
         },
         {
             'Header': 'Units / Strips',
             'accessor': 'quantity',
+            editEnable: true,
         },
         {
             'Header': 'Total Strips',
             'accessor': 'noOfStrips',
+            editEnable: true,
         },
         {
             'Header': 'MRP per Strip',
             'accessor': 'mrpPerStrip',
+            editEnable: true,
         },
         {
             'Header': 'Price per Strip',
             'accessor': 'pricePerStrip',
+            editEnable: true,
         },
         {
             'Header': 'GST',
             'accessor': 'gst',
+            editEnable: true,
         },
         {
             'Header': 'Tax in',
             'accessor': '',
+            editEnable: true,
         },
         {
             'Header': 'Total Price',
             'accessor': 'netPrice',
+            editEnable: true,
         },
         {
             Header: "Actions",
             id: "actions",
-            // disableSortBy: true,
-            // Cell: ({ row, column, cell }) =>
-            //     row.original.isEditing ? (
-            //         <>
-            //             <button onClick={() => handleButtonClick("save", row.original)}>
-            //                 Save
-            //             </button>
-            //             <button onClick={() => handleButtonClick("cancel", row.original)}>
-            //                 Cancel
-            //             </button>
-            //         </>
-            //     ) : (
-            //         <button disabled={dataFetched} onClick={() => handleButtonClick("edit", row.original)}>
-            //             Edit
-            //         </button>
-            //     ),
+            disableSortBy: true,
+            Cell: ({ row, column, cell }) =>
+                row.original.isEditing ? (
+                    <>
+                        <button onClick={() => handleButtonClick("save", row.original)}>
+                            Save
+                        </button>
+                        <button onClick={() => handleButtonClick("cancel", row.original)}>
+                            Cancel
+                        </button>
+                    </>
+                ) : (
+                    <button disabled={dataFetched} onClick={() => handleButtonClick("edit", row.original)}>
+                        Edit
+                    </button>
+                ),
         },
     ];
 
@@ -167,6 +174,17 @@ export const AddInvoice = () => {
                     width: "194px"
                 }
             },
+            {
+                title: 'Invoice Due Date',
+                type: 'date',
+                name: 'invoiceDate',
+                validationProps: {
+                    required: "Date is required"
+                },
+                style: {
+                    width: "194px"
+                }
+            },
 
         ],
     };
@@ -174,6 +192,23 @@ export const AddInvoice = () => {
     const vendor_details_style = {
         display: "flex",
         gap: "28px 30px",
+    };
+
+    const handleButtonClick = (action, row) => {
+        const newData = rows.map((rowData) => {
+            if (rowData.id === row.id) {
+                if (action === "edit") {
+                    return { ...rowData, isEditing: true, prevData: { ...rowData } };
+                } else if (action === "cancel") {
+                    return { ...rowData, isEditing: false, ...rowData.prevData };
+                } else if (action === "save") {
+                    const { prevData, ...updatedRowData } = rowData;
+                    return { ...updatedRowData, isEditing: false };
+                }
+            }
+            return rowData;
+        });
+        setRows(newData);
     };
 
     const btn_styles = { display: "flex", justifyContent: "end" };
@@ -231,84 +266,35 @@ export const AddInvoice = () => {
         setInvoiceDetails(invoiceInfo);
     };
 
+    const getVendors = async () => {
+        setLoader(true);
+        try {
+            let data = await PurchaseService.getAllVendors();
+            const result = data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }));
+            SetVendorDetails(result);
+            setLoader(false);
+        } catch (e) {
+            setLoader(false);
+            console.log(e, 'error allVendors')
+        }
+    };
     const invoiceHandler = (formData) => {
         setLoader(true);
         const { brandName, pharmacologicalName } = formData;
         const transformedObject = {
             ...formData,
             brandName: brandName?.label,
-            pharmacologicalName: pharmacologicalName?.label,
-            medicineId: brandName?.value
+            pharmacologicalName: pharmacologicalName?.label
         };
         setRows([...rows, transformedObject]);
-        if (transformedObject.pricePerStrip > transformedObject.mrpPerStrip) {
-            alert('Price per strip canbot be more than Mrp per strip');
-            setLoader(false);
-            return;
-        }
-        const isDuplicate = rows.some(row =>
-            row.pharmacologicalName === transformedObject.pharmacologicalName &&
-            row.brandName === transformedObject.brandName &&
-            row.batchNo === transformedObject.batchNo &&
-            row.hsnCode === transformedObject.hsnCode
-        );
-
-        if (isDuplicate) {
-            setNotification(true);
-            setNotificationMsg({
-                message: 'Duplicate data cannot be added.',
-                severity: 'error'
-            });
-            setLoader(false);
-            return;
-        }
-        if (editingIndex !== -1) {
-            let newArray = [...rows.slice(0, editingIndex), transformedObject, ...rows.slice(editingIndex + 1)];
-            setRows([...newArray]);
-        } else {
-            setRows([...rows, transformedObject]);
-        }
         setRestForm(true);
         setLoader(false);
-        setEditngIndex(-1);
     }
 
-
-
     useEffect(() => {
-        const getMedicines = async () => {
-            // setShowLoader(true);
-            try {
-                let data = await PurchaseService.getAllMedicines();
-                const result = data?.docs?.map((doc) => ({ ...doc?.data(), id: doc?.id }));
-                setPharmacologicalNames(result?.map((item) => ({ value: item?.id, name: item?.pharmacologicalName })));
-                setBrandNames(result?.map((item) => ({ value: item?.id, name: item?.brandName })));
-                // setShowLoader(false);
-            } catch (e) {
-                console.log(e, 'error allVendors');
-                // setShowLoader(false);
-            }
-        };
-        const getVendors = async () => {
-            setLoader(true);
-            try {
-                let data = await PurchaseService.getAllVendors();
-                const result = data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }));
-                SetVendorDetails(result);
-                setLoader(false);
-            } catch (e) {
-                setLoader(false);
-                console.log(e, 'error allVendors')
-            }
-        };
-        getMedicines();
         getVendors();
     }, []);
 
-    const dataCallback = (row, i) => {
-        setEditngRow(row);
-        setEditngIndex(i);
-    }
     return (
         <Box sx={{
             padding: 2,
@@ -327,23 +313,20 @@ export const AddInvoice = () => {
                 <AddInvoiceForm
                     onSubmit={invoiceHandler}
                     resetForm={reset}
-                    pData={pharmacologicalNames}
-                    bData={brandNames}
-                    data={editingRow}
                 />
             </Container>
             <Box sx={{ marginTop: 3 }}>
-                <Table
-                    headArray={columns}
-                    gridArray={rows}
+                <EditableTable
+                    columns={columns}
+                    data={rows}
                     setData={setRows}
-                    dataCallback={dataCallback}
+                    handleButtonClick={handleButtonClick}
                 />
             </Box>
             <div>
                 {rows.length > 0 && (
                     <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px ' }}>
-                        <Button disabled={editingIndex >= 0} variant="contained" onClick={() => saveInvoice()}>Save</Button>
+                        <Button variant="contained" onClick={() => saveInvoice()}>Save</Button>
                     </Box>
                 )}
             </div>

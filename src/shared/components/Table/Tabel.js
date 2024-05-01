@@ -4,21 +4,22 @@ import EditSharpIcon from '@mui/icons-material/EditSharp';
 import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
 import "./Table.css";
 
-export const Table = ({ headArray, gridArray, dataCallback }) => {
-  const action = (i) => {
-    dataCallback(gridArray[i], i);
-  }
-
-  console.log(headArray, gridArray);
+export const Table = ({ headArray, gridArray }) => {
+  // console.log(headArray, gridArray);
   return (
-    <div >
-      <table>
+    <div className="table-wrapper">
+      <table className="table">
         <thead>
 
           <tr>
             <th>S.No</th>
             {
-              headArray && headArray.map(item => <th className="expand">{item?.Header}</th>)
+              headArray && headArray.map(item => <th className="expand">{item?.head}</th>)
+            }
+            {
+              headArray && headArray?.head === "Action" && <th>
+                Action
+              </th>
             }
           </tr>
         </thead>
@@ -28,22 +29,21 @@ export const Table = ({ headArray, gridArray, dataCallback }) => {
               <tr>
                 <td>{i + 1}</td>
                 {
-                  headArray && headArray?.map((item) => item?.Header !== 'Actions' && <td className="expand">{row[item?.accessor]}</td>)
+                  headArray && headArray?.map(item => <td className="expand">{row[item?.fieldName]}</td>)
                 }
                 {
-                  headArray && headArray?.map((item) => item?.Header === 'Actions' &&
-                    <td>
-                      <span className="actions">
-                        <EditSharpIcon
-                          color="primary"
-                          onClick={() => action(i)}
-                        />
-                        <DeleteOutlineSharpIcon
-                          color="error"
-                          onClick={() => action(i)}
-                        />
-                      </span>
-                    </td>)
+                  headArray && headArray?.head === "Action" && <td>
+                    <span className="actions">
+                      <EditSharpIcon
+                        className="delete-btn"
+                        onClick={() => alert()}
+                      />
+                      <DeleteOutlineSharpIcon
+                        className="edit-btn"
+                        onClick={() => alert()}
+                      />
+                    </span>
+                  </td>
                 }
               </tr>
             )

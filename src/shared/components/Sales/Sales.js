@@ -1,45 +1,31 @@
 import { useState, useEffect } from "react";
-import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
+
 import { useForm } from 'react-hook-form'
 import { BillingSummaryForm } from "./BillingSummaryForm"
-import { PrintBill } from "./PrintBill"
+
 //material ui
+import { Box } from "@mui/material";
 import { Form } from "../Forms/index";
-import { Table } from "../Table/index";
+import { EditableTable } from "../EditableTable";
 import { Loader } from "../Loader/index";
 import { SalesForm } from "./SalesForm";
 import { Notification } from '../Notification/index';
 import { Container } from './Sales.styles';
 import SalesService from '../../services/sales.service';
-import InventoryService from '../../services/inventory.service';
-import Grid from '@mui/material/Grid';
-
-const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-}));
 
 export const Sales = () => {
-    const [billingDetails, setBillingDetails] = useState({});
+    const { watch, formState: { errors } } = useForm();
+    const [dataFetched, setDataFetched] = useState(false);
     const [showLoader, setShowLoader] = useState(false);
-    const [reset, setRestForm] = useState(false);
     const [rows, setRows] = useState([]);
     const [netPrice, setNetprice] = useState(0);
     const [patientDetails, setPatientDetails] = useState([]);
     const [notification, setNotification] = useState(false);
-    const [editingRow, setEditngRow] = useState({});
-    const [editingIndex, setEditngIndex] = useState(-1);
-    const [showPrint, SetShowPrint] = useState(false);
     const [notificationMsg, setNotificationMsg] = useState({
         message: '',
         severity: ''
     });
-    const [inventory, readInventory] = useState();
+
     const columns = [
         {
             'Header': 'Pharmacological Name',
@@ -63,7 +49,7 @@ export const Sales = () => {
         },
         {
             'Header': 'Price',
-            'accessor': 'pricePerUnit',
+            'accessor': 'price',
             editEnable: true,
         },
         {
@@ -88,9 +74,41 @@ export const Sales = () => {
         },
         {
             Header: "Actions",
-            id: "actions"
+            id: "actions",
+            disableSortBy: true,
+            Cell: ({ row, column, cell }) =>
+                row.original.isEditing ? (
+                    <>
+                        <button onClick={() => handleButtonClick("save", row.original)}>
+                            Save
+                        </button>
+                        <button onClick={() => handleButtonClick("cancel", row.original)}>
+                            Cancel
+                        </button>
+                    </>
+                ) : (
+                    <button disabled={dataFetched} onClick={() => handleButtonClick("edit", row.original)}>
+                        Edit
+                    </button>
+                ),
         },
     ];
+    const handleButtonClick = (action, row) => {
+        const newData = rows.map((rowData) => {
+            if (rowData.id === row.id) {
+                if (action === "edit") {
+                    return { ...rowData, isEditing: true, prevData: { ...rowData } };
+                } else if (action === "cancel") {
+                    return { ...rowData, isEditing: false, ...rowData.prevData };
+                } else if (action === "save") {
+                    const { prevData, ...updatedRowData } = rowData;
+                    return { ...updatedRowData, isEditing: false };
+                }
+            }
+            return rowData;
+        });
+        setRows(newData);
+    };
 
     const patient_details_template = {
         title: '',
@@ -108,7 +126,7 @@ export const Sales = () => {
                     required: "Patient Name is required"
                 },
                 style: {
-                    width: "150px"
+                    width: "250px"
                 }
             },
             {
@@ -158,7 +176,7 @@ export const Sales = () => {
                 type: 'email',
                 name: 'email',
                 style: {
-                    width: "150px"
+                    width: "250px"
                 }
             },
             {
@@ -193,10 +211,9 @@ export const Sales = () => {
     };
     const patient_details_style = {
         display: "flex",
-        justifyContent: "space-between",
-        flexWrap: 'wrap'
+        justifyContent: "space-between"
     };
-
+    
     const btn_styles = { display: "flex", gap: "20px 20px", justifyContent: "end" };
 
     const validate = (watchValues, errorMethods) => {
@@ -204,31 +221,13 @@ export const Sales = () => {
     };
 
     const handleSubmitForm = (formData) => {
-        console.log(formData, 'formData')
         const { pharmacologicalName, brandName } = formData;
         const transformedObject = {
             ...formData,
             pharmacologicalName: pharmacologicalName?.label,
             brandName: brandName?.label,
         };
-        const isDuplicate = rows.some(row =>
-            row.pharmacologicalName === transformedObject.pharmacologicalName &&
-            row.brandName === transformedObject.brandName
-        );
-        if (isDuplicate) {
-            alert('Duplicate data cannot be added.');
-            setShowLoader(false);
-            return;
-        }
-        if (editingIndex !== -1) {
-            let newArray = [...rows.slice(0, editingIndex), transformedObject, ...rows.slice(editingIndex + 1)];
-            setRows([...newArray]);
-        } else {
-            setRows([...rows, transformedObject]);
-        }
-
         setRows([...rows, transformedObject]);
-        setEditngIndex(-1);
     };
 
     useEffect(() => {
@@ -237,22 +236,6 @@ export const Sales = () => {
         }, 0);
         setNetprice(totalNetPrice);
     }, [rows]);
-
-    useEffect(() => {
-        const getInventory = async () => {
-            try {
-                let data = await InventoryService.getInventory();
-                const result = data?.docs?.map((doc) => ({ ...doc?.data(), id: doc?.id }));
-                result.forEach(item => {
-                    item['unitsInStock'] = (item?.quantity * (Number(item?.noOfStrips) + Number(item?.freeStrips)));
-                });
-                readInventory(result);
-            } catch (err) {
-                console.log(err, 'error getting inventory in sales');
-            }
-        }
-        getInventory();
-    }, [])
 
     const alertState = () => {
         setNotification(!notification);
@@ -266,23 +249,18 @@ export const Sales = () => {
                 patientId: patientId,
                 medicineDetails: rows,
                 ...data
-            };
+            }
             SalesService.addPharmacyBilling(billDetails).then(() => {
                 console.log('success saving')
             })
-            });
-            setRestForm(true);
-            SetShowPrint(true);
-            // setRows([]);
         }
-        catch (err) {
+        catch(err) {
             console.log(err, 'err adding medicine data');
         }
     }
 
     const handleSubmitBillingForm = (data) => {
         console.log(data, 'billDta');
-        setBillingDetails(data);
         if (patientDetails?.patientName === '') {
             setNotification(true);
             setNotificationMsg({
@@ -295,57 +273,54 @@ export const Sales = () => {
     }
 
     const onSubmit = (form, formType) => {
-
+        
     };
-    const dataCallback = (row, i) => {
-        setEditngRow(row);
-        setEditngIndex(i);
-    }
-    return (
-        <Box sx={{ flexGrow: 1, padding: '1rem' }}>
-            <Grid container spacing={2}>
-                <Grid item xs={9}>
-                    <Form
-                        template={patient_details_template}
-                        onSubmit={onSubmit}
-                        onValidate={validate}
-                        showSubmitButton={false}
-                        form_styles={patient_details_style}
-                        btn_styles={btn_styles}
 
+    return (
+        <Box sx={{
+            padding: 2,
+            backgroundColor: "#c0a6a614",
+            display: "flex"
+        }}>
+            <Box
+                sx={{
+                    flex: "4",
+                    marginRight: "50px"
+                }}>
+                <Form
+                    template={patient_details_template}
+                    onSubmit={onSubmit}
+                    onValidate={validate}
+                    showSubmitButton={false}
+                    form_styles={patient_details_style}
+                    btn_styles={btn_styles}
+
+                />
+                <Container>
+                    <SalesForm onSubmitForm={handleSubmitForm} />
+                </Container>
+
+                <Box sx={{ marginTop: 3 }}>
+                    <EditableTable
+                        columns={columns}
+                        data={rows}
+                        setData={setRows}
+                        handleButtonClick={handleButtonClick}
                     />
-                    <Container>
-                        <SalesForm
-                            onSubmitForm={handleSubmitForm}
-                            inventory={inventory}
-                            data={editingRow}
-                        />
-                    </Container>
-                    <Box sx={{ marginTop: 3 }}>
-                        <Table
-                            headArray={columns}
-                            gridArray={rows}
-                            setData={setRows}
-                            dataCallback={dataCallback}
-                        />
-                    </Box>
-                </Grid>
-                <Grid item xs={3}>
-                    <Box sx={{
-                        backgroundColor: '#eef0f3',
-                        borderRadius: '4px',
-                        padding: 2,
-                        marginTop: '4px',
-                        flex: 1
-                    }}>
-                        <BillingSummaryForm netPrice={netPrice} onSubmitBillingForm={handleSubmitBillingForm} patientDetails={patientDetails} medicineDetails={rows} resetForm={reset} />
-                    </Box>
-                </Grid>
-            </Grid>
+                </Box>
+
+            </Box>
+            <Box sx={{
+                backgroundColor: '#eef0f3',
+                borderRadius: '4px',
+                padding: 2,
+                marginTop: '4px',
+                flex: 1
+            }}>
+                <BillingSummaryForm netPrice={netPrice} onSubmitBillingForm={handleSubmitBillingForm} patientDetails={patientDetails} medicineDetails={rows}/>
+            </Box>
             <Loader open={showLoader} />
             {notification && <Notification severity={notificationMsg?.severity} message={notificationMsg?.message} action={alertState} />}
-            {showPrint && <PrintBill billDetails={billingDetails} medicineDetails={rows} patientDetails={patientDetails} />}
-
         </Box>
     )
 }

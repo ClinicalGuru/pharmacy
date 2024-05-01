@@ -17,26 +17,14 @@ export const InvalidInput = styled.input`
 
 export const FormContainer = styled.form`
 display: flex;
-gap: 15px;
+gap: 15px 15px;
 background-color: #eef0f3;
 border-radius: 4px;
 padding: 10px;
 margin-top: 5px;
 align-items: end;
-flex-wrap: wrap;
-justify-content: space-between;
 `;
 
 export const Container = styled.div`
 
-`;
-
-export const BillingForm = styled.form`
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 10px;
-    && input {
-        width: 100px;
-    }
 `;

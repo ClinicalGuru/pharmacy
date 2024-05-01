@@ -5,7 +5,7 @@ import "./EditableTable.css"
 import { IoClose } from "react-icons/io5";
 import PaymentDetails from "../Purchases/PaymentDetails/PaymentDetails";
 export const EditableTable = ({ columns, data, setData, handleButtonClick, hideColumns = [], selectedRows = () => {} }) => {
-console.log(data, 'editable table.js')
+
   const IndeterminateCheckbox = forwardRef(
     ({ indeterminate, ...rest }, ref) => {
       const defaultRef = React.useRef()

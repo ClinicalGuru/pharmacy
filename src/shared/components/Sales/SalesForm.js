@@ -1,12 +1,12 @@
-import React, { useEffect, useState, CSSProperties } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import Select from 'react-select';
+import CreatableSelect from 'react-select/creatable';
 import { FormContainer } from './Sales.styles'
 import { FORM_LABELS } from "../../Constants/index";
 import { Notification } from '../Notification/index';
-import isEmpty from 'lodash/isEmpty';
+export const SalesForm = ({ pData = [], bData = [], onSubmitForm }) => {
 
-export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
+
   const [notification, setNotification] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState({
     message: '',
@@ -18,7 +18,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
       brandName: null,
       batchNo: '',
       hsnCode: '',
-      pricePerUnit: '',
+      price: '',
       quantity: '',
       total: '',
       discount: 0,
@@ -33,12 +33,9 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
 
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
-      console.log(name, 'name');
-      if (name === "pricePerUnit" || name === "quantity" || name === "discount") {
-
-        const { pricePerUnit, quantity, discount } = value;
-        console.log(pricePerUnit, quantity, discount, 'pricePerUnit, quantity, discount');
-        const totalPrice = pricePerUnit * quantity;
+      if (name === "price" || name === "quantity" || name === "discount") {
+        const { price, quantity, discount } = value;
+        const totalPrice = price * quantity;
         const discountedValue = totalPrice - (totalPrice * discount) / 100;
         setValue('total', totalPrice);
         setValue('amount', discountedValue);
@@ -51,25 +48,6 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
   const alertState = () => {
     setNotification(!notification);
   };
-  const brandNameHandler = (form) => {
-    const { value } = form;
-    console.log(form, 'form', value);
-    const { batchNo, expiry, gst, hsnCode, pricePerUnit } = inventory.find((item) => item?.id === value);
-    let medDetails = { batchNo, expiry, gst, hsnCode, pricePerUnit };
-    for (let key in medDetails) {
-      setValue(key, medDetails[key]);
-    }
-  }
-  useEffect(() => {
-    if (!isEmpty(data)) {
-      for (let key in data) {
-        setValue(key, data[key]);
-      }
-      setValue('pharmacologicalName', { value: data?.medicineId, label: data?.pharmacologicalName });
-      setValue('brandName', { value: data?.medicineId, label: data?.brandName });
-    }
-  }, [data]);
-
   return (
     <FormContainer onSubmit={handleSubmit(onSubmit)}>
       <div>
@@ -86,9 +64,9 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
           control={control}
           defaultValue=""
           render={({ field }) => (
-            <Select
+            <CreatableSelect
               {...field}
-              options={inventory?.map(option => ({ value: option?.id, label: option?.pharmacologicalName }))}
+              options={pData?.map(option => ({ value: option?.value, label: option?.name }))}
               onChange={(newValue, actionMeta) => {
                 field.onChange(newValue);
 
@@ -109,7 +87,6 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
             />
           )}
         />
-
         {errors.pharmacologicalName && <p>{errors.pharmacologicalName.message}</p>}
       </div>
 
@@ -126,11 +103,10 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
           control={control}
           defaultValue=""
           render={({ field }) => (
-            <Select
+            <CreatableSelect
               {...field}
-              options={inventory?.map(option => ({ value: option?.id, label: option?.brandName }))}
+              options={bData?.map(option => ({ value: option?.value, label: option?.name }))}
               onChange={(newValue, actionMeta) => {
-                brandNameHandler(newValue)
                 field.onChange(newValue);
 
                 // If the clear action is triggered, set the field value to null
@@ -155,108 +131,72 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
       {errors['brandName'] && <span className='red-text'>{errors['brandName'][`message`]}</span>}
       <div>
         <label>{FORM_LABELS.BATCH_NO}</label>
-        <input
-          {...register("batchNo", {
-            required: true,
-          })}
-          type="text"
-          onInput={(e) => {
-            e.target.value = e.target.value.replace(/[^\w\s]/gi, '');
-          }}
-          style={{ width: "100px" }}
-        />
+        <input {...register("batchNo", {
+          required: true,
+        })} type="text" onInput={(e) => {
+          e.target.value = e.target.value.replace(/[^\w\s]/gi, '');
+        }} />
         {errors['batchNo'] && <span className='red-text'>{errors['batchNo'][`message`]}</span>}
       </div>
 
 
       <div>
         <label>{FORM_LABELS.HSN_CODE}</label>
-        <input
-          {...register("hsnCode", {
-            required: true, pattern: {
-              value: /^[0-9]*$/,
-              message: "Please enter a valid HSN code"
-            }
-          })}
-          type="number"
-          style={{ width: "100px" }}
-        />
+        <input {...register("hsnCode", {
+          required: true, pattern: {
+            value: /^[0-9]*$/,
+            message: "Please enter a valid HSN code"
+          }
+        })} type="number" />
         {errors['hsnCode'] && <span className='red-text'>{errors['hsnCode'][`message`]}</span>}
       </div>
 
       <div>
         <label>{FORM_LABELS.PRICE}</label>
-        <input
-          {...register("pricePerUnit", {
-            required: true, pattern: {
-              value: /^[0-9]*$/,
-              message: ""
-            }
-          })}
-          style={{ width: "60px" }}
-          type="number"
-          step="0.001"
-        />
+        <input {...register("price", {
+          required: true, pattern: {
+            value: /^[0-9]*$/,
+            message: ""
+          }
+        })} type="number" />
         {errors['price'] && <span className='red-text'>{errors['price'][`message`]}</span>}
       </div>
 
       <div>
         <label>{FORM_LABELS.QUANTITY}</label>
-        <input
-          {...register("quantity", {
-            required: true, pattern: {
-              value: /^[0-9]*$/,
-              message: ""
-            }
-          })}
-          type="number"
-          style={{ width: "60px" }}
-        />
+        <input {...register("quantity", {
+          required: true, pattern: {
+            value: /^[0-9]*$/,
+            message: ""
+          }
+        })} type="number" />
         {errors['quantity'] && <span className='red-text'>{errors['quantity'][`message`]}</span>}
       </div>
 
       <div>
         <label>{FORM_LABELS.TOTAL}</label>
-        <input
-          disabled {...register("total")}
-          type="number"
-          step="0.001"
-          readOnly
-          style={{ width: "60px" }}
-        />
+        <input disabled {...register("total")} type="number" readOnly />
         {errors['total'] && <span className='red-text'>{errors['total'][`message`]}</span>}
       </div>
       <div>
         <label>{FORM_LABELS.DISCOUNT}</label>
-        <input
-          placeholder="0"
-          {...register("discount", {
-            pattern: {
-              value: /^[0-9]*$/,
-              message: ""
-            }
-          })}
-          type="number"
-          style={{ width: "60px" }}
-        />
+        <input {...register("discount", {
+          pattern: {
+            value: /^[0-9]*$/,
+            message: ""
+          }
+        })} type="number" />
         {errors['discount'] && <span className='red-text'>{errors['discount'][`message`]}</span>}
       </div>
       <div>
         <label>{FORM_LABELS.AMOUNT}</label>
-        <input
-          disabled
-          {...register("amount")}
-          type="number"
-          step= "0.001"
-          style={{ width: "60px" }}
-        />
+        <input disabled {...register("amount")} type="number" />
         {errors['amount'] && <span className='red-text'>{errors['amount'][`message`]}</span>}
       </div>
 
       <div style={{
         display: 'flex',
-        justifyContent: 'end',
-        width: '100%'
+        alignItems: 'center'
       }}>
         <div style={{ display: 'flex' }}>
           <input type="submit" value="+ Add" style={{ padding: '10px', marginRight: '10px' }} />

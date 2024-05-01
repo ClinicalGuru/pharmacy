@@ -22,7 +22,7 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 export const Header = () => {
   const [value, setValue] = React.useState('1');
-  const [isSticky, setIsSticky] = React.useState(true);
+  const [isSticky, setIsSticky] = React.useState(false);
 
   // Function to handle scroll event
   const handleScroll = () => {
