@@ -15,6 +15,9 @@ import { Notification } from '../Notification/index';
 import { Loader } from "../Loader/index";
 import { DownloadOptionsModal } from "../DownloadOptionsModal/DownloadOptionsModal"
 import { useNavigate } from 'react-router-dom';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 
 export const PurchaseRequisition = () => {
     const navigate = useNavigate();
@@ -61,23 +64,17 @@ export const PurchaseRequisition = () => {
             editEnable: true,
         },
         {
-            Header: "Actions",
+            Header: "Action",
             id: "actions",
             disableSortBy: true,
             Cell: ({ row, column, cell }) =>
                 row.original.isEditing ? (
                     <>
-                        <button onClick={() => handleButtonClick("save", row.original)}>
-                            Save
-                        </button>
-                        <button onClick={() => handleButtonClick("cancel", row.original)}>
-                            Cancel
-                        </button>
+                        <DoneOutlinedIcon style={{ color: 'blue' }} onClick={() => handleButtonClick("save", row.original)} sx={{marginRight: '10px'}}/>
+                        <CancelOutlinedIcon style={{ color: 'red' }} onClick={() => handleButtonClick("cancel", row.original)}/>
                     </>
                 ) : (
-                    <button disabled={dataFetched} onClick={() => handleButtonClick("edit", row.original)}>
-                        Edit
-                    </button>
+                   <EditOutlinedIcon disabled={dataFetched} onClick={() => handleButtonClick("edit", row.original)}/>
                 ),
         },
     ];
@@ -166,8 +163,8 @@ export const PurchaseRequisition = () => {
 
     const medicine_details_style = {
         display: "flex",
-        // gap: "28px 28px",
-        justifyContent: 'space-between'
+        gap: "28px 28px",
+        // justifyContent: 'space-between'
     };
 
     const handleVendorSelection = (details) => {
@@ -300,7 +297,7 @@ export const PurchaseRequisition = () => {
     }, []);
     return (
         <Box sx={{
-            padding: 2,
+            padding: 1,
         }}>
             <Container>
                 <RefreshVendorsDetailsContext.Provider value={{ refreshVDetails, setRefreshVDetails }}>
@@ -323,10 +320,10 @@ export const PurchaseRequisition = () => {
 
             <Box
                 sx={{
-                    backgroundColor: '#eef0f3',
+                    backgroundColor: '#DEE1E6FF',
                     borderRadius: '4px',
-                    padding: 2,
-                    marginTop: '5px'
+                    padding: 1,
+                    marginTop: '15px'
                 }}
             >
                 <Form
@@ -340,7 +337,7 @@ export const PurchaseRequisition = () => {
                     btn_styles={btn_styles}
                 />
             </Box>
-            <Box sx={{ marginTop: 3 }}>
+            <Box sx={{ marginTop: 2 }}>
                 <EditableTable
                     columns={columns}
                     data={rows}
@@ -350,7 +347,7 @@ export const PurchaseRequisition = () => {
             </Box>
             <div>
                 {rows.length > 0 && (
-                    <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px ' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '15px ' }}>
                         < CButton
                             type="button"
                             variant='contained'

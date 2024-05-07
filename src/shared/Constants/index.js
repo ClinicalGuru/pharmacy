@@ -21,7 +21,7 @@ export const FORM_LABELS = {
     PRICE: "Price",
     AMOUNT: "Amount",
     PAYMENT_MODE: "Payment mode",
-    GST: "GST Total %",
+    GST: "GST %",
     NET_PRICE: "Net price",
     ROUND_OFF: "Round Off",
     BILL_AMOUNT: "Bill Amount",

@@ -11,6 +11,9 @@ import { Notification } from "../../Notification/index";
 import { Loader } from "../../Loader/index";
 import { v4 as uuidv4 } from 'uuid';
 import { List } from "./List";
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 
 export const Quotations = () => {
     const [showLoader, setShowLoader] = useState(false);
@@ -57,33 +60,27 @@ export const Quotations = () => {
             editEnable: true,
         },
         {
-            'Header': 'GST',
+            'Header': 'GST %',
             'accessor': 'gst',
             editEnable: true,
         },
         {
-            'Header': 'Discount',
+            'Header': 'Discount %',
             'accessor': 'discount',
             editEnable: true,
         },
         {
-            Header: "Actions",
+            Header: "Action",
             id: "actions",
             disableSortBy: true,
             Cell: ({ row, column, cell }) =>
                 row.original.isEditing ? (
                     <>
-                        <button onClick={() => handleButtonClick("save", row.original)}>
-                            Save
-                        </button>
-                        <button onClick={() => handleButtonClick("cancel", row.original)}>
-                            Cancel
-                        </button>
+                        <DoneOutlinedIcon style={{ color: 'blue' }} onClick={() => handleButtonClick("save", row.original)} sx={{ marginRight: '10px' }} />
+                        <CancelOutlinedIcon style={{ color: 'red' }} onClick={() => handleButtonClick("cancel", row.original)} />
                     </>
                 ) : (
-                    <button onClick={() => handleButtonClick("edit", row.original)}>
-                        Edit
-                    </button>
+                    <EditOutlinedIcon  onClick={() => handleButtonClick("edit", row.original)} />
                 ),
         },
     ];
@@ -128,11 +125,11 @@ export const Quotations = () => {
             },
             {
 
-                title: FORM_LABELS.MEDICINE_NAME,
+                title: FORM_LABELS.BRAND_NAME,
                 type: 'autoComplete',
                 name: 'brandName',
                 validationProps: {
-                    required: ` ${FORM_LABELS.MEDICINE_NAME} is required`
+                    required: ` ${FORM_LABELS.BRAND_NAME} is required`
                 },
                 options: [
 
@@ -148,6 +145,9 @@ export const Quotations = () => {
                 validationProps: {
                     required: ` ${FORM_LABELS.DOSE} is required`
                 },
+                style: {
+                    width: "60px"
+                }
             },
             {
                 title: FORM_LABELS.FORM,
@@ -156,6 +156,9 @@ export const Quotations = () => {
                 validationProps: {
                     required: `${FORM_LABELS.FORM} is required`
                 },
+                style: {
+                    width: "80px"
+                }
             },
             {
                 title: FORM_LABELS.QUANTITY,
@@ -164,6 +167,9 @@ export const Quotations = () => {
                 validationProps: {
                     required: `${FORM_LABELS.QUANTITY} is required`
                 },
+                style: {
+                    width: "100px"
+                }
             },
             {
                 title: FORM_LABELS.MRP,
@@ -172,6 +178,9 @@ export const Quotations = () => {
                 validationProps: {
                     required: ` ${FORM_LABELS.MRP} is required`
                 },
+                style: {
+                    width: "60px"
+                }
             },
             {
                 title: FORM_LABELS.PTR,
@@ -180,6 +189,9 @@ export const Quotations = () => {
                 validationProps: {
                     required: `${FORM_LABELS.PTR} is required`
                 },
+                style: {
+                    width: "60px"
+                }
             },
             {
                 title: FORM_LABELS.PTS,
@@ -188,6 +200,9 @@ export const Quotations = () => {
                 validationProps: {
                     required: `${FORM_LABELS.PTS} is required`
                 },
+                style: {
+                    width: "60px"
+                }
             },
             {
                 title: FORM_LABELS.GST,
@@ -196,6 +211,9 @@ export const Quotations = () => {
                 validationProps: {
                     required: `${FORM_LABELS.GST} is required`
                 },
+                style: {
+                    width: "60px"
+                }
             },
             {
                 title: FORM_LABELS.DISCOUNT,
@@ -204,6 +222,9 @@ export const Quotations = () => {
                 validationProps: {
                     required: `${FORM_LABELS.DISCOUNT} is required`
                 },
+                style: {
+                    width: "60px"
+                }
             },
         ],
         btns: [
@@ -217,8 +238,8 @@ export const Quotations = () => {
     };
     const medicine_details_style = {
         display: "flex",
-        flexWrap: 'wrap',
-        gap: "0px 28px",
+        // flexWrap: 'wrap',
+        gap: "0px 25px",
         // justifyContent: 'space-between'
     };
     const btn_styles = { display: "flex", justifyContent: "end" };
@@ -290,7 +311,7 @@ export const Quotations = () => {
     }
     return (
         <Box sx={{
-            padding: 2,
+            padding: 1,
         }}>
             <Container>
                 <VendorSelection
@@ -301,10 +322,10 @@ export const Quotations = () => {
 
             <Box
                 sx={{
-                    backgroundColor: '#eef0f3',
+                    backgroundColor: '#DEE1E6FF',
                     borderRadius: '4px',
-                    padding: 2,
-                    marginTop: '5px'
+                    padding: 1,
+                    marginTop: '15px'
                 }}
             >
                 <Form
@@ -317,7 +338,7 @@ export const Quotations = () => {
                     btn_styles={btn_styles}
                 />
             </Box>
-            <Box sx={{ marginTop: 3 }}>
+            <Box sx={{ marginTop: 2 }}>
                 <EditableTable
                     columns={columns}
                     data={rows}
@@ -327,7 +348,7 @@ export const Quotations = () => {
             </Box>
             <div>
                 {rows.length > 0 && (
-                    <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '15px' }}>
                         <Button variant="contained" onClick={onSaveQuotation}>Save</Button>
                     </Box>
                 )}

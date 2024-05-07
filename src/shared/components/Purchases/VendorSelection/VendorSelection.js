@@ -56,7 +56,7 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
         <form>
             <div style={{ display: 'flex' }}>
                 <span>
-                    <label>Select vendor</label>
+                    <label>Select Vendor</label>
                     <Controller
                         name="vendorId"
                         control={control}

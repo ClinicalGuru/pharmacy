@@ -10,7 +10,7 @@ display: flex;
   align-items: center; 
   justify-content: center; 
   color: white; 
-  background: #56EBFFFF; 
+  background: #1976d2; 
   border: none; 
   border-radius: 4px; 
   :disabled {
