@@ -251,7 +251,7 @@ export const AddInvoice = () => {
             pharmacologicalName: pharmacologicalName?.label,
             medicineId: brandName?.value
         };
-        if (transformedObject.pricePerStrip > transformedObject.mrpPerStrip) {
+        if (+transformedObject.pricePerStrip > +transformedObject.mrpPerStrip) {
             alert('Price per strip canbot be more than Mrp per strip');
             setLoader(false);
             return;

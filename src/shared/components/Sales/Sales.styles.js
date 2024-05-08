@@ -21,10 +21,10 @@ gap: 15px;
 background-color: #eef0f3;
 border-radius: 4px;
 padding: 10px;
-margin-top: 5px;
+// margin-top: 5px;
 align-items: end;
-flex-wrap: wrap;
-justify-content: space-between;
+// flex-wrap: wrap;
+// justify-content: space-between;
 `;
 
 export const Container = styled.div`
@@ -36,7 +36,14 @@ export const BillingForm = styled.form`
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 10px;
-    && input {
+    && input[type=number], [type=select] {
         width: 100px;
     }
 `;
+
+
+export const FooterSection = styled.div`
+    display: flex;
+    margin-left: auto;
+    margin-top: 10px
+`

@@ -54,7 +54,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
   const brandNameHandler = (form) => {
     const { value } = form;
     console.log(form, 'form', value);
-    const { batchNo, expiry, gst, hsnCode, pricePerUnit } = inventory.find((item) => item?.id === value);
+    const { batchNo, expiry, gst, hsnCode, pricePerUnit } = inventory.find((item) => item?.medicineId === value);
     let medDetails = { batchNo, expiry, gst, hsnCode, pricePerUnit };
     for (let key in medDetails) {
       setValue(key, medDetails[key]);
@@ -88,7 +88,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
           render={({ field }) => (
             <Select
               {...field}
-              options={inventory?.map(option => ({ value: option?.id, label: option?.pharmacologicalName }))}
+              options={inventory?.map(option => ({ value: option?.medicineId, label: option?.pharmacologicalName }))}
               onChange={(newValue, actionMeta) => {
                 field.onChange(newValue);
 
@@ -128,7 +128,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
           render={({ field }) => (
             <Select
               {...field}
-              options={inventory?.map(option => ({ value: option?.id, label: option?.brandName }))}
+              options={inventory?.map(option => ({ value: option?.medicineId, label: option?.brandName }))}
               onChange={(newValue, actionMeta) => {
                 brandNameHandler(newValue)
                 field.onChange(newValue);
@@ -210,7 +210,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
             }
           })}
           type="number"
-          style={{ width: "60px" }}
+          style={{ width: "85px" }}
         />
         {errors['quantity'] && <span className='red-text'>{errors['quantity'][`message`]}</span>}
       </div>
@@ -237,7 +237,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
             }
           })}
           type="number"
-          style={{ width: "60px" }}
+          style={{ width: "85px" }}
         />
         {errors['discount'] && <span className='red-text'>{errors['discount'][`message`]}</span>}
       </div>
