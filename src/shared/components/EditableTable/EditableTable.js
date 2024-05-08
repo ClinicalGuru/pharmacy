@@ -2,7 +2,7 @@ import React, { useState, forwardRef, useEffect } from "react";
 import { useTable, useRowSelect } from "react-table";
 import Modal from 'react-modal';
 import "./EditableTable.css"
-import { IoClose } from "react-icons/io5";
+import CloseIcon from '@mui/icons-material/Close';
 import PaymentDetails from "../Purchases/PaymentDetails/PaymentDetails";
 import { VendorList } from "../Reports/PurchaseReports/VendorList";
 export const EditableTable = ({ columns, data, setData, handleButtonClick, hideColumns = [], selectedRows = () => { } }) => {
@@ -115,7 +115,7 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick, hideC
           <div>
             <div className="popup-heading-x">
               <div className="popup-heading">Payment Details</div>
-              <div className="popup-x"><IoClose onClick={closeModal} /></div>
+              <div className="popup-x"><CloseIcon onClick={closeModal}/></div>
             </div>
             <div>
               <PaymentDetails />

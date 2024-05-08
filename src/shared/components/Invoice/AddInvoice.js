@@ -167,6 +167,17 @@ export const AddInvoice = () => {
                     width: "194px"
                 }
             },
+            {
+                title: 'Invoice Due Date',
+                type: 'date',
+                name: 'invoiceDate',
+                validationProps: {
+                    required: "Date is required"
+                },
+                style: {
+                    width: "194px"
+                }
+            },
 
         ],
     };

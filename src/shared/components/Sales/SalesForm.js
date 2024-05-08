@@ -195,6 +195,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
           })}
           style={{ width: "60px" }}
           type="number"
+          step="0.001"
         />
         {errors['price'] && <span className='red-text'>{errors['price'][`message`]}</span>}
       </div>
@@ -219,6 +220,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
         <input
           disabled {...register("total")}
           type="number"
+          step="0.001"
           readOnly
           style={{ width: "60px" }}
         />
@@ -245,6 +247,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
           disabled
           {...register("amount")}
           type="number"
+          step= "0.001"
           style={{ width: "60px" }}
         />
         {errors['amount'] && <span className='red-text'>{errors['amount'][`message`]}</span>}

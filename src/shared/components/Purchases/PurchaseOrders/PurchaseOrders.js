@@ -10,6 +10,7 @@ import { useLocation } from 'react-router-dom';
 import { Notification } from '../../Notification/index';
 import { Loader } from "../../Loader/index";
 import { useSearchParams } from 'react-router-dom';
+import {CButton} from "../../Button/index";
 
 export const PurchaseOrders = () => {
     const [rowIds, selectedRows] = useState({});
@@ -215,6 +216,9 @@ export const PurchaseOrders = () => {
         const { value } = e
         setVendorId(value);
     }
+    const btn_style = {
+        marginRight: '10px'
+    }
     useEffect(() => {
         if (vendorId !== '') {
             const vendorFilter = originalData.filter((item) => item?.vendorId === vendorId);
@@ -287,12 +291,32 @@ export const PurchaseOrders = () => {
                     </div> */}
                 </form>}
                 <Box sx={{ display: "flex", }}>
-                    <Button disabled sx={{ marginRight: "10px" }} variant="contained">PO List</Button>
+                    < CButton
+                        type="button"
+                        variant='contained'
+                        disabled = {true}
+                        style={ btn_style } 
+                        text="PO List"
+                    />
+                    < CButton
+                        type="button"
+                        variant='contained'
+                        style={ btn_style} 
+                        buttonHandler={getAllMedicines}
+                        text="L1 List"
+                    />
+                    < CButton
+                        type="button"
+                        variant='contained'
+                        text="Re-Order"
+                        disabled = {true}
+                    />
+                    {/* <Button disabled sx={{ marginRight: "10px" }} variant="contained">PO List</Button>
                     <Button sx={{ marginRight: "10px" }} variant="contained" onClick={getAllMedicines}>L1 List</Button>
-                    <Button disabled variant="contained">Re-Order</Button>
+                    <Button disabled variant="contained">Re-Order</Button> */}
                 </Box>
             </Container>
-            <Box sx={{ marginTop: 3 }}>
+            <Box sx={{ marginTop: 2 }}>
                 {rows?.length > 0 && <EditableTable
                     columns={columns}
                     data={rows}
@@ -304,7 +328,13 @@ export const PurchaseOrders = () => {
             <div>
                 {rows?.length > 0 && (
                     <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px' }}>
-                        <Button variant="contained" onClick={onSavePO}>Save purchage order</Button>
+                        < CButton
+                        type="button"
+                        variant='contained'
+                        buttonHandler={onSavePO}
+                        text="Save purchage order"
+                    />
+                        {/* <Button variant="contained" onClick={onSavePO}>Save purchage order</Button> */}
                     </Box>
                 )}
             </div>

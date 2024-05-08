@@ -9,8 +9,11 @@ export default function Breadcrumbs() {
         display: 'flex',
         alignItems: 'center',
         padding: '10px',
-        textTransform: 'uppercase',
-        fontWeight: 'bold'
+        textTransform: 'capitalize',
+        fontSize: '18px',
+        lineHeight: '26px', 
+        fontWeight: '400',
+        color:' #9095A1FF'
     };
 
     const displayPathnames = pathnames.slice(-2);
@@ -20,19 +23,16 @@ export default function Breadcrumbs() {
             {displayPathnames.map((name, index) => {
                 const isLast = index === displayPathnames.length - 1;
                 const isSecondToLast = index === displayPathnames.length - 2;
-                const displayName = isLast || isSecondToLast ? name : '';
+                const displayName = isLast || isSecondToLast ? name.replace(/([a-z])([A-Z])/g, '$1 $2') : '';
 
                 return (
                     <span key={name} style={{ display: 'flex', alignItems: 'center' }}>
                         {isSecondToLast && <span>{displayName}&nbsp; /</span>}
-                        {isLast && <span style={{ marginLeft: isSecondToLast ? '2px' : '2px' }}>{displayName}</span>}
-                        {isLast ? null : <span style={{ marginLeft: '2px', marginRight: '2px' }}>&nbsp;&nbsp;</span>}
+                        {isLast && <span style={{ marginLeft: isSecondToLast ? '1px' : '1px', color: '#4a2495' }}>{displayName}</span>}
+                        {isLast && <span style={{ marginLeft: '1px', marginRight: '1px' }}>&nbsp;&nbsp;</span>}
                     </span>
                 );
             })}
         </div>
-
-
-
     );
 }
