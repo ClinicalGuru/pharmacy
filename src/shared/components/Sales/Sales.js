@@ -29,6 +29,7 @@ export const Sales = () => {
     const [showLoader, setShowLoader] = useState(false);
     const [reset, setRestForm] = useState(false);
     const [rows, setRows] = useState([]);
+    const [printData, setPrintData] = useState([]);
     const [netPrice, setNetprice] = useState(0);
     const [patientDetails, setPatientDetails] = useState([]);
     const [notification, setNotification] = useState(false);
@@ -204,12 +205,12 @@ export const Sales = () => {
     };
 
     const handleSubmitForm = (formData) => {
-        console.log(formData, 'formData')
         const { pharmacologicalName, brandName } = formData;
         const transformedObject = {
             ...formData,
             pharmacologicalName: pharmacologicalName?.label,
             brandName: brandName?.label,
+            medicineId: brandName?.value
         };
         const isDuplicate = rows.some(row =>
             row.pharmacologicalName === transformedObject.pharmacologicalName &&
@@ -228,6 +229,7 @@ export const Sales = () => {
         }
 
         setRows([...rows, transformedObject]);
+        setPrintData([...rows, transformedObject]);
         setEditngIndex(-1);
     };
 
@@ -259,6 +261,7 @@ export const Sales = () => {
     };
 
     const addPatient = async (patientDetails, data) => {
+        setShowLoader(true);
         try {
             const patientId = await SalesService.addPatient(patientDetails);
             // console.log(patientId, 'patientId');
@@ -267,16 +270,48 @@ export const Sales = () => {
                 medicineDetails: rows,
                 ...data
             };
-            SalesService.addPharmacyBilling(billDetails).then(() => {
-                console.log('success saving')
+            await SalesService.addPharmacyBilling(billDetails).then(() => {
+                console.log('success saving');
+                quantityUpdate();
             });
-            setRestForm(true);
-            SetShowPrint(true);
-            // setRows([]);
         }
         catch (err) {
             console.log(err, 'err adding medicine data');
+            setShowLoader(false);
         }
+    }
+
+    const quantityUpdate = async () => {
+        let medicineIds = rows.map((item) => item?.medicineId);
+        console.log(medicineIds, 'medIds');
+        const querySnapshot = await InventoryService.queryInventoryWithMedicineIds(medicineIds)
+        querySnapshot.forEach((doc) => {
+            const inventory = [];
+            inventory.push({ inventoryId: doc.id, ...doc.data() });
+            const updatedInventoryDetails = inventory.map((inv) => {
+                const matchMed = rows.find((row) => row?.medicineId === inv?.medicineId);
+                if (matchMed) {
+                    const updatedQuantity = +inv?.quantity - +matchMed?.quantity;
+                    return {
+                        ...inv,
+                        quantity: updatedQuantity
+                    }
+                }
+            });
+            updatingInventory(updatedInventoryDetails);
+        });
+    }
+
+    const updatingInventory = async (data) => {
+        console.log(data, 'inv updating');
+        setShowLoader(true);
+        await InventoryService.updatingInventory(data).then(() => {
+            console.log("Inventory updated successfully");
+            setRestForm(true);
+            SetShowPrint(true);
+            setRows([]);
+            setShowLoader(false);
+        });
     }
 
     const handleSubmitBillingForm = (data) => {
@@ -343,8 +378,7 @@ export const Sales = () => {
             </Grid>
             <Loader open={showLoader} />
             {notification && <Notification severity={notificationMsg?.severity} message={notificationMsg?.message} action={alertState} />}
-            {showPrint && <PrintBill billDetails={billingDetails} medicineDetails={rows} patientDetails={patientDetails} />}
-
+            {showPrint && <PrintBill billDetails={billingDetails} medicineDetails={printData} patientDetails={patientDetails} />}
         </Box>
     )
 }

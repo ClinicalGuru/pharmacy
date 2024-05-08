@@ -20,6 +20,8 @@ export const MasterList = () => {
     const [pricingOrder, setPricingOrder] = useState("");
     const [originalData, setOriginalData] = useState([]);
     const [notification, setNotification] = useState(false);
+    const [vendorName, setVendorName] = useState('')
+    const [selectedIds, setSelectedIds]= useState();
     const columnsToHide = ['actions'];
     const navigate = useNavigate();
     const [vendorId, setVendorId] = useState("");
@@ -208,8 +210,9 @@ export const MasterList = () => {
     }, [quotationDetails])
 
     const vendorHandler = (e) => {
-        const { value } = e
+        const { value, label } = e
         setVendorId(value);
+        setVendorName(label);
     }
     const pNameHandler = (e) => {
         const { value } = e;
@@ -221,15 +224,16 @@ export const MasterList = () => {
     };
 
     const onCreatePurchageOrder = () => {
+        const selectedRows = rows.filter((item, index) => selectedIds[index]);
         if (vendorId === "") {
             setNotification(true);
             return;
         };
         navigate(
-            '/landing/purchase/order',
+            `/landing/purchase/order?vendorId=${vendorId}&vendorName=${vendorName}`,
             {
                 state: {
-                    data: rows
+                    data: selectedRows
                 }
             })
     };
@@ -257,6 +261,10 @@ export const MasterList = () => {
     const alertState = () => {
         setNotification(!notification);
     };
+
+    const selectedRowIds = (ids) => {
+        setSelectedIds(ids);
+    }
 
     return (
         <Box sx={{
@@ -317,6 +325,7 @@ export const MasterList = () => {
                         setData={setRows}
                         handleButtonClick={handleButtonClick}
                         hideColumns={columnsToHide}
+                        selectedRows={selectedRowIds}
                     />
                 </Box>
             </Box>

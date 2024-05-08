@@ -1,5 +1,5 @@
 import { firestore } from "../../context/firebase";
-import { addDoc, getDocs, getDoc, collection, orderBy, limit, doc, query, onSnapshot, writeBatch, where } from "firebase/firestore";
+import { addDoc, getDocs, getDoc, collection, orderBy, limit, doc, query, onSnapshot, writeBatch, where, updateDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
 
 const invoiceRef = collection(firestore, "invoice");
@@ -27,6 +27,30 @@ class InventoryService {
 
     getInventory = async () => {
         return await getDocs(inventoryRef);
+    }
+
+    queryInventoryWithMedicineIds = async (idsList) => {
+        const q = query(inventoryRef, where('medicineId', 'in', idsList));
+        try {
+            return await getDocs(q);
+        } catch (error) {
+            console.error('Error fetching inventory: ', error);
+            throw error;
+        }
+    }
+
+    updatingInventory = async (inventoryList) => {
+        try {
+            await Promise.all(inventoryList.map(async (inventory) => {
+                const { inventoryId, ...newData } = inventory;
+                const docRef = doc(inventoryRef, inventoryId);
+                return await updateDoc(docRef, newData);
+            }))
+        }
+        catch (err) {
+            console.error('Error updating inventory: ', err);
+
+        }
     }
 }
 export default new InventoryService();

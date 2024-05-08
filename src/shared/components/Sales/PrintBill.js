@@ -3,13 +3,13 @@ export const PrintBill = ({
     patientDetails,
     medicineDetails
 }) => {
-    console.log(billDetails, 'billDetails')
+    console.log(billDetails, patientDetails, medicineDetails, 'billDetails')
     const {
         discount,
         gst,
-        netPrice,
-        roundOff,
-        billAmount,
+        netPrice = 0,
+        roundOff = 0,
+        billAmount = 0,
         paymentMode,
         remarks,
         expiry
@@ -24,9 +24,9 @@ export const PrintBill = ({
     <hr>
     <div class = 'patient_sec'>
        <div>
-            <p><b>Patient Name:</b> ${patientDetails.patientName}</p>
-            <p><b>Phone:</b> ${patientDetails.phone}</p>
-            <p><b>Referred Doctor:</b> ${patientDetails.referredDoctor}</p>
+            <p><b>Patient Name:</b> ${patientDetails?.patientName}</p>
+            <p><b>Phone:</b> ${patientDetails?.phone}</p>
+            <p><b>Referred Doctor:</b> ${patientDetails?.referredDoctor}</p>
         </div>
         <div>
             <p><b>Bill Number:</b></p>
@@ -76,9 +76,9 @@ export const PrintBill = ({
 
     `;
 
-    const popupWin = window.open('', '_blank', 'width=600,height=600');
-    popupWin.document.open();
-    popupWin.document.write(`
+    let popupWin = window?.open('', '_blank', 'width=600,height=600');
+    popupWin?.document.open();
+    popupWin?.document.write(`
         <html>
             <head>
                 <style>
@@ -116,5 +116,5 @@ export const PrintBill = ({
             <body onload="window.print();">${printContent}</body>
         </html>
     `);
-    popupWin.document.close();
+    popupWin?.document?.close();
 }
