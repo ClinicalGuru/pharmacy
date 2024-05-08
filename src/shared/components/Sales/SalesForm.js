@@ -210,7 +210,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
             }
           })}
           type="number"
-          style={{ width: "60px" }}
+          style={{ width: "85px" }}
         />
         {errors['quantity'] && <span className='red-text'>{errors['quantity'][`message`]}</span>}
       </div>
@@ -237,7 +237,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
             }
           })}
           type="number"
-          style={{ width: "60px" }}
+          style={{ width: "85px" }}
         />
         {errors['discount'] && <span className='red-text'>{errors['discount'][`message`]}</span>}
       </div>

@@ -21,7 +21,7 @@ export const FixedHeader = styled('div')`
 `
 
 
-  
+
 /* Adjust z-index as needed */
 
 
@@ -70,3 +70,11 @@ export const Search = styled('div')(({ theme }) => ({
         width: 'auto',
     },
 }));
+
+export const Profile = styled('div')`
+    color: #4a2495;
+    text-decoration: underline;
+    margin-left: 15px;
+    cursor: pointer
+`
+

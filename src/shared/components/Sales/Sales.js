@@ -77,7 +77,7 @@ export const Sales = () => {
             editEnable: false,
         },
         {
-            'Header': 'Discount',
+            'Header': 'Discount %',
             'accessor': 'discount',
             editEnable: true,
         },
@@ -320,7 +320,7 @@ export const Sales = () => {
                             data={editingRow}
                         />
                     </Container>
-                    <Box sx={{ marginTop: 3 }}>
+                    <Box sx={{ marginTop: 2 }}>
                         <Table
                             headArray={columns}
                             gridArray={rows}
