@@ -17,7 +17,7 @@ export const Table = ({ headArray, gridArray, dataCallback = () => { } }) => {
           <tr>
             <th>S.No</th>
             {
-              headArray && headArray.map(item => <th className="expand">{item?.Header}</th>)
+              headArray && headArray.map(item => <th className="expand">{item?.Header || item?.head}</th>)
             }
           </tr>
         </thead>

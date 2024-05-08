@@ -50,10 +50,10 @@ const BootstrapButton = styled(Button)({
   
   
 
-export const CButton = ({ text, variant, buttonHandler = () => { }, type, style = {}, disabled }) => {
+export const CButton = ({ text, variant, buttonHandler = () => { }, type, style = {}, startIcon,disabled }) => {
     return (
         <Stack spacing={2} direction="row">
-            <ColorButton style={style} type={type} onClick={buttonHandler} variant={variant} disabled={disabled}>{text}</ColorButton>
+            <ColorButton style={style} type={type} onClick={buttonHandler} variant={variant} startIcon={startIcon} disabled={disabled}>{text}</ColorButton>
         </Stack>
     );
 }

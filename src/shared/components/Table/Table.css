@@ -1,3 +1,28 @@
+
+
+/* Reset margin and padding for the entire table */
+table {
+	width: 100%;
+	border-collapse: collapse; /* Combine cell borders */
+  }
+  
+  /* Style for table headers */
+  thead {
+	background-color: #ccc;
+  }
+  
+  th,
+  td {
+	padding: 0.5rem; /* Add padding to cells */
+	text-align: left; /* Align text to the left */
+	border-bottom: 1px solid #ddd; /* Add bottom border for separation */
+  }
+  
+  /* Style for alternating row background */
+  tr:nth-child(even) {
+	background: #efefef;
+  }
+  
 /*
 	Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
 	*/

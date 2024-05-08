@@ -7,6 +7,7 @@ import { Box } from "@mui/material";
 import { Form } from "../../Forms/index";
 // import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
+import { CButton } from '../../Button';
 // import { AddVendor } from "./AddVendorModal";
 import PurchaseService from "../../../services/Purchase.service";
 import { Table } from "../../Table";
@@ -214,14 +215,32 @@ export const InventoryReport = () => {
                     btn_styles={btn_styles}
                     
                 />
-                <Button style={{marginRight: '450px'}} variant="contained" >
+
+                < CButton
+                    type="input"
+                    variant='contained'
+                    style={{marginRight:'370px'}}
+                    buttonHandler={() => setModalOpen(true)}
+                    text="Go"
+                 />
+                
+                <CButton 
+                type="button"
+                 component="label" 
+                variant="contained" 
+                // style={{ color: '#56EBFF', border: '2px solid #56EBFF', backgroundColor: 'white',marginTo:'10px' }} 
+                startIcon={<CloudUploadIcon />}
+                text="Export as Excel"
+                />
+                <VisuallyHiddenInput type="file" />
+                {/* <Button style={{marginRight: '450px'}} variant="contained" >
                     Go
                 </Button>
                 
                 <Button   component="label" variant="contained" startIcon={<CloudUploadIcon />}>
                     Export as Excel
                     <VisuallyHiddenInput type="file" />
-                </Button>
+                </Button> */}
             </Container>
             
             <Box sx={{ marginTop: 3 }}>
