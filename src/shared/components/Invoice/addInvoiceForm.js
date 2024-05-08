@@ -288,12 +288,21 @@ export const AddInvoiceForm = ({
                 </div>
                 <div>
                     <div style={{ display: 'flex', marginLeft: '100px' }}>
+
                         <div style={{ position: 'absolute' }}>
+                        <input style={{ color: 'white' }} type="submit" id="styled-submit-button"  />
+                        </div>
+                        <div style={{ position: 'absolute', marginLeft: '70px' }}>
+                            <input style={{ color: 'white' }} type="reset" id="styled-reset-button"  />
+                        </div>
+
+                        {/* <div style={{ position: 'absolute' }}>
+                        <input type="submit" style={{ padding: '10px', marginTop: '5px' }} />
                             <button style={{ height: '35px', marginTop: '5px' }} type="submit">Submit</button>
                         </div>
                         <div style={{ position: 'absolute', marginLeft: '70px' }}>
                             <input type="reset" style={{ padding: '10px', height: '35px', marginTop: '5px' }} />
-                        </div>
+                        </div> */}
 
                         {/* <input type="submit" style={{ padding: '10px', marginRight: '10px' }} /> */}
 

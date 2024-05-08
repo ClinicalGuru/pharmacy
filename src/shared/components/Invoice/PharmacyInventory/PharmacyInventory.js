@@ -18,6 +18,17 @@ export const PharmacyInventory = () => {
         },
         fields: [
             {
+                title: 'Search',
+                type: 'text',
+                name: 'text',
+                validationProps: {
+                    required: ""
+                },
+                style: {
+                    width: "194px"
+                }
+            },
+            {
                 title: 'Total Qty & Value',
                 type: 'date',
                 name: 'date',
