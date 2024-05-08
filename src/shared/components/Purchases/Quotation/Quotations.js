@@ -80,7 +80,7 @@ export const Quotations = () => {
                         <CancelOutlinedIcon style={{ color: 'red' }} onClick={() => handleButtonClick("cancel", row.original)} />
                     </>
                 ) : (
-                    <EditOutlinedIcon  onClick={() => handleButtonClick("edit", row.original)} />
+                    <EditOutlinedIcon onClick={() => handleButtonClick("edit", row.original)} />
                 ),
         },
     ];
@@ -234,13 +234,18 @@ export const Quotations = () => {
             {
                 btn_text: "Clear",
             }
-        ]
+        ],
+        buttonStyles: {
+            display: 'flex',
+            justifyContent: 'end',
+            width: '100%'
+        }
     };
     const medicine_details_style = {
         display: "flex",
-        // flexWrap: 'wrap',
+        flexWrap: 'wrap',
         gap: "0px 25px",
-        // justifyContent: 'space-between'
+        justifyContent: 'space-between'
     };
     const btn_styles = { display: "flex", justifyContent: "end" };
 

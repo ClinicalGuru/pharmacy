@@ -158,13 +158,17 @@ export const PurchaseRequisition = () => {
             {
                 btn_text: "+ Add",
             },
-        ]
+        ],
+        buttonStyles: {
+            display: 'flex',
+            alignItems: 'center'
+        }
     };
 
     const medicine_details_style = {
         display: "flex",
         gap: "28px 28px",
-        // justifyContent: 'space-between'
+        justifyContent: 'space-between'
     };
 
     const handleVendorSelection = (details) => {
