@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 // import { FormContainer } from './AddInvoice.styles'
 import { FORM_LABELS } from "../../Constants/index";
 import { Notification } from '../Notification/index';
-import { BillingForm } from "./Sales.styles";
+import { BillingForm, FooterSection } from "./Sales.styles";
 
 export const BillingSummaryForm = ({
     onSubmitBillingForm,
@@ -149,12 +149,10 @@ export const BillingSummaryForm = ({
                     <textarea {...register("remarks")}></textarea>
                     {errors['remarks'] && <span className='red-text'>{errors['remarks'][`message`]}</span>}
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'flex-end', marginLeft: 'auto' }}>
-                    <button disabled={netPriceValue === 0} style={{ height: '35px', marginTop: '5px', backgroundColor: "#4ceaff", border: '1px solid #bdbcbc', borderRadius: '4px', marginRight:'10px' }}
-                        type="submit"> Save </button>
-                    <button disabled={netPriceValue === 0} style={{ height: '35px', marginTop: '5px', backgroundColor: "#4ceaff", border: '1px solid #bdbcbc', borderRadius: '4px' }}
-                        type="submit" >Save & Print</button>
-                </div>
+                <FooterSection>
+                    <input type="submit" value=" Save" style={{marginRight: '10px' }} disabled={netPriceValue === 0} /> 
+                    <input type="submit" value=" Save & Print" disabled={netPriceValue === 0} />
+                </FooterSection>
             </BillingForm>
             {notification && <Notification notificationState={notification} severity={notificationMsg?.severity} message={notificationMsg?.message} action={alertState} />}
         </>

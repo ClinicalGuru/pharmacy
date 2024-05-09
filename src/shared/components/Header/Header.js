@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -11,7 +12,9 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import SearchIcon from '@mui/icons-material/Search';
-import { FixedHeader } from './Header.styles';
+import { FixedHeader, Profile } from './Header.styles';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 import { SearchIconWrapper, Search, StyledInputBase, TypographyWrapper } from "./Header.styles";
 import navLinksData from "../../../Json/MenuItems.json";
@@ -21,6 +24,7 @@ const pages = ['Purchases', 'Inventory', 'Sales', 'Reports'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 export const Header = () => {
+  const navigate = useNavigate();
   const [value, setValue] = React.useState('1');
   const [isSticky, setIsSticky] = React.useState(true);
 
@@ -59,6 +63,10 @@ export const Header = () => {
     setAnchorElNav(null);
   };
 
+  const handleLogout = () => {
+    navigate('/');
+  };
+
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
@@ -70,7 +78,7 @@ export const Header = () => {
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <img style={{ width: '95px', height: '32px', objectFit: 'cover', marginRight: '1rem' }}
-             src={require('../../../assets/img/logo.png')} alt='logo' />
+              src={require('../../../assets/img/logo.png')} alt='logo' />
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
               <IconButton
                 size="large"
@@ -145,7 +153,10 @@ export const Header = () => {
                 {page}
               </Button>
             ))} */}
-              <Navbar navLinksData={navLinksData}/>
+              <Navbar navLinksData={navLinksData} />
+            </Box>
+            <Box>
+              <NotificationsIcon style={{ color: '#4a2495' }} />
             </Box>
             <Box sx={{ marginRight: 4 }}>
               <Search>
@@ -160,11 +171,13 @@ export const Header = () => {
               </Search>
             </Box>
             <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                </IconButton>
-              </Tooltip>
+              <Box sx={{
+                display: 'flex',
+                alignItems: 'center'
+              }}>
+                <AccountCircleIcon fontSize="large" style={{ color: '#4a2495' }} />
+                <Profile onClick={handleOpenUserMenu}>Laxmi Kanth</Profile>
+              </Box>
               <Menu
                 sx={{ mt: '45px' }}
                 id="menu-appbar"
@@ -182,7 +195,7 @@ export const Header = () => {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <MenuItem key={setting} onClick={setting === 'Logout' ? handleLogout : handleCloseUserMenu}>
                     <TypographyWrapper textAlign="center">{setting}</TypographyWrapper>
                   </MenuItem>
                 ))}

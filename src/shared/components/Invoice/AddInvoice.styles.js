@@ -25,5 +25,7 @@ gap: 28px 30px;
 background-color: #eef0f3;
 border-radius: 4px;
 padding: 16px;
-margin-top: 5px;
+margin-top: 15px;
 `;
+
+

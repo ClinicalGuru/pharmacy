@@ -9,6 +9,7 @@ import { Container } from './PurchaseOrders.styles'
 import { useLocation } from 'react-router-dom';
 import { Notification } from '../../Notification/index';
 import { Loader } from "../../Loader/index";
+import { useSearchParams } from 'react-router-dom';
 import {CButton} from "../../Button/index";
 
 export const PurchaseOrders = () => {
@@ -23,10 +24,12 @@ export const PurchaseOrders = () => {
     const [originalData, setOriginalData] = useState([]);
     const [pdfData, setPdfData] = useState([]);
     const [selectedVendorDtls, setSelectedVendorDtls] = useState();
+    const [searchParams] = useSearchParams();
+    const selectedVendor = {value: searchParams.get('vendorId'), label: searchParams.get('vendorName')}
     const [notificationMsg, setNotificationMsg] = useState({
         message: '',
         severity: ''
-    })
+    });
 
     const columns = [
         {
@@ -100,7 +103,7 @@ export const PurchaseOrders = () => {
     let location = useLocation();
     useEffect(() => {
         setRows(location?.state?.data);
-        console.log(location?.state?.data, 'state')
+
     }, [location]);
 
     const getVendors = async () => {
@@ -117,17 +120,11 @@ export const PurchaseOrders = () => {
         getVendors();
     }, []);
 
-    useEffect(() => {
-        console.log(rowIds, 'rowIds')
-    }, [rowIds]);
-
-
     const onSavePO = async () => {
-        console.log(rows, 'updated')
-        if (vendorId === '') {
+        if (vendorId === '' &&  selectedVendor.value === '') {
             setNotification(true);
             setNotificationMsg({
-                severity: 'info',
+                severity: 'error',
                 message: 'Please select vendor'
             });
             return;
@@ -135,7 +132,6 @@ export const PurchaseOrders = () => {
         setShowLoader(true);
         const rowIdKeys = Object.keys(rowIds);
         const filtredRows = rowIdKeys?.map(id => rows[parseInt(id)]);
-        console.log(filtredRows, 'filtredRows')
         try {
             await PurchaseService.savePO(filtredRows);
             pdfUsableData(filtredRows);
@@ -163,7 +159,6 @@ export const PurchaseOrders = () => {
                 quantity: rest.quantity
             }
         });
-        console.log(filteredList, 'filteredList')
         setPdfData(filteredList);
     }
 
@@ -179,11 +174,9 @@ export const PurchaseOrders = () => {
         try {
             let data = await PurchaseService.getAllQuotationData();
             const result = data?.docs?.map((doc) => ({ ...doc?.data(), id: doc?.id }));
-            console.log(result, 'result');
             joinQuotationsWithVendors(result);
             setShowLoader(false);
         } catch (e) {
-            console.log(e, 'error allVendors');
             setShowLoader(false);
         }
     }
@@ -265,6 +258,7 @@ export const PurchaseOrders = () => {
                                     marginRight: 50
                                 })
                             }}
+                            defaultValue={selectedVendor}
                         />
                     </div>
                     {/* <div className="form-group">

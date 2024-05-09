@@ -4,12 +4,11 @@ import EditSharpIcon from '@mui/icons-material/EditSharp';
 import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
 import "./Table.css";
 
-export const Table = ({ headArray, gridArray, dataCallback }) => {
+export const Table = ({ headArray, gridArray, dataCallback = () => { } }) => {
   const action = (i) => {
     dataCallback(gridArray[i], i);
   }
 
-  console.log(headArray, gridArray);
   return (
     <div >
       <table>
@@ -18,7 +17,7 @@ export const Table = ({ headArray, gridArray, dataCallback }) => {
           <tr>
             <th>S.No</th>
             {
-              headArray && headArray.map(item => <th className="expand">{item?.Header}</th>)
+              headArray && headArray.map(item => <th className="expand">{item?.Header || item?.head}</th>)
             }
           </tr>
         </thead>

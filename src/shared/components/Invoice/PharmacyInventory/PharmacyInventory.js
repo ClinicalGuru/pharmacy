@@ -2,62 +2,64 @@
 
 import React, { useState, useEffect } from 'react';
 import { Box, } from "@mui/material";
-import { Form } from "../../Forms/index";
+import { useForm } from "react-hook-form";
 import Button from '@mui/material/Button';
-import EnhancedTable from './denseTable'
+// import EnhancedTable from './denseTable'
 import { Container } from "./PharmacyInventory.styles";
 import InventoryService from '../../../services/inventory.service';
+import { Table } from '../../Table/index'
 
 export const PharmacyInventory = () => {
+    const { register, watch, formState: { errors }, handleSubmit } = useForm();
+    const whatFiled = watch(["medicineName"]); // when pass nothing as argument, you are watching everything
+    const [originalList, setOriginalList] = useState([]);
     let [rows, setRows] = useState([]);
-    let vendor_details_template = {
-        title: '',
-        submitButttonText: 'Log in',
-        formStyles: {
-            backgroundColor: "#eee",
+    const columns = [
+        {
+            'Header': 'Medicine Name',
+            'accessor': 'brandName',
         },
-        fields: [
-            {
-                title: 'Total Qty & Value',
-                type: 'date',
-                name: 'date',
-                validationProps: {
-                    required: "Date is required"
-                },
-                style: {
-                    width: "200px"
-                }
-            },
-            {
-                title: 'Consumption Qty & Value',
-                type: 'date',
-                name: 'date',
-                validationProps: {
-                    required: "Date is required"
-                },
-                style: {
-                    width: "200px"
-                }
-            },
-        ],
-    };
-
-    const vendor_details_style = {
-        display: "flex",
-        gap: "28px 30px",
-        // justifyContent: "space-between"
-    };
-    const btn_styles = { display: "flex", justifyContent: "end" };
-    const onSubmit = (form) => {
-        console.log(form);
-    };
-
-    const validate = (watchValues, errorMethods) => {
-        // console.log(watchValues, 'watchValues')
-    };
-    // const handleDeleteRow = (targetIndex) => {
-    //     setRows(rows.filter((_, idx) => idx !== targetIndex));
-    // };
+        {
+            'Header': 'Invoice Number',
+            'accessor': 'invoiceNumber',
+        },
+        {
+            'Header': 'Batch Number',
+            'accessor': 'batchNumber',
+        },
+        {
+            'Header': 'Expity',
+            'accessor': 'expiry',
+        },
+        {
+            'Header': 'MRP',
+            'accessor': 'mrpPerStrip',
+        },
+        {
+            'Header': 'Discount',
+            'accessor': 'discount',
+        },
+        {
+            'Header': 'Price',
+            'accessor': 'pricePerStrip',
+        },
+        {
+            'Header': 'Units Per Strip',
+            'accessor': 'quantity',
+        },
+        {
+            'Header': 'Price Per Unit',
+            'accessor': 'pricePerUnit',
+        },
+        {
+            'Header': 'Units In Stock',
+            'accessor': 'unitsInStock',
+        },
+        {
+            'Header': 'GST %',
+            'accessor': 'gst',
+        }
+    ];
 
     useEffect(() => {
         const getInventory = async () => {
@@ -68,36 +70,53 @@ export const PharmacyInventory = () => {
                     item['unitsInStock'] = (item?.quantity * (Number(item?.noOfStrips) + Number(item?.freeStrips)));
                 })
                 console.log(result, 'inventory');
-                setRows(result)
+                setRows(result);
+                setOriginalList(result);
             } catch (err) {
 
             }
         }
         getInventory();
-        // const data = InventoryService.getInventory();
-        // console.log(data, 'inventory');
-    }, [])
+    }, []);
 
+    useEffect(() => {
+        let input = '';
+        const subscription = watch((value, { name, type }) => input = value.medicineName);
+        const filteredList = originalList?.filter(item =>
+            item.brandName.toLowerCase().includes(input.toLowerCase())
+        );
+        setRows(filteredList)
+        return () => subscription.unsubscribe();
+
+    }, [watch]);
+    
     return (
         <Box sx={{
             padding: 2,
         }}>
             <Container>
-                <Form
-                    template={vendor_details_template}
-                    onSubmit={onSubmit}
-                    validate={validate}
-                    showSubmitButton={false}
-                    form_styles={vendor_details_style}
-                    btn_styles={btn_styles}
-                />
+                <form>
+                    <input
+                        placeholder='Medicine Name'
+                        {...register("medicineName", {
+                            required: true, minLength: {
+                                value: 3,
+                                message: "Input must be at least 3 characters long"
+                            }
+                        })}
+                    />
+                </form>
                 <div>
                     <Button variant="contained">Minimal Quantity</Button>
 
                 </div>
             </Container>
             <Box sx={{ marginTop: 3 }}>
-                <EnhancedTable data = {rows}/>
+                <Table
+                    headArray={columns}
+                    gridArray={rows}
+                    setData={setRows}
+                />
             </Box>
         </Box>
     )

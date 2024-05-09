@@ -130,8 +130,8 @@ export const AllBills = () => {
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'space-around',
-                marginTop: '40px',
-                marginBottom: '100px',
+                marginTop: '15px',
+                // marginBottom: '100px',
                 // marginLeft:'50px'
             }}>
                 <Box>
@@ -150,7 +150,7 @@ export const AllBills = () => {
                     <Card variant="outlined" sx={{ backgroundColor: '#FEF9EEFF' }}>{card5}</Card>
                 </Box>
             </Box>
-            <Box sx={{ marginTop: 3 }}>
+            <Box sx={{ marginTop:2 }}>
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 700 }} aria-label="customized table">
                         <TableHead>

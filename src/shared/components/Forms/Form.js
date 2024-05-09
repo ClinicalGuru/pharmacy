@@ -13,10 +13,10 @@ export const Form = ({
     onValidate = () => { },
 }) => {
     const [prevWatchValues, setPrevWatchValues] = useState({});
-    let { control, register, handleSubmit, watch, setError, clearErrors, formState: { errors }, reset,watchFields  } = useForm({
+    let { control, register, handleSubmit, watch, setError, clearErrors, formState: { errors }, reset, watchFields } = useForm({
         mode: "onChange"
     });
-    let { title, fields, value, formStyles, btns, isBlockLevelBtns = true } = template;
+    let { title, fields, value, formStyles, btns, isBlockLevelBtns = true, buttonStyles={} } = template;
     let watchValues = watch(watchFields);
     // console.log(watchValues, 'watchValues')
     // onValidate(watchValues, { setError, clearErrors });
@@ -148,7 +148,7 @@ export const Form = ({
                                         styles={{
                                             container: (provided) => ({
                                                 ...provided,
-                                                width: 250,
+                                                width: 200,
                                                 // marginRight: 10
                                             })
                                         }}
@@ -172,25 +172,25 @@ export const Form = ({
     const butttons = (btns) => {
         return btns && btns?.map((button) => {
             return (
-                <div>
+                <>
                     {
                         button.type == 'checkbox'
                             ? <div className='atofq'><div className='atofq-checkbox'><input type={button.type} /></div><div className='atofq-text'>{button?.btn_text}</div></div>
                             : <SubmitButton style={button?.styles} type={button.type} className="btn"> {button?.btn_text}</SubmitButton>
                     }
-                </div>
+                </>
             )
         })
     };
-    
+
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             {title && <h4>{title}</h4>}
             <div style={form_styles}>
                 {renderFields(fields)}
                 {/* to render buttons in same line */}
-                {!isBlockLevelBtns && <span> <Box sx={{ display: 'flex', marginTop: '28px' }}>
-                    {butttons(btns)}</Box></span>}
+                {!isBlockLevelBtns && <Box sx={buttonStyles}>
+                    {butttons(btns)}</Box>}
             </div>
             {/* to render buttons in next line */}
             {isBlockLevelBtns && <div style={btn_styles}>
