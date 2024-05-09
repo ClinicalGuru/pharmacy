@@ -23,8 +23,8 @@ border-radius: 4px;
 padding: 10px;
 // margin-top: 5px;
 align-items: end;
-// flex-wrap: wrap;
-// justify-content: space-between;
+flex-wrap: wrap;
+justify-content: space-between;
 `;
 
 export const Container = styled.div`

@@ -1,12 +1,14 @@
-import React, { useState, forwardRef } from "react";
+import React, { useState, forwardRef, useEffect } from "react";
 import { useTable, useRowSelect } from "react-table";
 import Modal from 'react-modal';
 import "./EditableTable.css"
 import CloseIcon from '@mui/icons-material/Close';
 import PaymentDetails from "../Purchases/PaymentDetails/PaymentDetails";
 import { VendorList } from "../Reports/PurchaseReports/VendorList";
-export const EditableTable = ({ columns, data, setData, handleButtonClick, hideColumns = [], selectedRows = () => {} }) => {
-console.log(data, 'editable table.js')
+export const EditableTable = ({ columns, data, setData, handleButtonClick, hideColumns = [], selectedRows = () => { } }) => {
+  // console.log(data, 'editable table.js')
+  const [selectedRowIdsState, setSelectedRowIdsState] = useState({});
+
   const IndeterminateCheckbox = forwardRef(
     ({ indeterminate, ...rest }, ref) => {
       const defaultRef = React.useRef()
@@ -23,8 +25,8 @@ console.log(data, 'editable table.js')
       )
     }
   )
-  
-  
+
+
   // console.log(hideColumns, 'hideColumns = []')
   const {
     getTableProps,
@@ -69,23 +71,22 @@ console.log(data, 'editable table.js')
   const [isOpen, setIsOpen] = useState(false);
 
   const openModal = () => {
-    console.log("popup init")
+    // console.log("popup init")
     setIsOpen(true);
   };
 
   const closeModal = () => {
     setIsOpen(false);
   };
-  function cellEvent(e,data)
-  {
-    console.log("data => ",data.column.popup)
-    if(data.column.popup == 'popup')
-    {
+
+  function cellEvent(e, data) {
+    // console.log("data => ", selectedRowIds)
+    if (data.column.popup == 'popup') {
       openModal()
     }
   }
-  
-  console.log("data from editable table rows => ",rows,columns)
+
+  // console.log("data from editable table rows => ", rows, columns)
   const handleInputChange = (event, row, columnId) => {
     // console.log(data, 'editable table')
     const newData = data.map((rowData) => {
@@ -96,115 +97,118 @@ console.log(data, 'editable table.js')
     });
     setData(newData);
   };
-  selectedRows(selectedRowIds);
+
+  useEffect(() => {
+    selectedRows(selectedRowIds);
+    // console.log(selectedRowIds, 'selectedRowIds')
+  }, [selectedRowIds]);
   return (
     <div>
       <div>
-      <Modal
-        isOpen={isOpen}
-        onRequestClose={closeModal}
-        contentLabel="Example Modal"
-        className="Modal"
-        overlayClassName="Overlay"
-      >
-        <div>
-          <div className="popup-heading-x">
-            <div className="popup-heading">Payment Details</div>
-            <div className="popup-x"><CloseIcon onClick={closeModal}/></div>
-          </div>
+        <Modal
+          isOpen={isOpen}
+          onRequestClose={closeModal}
+          contentLabel="Example Modal"
+          className="Modal"
+          overlayClassName="Overlay"
+        >
           <div>
-            <PaymentDetails/>
-    
+            <div className="popup-heading-x">
+              <div className="popup-heading">Payment Details</div>
+              <div className="popup-x"><CloseIcon onClick={closeModal}/></div>
+            </div>
+            <div>
+              <PaymentDetails />
+
+            </div>
           </div>
-        </div>
-      </Modal>
+        </Modal>
       </div>
       <table {...getTableProps()} style={{
-      overflow: 'hidden',
-      tableLayout: 'fixed',
-      borderCollapse: 'collapse',
-      boxShadow: '0px 5px 10px #ccc',
-      borderRadius: '10px',
-      whiteSpace: 'nowrap',
-      width: '100%',
-      margin: 'auto',
-      tableLayout: 'auto',
-      overflowX: 'auto',
-    }}>
-      <thead>
-        <tr>
-          {/* <th>
+        overflow: 'hidden',
+        tableLayout: 'fixed',
+        borderCollapse: 'collapse',
+        boxShadow: '0px 5px 10px #ccc',
+        borderRadius: '10px',
+        width: '100%',
+        margin: 'auto',
+        tableLayout: 'auto',
+        overflowX: 'auto',
+      }}>
+        <thead>
+          <tr>
+            {/* <th>
             <input
               type="checkbox"
               checked={Object?.keys(selectedRowIds)?.length === rows?.length}
               onChange={toggleSelectAll}
             />
           </th> */}
-          {headerGroups.map((headerGroup) => (
-            <React.Fragment key={headerGroup.id}>
-              {headerGroup.headers.map((column) => (
-                <th
-                  {...column.getHeaderProps()}
-                  style={{
-                    padding: "0.5rem",
-                    color: "black",
-                    fontWeight: "bold",
-                    backgroundColor: "#DEE1E6FF",
-                  }}
-                >
-                  {column.render("Header")}
-                </th>
-              ))}
-            </React.Fragment>
-          ))}
-        </tr>
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map((row) => {
-          prepareRow(row);
-          return (
-            <tr {...row.getRowProps()}>
-              {/* <td>
+            {headerGroups.map((headerGroup) => (
+              <React.Fragment key={headerGroup.id}>
+                {headerGroup.headers.map((column) => (
+                  <th
+                    {...column.getHeaderProps()}
+                    style={{
+                      padding: "0.5rem",
+                      color: "black",
+                      fontWeight: "bold",
+                      backgroundColor: "#DEE1E6FF",
+                    }}
+                  >
+                    {column.render("Header")}
+                  </th>
+                ))}
+              </React.Fragment>
+            ))}
+          </tr>
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map((row) => {
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()}>
+                {/* <td>
                 <input
                   type="checkbox"
                   {...row.getToggleRowSelectedProps()}
                   checked={selectedRowIds[row.id]}
                 />
               </td> */}
-              {row.cells.map((cell) => {
-                return (
-                  <td
-                    {...cell.getCellProps()}
-                    onClick={(e) =>{cellEvent(e,cell)}}
-                    style={{
-                      padding: "10px",
-                      textAlign:"center"
-                      // border: "solid 1px gray",
-                      // background: "papayawhip",
-                    }}
-                  >
-                    {cell.column.editEnable ? (
-                      row.original.isEditing ? (
-                        <input
-                          
-                          type="text"
-                          defaultValue={cell.value}
-                          onChange={(e) => handleInputChange(e, row, cell.column.id)}
-                        />
+                {row.cells.map((cell) => {
+                  return (
+                    <td
+                      {...cell.getCellProps()}
+                      onClick={(e) => { cellEvent(e, cell) }}
+                      style={{
+                        padding: "10px",
+                        textAlign: "center"
+                        // border: "solid 1px gray",
+                        // background: "papayawhip",
+                      }}
+                    >
+                      {cell.column.editEnable ? (
+                        row.original.isEditing ? (
+                          <input
+
+                            type="text"
+                            defaultValue={cell.value}
+                            onChange={(e) => handleInputChange(e, row, cell.column.id)}
+                          />
+                        ) : (
+                          cell.render("Cell")
+                        )
                       ) : (
                         cell.render("Cell")
-                      )
-                    ) : (
-                      cell.render("Cell")
-                    )}
-                  </td>
-                );
-              })}
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 };
