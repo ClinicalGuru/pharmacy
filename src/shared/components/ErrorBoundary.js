@@ -18,8 +18,13 @@ class ErrorBoundary extends Component {
 
   render() {
     if (this.state.hasError) {
-      // You can render any custom fallback UI
-      return <h1>Something went wrong.</h1>;
+      // You can render any custom fallback UI, including styling for the error message
+      return (
+        <div style={{ color: 'red', fontWeight: 'bold', textAlign: 'center' }}>
+          <h1>Something went wrong.</h1>
+          <p>Please refresh the page or try again later.</p>
+        </div>
+      );
     }
     return this.props.children; 
   }
