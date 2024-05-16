@@ -29,7 +29,7 @@ export const SignIn = () => {
         },
         fields: [
             {
-                title: 'user name',
+                title: 'User name',
                 type: 'text',
                 name: 'userName',
                 validationProps: {

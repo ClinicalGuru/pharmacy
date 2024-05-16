@@ -1,0 +1,31 @@
+{
+    "paymentData": [
+      {
+        "dueInvoiceNo": "12345",
+        "vendorName": "Vendor1",
+        "dueDate": "23-06-24",
+        "invoiceAmount": 100000,
+        "paidAmount": 50000,
+        "dueAmount": 50000,
+        "paymentStatus": "Pending"
+      },
+      {
+        "dueInvoiceNo": "56789",
+        "vendorName": "Vendor2",
+        "dueDate": "23-06-24",
+        "invoiceAmount": 50000,
+        "paidAmount": 30000,
+        "dueAmount": 20000,
+        "paymentStatus": "Pending"
+      },
+    {
+        "dueInvoiceNo": "45632",
+        "vendorName": "Vendor3",
+        "dueDate": "23-06-24",
+        "invoiceAmount": 500000,
+        "paidAmount": 300000,
+        "dueAmount": 200000,
+        "paymentStatus": "Pending"
+      }
+    ]
+  }

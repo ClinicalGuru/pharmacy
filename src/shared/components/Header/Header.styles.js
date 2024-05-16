@@ -75,6 +75,8 @@ export const Profile = styled('div')`
     color: #4a2495;
     text-decoration: underline;
     margin-left: 15px;
-    cursor: pointer
+    cursor: pointer;
+    font-weight: 900;
+    font-size: 18px;
 `
 
