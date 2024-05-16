@@ -6,13 +6,13 @@ import { Quotations } from "./shared/components/Purchases/Quotation/index";
 import { PurchaseOrders } from "./shared/components/Purchases/PurchaseOrders";
 import { MasterList } from "./shared/components/Purchases/MasterList";
 import { AddInvoice } from "./shared/components/Invoice";
-import { Payments} from "./shared/components/Purchases/PurchasePayments/index";
+import { Payments } from "./shared/components/Purchases/PurchasePayments/index";
 import { OrderList } from './shared/components/Reports/PurchaseReports/OrderList/OrderList';
 
-import { PurchaseReports} from "./shared/components/Reports/PurchaseReports/index";
-import { ImportantReports} from "./shared/components/Reports/ImportantReport/index";
-import { SalesReports} from "./shared/components/Reports/SalesReports/index";
-import { InventoryReport} from "./shared/components/Reports/InventoryReport/index";
+import { PurchaseReports } from "./shared/components/Reports/PurchaseReports/index";
+import { ImportantReports } from "./shared/components/Reports/ImportantReport/index";
+import { SalesReports } from "./shared/components/Reports/SalesReports/index";
+import { InventoryReport } from "./shared/components/Reports/InventoryReport/index";
 import "./index.css";
 import { PharmacyInventory } from "./shared/components/Invoice/PharmacyInventory/index";
 import { AllBills } from "./shared/components/Sales/AllBills/AllBills";
@@ -25,6 +25,7 @@ import { InvoiceList } from './shared/components/Reports/PurchaseReports/Invoice
 import { PaymentsList } from './shared/components/Reports/PurchaseReports/PaymentsList';
 import { RefreshVendorsDetailsContext } from './context/RefreshVendorDetailsContext';
 import { VendorList } from './shared/components/Reports/PurchaseReports/VendorList';
+import ErrorBoundary from "./shared/components/ErrorBoundary";
 const Router = createBrowserRouter([
     {
         path: "/",
@@ -36,22 +37,22 @@ const Router = createBrowserRouter([
         children: [
             {
                 path: "",
-                element: <Sales />,
+                element:<ErrorBoundary><Sales /></ErrorBoundary> ,
             },
             {
                 path: "sales",
                 children: [
                     {
                         path: "",
-                        element: <Sales />,
+                        element:<ErrorBoundary><Sales /></ErrorBoundary> ,
                     },
                     {
                         path: "billing",
-                        element: <Sales />
+                        element:<ErrorBoundary><Sales /></ErrorBoundary> 
                     },
                     {
                         path: "allBills",
-                        element: <AllBills />
+                        element:<ErrorBoundary><AllBills /></ErrorBoundary> 
                     }
                 ]
             },
@@ -59,28 +60,28 @@ const Router = createBrowserRouter([
                 path: "purchase",
                 children: [
                     {
-                        path: "", 
-                        element: <PurchaseRequisition />,  
+                        path: "",
+                        element: <ErrorBoundary> <PurchaseRequisition /></ErrorBoundary>,
                     },
                     {
                         path: "requisition",
-                        element: <PurchaseRequisition />
+                        element: <ErrorBoundary> <PurchaseRequisition /></ErrorBoundary>
                     },
                     {
                         path: "quotation",
-                        element: <Quotations />
+                        element:<ErrorBoundary><Quotations /></ErrorBoundary> 
                     },
                     {
                         path: "order",
-                        element: <PurchaseOrders />
+                        element:<ErrorBoundary><PurchaseOrders /></ErrorBoundary> 
                     },
                     {
                         path: "payments",
-                        element: <Payments />
+                        element: <ErrorBoundary><Payments /></ErrorBoundary>
                     },
                     {
                         path: "masterList",
-                        element: <MasterList />
+                        element:<ErrorBoundary><MasterList /></ErrorBoundary> 
                     }
                 ]
             },
@@ -89,15 +90,15 @@ const Router = createBrowserRouter([
                 children: [
                     {
                         path: "",  // An empty string indicates the default child route
-                        element: <AddInvoice />,  // The default route for "/landing" is "/landing/sales/allBills"
+                        element:<ErrorBoundary><AddInvoice /></ErrorBoundary> ,  // The default route for "/landing" is "/landing/sales/allBills"
                     },
                     {
                         path: 'invoice',
-                        element: <AddInvoice />
+                        element:<ErrorBoundary><AddInvoice /></ErrorBoundary> 
                     },
                     {
                         path: 'pharmacyInventory',
-                        element: <PharmacyInventory />
+                        element:<ErrorBoundary><PharmacyInventory /></ErrorBoundary> 
                     }
                 ]
             },
@@ -105,38 +106,38 @@ const Router = createBrowserRouter([
                 path: "reports",
                 children: [
                     {
-                        path: "purchase", 
+                        path: "purchase",
                         element: <PurchaseReports />,
                         children: [
                             {
                                 path: "requisitionList",
-                                element: <RequisitionList />,
+                                element:<ErrorBoundary><RequisitionList /></ErrorBoundary> ,
                             },
                             {
                                 path: "quotationList",
-                                element: <QuotationList />,
+                                element:<ErrorBoundary><QuotationList /></ErrorBoundary> ,
                             },
                             {
-                                path:"returnList",
-                                element:<ReturnList />,
+                                path: "returnList",
+                                element:<ErrorBoundary><ReturnList /></ErrorBoundary> ,
                             },
                             {
                                 path: "paymentsList",
-                                element: <PaymentsList />,
+                                element:<ErrorBoundary> <PaymentsList /></ErrorBoundary>,
                             },
                             {
-                                path:"orderList",
-                                element:<OrderList />,
+                                path: "orderList",
+                                element:<ErrorBoundary> <OrderList /></ErrorBoundary>,
                             },
                             {
-                                path:"invoiceList",
-                                element:<InvoiceList />
+                                path: "invoiceList",
+                                element:<ErrorBoundary><InvoiceList /></ErrorBoundary> 
                             },
                             {
-                                path:"vendorList",
-                                element:<VendorList />
+                                path: "vendorList",
+                                element:<ErrorBoundary><VendorList /></ErrorBoundary> 
                             },
-                        ]  
+                        ]
                     },
                     {
                         path: "inventory",
@@ -144,11 +145,11 @@ const Router = createBrowserRouter([
                     },
                     {
                         path: "sales",
-                        element: <SalesReports />
+                        element:<ErrorBoundary><SalesReports /></ErrorBoundary> 
                     },
                     {
                         path: "Important",
-                        element: <ImportantReports />
+                        element:<ErrorBoundary><ImportantReports /></ErrorBoundary> 
                     },
 
                 ]
