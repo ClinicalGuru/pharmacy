@@ -2,30 +2,27 @@
 
 import React, { useState, useEffect } from 'react';
 import { Box, } from "@mui/material";
-import { useForm } from "react-hook-form";
 import Button from '@mui/material/Button';
-// import EnhancedTable from './denseTable'
 import { Container } from "./PharmacyInventory.styles";
 import InventoryService from '../../../services/inventory.service';
-import { Table } from '../../Table/index'
+import { InventoryTable } from './denseTable'
 
 export const PharmacyInventory = () => {
-    const { register, watch, formState: { errors }, handleSubmit } = useForm();
-    const whatFiled = watch(["medicineName"]); // when pass nothing as argument, you are watching everything
     const [originalList, setOriginalList] = useState([]);
     let [rows, setRows] = useState([]);
+    let [medicineName, setMedicineName] = useState('');
     const columns = [
         {
             'Header': 'Medicine Name',
             'accessor': 'brandName',
         },
-        {
-            'Header': 'Invoice Number',
-            'accessor': 'invoiceNumber',
-        },
+        // {
+        //     'Header': 'Invoice Number',
+        //     'accessor': 'invoiceNumber',
+        // },
         {
             'Header': 'Batch Number',
-            'accessor': 'batchNumber',
+            'accessor': 'batchNo',
         },
         {
             'Header': 'Expity',
@@ -58,6 +55,10 @@ export const PharmacyInventory = () => {
         {
             'Header': 'GST %',
             'accessor': 'gst',
+        },
+        {
+            'Header': 'Stock Alert',
+            'accessor': 'stockAlert',
         }
     ];
 
@@ -80,16 +81,23 @@ export const PharmacyInventory = () => {
     }, []);
 
     useEffect(() => {
-        let input = '';
-        const subscription = watch((value, { name, type }) => input = value.medicineName);
+        console.log('name')
+        let input = medicineName;
+
         const filteredList = originalList?.filter(item =>
             item.brandName.toLowerCase().includes(input.toLowerCase())
         );
-        setRows(filteredList)
-        return () => subscription.unsubscribe();
+        setRows(filteredList);
 
-    }, [watch]);
-    
+    }, [medicineName]);
+
+    const medicineNameHandler = (e) => {
+        setMedicineName(e.target.value)
+    }
+    const inventoryFilterHandler = (e) => {
+        const value = e.target.value;
+
+    }
     return (
         <Box sx={{
             padding: 2,
@@ -98,21 +106,22 @@ export const PharmacyInventory = () => {
                 <form>
                     <input
                         placeholder='Medicine Name'
-                        {...register("medicineName", {
-                            required: true, minLength: {
-                                value: 3,
-                                message: "Input must be at least 3 characters long"
-                            }
-                        })}
+                        onChange={(e) => medicineNameHandler(e)}
+                        value={medicineName}
                     />
+                    <select onChange={(e) => inventoryFilterHandler(e)}>
+                        <option value="all">All</option>
+                        <option value="zeroStocks">Zero stocks</option>
+                        <option value="nearExpiryStocks">Near Expiry Stocks</option>
+                        <option value="lowStocks">Low Stocks</option>
+                    </select>
                 </form>
                 <div>
                     <Button variant="contained">Minimal Quantity</Button>
-
                 </div>
             </Container>
             <Box sx={{ marginTop: 3 }}>
-                <Table
+                <InventoryTable
                     headArray={columns}
                     gridArray={rows}
                     setData={setRows}

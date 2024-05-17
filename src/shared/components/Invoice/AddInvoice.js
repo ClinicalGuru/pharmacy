@@ -112,7 +112,7 @@ export const AddInvoice = () => {
                     required: "Invoice num is required"
                 },
                 style: {
-                    width:'194px'
+                    width: '194px'
                 }
             },
             {
@@ -170,7 +170,7 @@ export const AddInvoice = () => {
             {
                 title: 'Invoice Due Date',
                 type: 'date',
-                name: 'invoiceDate',
+                name: 'invoiceDueDate',
                 validationProps: {
                     required: "Date is required"
                 },
@@ -353,8 +353,8 @@ export const AddInvoice = () => {
             <div>
                 {rows.length > 0 && (
                     <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px ' }}>
-                        <Button disabled={editingIndex >= 0} variant="contained" style={{backgroundColor: "#4ceaff", border: '1px solid #bdbcbc'}}
-                        type="submit" onClick={() => saveInvoice()}>Save</Button>
+                        <Button disabled={editingIndex >= 0} variant="contained"
+                            type="submit" onClick={() => saveInvoice()}>Save</Button>
                     </Box>
                 )}
             </div>

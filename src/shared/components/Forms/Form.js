@@ -118,7 +118,7 @@ export const Form = ({
                     return (
                         <div key={name}>
                             <Box component="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
-                            <input className='makefieldsempty7' style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
+                            <input style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
                             {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
                         </div>
                     )

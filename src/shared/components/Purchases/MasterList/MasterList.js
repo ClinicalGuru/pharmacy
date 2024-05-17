@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { Box } from "@mui/material";
-import Button from '@mui/material/Button';
 import { Container } from "./MasterList.styles";
 import PurchaseService from "../../../services/Purchase.service";
 import { Loader } from "../../Loader/index";
@@ -9,7 +8,8 @@ import { EditableTable } from "../../EditableTable";
 import { useNavigate } from 'react-router-dom';
 import CreatableSelect from 'react-select/creatable';
 import { Notification } from '../../Notification/index';
-import { CButton } from "../../Button/index"
+import { CButton } from "../../Button/index";
+import isEmpty from 'lodash/isEmpty';
 
 export const MasterList = () => {
     const [showLoader, setShowLoader] = useState(false);
@@ -22,11 +22,15 @@ export const MasterList = () => {
     const [originalData, setOriginalData] = useState([]);
     const [notification, setNotification] = useState(false);
     const [vendorName, setVendorName] = useState('')
-    const [selectedIds, setSelectedIds]= useState();
+    const [selectedIds, setSelectedIds] = useState();
     const columnsToHide = ['actions'];
     const navigate = useNavigate();
     const [vendorId, setVendorId] = useState("");
     const [pMed, setPMedId] = useState("");
+    const [notificationMsg, setNotificationMsg] = useState({
+        message: '',
+        severity: ''
+    });
     const columns = [
         {
             'Header': 'Vendor Name',
@@ -51,17 +55,17 @@ export const MasterList = () => {
         {
             'Header': 'Dose',
             'accessor': 'dose',
-            editEnable: true,
+            editEnable: false,
         },
         {
             'Header': 'Form',
             'accessor': 'form',
-            editEnable: true,
+            editEnable: false,
         },
         {
             'Header': 'Qantity / Strips',
             'accessor': 'quantity',
-            editEnable: true,
+            editEnable: false,
         },
         {
             'Header': 'MRP',
@@ -228,8 +232,20 @@ export const MasterList = () => {
         const selectedRows = rows.filter((item, index) => selectedIds[index]);
         if (vendorId === "") {
             setNotification(true);
+            setNotificationMsg({
+                severity: 'info',
+                message: 'Please select vendor before creating PO'
+            })
             return;
         };
+        if (selectedRows?.length === 0) {
+            setNotification(true);
+            setNotificationMsg({
+                severity: 'error',
+                message: 'Please select medicines to create purchase order'
+            });
+            return;
+        }
         navigate(
             `/landing/purchase/order?vendorId=${vendorId}&vendorName=${vendorName}`,
             {
@@ -317,16 +333,16 @@ export const MasterList = () => {
                     </div> */}
                 </form>}
             </Container>
-                <Box sx={{ marginTop: '15px'}}>
-                    <EditableTable
-                        columns={columns}
-                        data={rows}
-                        setData={setRows}
-                        handleButtonClick={handleButtonClick}
-                        hideColumns={columnsToHide}
-                        selectedRows={selectedRowIds}
-                    />
-                </Box>
+            <Box sx={{ marginTop: '15px' }}>
+                <EditableTable
+                    columns={columns}
+                    data={rows}
+                    setData={setRows}
+                    handleButtonClick={handleButtonClick}
+                    hideColumns={columnsToHide}
+                    selectedRows={selectedRowIds}
+                />
+            </Box>
             <div>
                 {rows.length > 0 && (
                     <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '15px' }}>
@@ -339,7 +355,7 @@ export const MasterList = () => {
                     </Box>
                 )}
             </div>
-            {notification && <Notification notificationState={notification} severity="info" message="Please select vendor before creating PO" action={alertState} />}
+            {notification && <Notification notificationState={notification} severity={notificationMsg.severity} message={notificationMsg.message} action={alertState} />}
             <Loader open={showLoader} />
         </Box>
     )

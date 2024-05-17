@@ -85,7 +85,7 @@ export const Payments = () => {
             return rowData;
         });
         setRows(newData);
-        setOriginalData(newData)
+        // setOriginalData(newData)
     };
 
     const getVendors = async () => {
@@ -95,7 +95,7 @@ export const Payments = () => {
             const result = data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }));
             SetVendorDetails(result);
             setShowLoader(false);
-            getAllQuotationsData();
+            // getAllQuotationsData();
         } catch (e) {
             console.log(e, 'error allVendors');
             setShowLoader(false);
@@ -181,28 +181,9 @@ export const Payments = () => {
             <Box sx={{ marginTop: 3 }}>
                 <PaymentTable/>
             </Box>
-            {notification && <Notification notificationState={notification} severity="info" message="Please select vendor" action={alertState} />}
+            {/* {notification && <Notification notificationState={notification} severity="info" message="Please select vendor" action={alertState} />} */}
             <Loader open={showLoader} />
         </Box>
 
     )
 }
-
-{/* // import React, { useState, useEffect } from 'react';
-// import { FORM_LABELS } from "../../../Constants/index";
-
-// import { Box } from "@mui/material";
-// import { Form } from "../../Forms/index";
-// // import Table from '@mui/material/Table';
-// import Button from '@mui/material/Button';
-// import { Container } from "./Payments.styles";
-// // import { AddVendor } from "./AddVendorModal";
-// import PurchaseService from "../../../services/Purchase.service";
-// import { Table } from "../../Table";
-// export const Payments = () => {
-    
-//     return (
-//         <Box></Box>
-
-//     )
-// } */}

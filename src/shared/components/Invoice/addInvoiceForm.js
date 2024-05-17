@@ -64,7 +64,7 @@ export const AddInvoiceForm = ({
                 const netPrice = discountedValue + ((gst * discountedValue) / 100);
                 const pricePerUnit = mrpPerStrip / quantity;
                 setValue('netPrice', netPrice);
-                setValue('pricePerUnit', pricePerUnit);
+                setValue('pricePerUnit', pricePerUnit?.toFixed(2));
             }
         });
         return () => subscription.unsubscribe();

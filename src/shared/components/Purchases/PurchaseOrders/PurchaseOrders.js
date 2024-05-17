@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box } from "@mui/material";
 import CreatableSelect from 'react-select/creatable';
-import Button from '@mui/material/Button';
 import PurchaseService from "../../../services/Purchase.service";
 import { EditableTable } from "../../EditableTable";
 import { DownloadOptionsModal } from "../../DownloadOptionsModal/DownloadOptionsModal";
@@ -10,7 +9,8 @@ import { useLocation } from 'react-router-dom';
 import { Notification } from '../../Notification/index';
 import { Loader } from "../../Loader/index";
 import { useSearchParams } from 'react-router-dom';
-import {CButton} from "../../Button/index";
+import { CButton } from "../../Button/index";
+import isEmpty from 'lodash/isEmpty';
 
 export const PurchaseOrders = () => {
     const [rowIds, selectedRows] = useState({});
@@ -25,7 +25,7 @@ export const PurchaseOrders = () => {
     const [pdfData, setPdfData] = useState([]);
     const [selectedVendorDtls, setSelectedVendorDtls] = useState();
     const [searchParams] = useSearchParams();
-    const selectedVendor = {value: searchParams.get('vendorId'), label: searchParams.get('vendorName')}
+    const selectedVendor = { value: searchParams.get('vendorId'), label: searchParams.get('vendorName') }
     const [notificationMsg, setNotificationMsg] = useState({
         message: '',
         severity: ''
@@ -121,11 +121,19 @@ export const PurchaseOrders = () => {
     }, []);
 
     const onSavePO = async () => {
-        if (vendorId === '' &&  selectedVendor.value === '') {
+        if (vendorId === '' && selectedVendor.value === '') {
             setNotification(true);
             setNotificationMsg({
                 severity: 'error',
                 message: 'Please select vendor'
+            });
+            return;
+        }
+        if (isEmpty(rowIds)) {
+            setNotification(true);
+            setNotificationMsg({
+                severity: 'error',
+                message: 'Please select medicines to create purchase order'
             });
             return;
         }
@@ -294,22 +302,22 @@ export const PurchaseOrders = () => {
                     < CButton
                         type="button"
                         variant='contained'
-                        disabled = {true}
-                        style={ btn_style } 
+                        disabled={true}
+                        style={btn_style}
                         text="PO List"
                     />
                     < CButton
                         type="button"
                         variant='contained'
-                        style={ btn_style} 
+                        style={btn_style}
                         buttonHandler={getAllMedicines}
-                        text="L1 List"
+                        text="L1 Medicines List"
                     />
                     < CButton
                         type="button"
                         variant='contained'
                         text="Re-Order"
-                        disabled = {true}
+                        disabled={true}
                     />
                     {/* <Button disabled sx={{ marginRight: "10px" }} variant="contained">PO List</Button>
                     <Button sx={{ marginRight: "10px" }} variant="contained" onClick={getAllMedicines}>L1 List</Button>
@@ -329,11 +337,11 @@ export const PurchaseOrders = () => {
                 {rows?.length > 0 && (
                     <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px' }}>
                         < CButton
-                        type="button"
-                        variant='contained'
-                        buttonHandler={onSavePO}
-                        text="Save purchage order"
-                    />
+                            type="button"
+                            variant='contained'
+                            buttonHandler={onSavePO}
+                            text="Create purchage order"
+                        />
                         {/* <Button variant="contained" onClick={onSavePO}>Save purchage order</Button> */}
                     </Box>
                 )}

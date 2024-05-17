@@ -88,7 +88,6 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick, hideC
 
   // console.log("data from editable table rows => ", rows, columns)
   const handleInputChange = (event, row, columnId) => {
-    // console.log(data, 'editable table')
     const newData = data.map((rowData) => {
       if (rowData.medicineId === row.original.medicineId) {
         return { ...rowData, [columnId]: event.target.value };

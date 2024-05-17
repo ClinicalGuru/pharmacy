@@ -6,6 +6,7 @@ import ListItemText from '@mui/material/ListItemText';
 
 export const PdfFile = ({ data, vendorDetails, pdfTitle }) => {
   const { address = '', email ='', gst = '', name = '', phone = '' } = vendorDetails || {};
+  const time = new Date().getTime()
   const handleDownload = () => {
     const doc = new jsPDF();
     const totalPages = doc.internal.getNumberOfPages();
@@ -20,7 +21,7 @@ export const PdfFile = ({ data, vendorDetails, pdfTitle }) => {
       // Map the sorted keys to their corresponding values
       return sortedKeys.map(key => item[key]);
     });
-    console.log(columns, rows, 'data pdf');
+
     doc.setFontSize(16);
     doc.text(pdfTitle, doc.internal.pageSize.getWidth() / 2, 10, { align: 'center' });
     doc.setFontSize(12);
@@ -44,7 +45,7 @@ export const PdfFile = ({ data, vendorDetails, pdfTitle }) => {
       doc.text(`Text at the end of Page ${i}`, doc.internal.pageSize.getWidth() / 2, doc.internal.pageSize.getHeight() - 10, { align: 'center' });
     }
     // Save the PDF file
-    doc.save('table.pdf');
+    doc.save(`${pdfTitle}_${time}_${name}.pdf`);
   };
 
   return (
