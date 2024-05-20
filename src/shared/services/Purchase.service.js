@@ -139,5 +139,18 @@ class PurchaseService {
         }
     }
 
+    getPOData = async (vendorId) => {
+        const queryRef = query(purchageOrderRef, where("vendorId", "==", vendorId));
+        const querySnapshot = await getDocs(queryRef);
+
+        // Now you can use the querySnapshot as needed
+        const filteredData = querySnapshot.docs.map(doc => ({ ...doc.data(), purchaseDocumentId: doc.id }));
+
+        return filteredData;
+    }
+
+
+
+
 }
 export default new PurchaseService();

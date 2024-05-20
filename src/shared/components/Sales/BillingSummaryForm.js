@@ -34,25 +34,32 @@ export const BillingSummaryForm = ({
             roundOff: '',
             billAmount: 0,
             paymentMode: 'cash',
+            paidAmount: 0,
+            balance: 0,
             remarks: ''
         }
     });
 
-    const watchFields = watch(["discount", "gst"]);
+    const watchFields = watch(["discount", "gst", "billAmount", 'paidAmount']);
 
     useEffect(() => {
         const subscription = watch((value, { name, type }) => {
             if (name === "discount" || name === "gst") {
-                const { discount, gst } = value;
+                const { discount, gst, } = value;
                 const discountAmount = (netPrice * (discount / 100));
                 const gstAmount = (netPrice * (gst / 100));
                 const totalDiscountedPrice = netPrice - discountAmount;
                 const totalAmountAfterGST = totalDiscountedPrice + gstAmount;
                 const roundOffAmount = Math.round(totalAmountAfterGST) - totalAmountAfterGST;
-                const payableAmount = Math.round(totalAmountAfterGST)
+                const payableAmount = Math.round(totalAmountAfterGST);
                 setValue('netPrice', totalAmountAfterGST);
                 setValue('roundOff', roundOffAmount);
                 setValue('billAmount', payableAmount);
+            } 
+            else if (name === "billAmount" || name === "paidAmount") {
+                const { billAmount, paidAmount } = value;
+                const balanceAmount = billAmount - paidAmount;
+                setValue('balance', balanceAmount);
             }
         });
         return () => subscription.unsubscribe();
@@ -65,11 +72,11 @@ export const BillingSummaryForm = ({
         const totalDiscountedPrice = netPrice - discountAmount;
         const totalAmountAfterGST = (totalDiscountedPrice + gstAmount).toFixed(2);
         const roundOffAmount = Math.round(totalAmountAfterGST) - totalAmountAfterGST;
-        const payableAmount = Math.round(totalAmountAfterGST)
+        const payableAmount = Math.round(totalAmountAfterGST);
         setValue('netPrice', totalAmountAfterGST);
         setValue('roundOff', roundOffAmount);
         setValue('billAmount', payableAmount);
-        setNetPriceValue(Number(totalAmountAfterGST))
+        setNetPriceValue(Number(totalAmountAfterGST));
     }, [netPrice]);
 
     const onSubmit = (data) => {
@@ -125,7 +132,7 @@ export const BillingSummaryForm = ({
                 </div>
                 <div>
                     <label>{FORM_LABELS.ROUND_OFF}</label>
-                    <input onBlur={handleBlur} {...register("roundOff", { required: true })} type="number" step= "0.001" />
+                    <input onBlur={handleBlur} {...register("roundOff", { required: true })} type="number" step="0.001" />
                     {errors['roundOff'] && <span className='red-text'>{errors['roundOff'][`message`]}</span>}
                 </div>
                 <div>
@@ -143,14 +150,23 @@ export const BillingSummaryForm = ({
                     </select>
                     {errors['paymentMode'] && <span className='red-text'>{errors['paymentMode'][`message`]}</span>}
                 </div>
-
-                <div style={{ minWidth: '150px', display: 'flex', alignItems: 'center' }}>
+                <div>
+                    <label>{FORM_LABELS.PAID_AMOUNT}</label>
+                    <input {...register("paidAmount", { required: true })} type="number" />
+                    {errors['paidAmount'] && <span className='red-text'>{errors['paidAmount'][`message`]}</span>}
+                </div>
+                <div>
+                    <label>Balance</label>
+                    <input {...register("balance", { required: true })} type="number" />
+                    {errors['balance'] && <span className='red-text'>{errors['balance'][`message`]}</span>}
+                </div>
+                <div style={{ display: 'grid' }}>
                     <label>{FORM_LABELS.ADD_REMARKS}</label>
                     <textarea {...register("remarks")}></textarea>
                     {errors['remarks'] && <span className='red-text'>{errors['remarks'][`message`]}</span>}
                 </div>
                 <FooterSection>
-                    <input type="submit" value=" Save" style={{marginRight: '10px' }} disabled={netPriceValue === 0} /> 
+                    <input type="submit" value=" Save" style={{ marginRight: '10px' }} disabled={netPriceValue === 0} />
                     <input type="submit" value=" Save & Print" disabled={netPriceValue === 0} />
                 </FooterSection>
             </BillingForm>

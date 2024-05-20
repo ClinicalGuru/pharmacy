@@ -27,5 +27,14 @@ class SalesService {
     addPharmacyBilling = (newBill) => {
         return addDoc(pharmacyBillingRef, newBill);
     }
+
+
+    getBillsByTimestamp = async(startDate, endDate) => {
+        const q = query(pharmacyBillingRef, where('billDate', '>=', startDate), where('billDate', '<=', endDate));
+        return await getDocs(q);
+        // return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      }
+
+
 }
 export default new SalesService();

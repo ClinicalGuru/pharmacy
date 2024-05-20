@@ -44,3 +44,16 @@ export const SearchIconWrapper = styled('div')(({ theme }) => ({
     justifyContent: 'center',
 }));
 
+export const Container = styled('div')(({ theme}) => ({
+    background: '#FFFFFFFF',
+    borderRadius: '6px', 
+    borderWidth: '1px', 
+    borderColor: '#F3F4F6FF', 
+    borderStyle: 'solid',
+    boxShadow: '0px 0px 2px #171a1f',
+    padding: '10px'
+}));
+
+ 
+
+

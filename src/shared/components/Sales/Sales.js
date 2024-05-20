@@ -266,6 +266,7 @@ export const Sales = () => {
             const patientId = await SalesService.addPatient(patientDetails);
             // console.log(patientId, 'patientId');
             const billDetails = {
+                billDate: new Date().valueOf(),
                 patientId: patientId,
                 medicineDetails: rows,
                 ...data

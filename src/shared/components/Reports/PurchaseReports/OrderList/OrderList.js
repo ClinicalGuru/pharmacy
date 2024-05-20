@@ -1,194 +1,94 @@
 import React, { useState, useEffect } from 'react';
-// import { FORM_LABELS } from "../../../Constants/index";
 
 import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Box } from "@mui/material";
-import { Form } from "../../../Forms/index";
-// import Table from '@mui/material/Table';
+import { VendorSelection } from "../../../Purchases/VendorSelection/index";
 import Button from '@mui/material/Button';
 import { CButton } from '../../../Button';
-// import { AddVendor } from "./AddVendorModal";
 import PurchaseService from "../../../../services/Purchase.service";
 import { Table } from "../../../Table";
 import { Container } from './OrderList.styles'
-const VisuallyHiddenInput = styled('input')({
-    clip: 'rect(0 0 0 0)',
-    clipPath: 'inset(50%)',
-    height: 1,
-    overflow: 'hidden',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    whiteSpace: 'nowrap',
-    width: 1,
-  });
+import { OrderTable } from './OrderTable';
+
 export const OrderList = () => {
-   
-    const [modalOpen, setModalOpen] = useState(false);
-    const [vendorDetails, SetVendorDetails] = useState([]);
-    const [rowToEdit, setRowToEdit] = useState(null);
+    const [vendorData, setVendorData] = useState([]);
+    const [showLoader, setShowLoader] = useState(false);
+    const [vendorDetails, setVendorDetails] = useState([]);
     const [rows, setRows] = useState([]);
-    const headArray = [
-        {
-            'head': 'Date',
-            'fieldName': 'date'
-        },
-        {
-            'head': 'Vendor Name',
-            'fieldName': 'vendorName'
-        },
-        {
-            'head': 'Purchase Order ID',
-            'fieldName': 'purchaseOrderId'
-        },
-        // {
-        //     'head': 'Quotation ID',
-        //     'fieldName': 'quotationId'
-        // },
-        {
-            'head': 'Status',
-            'fieldName': 'status'
-        },
-        // {
-        //     'head': 'Remarks',
-        //     'fieldName': 'remarks'
-        // },
-        // {
-        //     'head': 'Action',
-        //     'fieldName': ''
-        // }
-    ]
-    let purchaseReports_details_template = {
-        title: '',
-        submitButttonText: 'Log in',
-        formStyles: {
-            backgroundColor: "#eee",
-        },
-        fields: [
-            {
-                title: 'Search',
-                type: 'text',
-                name: 'text',
-                validationProps: {
-                    required: ""
-                },
-                style: {
-                    width: "194px"
-                }
-            },
-            {
-                title: 'Select Date',
-                type: 'date',
-                name: 'date',
-                validationProps: {
-                    required: "Date is required"
-                },
-                style: {
-                    width: "194px"
-                }
-            },
+    const [selectVendorAlert, setSelectVendorAlert] = useState(true);
 
-            {
-
-                title: 'Select Options',
-                type: 'select',
-                name: 'select',
-                options: [
-                    {
-                        value: "none",
-                        name: "None",
-                    },
-                ],
-                validationProps: {
-                    required: ""
-                },
-                style: {
-                    width: "194px"
-                }
-            },
-
-        ],
+    const handleVendorSelection = (vendorDetails) => {
+        setVendorDetails({ vendorId: vendorDetails?.value, date: '' });
+        getFilteredOrderList(vendorDetails.value)
+        console.log(vendorDetails, 'details');
+    };
+    const handelDateSelection = (value) => {
+        setVendorDetails({ vendorId: vendorDetails?.value, date: value })
     };
 
-    const vendor_details_style = {
-        display: "flex",
-        gap: "28px 30px",
-        // alignItems: "center"
-        // justifyContent: "space-around"
-    };
-    const btn_styles = { display: "flex", justifyContent: "end" };
-    const onSubmit = (form) => {
-        console.log(form);
-    };
-
-    const validate = (watchValues, errorMethods) => {
-        // console.log(watchValues, 'watchValues')
-    };
-    const handleDeleteRow = (targetIndex) => {
-        setRows(rows.filter((_, idx) => idx !== targetIndex));
-    };
-
-    const handleEditRow = (idx) => {
-        setRowToEdit(idx);
-        setModalOpen(true);
-    };
-    const getVendors = async () => {
+    const getFilteredOrderList = async (vendorId) => {
         try {
-            let data = await PurchaseService.getAllVendors();
-            const result = data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }));
-            SetVendorDetails(result);
-            console.log(purchaseReports_details_template, 'vendor_details_template', result)
-        } catch (e) {
-            console.log(e, 'error allVendors')
+            let data = await PurchaseService.getPOData(vendorId);
+            const filteredOrderWithQuotationId = data.reduce((acc, order) => {
+                const quotationId = order.quotationId;
+                if (!acc[quotationId]) {
+                    acc[quotationId] = [];
+                }
+                acc[quotationId].push(order);
+                return acc;
+            }, {});
+            // console.log(filteredOrderWithQuotationId, 'filteredOrderWithQuotationId');
+            // const rowsData = Object.values(filteredOrderWithQuotationId).flat();
+            console.log(filteredOrderWithQuotationId, 'filteredOrderWithQuotationId')
+            setRows(filteredOrderWithQuotationId);
+        } catch (err) {
         }
     };
-    const refreshVendorNewVendors = () => {
-        getVendors();
-    };
+
     useEffect(() => {
-        getVendors();
-    }, []);
+        const vendorInfo = async () => {
+            console.log(vendorDetails, 'vendor data');
+            setShowLoader(true);
+            try {
+                let data = await PurchaseService.getVendor(vendorDetails.vendorId);
+                setSelectVendorAlert(false);
+                setVendorData(data);
+                setShowLoader(false);
+            } catch (err) {
+                console.log(err, 'error getting requisition data');
+                setShowLoader(false);
+            }
+        }
+        vendorInfo();
+    }, [vendorDetails]);
+
     return (
         <Box sx={{
             padding: 2,
         }}>
             <Container>
-                <Form
-                    template={purchaseReports_details_template}
-                    onSubmit={onSubmit}
-                    validate={validate}
-                    showSubmitButton={false}
-                    form_styles={vendor_details_style}
-                    btn_styles={btn_styles}
-                />
-                <CButton 
-                type="button"
-                 component="label" 
-                variant="contained" 
-                // style={{ color: '#56EBFF', border: '2px solid #56EBFF', backgroundColor: 'white',marginTo:'10px' }} 
-                startIcon={<CloudUploadIcon />}
-                text="Export as Excel"
+                <Container>
+                    <VendorSelection
+                        onSelectVendor={handleVendorSelection}
+                        onSelectDate={handelDateSelection}
+                    />
+                </Container>
+                <CButton
+                    type="button"
+                    component="label"
+                    variant="contained"
+                    startIcon={<CloudUploadIcon />}
+                    text="Export as Excel"
                 >
-                <VisuallyHiddenInput type="file" />
                 </CButton>
-
-                {/* <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-                    Export as Excel
-                    <VisuallyHiddenInput type="file" />
-                </Button> */}
             </Container>
             <Box sx={{ marginTop: 3 }}>
-                <Table headArray={headArray} gridArray={rows} />
+                <OrderTable
+                    data={rows}
+                    vendorData={vendorData}
+                />
             </Box>
-            <div>
-                {rows.length > 0 && (
-                    <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px' }}>
-                        <Button variant="contained">Save</Button>
-                    </Box>
-                )}
-
-            </div>
         </Box>
 
     )

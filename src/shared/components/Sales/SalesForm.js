@@ -195,7 +195,6 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
           })}
           style={{ width: "60px" }}
           type="number"
-          step="0.001"
         />
         {errors['price'] && <span className='red-text'>{errors['price'][`message`]}</span>}
       </div>
