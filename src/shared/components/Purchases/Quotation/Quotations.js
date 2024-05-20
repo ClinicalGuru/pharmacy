@@ -85,12 +85,13 @@ export const Quotations = () => {
         },
     ];
     const handleButtonClick = (action, row) => {
+        console.log(action, 'chjsdbchjsbchbs');
         const newData = rows.map((rowData) => {
             if (rowData.pharmacologicalName === row.pharmacologicalName) {
                 if (action === "edit") {
                     return { ...rowData, isEditing: true, prevData: { ...rowData } };
                 } else if (action === "cancel") {
-                    return { ...rowData, isEditing: false, ...rowData.prevData };
+                    return { isEditing: false, ...rowData.prevData };
                 } else if (action === "save") {
                     const { prevData, ...updatedRowData } = rowData;
                     return { ...updatedRowData, isEditing: false };
@@ -249,9 +250,18 @@ export const Quotations = () => {
     };
     const btn_styles = { display: "flex", justifyContent: "end" };
 
-    const onAddMedicine = (formData) => {
-        const updatedRows = [...rows, formData]
+    const onAddMedicine = (formData, e) => {
+        const { pharmacologicalName, brandName } = formData;
+        const transformedObject = {
+            ...formData,
+            pharmacologicalName: pharmacologicalName?.label,
+            brandName: brandName?.label,
+            medicineId: brandName?.value,
+        };
+        console.log(transformedObject, 'dsjkfncdjnvcdfjhvnhdfjhvndjhfnvhjdfnvhjjjjjjjj');
+        const updatedRows = [...rows, transformedObject]
         setRows(updatedRows);
+        e.target.reset();
     };
 
     const validate = (watchValues, errorMethods) => {
@@ -272,6 +282,11 @@ export const Quotations = () => {
             console.log(err, 'error getting requisition data');
             setShowLoader(false);
         }
+    };
+
+    const clearForm = () => {
+        // Clear form fields here
+        setRows([]);
     };
 
     const handleVendorSelection = (vendorDetails) => {
@@ -298,6 +313,7 @@ export const Quotations = () => {
                 console.log(res, 'Quotation data saved successfully');
                 setShowLoader(false);
                 alertState();
+                setRows([]);
             });
         } catch (err) {
             console.log(err, 'err while adding quotation data');
@@ -341,6 +357,7 @@ export const Quotations = () => {
                     showClearFormButton={true}
                     form_styles={medicine_details_style}
                     btn_styles={btn_styles}
+                    onClearForm={clearForm}
                 />
             </Box>
             <Box sx={{ marginTop: 2 }}>
