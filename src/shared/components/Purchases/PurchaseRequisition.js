@@ -324,6 +324,7 @@ export const PurchaseRequisition = () => {
 
             <Box
                 sx={{
+                    height: '70px',
                     backgroundColor: '#DEE1E6FF',
                     borderRadius: '4px',
                     padding: 1,
