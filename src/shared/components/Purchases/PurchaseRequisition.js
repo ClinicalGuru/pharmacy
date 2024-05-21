@@ -70,11 +70,11 @@ export const PurchaseRequisition = () => {
             Cell: ({ row, column, cell }) =>
                 row.original.isEditing ? (
                     <>
-                        <DoneOutlinedIcon style={{ color: 'blue' }} onClick={() => handleButtonClick("save", row.original)} sx={{marginRight: '10px'}}/>
-                        <CancelOutlinedIcon style={{ color: 'red' }} onClick={() => handleButtonClick("cancel", row.original)}/>
+                        <DoneOutlinedIcon style={{ color: 'blue' }} onClick={() => handleButtonClick("save", row.original)} sx={{ marginRight: '10px' }} />
+                        <CancelOutlinedIcon style={{ color: 'red' }} onClick={() => handleButtonClick("cancel", row.original)} />
                     </>
                 ) : (
-                   <EditOutlinedIcon disabled={dataFetched} onClick={() => handleButtonClick("edit", row.original)}/>
+                    <EditOutlinedIcon disabled={dataFetched} onClick={() => handleButtonClick("edit", row.original)} />
                 ),
         },
     ];
@@ -84,7 +84,7 @@ export const PurchaseRequisition = () => {
                 if (action === "edit") {
                     return { ...rowData, isEditing: true, prevData: { ...rowData } };
                 } else if (action === "cancel") {
-                    return { ...rowData, isEditing: false, ...rowData.prevData };
+                    return { isEditing: false, ...rowData.prevData };
                 } else if (action === "save") {
                     const { prevData, ...updatedRowData } = rowData;
                     return { ...updatedRowData, isEditing: false };
@@ -226,6 +226,9 @@ export const PurchaseRequisition = () => {
                 setRows(updatedRows);
                 setShowLoader(false);
                 e.target.reset();
+                setPharmacologicalNames('');
+                setBrandNames( '')
+                // reset();
             })
         } catch (err) {
             setShowLoader(false);
@@ -332,6 +335,7 @@ export const PurchaseRequisition = () => {
                 }}
             >
                 <Form
+                    // ref={formRef}
                     template={medicine_details_template}
                     onSubmit={onAddMedicine}
                     onResetForm

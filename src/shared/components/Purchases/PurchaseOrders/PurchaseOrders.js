@@ -50,12 +50,12 @@ export const PurchaseOrders = () => {
         {
             'Header': 'Dose',
             'accessor': 'dose',
-            editEnable: true,
+            editEnable: false,
         },
         {
             'Header': 'Form',
             'accessor': 'form',
-            editEnable: true,
+            editEnable: false,
         },
         {
             'Header': 'Qantity / Strips',
@@ -120,6 +120,10 @@ export const PurchaseOrders = () => {
         getVendors();
     }, []);
 
+    useEffect(() => {
+        getAllMedicines();
+    }, [vendorDetails]);
+
     const onSavePO = async () => {
         if (vendorId === '' && selectedVendor.value === '') {
             setNotification(true);
@@ -151,6 +155,7 @@ export const PurchaseOrders = () => {
                 severity: 'success',
                 message: 'Purchase order created successfully.'
             });
+            getAllMedicines();
         } catch (err) {
             console.log('error on saving PO', err)
             setShowLoader(false);
@@ -182,6 +187,7 @@ export const PurchaseOrders = () => {
         try {
             let data = await PurchaseService.getAllQuotationData();
             const result = data?.docs?.map((doc) => ({ ...doc?.data(), id: doc?.id }));
+            console.log(result, 'dhbcsfbncsjkncsjdhcdshshdd');
             joinQuotationsWithVendors(result);
             setShowLoader(false);
         } catch (e) {
@@ -192,6 +198,7 @@ export const PurchaseOrders = () => {
     const joinQuotationsWithVendors = (data) => {
         setShowLoader(true);
         let vendorMap = new Map();
+        console.log(vendorDetails, 'vendorDetails')
         for (const vendor of vendorDetails) {
             vendorMap.set(vendor.id, vendor.name)
         }
@@ -340,7 +347,7 @@ export const PurchaseOrders = () => {
                             type="button"
                             variant='contained'
                             buttonHandler={onSavePO}
-                            text="Create purchage order"
+                            text="Create purchase order"
                         />
                         {/* <Button variant="contained" onClick={onSavePO}>Save purchage order</Button> */}
                     </Box>
