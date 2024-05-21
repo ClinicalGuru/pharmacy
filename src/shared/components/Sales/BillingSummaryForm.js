@@ -125,7 +125,7 @@ export const BillingSummaryForm = ({
                 </div>
                 <div>
                     <label>{FORM_LABELS.ROUND_OFF}</label>
-                    <input onBlur={handleBlur} {...register("roundOff", { required: true })} type="number" step= "0.001" />
+                    <input onBlur={handleBlur} {...register("roundOff", { required: true })} type="number" step= ".01" />
                     {errors['roundOff'] && <span className='red-text'>{errors['roundOff'][`message`]}</span>}
                 </div>
                 <div>

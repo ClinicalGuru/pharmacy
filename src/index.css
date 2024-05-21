@@ -58,9 +58,9 @@ input[type=submit], [type=reset] {
 
 }
 
-input[type = number] {
+/* input[type = number] {
   direction: rtl;
-}
+} */
 
 /* input[type=reset] {
   cursor: pointer;

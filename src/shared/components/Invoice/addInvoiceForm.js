@@ -6,7 +6,7 @@ import { FORM_LABELS } from "../../Constants/index";
 import { Notification } from '../Notification/index';
 // import DatePicker from "react-datepicker";
 // import "react-datepicker/dist/react-datepicker.css";
-import { CiCalendarDate } from "react-icons/ci";
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import './addinvoiceform.css'
 import MonthYearCalendarPopup from "../Calendar/MonthYearCalendarPopup";
 import Modal from 'react-modal';
@@ -235,7 +235,7 @@ export const AddInvoiceForm = ({
         min={currentDate}
       />
       <div style={{ position: 'absolute', left: '8px', top: '50%', transform: 'translateY(-50%)' }}>
-        <CiCalendarDate onClick={openModal} style={{ color: '#888', fontSize: '1.2em' }} />
+        <CalendarMonthIcon onClick={openModal} style={{ color: '#888', fontSize: '1.2em' }} />
       </div>
     </div> 
                     {/* <input {...register("expiry", { required: true })} placeholder="MM/YY"
