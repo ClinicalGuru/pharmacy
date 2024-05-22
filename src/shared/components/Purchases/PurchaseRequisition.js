@@ -207,10 +207,9 @@ export const PurchaseRequisition = () => {
             medicineId: brandName?.value
         };
         const isDuplicate = rows.some(row =>
-            row.pharmacologicalName === transformedObject.pharmacologicalName &&
-            row.brandName === transformedObject.brandName &&
-            row.form === transformedObject.form
+            Object.keys(transformedObject).every(key => row[key] === transformedObject[key])
         );
+        
 
         if (isDuplicate) {
             alert('Duplicate data cannot be added.');

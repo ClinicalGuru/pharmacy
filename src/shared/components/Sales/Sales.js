@@ -215,17 +215,14 @@ export const Sales = () => {
             medicineId: brandName?.value
         };
         const isDuplicate = rows.some(row =>
-            row.pharmacologicalName === transformedObject.pharmacologicalName &&
-            row.brandName === transformedObject.brandName &&
-            row.batchNo === transformedObject.batchNo &&
-            row.hsnCode === transformedObject.hsnCode &&
-            row.pricePerUnit === transformedObject.pricePerUnit &&
-            row.quantity === transformedObject.quantity && 
-            row.discount === transformedObject.discount
+            Object.keys(transformedObject).every(key => row[key] === transformedObject[key])
         );
+        
         if (isDuplicate) {
             alert('Duplicate data cannot be added.');
             setShowLoader(false);
+            setEditngIndex(-1); 
+            setEditngRow({});
             return;
         }
         if (editingIndex !== -1) {

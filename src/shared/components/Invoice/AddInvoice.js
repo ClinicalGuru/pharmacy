@@ -264,20 +264,8 @@ export const AddInvoice = () => {
             setLoader(false);
             return;
         }
-        console.log(transformedObject, 'fhencvhjfnvchjfncvhfenhfnhn');
         const isDuplicate = rows.some(row =>
-            row.pharmacologicalName === transformedObject.pharmacologicalName &&
-            row.brandName === transformedObject.brandName &&
-            row.batchNo === transformedObject.batchNo &&
-            row.hsnCode === transformedObject.hsnCode &&
-            row.expiry === transformedObject.expiry &&
-            row.quantity === transformedObject.quantity &&
-            row.pricePerStrip === transformedObject.pricePerStrip &&
-            row.mrpPerStrip === transformedObject.mrpPerStrip &&
-            row.noOfStrips === transformedObject.noOfStrips &&
-            row.freeStrips === transformedObject.freeStrips &&
-            row.discount === transformedObject.discount &&
-            row.gst === transformedObject.gst
+            Object.keys(transformedObject).every(key => row[key] === transformedObject[key])
         );
 
         if (isDuplicate) {
@@ -287,6 +275,8 @@ export const AddInvoice = () => {
                 severity: 'error'
             });
             setLoader(false);
+            setEditngIndex(-1); 
+            setEditngRow({});
             return;
         }
         if (editingIndex !== -1) {
