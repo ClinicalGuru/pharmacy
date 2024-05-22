@@ -10,7 +10,8 @@ export const BillingSummaryForm = ({
     resetForm,
     netPrice,
     patientDetails,
-    medicineDetails
+    medicineDetails,
+    resetTrigger
 }) => {
     const [notification, setNotification] = useState(false);
     const [netPriceValue, setNetPriceValue] = useState(0);
@@ -51,8 +52,8 @@ export const BillingSummaryForm = ({
                 const roundOffAmount = Math.round(totalAmountAfterGST) - totalAmountAfterGST;
                 const payableAmount = Math.round(totalAmountAfterGST)
                 setValue('netPrice', totalAmountAfterGST);
-                setValue('roundOff', roundOffAmount);
-                setValue('billAmount', payableAmount);
+                setValue('roundOff', roundOffAmount.toFixed(2));
+                setValue('billAmount', payableAmount.toFixed(2));
             }
         });
         return () => subscription.unsubscribe();
@@ -67,8 +68,8 @@ export const BillingSummaryForm = ({
         const roundOffAmount = Math.round(totalAmountAfterGST) - totalAmountAfterGST;
         const payableAmount = Math.round(totalAmountAfterGST)
         setValue('netPrice', totalAmountAfterGST);
-        setValue('roundOff', roundOffAmount);
-        setValue('billAmount', payableAmount);
+        setValue('roundOff', roundOffAmount.toFixed(2));
+        setValue('billAmount', payableAmount.toFixed(2));
         setNetPriceValue(Number(totalAmountAfterGST))
     }, [netPrice]);
 
@@ -89,9 +90,15 @@ export const BillingSummaryForm = ({
         setNotification(!notification);
     };
 
+    useEffect(() => {
+        if (resetTrigger) {
+            reset();
+        }
+    }, [resetTrigger, reset]);
+
     const handleBlur = (e) => {
-        const value = parseFloat(e.target.value).toFixed(3); // Convert to float and fix to 2 decimal places
-        setValue("roundOff", value); // Update the form value with the restricted value
+        const value = parseFloat(e.target.value).toFixed(2);
+        setValue(e.target.name, value, { shouldValidate: true });
     };
 
     return (
@@ -124,9 +131,22 @@ export const BillingSummaryForm = ({
                     {errors['netPrice'] && <span className='red-text'>{errors['netPrice'][`message`]}</span>}
                 </div>
                 <div>
-                    <label>{FORM_LABELS.ROUND_OFF}</label>
-                    <input onBlur={handleBlur} {...register("roundOff", { required: true })} type="number" step= ".01" />
-                    {errors['roundOff'] && <span className='red-text'>{errors['roundOff'][`message`]}</span>}
+                    <div>
+                        <label>{FORM_LABELS.ROUND_OFF}</label>
+                        <input
+                            onBlur={handleBlur}
+                            {...register("roundOff", {
+                                required: "Round off is required",
+                                pattern: {
+                                    value: /^\d+(\.\d{1,2})?$/,
+                                    message: "Please enter a valid number with up to 2 decimal places"
+                                }
+                            })}
+                            type="number"
+                            step="0.01"
+                        />
+                        {errors.roundOff && <span className='red-text'>{errors.roundOff.message}</span>}
+                    </div>
                 </div>
                 <div>
                     <label>{FORM_LABELS.BILL_AMOUNT}</label>
@@ -150,7 +170,7 @@ export const BillingSummaryForm = ({
                     {errors['remarks'] && <span className='red-text'>{errors['remarks'][`message`]}</span>}
                 </div>
                 <FooterSection>
-                    <input type="submit" value=" Save" style={{marginRight: '10px' }} disabled={netPriceValue === 0} /> 
+                    <input type="submit" value=" Save" style={{ marginRight: '10px' }} disabled={netPriceValue === 0} />
                     <input type="submit" value=" Save & Print" disabled={netPriceValue === 0} />
                 </FooterSection>
             </BillingForm>

@@ -36,6 +36,8 @@ export const Sales = () => {
     const [editingRow, setEditngRow] = useState({});
     const [editingIndex, setEditngIndex] = useState(-1);
     const [showPrint, SetShowPrint] = useState(false);
+    const [resetPatientForm, setResetPatientForm] = useState(false);
+    const [resetBillingForm, setResetBillingForm] = useState(false);
     const [notificationMsg, setNotificationMsg] = useState({
         message: '',
         severity: ''
@@ -214,7 +216,12 @@ export const Sales = () => {
         };
         const isDuplicate = rows.some(row =>
             row.pharmacologicalName === transformedObject.pharmacologicalName &&
-            row.brandName === transformedObject.brandName
+            row.brandName === transformedObject.brandName &&
+            row.batchNo === transformedObject.batchNo &&
+            row.hsnCode === transformedObject.hsnCode &&
+            row.pricePerUnit === transformedObject.pricePerUnit &&
+            row.quantity === transformedObject.quantity && 
+            row.discount === transformedObject.discount
         );
         if (isDuplicate) {
             alert('Duplicate data cannot be added.');
@@ -222,15 +229,17 @@ export const Sales = () => {
             return;
         }
         if (editingIndex !== -1) {
-            let newArray = [...rows.slice(0, editingIndex), transformedObject, ...rows.slice(editingIndex + 1)];
-            setRows([...newArray]);
+            const updatedRows = rows.map((row, index) =>
+                index === editingIndex ? transformedObject : row
+            );
+            setRows(updatedRows);
+            setPrintData(updatedRows);
         } else {
             setRows([...rows, transformedObject]);
+            setPrintData([...rows, transformedObject]);
         }
-
-        setRows([...rows, transformedObject]);
-        setPrintData([...rows, transformedObject]);
         setEditngIndex(-1);
+        setEditngRow({});
     };
 
     useEffect(() => {
@@ -264,7 +273,6 @@ export const Sales = () => {
         setShowLoader(true);
         try {
             const patientId = await SalesService.addPatient(patientDetails);
-            // console.log(patientId, 'patientId');
             const billDetails = {
                 patientId: patientId,
                 medicineDetails: rows,
@@ -326,6 +334,8 @@ export const Sales = () => {
             return;
         };
         addPatient(patientDetails, data);
+        setResetPatientForm(true);
+        setResetBillingForm(true);
     }
 
     const onSubmit = (form, formType) => {
@@ -346,6 +356,7 @@ export const Sales = () => {
                         showSubmitButton={false}
                         form_styles={patient_details_style}
                         btn_styles={btn_styles}
+                        resetTrigger={resetPatientForm}
 
                     />
                     <Container>
@@ -372,7 +383,12 @@ export const Sales = () => {
                         marginTop: '4px',
                         flex: 1
                     }}>
-                        <BillingSummaryForm netPrice={netPrice} onSubmitBillingForm={handleSubmitBillingForm} patientDetails={patientDetails} medicineDetails={rows} resetForm={reset} />
+                        <BillingSummaryForm 
+                        netPrice={netPrice} 
+                        onSubmitBillingForm={handleSubmitBillingForm} 
+                        patientDetails={patientDetails} 
+                        medicineDetails={rows} 
+                        resetTrigger={resetBillingForm} />
                     </Box>
                 </Grid>
             </Grid>

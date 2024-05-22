@@ -23,6 +23,8 @@ export const Quotations = () => {
     const [notification, setNotification] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [requesitionId, setRequesitionId] = useState('');
+    const [pharmacologicalNames, setPharmacologicalNames] = useState([]);
+    const [brandNames, setBrandNames] = useState([]);
     const columns = [
         {
             'Header': 'Pharmacological Name',
@@ -117,12 +119,7 @@ export const Quotations = () => {
                 validationProps: {
                     required: `${FORM_LABELS.PHARMACOLOGICAL_NAME} is required`
                 },
-                options: [
-
-                ],
-                // style: {
-                //     width: "194px"
-                // }
+                options: [...pharmacologicalNames],
             },
             {
 
@@ -132,12 +129,7 @@ export const Quotations = () => {
                 validationProps: {
                     required: ` ${FORM_LABELS.BRAND_NAME} is required`
                 },
-                options: [
-
-                ],
-                // style: {
-                //     width: "194px"
-                // }
+                options: [...brandNames],
             },
             {
                 title: FORM_LABELS.DOSE,
@@ -258,10 +250,11 @@ export const Quotations = () => {
             brandName: brandName?.label,
             medicineId: brandName?.value,
         };
-        console.log(transformedObject, 'dsjkfncdjnvcdfjhvnhdfjhvndjhfnvhjdfnvhjjjjjjjj');
         const updatedRows = [...rows, transformedObject]
         setRows(updatedRows);
         e.target.reset();
+        setPharmacologicalNames('');
+        setBrandNames('');
     };
 
     const validate = (watchValues, errorMethods) => {
@@ -314,12 +307,30 @@ export const Quotations = () => {
                 setShowLoader(false);
                 alertState();
                 setRows([]);
+                
             });
         } catch (err) {
             console.log(err, 'err while adding quotation data');
             setShowLoader(false);
         }
     };
+
+    const getMedicines = async () => {
+        setShowLoader(true);
+        try {
+            let data = await PurchaseService.getAllMedicines();
+            const result = data?.docs?.map((doc) => ({ ...doc?.data(), id: doc?.id }));
+            setPharmacologicalNames(result?.map((item) => ({ value: item?.id, name: item?.pharmacologicalName })));
+            setBrandNames(result?.map((item) => ({ value: item?.id, name: item?.brandName })));
+            setShowLoader(false);
+        } catch (e) {
+            console.log(e, 'error allVendors');
+            setShowLoader(false);
+        }
+    }
+    useEffect(() => {
+        getMedicines();
+    }, []);
 
     const alertState = () => {
         setNotification(!notification);

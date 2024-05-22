@@ -187,7 +187,6 @@ export const PurchaseOrders = () => {
         try {
             let data = await PurchaseService.getAllQuotationData();
             const result = data?.docs?.map((doc) => ({ ...doc?.data(), id: doc?.id }));
-            console.log(result, 'dhbcsfbncsjkncsjdhcdshshdd');
             joinQuotationsWithVendors(result);
             setShowLoader(false);
         } catch (e) {
@@ -198,7 +197,6 @@ export const PurchaseOrders = () => {
     const joinQuotationsWithVendors = (data) => {
         setShowLoader(true);
         let vendorMap = new Map();
-        console.log(vendorDetails, 'vendorDetails')
         for (const vendor of vendorDetails) {
             vendorMap.set(vendor.id, vendor.name)
         }
