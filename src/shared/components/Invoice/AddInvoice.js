@@ -32,6 +32,10 @@ export const AddInvoice = () => {
             'accessor': 'brandName',
         },
         {
+            'Header': 'Batch No',
+            'accessor': 'batchno',
+        },
+        {
             'Header': 'HSN Code',
             'accessor': 'hsnCode',
         },

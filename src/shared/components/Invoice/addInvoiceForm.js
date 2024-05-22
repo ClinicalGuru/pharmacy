@@ -276,11 +276,22 @@ export const AddInvoiceForm = ({
                     <input {...register("discount", { required: true })} type="number" step=".01" />
                     {errors['discount'] && <span className='red-text'>{errors['discount'][`message`]}</span>}
                 </div>
-                <div style={{ minWidth: '150px' }}>
+                <div style={{ minWidth: '100px' }}>
+                    <label>{FORM_LABELS.GST}</label>
+                    <select {...register("gst")}>
+                    <option value="0">0%</option>
+                    <option value="5">5%</option>
+                    <option value="12">12%</option>
+                    <option value="18">18%</option>
+                    <option value="28">28%</option>
+                    </select>
+                    {errors['gst'] && <span className='red-text'>{errors['gst'][`message`]}</span>}
+                </div>
+                {/* <div style={{ minWidth: '150px' }}>
                     <label>{FORM_LABELS.GST}</label>
                     <input {...register("gst")} type="number" step=".01" />
                     {errors['gst'] && <span className='red-text'>{errors['gst'][`message`]}</span>}
-                </div>
+                </div> */}
                 <div style={{ minWidth: '150px' }}>
                     <label>{FORM_LABELS.NET_PRICE}</label>
                     <input disabled {...register("netPrice", { required: true })} type="number" />
