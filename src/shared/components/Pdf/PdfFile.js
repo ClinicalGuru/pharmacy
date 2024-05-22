@@ -5,7 +5,7 @@ import moment from 'moment'
 import ListItemText from '@mui/material/ListItemText';
 
 export const PdfFile = ({ data, vendorDetails, pdfTitle }) => {
-  console.log(data, 'pdf data');
+  // console.log(data, 'pdf data');
   const { address = '', email ='', gst = '', name = '', phone = '' } = vendorDetails || {};
   const time = new Date().getTime()
   const handleDownload = () => {

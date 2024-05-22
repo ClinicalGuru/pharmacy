@@ -12,6 +12,7 @@ export const Form = ({
     btn_styles,
     onClearForm,
     onValidate = () => { },
+    resetTrigger
 }) => {
     const [prevWatchValues, setPrevWatchValues] = useState({});
     let { control, register, handleSubmit, watch, setError, clearErrors, formState: { errors }, reset, watchFields } = useForm({
@@ -28,6 +29,12 @@ export const Form = ({
             setPrevWatchValues(watchValues);
         }
     }, [watchValues, prevWatchValues, onValidate]);
+
+    useEffect(() => {
+        if (resetTrigger) {
+            reset();
+        }
+    }, [resetTrigger, reset]);
 
     const renderFields = (fields) => {
         return fields.map(field => {
@@ -182,7 +189,7 @@ export const Form = ({
             return (
                 <>
                     {
-                        button.type == 'checkbox'
+                        button.type === 'checkbox'
                             ? <div className='atofq'><div className='atofq-checkbox'><input type={button.type} /></div><div className='atofq-text'>{button?.btn_text}</div></div>
                             : <SubmitButton style={button?.styles} type={button.type} className="btn"> {button?.btn_text}</SubmitButton>
                     }

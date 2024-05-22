@@ -188,17 +188,19 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
         <label>{FORM_LABELS.PRICE}</label>
         <input
           {...register("pricePerUnit", {
-            required: true, pattern: {
-              value: /^[0-9]*$/,
-              message: ""
+            required: "Price is required",
+            pattern: {
+              value: /^[0-9]*\.?[0-9]+$/,
+              message: "Invalid price format"
             }
           })}
           style={{ width: "60px" }}
           type="number"
-          step="0.001"
+          step="0.01"
         />
-        {errors['price'] && <span className='red-text'>{errors['price'][`message`]}</span>}
+        {errors['pricePerUnit'] && <span className='red-text'>{errors['pricePerUnit'].message}</span>}
       </div>
+
 
       <div>
         <label>{FORM_LABELS.QUANTITY}</label>
@@ -247,7 +249,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
           disabled
           {...register("amount")}
           type="number"
-          step= "0.001"
+          step="0.001"
           style={{ width: "60px" }}
         />
         {errors['amount'] && <span className='red-text'>{errors['amount'][`message`]}</span>}

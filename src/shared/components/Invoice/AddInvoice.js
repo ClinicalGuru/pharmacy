@@ -22,6 +22,8 @@ export const AddInvoice = () => {
     const [brandNames, setBrandNames] = useState([]);
     const [editingRow, setEditngRow] = useState({});
     const [editingIndex, setEditngIndex] = useState(-1);
+    const [resetVendorForm, setResetVendorForm] = useState(false);
+    const [resetInvoiceForm, setResetInvoiceForm] = useState(false);
     const [notificationMsg, setNotificationMsg] = useState({
         message: '',
         severity: ''
@@ -190,7 +192,6 @@ export const AddInvoice = () => {
     const btn_styles = { display: "flex", justifyContent: "end" };
     const onSubmit = (formData) => {
 
-
     };
     const alertState = () => {
         setNotification(!notification);
@@ -222,6 +223,9 @@ export const AddInvoice = () => {
                 message: 'Medicines added to inventory',
                 severity: 'success'
             });
+            setRows([]);
+            setResetVendorForm(true); // Trigger the reset
+
             setLoader(false);
         } catch (err) {
             setLoader(false);
@@ -256,11 +260,20 @@ export const AddInvoice = () => {
             setLoader(false);
             return;
         }
+        console.log(transformedObject, 'fhencvhjfnvchjfncvhfenhfnhn');
         const isDuplicate = rows.some(row =>
             row.pharmacologicalName === transformedObject.pharmacologicalName &&
             row.brandName === transformedObject.brandName &&
             row.batchNo === transformedObject.batchNo &&
-            row.hsnCode === transformedObject.hsnCode
+            row.hsnCode === transformedObject.hsnCode &&
+            row.expiry === transformedObject.expiry &&
+            row.quantity === transformedObject.quantity &&
+            row.pricePerStrip === transformedObject.pricePerStrip &&
+            row.mrpPerStrip === transformedObject.mrpPerStrip &&
+            row.noOfStrips === transformedObject.noOfStrips &&
+            row.freeStrips === transformedObject.freeStrips &&
+            row.discount === transformedObject.discount &&
+            row.gst === transformedObject.gst
         );
 
         if (isDuplicate) {
@@ -278,7 +291,7 @@ export const AddInvoice = () => {
         } else {
             setRows([...rows, transformedObject]);
         }
-        setRestForm(true);
+        setResetInvoiceForm(true);
         setLoader(false);
         setEditngIndex(-1);
     }
@@ -331,12 +344,13 @@ export const AddInvoice = () => {
                     showSubmitButton={false}
                     form_styles={vendor_details_style}
                     btn_styles={btn_styles}
+                    resetTrigger={resetVendorForm}
                 />
             </Container>
             <Container>
                 <AddInvoiceForm
                     onSubmit={invoiceHandler}
-                    resetForm={reset}
+                    resetTrigger={resetInvoiceForm}
                     pData={pharmacologicalNames}
                     bData={brandNames}
                     data={editingRow}

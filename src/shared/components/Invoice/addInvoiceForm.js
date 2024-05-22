@@ -19,6 +19,7 @@ export const AddInvoiceForm = ({
     pData = [],
     bData = [],
     onSubmit,
+    resetTrigger,
     resetForm = {},
     data
 }) => {
@@ -74,6 +75,7 @@ export const AddInvoiceForm = ({
         setValue("expiry","MM/YY")
         if (resetForm) reset();
     }, [onSubmit]);
+    
 
     useEffect(() => {
         if (!isEmpty(data)) {
@@ -124,6 +126,13 @@ export const AddInvoiceForm = ({
         setIsOpen(false);
         setValue("expiry",`${month}/${year}`)
       };
+
+      useEffect(() => {
+        if (resetTrigger) {
+            reset();
+        }
+    }, [resetTrigger, reset]);
+
     return (
         <FormContainer onSubmit={handleSubmit(onSubmit)}>
             <div className={"addInvoiceForm"}>
