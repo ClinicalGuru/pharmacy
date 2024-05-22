@@ -64,7 +64,7 @@ export const AddInvoiceForm = ({
                 const discountedValue = (noOfStrips * pricePerStrip) - ((noOfStrips * pricePerStrip * discount) / 100);
                 const netPrice = discountedValue + ((gst * discountedValue) / 100);
                 const pricePerUnit = mrpPerStrip / quantity;
-                setValue('netPrice', netPrice);
+                setValue('netPrice', netPrice?.toFixed(2));
                 setValue('pricePerUnit', pricePerUnit?.toFixed(2));
             }
         });

@@ -37,6 +37,7 @@ export const PurchaseRequisition = () => {
     const [brandNames, setBrandNames] = useState([]);
     const [manditoryAlert, setManditoryAlert] = useState(false);
     const [undefindedValues, setundefindedValues] = useState(false);
+    const [resetForm, setResetForm] = useState(null);
     const columns = [
         {
             'Header': 'Pharmacological Name',
@@ -195,7 +196,7 @@ export const PurchaseRequisition = () => {
 
     const onAddMedicine = async (formData, e) => {
         setShowLoader(true);
-
+        debugger;
         const { dose, form, quantity, pharmacologicalName, brandName } = formData;
         const transformedObject = {
             dose,
@@ -226,9 +227,6 @@ export const PurchaseRequisition = () => {
                 setRows(updatedRows);
                 setShowLoader(false);
                 e.target.reset();
-                setPharmacologicalNames('');
-                setBrandNames( '')
-                // reset();
             })
         } catch (err) {
             setShowLoader(false);
@@ -344,6 +342,7 @@ export const PurchaseRequisition = () => {
                     showClearFormButton={true}
                     form_styles={medicine_details_style}
                     btn_styles={btn_styles}
+                    resetForm={setResetForm}
                 />
             </Box>
             <Box sx={{ marginTop: 2 }}>

@@ -35,7 +35,7 @@ export const AddInvoice = () => {
         },
         {
             'Header': 'Batch No',
-            'accessor': 'batchno',
+            'accessor': 'batchNo',
         },
         {
             'Header': 'HSN Code',
@@ -336,6 +336,12 @@ export const AddInvoice = () => {
         setEditngRow(row);
         setEditngIndex(i);
     }
+
+    const deleteRow = (index) => {
+        const updatedRows = rows.filter((_, i) => i !== index);
+        setRows(updatedRows);
+    }
+
     return (
         <Box sx={{
             padding: 2,
@@ -366,6 +372,7 @@ export const AddInvoice = () => {
                     gridArray={rows}
                     setData={setRows}
                     dataCallback={dataCallback}
+                    deleteRow={deleteRow}
                 />
             </Box>
             <div>

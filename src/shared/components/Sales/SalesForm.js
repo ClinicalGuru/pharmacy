@@ -20,9 +20,9 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
       hsnCode: '',
       pricePerUnit: '',
       quantity: '',
-      total: '',
+      total: 0,
       discount: 0,
-      amount: ''
+      amount: 0
     }
   });
   const watchFields = watch(["price", "quantity", "discount"]);
@@ -33,15 +33,16 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
 
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
-      console.log(name, 'name');
+      // console.log(name, 'dcxsbgcbsdhucbhdsbchusbhb');
       if (name === "pricePerUnit" || name === "quantity" || name === "discount") {
 
         const { pricePerUnit, quantity, discount } = value;
         console.log(pricePerUnit, quantity, discount, 'pricePerUnit, quantity, discount');
         const totalPrice = pricePerUnit * quantity;
         const discountedValue = totalPrice - (totalPrice * discount) / 100;
-        setValue('total', totalPrice);
+        setValue('total', totalPrice?.toFixed(2));
         setValue('amount', discountedValue);
+        // console.log(discountedValue, 'amount');
       }
     });
     return () => subscription.unsubscribe();

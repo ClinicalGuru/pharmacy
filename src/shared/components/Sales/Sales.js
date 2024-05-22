@@ -247,7 +247,7 @@ export const Sales = () => {
             return accumulator + currentRow.amount;
         }, 0);
         setNetprice(totalNetPrice);
-    }, [rows]);
+    }, [rows]); 
 
     useEffect(() => {
         const getInventory = async () => {
@@ -341,10 +341,18 @@ export const Sales = () => {
     const onSubmit = (form, formType) => {
 
     };
+
     const dataCallback = (row, i) => {
         setEditngRow(row);
         setEditngIndex(i);
     }
+
+    const deleteRow = (index) => {
+        const updatedRows = rows.filter((_, i) => i !== index);
+        setRows(updatedRows);
+        setPrintData(updatedRows);
+    }
+
     return (
         <Box sx={{ flexGrow: 1, padding: '1rem' }}>
             <Grid container spacing={2}>
@@ -372,6 +380,7 @@ export const Sales = () => {
                             gridArray={rows}
                             setData={setRows}
                             dataCallback={dataCallback}
+                            deleteRow={deleteRow}
                         />
                     </Box>
                 </Grid>

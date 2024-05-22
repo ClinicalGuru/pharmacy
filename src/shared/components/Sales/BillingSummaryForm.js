@@ -138,14 +138,13 @@ export const BillingSummaryForm = ({
                             {...register("roundOff", {
                                 required: "Round off is required",
                                 pattern: {
-                                    value: /^\d+(\.\d{1,2})?$/,
+                                    value: /^-?\d+(\.\d{1,2})?$/,
                                     message: "Please enter a valid number with up to 2 decimal places"
                                 }
                             })}
                             type="number"
                             step="0.01"
                         />
-                        {errors.roundOff && <span className='red-text'>{errors.roundOff.message}</span>}
                     </div>
                 </div>
                 <div>
