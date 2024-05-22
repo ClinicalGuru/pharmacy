@@ -272,6 +272,11 @@ export const MasterList = () => {
                 filteredRows = originalData.filter((item) => item?.pricingOrder === pricingOrder);
             }
         }
+        filteredRows.sort((a, b) => {
+            const orderA = parseInt(a.pricingOrder.replace('L', ''), 10);
+            const orderB = parseInt(b.pricingOrder.replace('L', ''), 10);
+            return orderA - orderB;
+        });
         setRows(filteredRows);
     }, [vendorId, pMed, pricingOrder]);
 
