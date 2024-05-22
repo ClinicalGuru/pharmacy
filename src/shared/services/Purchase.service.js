@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 const vendorCollectionRef = collection(firestore, "vendors");
 const requisitionCollectionRef = collection(firestore, "purchaseRequisition");
 const quotationCollectionRef = collection(firestore, "quotation");
-const medicineCollectionRef = collection(firestore, "pMedicines")
+const medicineCollectionRef = collection(firestore, "pMedicines");
 const purchageOrderRef = collection(firestore, "purchageOrder");
 
 class PurchaseService {
