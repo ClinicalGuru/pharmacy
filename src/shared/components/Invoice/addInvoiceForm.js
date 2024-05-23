@@ -310,10 +310,10 @@ export const AddInvoiceForm = ({
                     <div style={{ display: 'flex', marginLeft: '100px' }}>
 
                         <div style={{ position: 'absolute' }}>
-                        <input style={{ color: 'white' }} type="submit" id="styled-submit-button"  />
+                        <input style={{ color: 'white' }} type="submit" id="styled-submit-button" value={"+ Add"} />
                         </div>
                         <div style={{ position: 'absolute', marginLeft: '70px' }}>
-                            <input style={{ color: 'white' }} type="reset" id="styled-reset-button"  />
+                            <input style={{ color: 'white' }} type="reset" id="styled-reset-button"  value={"Clear"} />
                         </div>
 
                         {/* <div style={{ position: 'absolute' }}>

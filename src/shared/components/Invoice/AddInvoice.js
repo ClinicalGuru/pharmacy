@@ -106,14 +106,8 @@ export const AddInvoice = () => {
             {
 
                 title: 'Invoice Number',
-                type: 'autoComplete',
+                type: 'text',
                 name: 'invoiceNumber',
-                options: [
-                    {
-                        value: "none",
-                        name: "None",
-                    },
-                ],
                 validationProps: {
                     required: "Invoice num is required"
                 },
@@ -124,14 +118,8 @@ export const AddInvoice = () => {
             {
 
                 title: 'PO Number',
-                type: 'autoComplete',
+                type: 'text',
                 name: 'poNumber',
-                options: [
-                    {
-                        value: "none",
-                        name: "None",
-                    },
-                ],
                 validationProps: {
                     required: "PO Num is required"
                 },
@@ -191,6 +179,9 @@ export const AddInvoice = () => {
     const vendor_details_style = {
         display: "flex",
         gap: "28px 30px",
+        minHeight: "70px",
+        maxHeight: "70px",
+        height: "70px",
     };
 
     const btn_styles = { display: "flex", justifyContent: "end" };
