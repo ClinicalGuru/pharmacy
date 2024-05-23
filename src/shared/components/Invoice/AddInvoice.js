@@ -35,7 +35,7 @@ export const AddInvoice = () => {
         },
         {
             'Header': 'Batch No',
-            'accessor': 'batchno',
+            'accessor': 'batchNo',
         },
         {
             'Header': 'HSN Code',
@@ -264,20 +264,8 @@ export const AddInvoice = () => {
             setLoader(false);
             return;
         }
-        console.log(transformedObject, 'fhencvhjfnvchjfncvhfenhfnhn');
         const isDuplicate = rows.some(row =>
-            row.pharmacologicalName === transformedObject.pharmacologicalName &&
-            row.brandName === transformedObject.brandName &&
-            row.batchNo === transformedObject.batchNo &&
-            row.hsnCode === transformedObject.hsnCode &&
-            row.expiry === transformedObject.expiry &&
-            row.quantity === transformedObject.quantity &&
-            row.pricePerStrip === transformedObject.pricePerStrip &&
-            row.mrpPerStrip === transformedObject.mrpPerStrip &&
-            row.noOfStrips === transformedObject.noOfStrips &&
-            row.freeStrips === transformedObject.freeStrips &&
-            row.discount === transformedObject.discount &&
-            row.gst === transformedObject.gst
+            Object.keys(transformedObject).every(key => row[key] === transformedObject[key])
         );
 
         if (isDuplicate) {
@@ -287,6 +275,8 @@ export const AddInvoice = () => {
                 severity: 'error'
             });
             setLoader(false);
+            setEditngIndex(-1); 
+            setEditngRow({});
             return;
         }
         if (editingIndex !== -1) {
@@ -336,6 +326,12 @@ export const AddInvoice = () => {
         setEditngRow(row);
         setEditngIndex(i);
     }
+
+    const deleteRow = (index) => {
+        const updatedRows = rows.filter((_, i) => i !== index);
+        setRows(updatedRows);
+    }
+
     return (
         <Box sx={{
             padding: 2,
@@ -366,6 +362,7 @@ export const AddInvoice = () => {
                     gridArray={rows}
                     setData={setRows}
                     dataCallback={dataCallback}
+                    deleteRow={deleteRow}
                 />
             </Box>
             <div>

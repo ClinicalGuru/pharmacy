@@ -215,17 +215,14 @@ export const Sales = () => {
             medicineId: brandName?.value
         };
         const isDuplicate = rows.some(row =>
-            row.pharmacologicalName === transformedObject.pharmacologicalName &&
-            row.brandName === transformedObject.brandName &&
-            row.batchNo === transformedObject.batchNo &&
-            row.hsnCode === transformedObject.hsnCode &&
-            row.pricePerUnit === transformedObject.pricePerUnit &&
-            row.quantity === transformedObject.quantity && 
-            row.discount === transformedObject.discount
+            Object.keys(transformedObject).every(key => row[key] === transformedObject[key])
         );
+        
         if (isDuplicate) {
             alert('Duplicate data cannot be added.');
             setShowLoader(false);
+            setEditngIndex(-1); 
+            setEditngRow({});
             return;
         }
         if (editingIndex !== -1) {
@@ -247,7 +244,7 @@ export const Sales = () => {
             return accumulator + currentRow.amount;
         }, 0);
         setNetprice(totalNetPrice);
-    }, [rows]);
+    }, [rows]); 
 
     useEffect(() => {
         const getInventory = async () => {
@@ -341,10 +338,18 @@ export const Sales = () => {
     const onSubmit = (form, formType) => {
 
     };
+
     const dataCallback = (row, i) => {
         setEditngRow(row);
         setEditngIndex(i);
     }
+
+    const deleteRow = (index) => {
+        const updatedRows = rows.filter((_, i) => i !== index);
+        setRows(updatedRows);
+        setPrintData(updatedRows);
+    }
+
     return (
         <Box sx={{ flexGrow: 1, padding: '1rem' }}>
             <Grid container spacing={2}>
@@ -372,6 +377,7 @@ export const Sales = () => {
                             gridArray={rows}
                             setData={setRows}
                             dataCallback={dataCallback}
+                            deleteRow={deleteRow}
                         />
                     </Box>
                 </Grid>

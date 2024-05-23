@@ -253,8 +253,6 @@ export const Quotations = () => {
         const updatedRows = [...rows, transformedObject]
         setRows(updatedRows);
         e.target.reset();
-        setPharmacologicalNames('');
-        setBrandNames('');
     };
 
     const validate = (watchValues, errorMethods) => {
@@ -275,11 +273,6 @@ export const Quotations = () => {
             console.log(err, 'error getting requisition data');
             setShowLoader(false);
         }
-    };
-
-    const clearForm = () => {
-        // Clear form fields here
-        setRows([]);
     };
 
     const handleVendorSelection = (vendorDetails) => {
@@ -368,7 +361,6 @@ export const Quotations = () => {
                     showClearFormButton={true}
                     form_styles={medicine_details_style}
                     btn_styles={btn_styles}
-                    onClearForm={clearForm}
                 />
             </Box>
             <Box sx={{ marginTop: 2 }}>
