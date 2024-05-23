@@ -263,7 +263,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
       }}>
         <div style={{ display: 'flex' }}>
           <input type="submit" value="+ Add" style={{ padding: '10px', marginRight: '10px' }} />
-          <input type="reset" style={{ padding: '10px' }} />
+          <input type="reset" value="Clear" style={{ padding: '10px' }} />
         </div>
       </div>
 
