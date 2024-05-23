@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import { useForm } from 'react-hook-form'
+import { v4 as uuidv4 } from 'uuid';
 import { BillingSummaryForm } from "./BillingSummaryForm"
 import { PrintBill } from "./PrintBill"
 //material ui
@@ -267,6 +267,7 @@ export const Sales = () => {
             // console.log(patientId, 'patientId');
             const billDetails = {
                 billDate: new Date().valueOf(),
+                billNumber: uuidv4(),
                 patientId: patientId,
                 medicineDetails: rows,
                 ...data

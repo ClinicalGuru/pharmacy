@@ -3,11 +3,10 @@ import { addDoc, getDocs, getDoc, collection, orderBy, limit, doc, query, onSnap
 import { v4 as uuidv4 } from 'uuid';
 
 const patientDetailsRef = collection(firestore, "patients");
-const pharmacyBillingRef = collection(firestore, "pharmacyBilling");
+const pharmacyBillingRef = collection(firestore, "pharmacyBills");
 // const inventoryRef = collection(firestore, "medicineInventory");
 
 class SalesService {
-
     addPatient = async (patientDetails) => {
         //  await addDoc(medicineCollectionRef, medicine);
         try {
