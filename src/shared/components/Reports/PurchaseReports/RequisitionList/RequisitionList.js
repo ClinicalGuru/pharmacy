@@ -116,57 +116,6 @@ export const RequisitionList = () => {
                 </Link>
             </Container>
             <Box sx={{ marginTop: 8 }}>
-                {/* {rows?.map((item) => {
-                    return (
-                        <Accordion expanded={expanded === item?.requesitionId} onChange={handleChange(item?.requesitionId)}>
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel1bh-content"
-                                id="panel1bh-header"
-                            >
-                                <Typography sx={{ width: '33%', flexShrink: 0 }}>
-                                    Created Date: {item?.requesitionCreatedDate}
-                                </Typography>
-                                <Typography sx={{ width: '33%', flexShrink: 0 }}>
-                                    Status: {item?.status}
-                                </Typography>
-                                <Typography sx={{ color: 'text.secondary' }}>Number of medicines ordered: {item?.medicines?.length}</Typography>
-                                <Typography sx={{ marginLeft: '30px', display: 'flex', alignItems: 'center' }}>
-                                    <a href='#'>{item && <PdfFile vendorData={vendorData} data={item?.medicines} />}</a> &nbsp;&nbsp;&nbsp;
-                                    <span><a href='#' onClick={() => openDefaultMailClient(item)}>Email</a></span>
-                                </Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Pharmacological Name</th>
-                                            <th align="right">Brand Name</th>
-                                            <th align="right">Dose</th>
-                                            <th align="right">Form</th>
-                                            <th align="right">Quantity</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {item?.medicines?.map((row) => (
-                                            <tr
-                                                key={row.pharmacologicalName}
-                                            >
-                                                <td>
-                                                    {row.pharmacologicalName}
-                                                </td>
-                                                <td align="right">{row.brandName}</td>
-                                                <td align="right">{row.dose}</td>
-                                                <td align="right">{row.form}</td>
-                                                <td align="right">{row.quantity}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </AccordionDetails>
-                        </Accordion>
-                    )
-                })} */}
                 {rows?.length > 0 && <CollapsibleTable
                     data={rows}
                     vendorData={vendorData}

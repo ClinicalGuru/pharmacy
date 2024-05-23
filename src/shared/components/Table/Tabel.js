@@ -4,10 +4,15 @@ import EditSharpIcon from '@mui/icons-material/EditSharp';
 import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
 import "./Table.css";
 
-export const Table = ({ headArray, gridArray, dataCallback = () => { } }) => {
+export const Table = ({ headArray, gridArray, dataCallback = () => { }, deleteRow = () => {} }) => {
   const action = (i) => {
     dataCallback(gridArray[i], i);
   }
+
+  const handleDelete = (i) => {
+    deleteRow(i);
+  }
+
 
   return (
     <div >
@@ -39,7 +44,7 @@ export const Table = ({ headArray, gridArray, dataCallback = () => { } }) => {
                         />
                         <DeleteOutlineSharpIcon
                           color="error"
-                          onClick={() => action(i)}
+                          onClick={() => handleDelete(i)}
                         />
                       </span>
                     </td>)

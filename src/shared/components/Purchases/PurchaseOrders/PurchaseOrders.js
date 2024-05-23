@@ -11,6 +11,9 @@ import { Loader } from "../../Loader/index";
 import { useSearchParams } from 'react-router-dom';
 import { CButton } from "../../Button/index";
 import isEmpty from 'lodash/isEmpty';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 
 export const PurchaseOrders = () => {
     const [rowIds, selectedRows] = useState({});
@@ -50,12 +53,12 @@ export const PurchaseOrders = () => {
         {
             'Header': 'Dose',
             'accessor': 'dose',
-            editEnable: true,
+            editEnable: false,
         },
         {
             'Header': 'Form',
             'accessor': 'form',
-            editEnable: true,
+            editEnable: false,
         },
         {
             'Header': 'Qantity / Strips',
@@ -63,23 +66,17 @@ export const PurchaseOrders = () => {
             editEnable: true,
         },
         {
-            Header: "Actions",
+            Header: "Action",
             id: "actions",
             disableSortBy: true,
             Cell: ({ row, column, cell }) =>
                 row.original.isEditing ? (
                     <>
-                        <button onClick={() => handleButtonClick("save", row.original)}>
-                            Save
-                        </button>
-                        <button onClick={() => handleButtonClick("cancel", row.original)}>
-                            Cancel
-                        </button>
+                        <DoneOutlinedIcon style={{ color: 'blue' }} onClick={() => handleButtonClick("save", row.original)} sx={{marginRight: '10px'}}/>
+                        <CancelOutlinedIcon style={{ color: 'red' }} onClick={() => handleButtonClick("cancel", row.original)}/>
                     </>
                 ) : (
-                    <button disabled={dataFetched} onClick={() => handleButtonClick("edit", row.original)}>
-                        Edit
-                    </button>
+                   <EditOutlinedIcon disabled={dataFetched} onClick={() => handleButtonClick("edit", row.original)}/>
                 ),
         },
     ];
@@ -120,6 +117,10 @@ export const PurchaseOrders = () => {
         getVendors();
     }, []);
 
+    useEffect(() => {
+        getAllMedicines();
+    }, [vendorDetails]);
+
     const onSavePO = async () => {
         if (vendorId === '' && selectedVendor.value === '') {
             setNotification(true);
@@ -151,6 +152,7 @@ export const PurchaseOrders = () => {
                 severity: 'success',
                 message: 'Purchase order created successfully.'
             });
+            getAllMedicines();
         } catch (err) {
             console.log('error on saving PO', err)
             setShowLoader(false);
@@ -340,7 +342,7 @@ export const PurchaseOrders = () => {
                             type="button"
                             variant='contained'
                             buttonHandler={onSavePO}
-                            text="Create purchage order"
+                            text="Create purchase order"
                         />
                         {/* <Button variant="contained" onClick={onSavePO}>Save purchage order</Button> */}
                     </Box>

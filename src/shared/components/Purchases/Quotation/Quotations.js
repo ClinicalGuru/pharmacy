@@ -23,6 +23,8 @@ export const Quotations = () => {
     const [notification, setNotification] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [requesitionId, setRequesitionId] = useState('');
+    const [pharmacologicalNames, setPharmacologicalNames] = useState([]);
+    const [brandNames, setBrandNames] = useState([]);
     const columns = [
         {
             'Header': 'Pharmacological Name',
@@ -85,12 +87,13 @@ export const Quotations = () => {
         },
     ];
     const handleButtonClick = (action, row) => {
+        console.log(action, 'chjsdbchjsbchbs');
         const newData = rows.map((rowData) => {
             if (rowData.pharmacologicalName === row.pharmacologicalName) {
                 if (action === "edit") {
                     return { ...rowData, isEditing: true, prevData: { ...rowData } };
                 } else if (action === "cancel") {
-                    return { ...rowData, isEditing: false, ...rowData.prevData };
+                    return { isEditing: false, ...rowData.prevData };
                 } else if (action === "save") {
                     const { prevData, ...updatedRowData } = rowData;
                     return { ...updatedRowData, isEditing: false };
@@ -116,12 +119,7 @@ export const Quotations = () => {
                 validationProps: {
                     required: `${FORM_LABELS.PHARMACOLOGICAL_NAME} is required`
                 },
-                options: [
-
-                ],
-                // style: {
-                //     width: "194px"
-                // }
+                options: [...pharmacologicalNames],
             },
             {
 
@@ -131,12 +129,7 @@ export const Quotations = () => {
                 validationProps: {
                     required: ` ${FORM_LABELS.BRAND_NAME} is required`
                 },
-                options: [
-
-                ],
-                // style: {
-                //     width: "194px"
-                // }
+                options: [...brandNames],
             },
             {
                 title: FORM_LABELS.DOSE,
@@ -249,9 +242,17 @@ export const Quotations = () => {
     };
     const btn_styles = { display: "flex", justifyContent: "end" };
 
-    const onAddMedicine = (formData) => {
-        const updatedRows = [...rows, formData]
+    const onAddMedicine = (formData, e) => {
+        const { pharmacologicalName, brandName } = formData;
+        const transformedObject = {
+            ...formData,
+            pharmacologicalName: pharmacologicalName?.label,
+            brandName: brandName?.label,
+            medicineId: brandName?.value,
+        };
+        const updatedRows = [...rows, transformedObject]
         setRows(updatedRows);
+        e.target.reset();
     };
 
     const validate = (watchValues, errorMethods) => {
@@ -298,12 +299,31 @@ export const Quotations = () => {
                 console.log(res, 'Quotation data saved successfully');
                 setShowLoader(false);
                 alertState();
+                setRows([]);
+                
             });
         } catch (err) {
             console.log(err, 'err while adding quotation data');
             setShowLoader(false);
         }
     };
+
+    const getMedicines = async () => {
+        setShowLoader(true);
+        try {
+            let data = await PurchaseService.getAllMedicines();
+            const result = data?.docs?.map((doc) => ({ ...doc?.data(), id: doc?.id }));
+            setPharmacologicalNames(result?.map((item) => ({ value: item?.id, name: item?.pharmacologicalName })));
+            setBrandNames(result?.map((item) => ({ value: item?.id, name: item?.brandName })));
+            setShowLoader(false);
+        } catch (e) {
+            console.log(e, 'error allVendors');
+            setShowLoader(false);
+        }
+    }
+    useEffect(() => {
+        getMedicines();
+    }, []);
 
     const alertState = () => {
         setNotification(!notification);

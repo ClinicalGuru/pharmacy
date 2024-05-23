@@ -58,9 +58,9 @@ input[type=submit], [type=reset] {
 
 }
 
-input[type = number] {
+/* input[type = number] {
   direction: rtl;
-}
+} */
 
 /* input[type=reset] {
   cursor: pointer;
@@ -90,4 +90,13 @@ label {
 
 a {
   cursor: pointer
+}
+input[type=date] {
+  padding: 10px 10px;
+  border-radius: 4px;
+  border: 1px solid #bdbcbc;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 14px;
 }

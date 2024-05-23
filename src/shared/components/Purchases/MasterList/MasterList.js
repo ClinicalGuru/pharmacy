@@ -173,27 +173,21 @@ export const MasterList = () => {
             ...quotation,
             vendorName: vendorMap.get(quotation.vendorId)
         }));
-        let medicineIdCount = {};
-        updatedQuotationDetails?.forEach(medicine => {
-            if (medicine.medicineId in medicineIdCount) {
-                medicineIdCount[medicine.medicineId]++;
-            } else {
-                medicineIdCount[medicine.medicineId] = 1;
+        const groupedByBrandName = updatedQuotationDetails.reduce((acc, item) => {
+            if (!acc[item.brandName]) {
+                acc[item.brandName] = [];
             }
-        });
-        updatedQuotationDetails.forEach(medicine => {
-            const count = medicineIdCount[medicine.medicineId];
-            if (count === 1) {
-                medicine.pricingOrder = 'L1';
-            } else {
-                const sameMedicines = updatedQuotationDetails.filter(med => med.medicineId === medicine.medicineId);
-                sameMedicines.sort((a, b) => parseFloat(a?.ptr) - parseFloat(b?.ptr));
-                for (let i = 0; i < sameMedicines.length; i++) {
-                    sameMedicines[i].pricingOrder = `L${i + 1}`;
-                }
-            }
-        });
-        setOriginalData(updatedQuotationDetails);
+            acc[item.brandName].push(item);
+            return acc;
+        }, {});
+        for (let brand in groupedByBrandName) {
+            groupedByBrandName[brand].sort((a, b) => parseFloat(a.ptr) - parseFloat(b.ptr));
+            groupedByBrandName[brand].forEach((item, index) => {
+                item.pricingOrder = `L${index + 1}`;
+            });
+        };
+        const flatArray = Object.values(groupedByBrandName).flat();
+        setOriginalData(flatArray);
         setShowLoader(false);
     }
 
@@ -212,17 +206,19 @@ export const MasterList = () => {
 
     useEffect(() => {
         quotationDetails?.length > 0 && joinQuotationsWithVendors()
-    }, [quotationDetails])
+    }, [quotationDetails]);
 
     const vendorHandler = (e) => {
         const { value, label } = e
         setVendorId(value);
         setVendorName(label);
-    }
+    };
+
     const pNameHandler = (e) => {
         const { value } = e;
         setPMedId(value);
-    }
+    };
+
     const handleList = (e) => {
         const { value } = e.target;
         setPricingOrder(value);
@@ -254,24 +250,21 @@ export const MasterList = () => {
                 }
             })
     };
+
     useEffect(() => {
-        let filteredRows;
-        if (vendorId && vendorId !== '' && pMed && pMed !== '') {
-            filteredRows = originalData.filter((item) => item?.vendorId === vendorId && item?.medicineId === pMed);
-        } else if (vendorId && vendorId !== '') {
-            filteredRows = originalData.filter((item) => item?.vendorId === vendorId)
-        } else if (pMed && pMed !== '') {
-            filteredRows = originalData.filter((item) => item?.medicineId === pMed)
-        } else {
-            filteredRows = originalData;
-        }
-        if (pricingOrder) {
-            if (filteredRows?.length > 0) {
-                filteredRows = filteredRows.filter((item) => item?.pricingOrder === pricingOrder);
-            } else {
-                filteredRows = originalData.filter((item) => item?.pricingOrder === pricingOrder);
+        const filteredRows = originalData.filter((item) => {
+            if (vendorId && pMed && pricingOrder) {
+                return item.vendorId === vendorId && item.medicineId === pMed && item.pricingOrder === pricingOrder;
+            } else if (vendorId) {
+                return item.vendorId === vendorId;
+            } else if (pMed) {
+                return item.medicineId === pMed;
+            } else if(pricingOrder){
+                return item.pricingOrder === pricingOrder; 
             }
-        }
+            return true;
+        });
+    
         setRows(filteredRows);
     }, [vendorId, pMed, pricingOrder]);
 

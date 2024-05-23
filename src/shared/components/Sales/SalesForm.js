@@ -20,9 +20,9 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
       hsnCode: '',
       pricePerUnit: '',
       quantity: '',
-      total: '',
+      total: 0,
       discount: 0,
-      amount: ''
+      amount: 0
     }
   });
   const watchFields = watch(["price", "quantity", "discount"]);
@@ -33,15 +33,16 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
 
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
-      console.log(name, 'name');
+      // console.log(name, 'dcxsbgcbsdhucbhdsbchusbhb');
       if (name === "pricePerUnit" || name === "quantity" || name === "discount") {
 
         const { pricePerUnit, quantity, discount } = value;
         console.log(pricePerUnit, quantity, discount, 'pricePerUnit, quantity, discount');
         const totalPrice = pricePerUnit * quantity;
         const discountedValue = totalPrice - (totalPrice * discount) / 100;
-        setValue('total', totalPrice);
+        setValue('total', totalPrice?.toFixed(2));
         setValue('amount', discountedValue);
+        // console.log(discountedValue, 'amount');
       }
     });
     return () => subscription.unsubscribe();
@@ -188,16 +189,19 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
         <label>{FORM_LABELS.PRICE}</label>
         <input
           {...register("pricePerUnit", {
-            required: true, pattern: {
-              value: /^[0-9]*$/,
-              message: ""
+            required: "Price is required",
+            pattern: {
+              value: /^[0-9]*\.?[0-9]+$/,
+              message: "Invalid price format"
             }
           })}
           style={{ width: "60px" }}
           type="number"
+          step="0.01"
         />
-        {errors['price'] && <span className='red-text'>{errors['price'][`message`]}</span>}
+        {errors['pricePerUnit'] && <span className='red-text'>{errors['pricePerUnit'].message}</span>}
       </div>
+
 
       <div>
         <label>{FORM_LABELS.QUANTITY}</label>
@@ -246,7 +250,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
           disabled
           {...register("amount")}
           type="number"
-          step= "0.001"
+          step="0.001"
           style={{ width: "60px" }}
         />
         {errors['amount'] && <span className='red-text'>{errors['amount'][`message`]}</span>}

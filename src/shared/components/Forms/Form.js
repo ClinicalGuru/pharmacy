@@ -10,13 +10,15 @@ export const Form = ({
     onSubmit,
     form_styles,
     btn_styles,
+    onClearForm,
     onValidate = () => { },
+    resetTrigger
 }) => {
     const [prevWatchValues, setPrevWatchValues] = useState({});
     let { control, register, handleSubmit, watch, setError, clearErrors, formState: { errors }, reset, watchFields } = useForm({
         mode: "onChange"
     });
-    let { title, fields, value, formStyles, btns, isBlockLevelBtns = true, buttonStyles={} } = template;
+    let { title, fields, value, formStyles, btns, isBlockLevelBtns = true, buttonStyles = {} } = template;
     let watchValues = watch(watchFields);
     // console.log(watchValues, 'watchValues')
     // onValidate(watchValues, { setError, clearErrors });
@@ -27,6 +29,12 @@ export const Form = ({
             setPrevWatchValues(watchValues);
         }
     }, [watchValues, prevWatchValues, onValidate]);
+
+    useEffect(() => {
+        if (resetTrigger) {
+            reset();
+        }
+    }, [resetTrigger, reset]);
 
     const renderFields = (fields) => {
         return fields.map(field => {
@@ -63,15 +71,22 @@ export const Form = ({
                     )
                 case 'number':
                     return (
-                        <Box sx={{
-                            marginBottom: 2
-                        }}>
+                        <Box sx={{ marginBottom: 2 }}>
                             <div key={name}>
                                 <Box component="label" sx={{ marginBottom: 1, fontSize: "14px" }}>{title}</Box>
-                                <input className='makefieldsempty3' style={finalStyle} type={type} name={name} id={name} {...register(name, validationProps)} />
-                                {errors[name] && <span className='red-text'>{errors[name][`message`]}</span>}
+                                <input
+                                    className='makefieldsempty3'
+                                    style={finalStyle}
+                                    type={type}
+                                    name={name}
+                                    id={name}
+                                    step="0.01" 
+                                    {...register(name, validationProps)}
+                                />
+                                {errors[name] && <span className='red-text'>{errors[name].message}</span>}
                             </div>
-                        </Box>)
+                        </Box>
+                    )
                 case 'email':
                     return (
                         <Box sx={{
@@ -174,7 +189,7 @@ export const Form = ({
             return (
                 <>
                     {
-                        button.type == 'checkbox'
+                        button.type === 'checkbox'
                             ? <div className='atofq'><div className='atofq-checkbox'><input type={button.type} /></div><div className='atofq-text'>{button?.btn_text}</div></div>
                             : <SubmitButton style={button?.styles} type={button.type} className="btn"> {button?.btn_text}</SubmitButton>
                     }

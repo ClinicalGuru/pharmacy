@@ -37,6 +37,7 @@ export const PurchaseRequisition = () => {
     const [brandNames, setBrandNames] = useState([]);
     const [manditoryAlert, setManditoryAlert] = useState(false);
     const [undefindedValues, setundefindedValues] = useState(false);
+    const [resetForm, setResetForm] = useState(null);
     const columns = [
         {
             'Header': 'Pharmacological Name',
@@ -70,11 +71,11 @@ export const PurchaseRequisition = () => {
             Cell: ({ row, column, cell }) =>
                 row.original.isEditing ? (
                     <>
-                        <DoneOutlinedIcon style={{ color: 'blue' }} onClick={() => handleButtonClick("save", row.original)} sx={{marginRight: '10px'}}/>
-                        <CancelOutlinedIcon style={{ color: 'red' }} onClick={() => handleButtonClick("cancel", row.original)}/>
+                        <DoneOutlinedIcon style={{ color: 'blue' }} onClick={() => handleButtonClick("save", row.original)} sx={{ marginRight: '10px' }} />
+                        <CancelOutlinedIcon style={{ color: 'red' }} onClick={() => handleButtonClick("cancel", row.original)} />
                     </>
                 ) : (
-                   <EditOutlinedIcon disabled={dataFetched} onClick={() => handleButtonClick("edit", row.original)}/>
+                    <EditOutlinedIcon disabled={dataFetched} onClick={() => handleButtonClick("edit", row.original)} />
                 ),
         },
     ];
@@ -84,7 +85,7 @@ export const PurchaseRequisition = () => {
                 if (action === "edit") {
                     return { ...rowData, isEditing: true, prevData: { ...rowData } };
                 } else if (action === "cancel") {
-                    return { ...rowData, isEditing: false, ...rowData.prevData };
+                    return { isEditing: false, ...rowData.prevData };
                 } else if (action === "save") {
                     const { prevData, ...updatedRowData } = rowData;
                     return { ...updatedRowData, isEditing: false };
@@ -195,7 +196,7 @@ export const PurchaseRequisition = () => {
 
     const onAddMedicine = async (formData, e) => {
         setShowLoader(true);
-
+        debugger;
         const { dose, form, quantity, pharmacologicalName, brandName } = formData;
         const transformedObject = {
             dose,
@@ -206,10 +207,9 @@ export const PurchaseRequisition = () => {
             medicineId: brandName?.value
         };
         const isDuplicate = rows.some(row =>
-            row.pharmacologicalName === transformedObject.pharmacologicalName &&
-            row.brandName === transformedObject.brandName &&
-            row.form === transformedObject.form
+            Object.keys(transformedObject).every(key => row[key] === transformedObject[key])
         );
+        
 
         if (isDuplicate) {
             alert('Duplicate data cannot be added.');
@@ -324,6 +324,7 @@ export const PurchaseRequisition = () => {
 
             <Box
                 sx={{
+                    height: '70px',
                     backgroundColor: '#DEE1E6FF',
                     borderRadius: '4px',
                     padding: 1,
@@ -331,6 +332,7 @@ export const PurchaseRequisition = () => {
                 }}
             >
                 <Form
+                    // ref={formRef}
                     template={medicine_details_template}
                     onSubmit={onAddMedicine}
                     onResetForm
@@ -339,6 +341,7 @@ export const PurchaseRequisition = () => {
                     showClearFormButton={true}
                     form_styles={medicine_details_style}
                     btn_styles={btn_styles}
+                    resetForm={setResetForm}
                 />
             </Box>
             <Box sx={{ marginTop: 2 }}>

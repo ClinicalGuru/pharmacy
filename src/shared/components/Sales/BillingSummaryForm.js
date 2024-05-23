@@ -10,7 +10,8 @@ export const BillingSummaryForm = ({
     resetForm,
     netPrice,
     patientDetails,
-    medicineDetails
+    medicineDetails,
+    resetTrigger
 }) => {
     const [notification, setNotification] = useState(false);
     const [netPriceValue, setNetPriceValue] = useState(0);
@@ -53,13 +54,8 @@ export const BillingSummaryForm = ({
                 const roundOffAmount = Math.round(totalAmountAfterGST) - totalAmountAfterGST;
                 const payableAmount = Math.round(totalAmountAfterGST);
                 setValue('netPrice', totalAmountAfterGST);
-                setValue('roundOff', roundOffAmount);
-                setValue('billAmount', payableAmount);
-            } 
-            else if (name === "billAmount" || name === "paidAmount") {
-                const { billAmount, paidAmount } = value;
-                const balanceAmount = billAmount - paidAmount;
-                setValue('balance', balanceAmount);
+                setValue('roundOff', roundOffAmount.toFixed(2));
+                setValue('billAmount', payableAmount.toFixed(2));
             }
         });
         return () => subscription.unsubscribe();
@@ -74,9 +70,9 @@ export const BillingSummaryForm = ({
         const roundOffAmount = Math.round(totalAmountAfterGST) - totalAmountAfterGST;
         const payableAmount = Math.round(totalAmountAfterGST);
         setValue('netPrice', totalAmountAfterGST);
-        setValue('roundOff', roundOffAmount);
-        setValue('billAmount', payableAmount);
-        setNetPriceValue(Number(totalAmountAfterGST));
+        setValue('roundOff', roundOffAmount.toFixed(2));
+        setValue('billAmount', payableAmount.toFixed(2));
+        setNetPriceValue(Number(totalAmountAfterGST))
     }, [netPrice]);
 
     const onSubmit = (data) => {
@@ -96,9 +92,15 @@ export const BillingSummaryForm = ({
         setNotification(!notification);
     };
 
+    useEffect(() => {
+        if (resetTrigger) {
+            reset();
+        }
+    }, [resetTrigger, reset]);
+
     const handleBlur = (e) => {
-        const value = parseFloat(e.target.value).toFixed(3); // Convert to float and fix to 2 decimal places
-        setValue("roundOff", value); // Update the form value with the restricted value
+        const value = parseFloat(e.target.value).toFixed(2);
+        setValue(e.target.name, value, { shouldValidate: true });
     };
 
     return (
@@ -131,9 +133,21 @@ export const BillingSummaryForm = ({
                     {errors['netPrice'] && <span className='red-text'>{errors['netPrice'][`message`]}</span>}
                 </div>
                 <div>
-                    <label>{FORM_LABELS.ROUND_OFF}</label>
-                    <input onBlur={handleBlur} {...register("roundOff", { required: true })} type="number" step="0.001" />
-                    {errors['roundOff'] && <span className='red-text'>{errors['roundOff'][`message`]}</span>}
+                    <div>
+                        <label>{FORM_LABELS.ROUND_OFF}</label>
+                        <input
+                            onBlur={handleBlur}
+                            {...register("roundOff", {
+                                required: "Round off is required",
+                                pattern: {
+                                    value: /^-?\d+(\.\d{1,2})?$/,
+                                    message: "Please enter a valid number with up to 2 decimal places"
+                                }
+                            })}
+                            type="number"
+                            step="0.01"
+                        />
+                    </div>
                 </div>
                 <div>
                     <label>{FORM_LABELS.BILL_AMOUNT}</label>

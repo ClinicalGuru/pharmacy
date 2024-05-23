@@ -6,7 +6,7 @@ import { FORM_LABELS } from "../../Constants/index";
 import { Notification } from '../Notification/index';
 // import DatePicker from "react-datepicker";
 // import "react-datepicker/dist/react-datepicker.css";
-import { CiCalendarDate } from "react-icons/ci";
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import './addinvoiceform.css'
 import MonthYearCalendarPopup from "../Calendar/MonthYearCalendarPopup";
 import Modal from 'react-modal';
@@ -19,6 +19,7 @@ export const AddInvoiceForm = ({
     pData = [],
     bData = [],
     onSubmit,
+    resetTrigger,
     resetForm = {},
     data
 }) => {
@@ -63,7 +64,7 @@ export const AddInvoiceForm = ({
                 const discountedValue = (noOfStrips * pricePerStrip) - ((noOfStrips * pricePerStrip * discount) / 100);
                 const netPrice = discountedValue + ((gst * discountedValue) / 100);
                 const pricePerUnit = mrpPerStrip / quantity;
-                setValue('netPrice', netPrice);
+                setValue('netPrice', netPrice?.toFixed(2));
                 setValue('pricePerUnit', pricePerUnit?.toFixed(2));
             }
         });
@@ -74,6 +75,7 @@ export const AddInvoiceForm = ({
         setValue("expiry","MM/YY")
         if (resetForm) reset();
     }, [onSubmit]);
+    
 
     useEffect(() => {
         if (!isEmpty(data)) {
@@ -124,6 +126,13 @@ export const AddInvoiceForm = ({
         setIsOpen(false);
         setValue("expiry",`${month}/${year}`)
       };
+
+      useEffect(() => {
+        if (resetTrigger) {
+            reset();
+        }
+    }, [resetTrigger, reset]);
+
     return (
         <FormContainer onSubmit={handleSubmit(onSubmit)}>
             <div className={"addInvoiceForm"}>
@@ -235,7 +244,7 @@ export const AddInvoiceForm = ({
         min={currentDate}
       />
       <div style={{ position: 'absolute', left: '8px', top: '50%', transform: 'translateY(-50%)' }}>
-        <CiCalendarDate onClick={openModal} style={{ color: '#888', fontSize: '1.2em' }} />
+        <CalendarMonthIcon onClick={openModal} style={{ color: '#888', fontSize: '1.2em' }} />
       </div>
     </div> 
                     {/* <input {...register("expiry", { required: true })} placeholder="MM/YY"
@@ -276,11 +285,22 @@ export const AddInvoiceForm = ({
                     <input {...register("discount", { required: true })} type="number" step=".01" />
                     {errors['discount'] && <span className='red-text'>{errors['discount'][`message`]}</span>}
                 </div>
-                <div style={{ minWidth: '150px' }}>
+                <div style={{ minWidth: '100px' }}>
+                    <label>{FORM_LABELS.GST}</label>
+                    <select {...register("gst")}>
+                    <option value="0">0%</option>
+                    <option value="5">5%</option>
+                    <option value="12">12%</option>
+                    <option value="18">18%</option>
+                    <option value="28">28%</option>
+                    </select>
+                    {errors['gst'] && <span className='red-text'>{errors['gst'][`message`]}</span>}
+                </div>
+                {/* <div style={{ minWidth: '150px' }}>
                     <label>{FORM_LABELS.GST}</label>
                     <input {...register("gst")} type="number" step=".01" />
                     {errors['gst'] && <span className='red-text'>{errors['gst'][`message`]}</span>}
-                </div>
+                </div> */}
                 <div style={{ minWidth: '150px' }}>
                     <label>{FORM_LABELS.NET_PRICE}</label>
                     <input disabled {...register("netPrice", { required: true })} type="number" />

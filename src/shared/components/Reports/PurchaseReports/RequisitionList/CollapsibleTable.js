@@ -58,7 +58,7 @@ export const CollapsibleTable = ({ data, vendorData }) => {
           <TableCell component="th" scope="row">
             {row?.vendorName}
           </TableCell>
-          <TableCell align="right">{row?.requesitionCreatedDate}</TableCell>
+          <TableCell align="right">{row?.date}</TableCell>
           <TableCell align="right">{row?.status}</TableCell>
           <TableCell align="right">{row?.medicines?.length}</TableCell>
           <TableCell>
@@ -94,7 +94,7 @@ export const CollapsibleTable = ({ data, vendorData }) => {
                         <TableCell component="th" scope="row">
                           {medicine?.brandName}
                         </TableCell>
-                        <TableCell>{medicine?.dose}</TableCell>
+                        <TableCell align="right">{medicine?.dose}</TableCell>
                         <TableCell align="right">{medicine?.form}</TableCell>
                         <TableCell align="right">{medicine?.quantity}</TableCell>
   
