@@ -1,31 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { Box } from "@mui/material";
-import Button from '@mui/material/Button';
+import { Box, Button, Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useLocation, Link } from 'react-router-dom';
 import PurchaseService from "../../../../services/Purchase.service";
 import { Container } from './RequisitionList.styles';
-import { VendorSelection } from "../../../Purchases/VendorSelection/index";
-import { Loader } from "../../../Loader/index";
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import Typography from '@mui/material/Typography';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { AlertMessage } from "../../../Alert/index";
-import { useLocation } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import { PdfFile } from '../../../Pdf';
-import { CollapsibleTable } from './CollapsibleTable'
-
+import { VendorSelection } from "../../../Purchases/VendorSelection";
+import { Loader } from "../../../Loader";
+import { AlertMessage } from "../../../Alert";
+import { CollapsibleTable } from './CollapsibleTable';
 
 export const RequisitionList = () => {
     const [noDataAvailable, setNoDataAvailable] = useState(false);
     const [selectVendorAlert, setSelectVendorAlert] = useState(true);
-    const [vendorDetails, setVendorDetails] = useState([]);
+    const [vendorDetails, setVendorDetails] = useState({});
     const [vendorData, setVendorData] = useState([]);
     const [rows, setRows] = useState([]);
     const [showLoader, setShowLoader] = useState(false);
-    const [expanded, setExpanded] = React.useState(false);
-    let location = useLocation();
+    const [expanded, setExpanded] = useState(false);
+    const location = useLocation();
+
     useEffect(() => {
         console.log(location?.state?.data, 'state rList');
     }, [location]);
@@ -34,62 +27,64 @@ export const RequisitionList = () => {
         setExpanded(isExpanded ? panel : false);
     };
 
-    const getFilteredRequestionData = async (vendorId) => {
+    const fetchRequisitionData = async (vendorId, date) => {
         setShowLoader(true);
         try {
             let data = await PurchaseService.getRequesitionData(vendorId);
             setSelectVendorAlert(false);
-            const updatedObj = data?.map((item) => ({
+
+            if (date) {
+                data = data.filter(item => new Date(item.date).toDateString() === new Date(date).toDateString());
+            }
+
+            const updatedData = data?.map(item => ({
                 ...item,
-                medicines: item?.medicines?.map((med) => {
-                    const { medicineId, ...rest } = med;
-                    return rest;
-                })
+                medicines: item.medicines.map(({ medicineId, ...rest }) => rest)
             }));
-            setRows([...updatedObj]);
-            setShowLoader(false);
-            if (updatedObj && updatedObj?.length === 0) setNoDataAvailable(true);
-            else setNoDataAvailable(false);
-            ;
+            
+            setRows(updatedData || []);
+            setNoDataAvailable(updatedData?.length === 0);
         } catch (err) {
-            console.log(err, 'error getting requisition data');
-            setShowLoader(false);
+            console.error('Error getting requisition data', err);
             setNoDataAvailable(false);
+        } finally {
+            setShowLoader(false);
         }
     };
 
     const handleVendorSelection = (vendorDetails) => {
-        setVendorDetails({ vendorId: vendorDetails?.value, date: '' });
-        getFilteredRequestionData(vendorDetails?.value);
-        console.log(vendorDetails, 'details');
+        setVendorDetails({ vendorId: vendorDetails.value, date: '' });
+        fetchRequisitionData(vendorDetails.value);
     };
 
-    const handelDateSelection = (value) => {
-        setVendorDetails({ vendorId: vendorDetails?.value, date: value })
+    const handleDateSelection = (date) => {
+        setVendorDetails(prevDetails => ({ ...prevDetails, date }));
+        fetchRequisitionData(vendorDetails.vendorId, date);
     };
 
     useEffect(() => {
-        const vendorInfo = async () => {
-            console.log(vendorDetails, 'vendor data');
-            setShowLoader(true);
-            try {
-                let data = await PurchaseService.getVendor(vendorDetails.vendorId);
-                setSelectVendorAlert(false);
-                setVendorData(data);
-                setShowLoader(false);
-            } catch (err) {
-                console.log(err, 'error getting requisition data');
-                setShowLoader(false);
+        const fetchVendorData = async () => {
+            if (vendorDetails.vendorId) {
+                setShowLoader(true);
+                try {
+                    const data = await PurchaseService.getVendor(vendorDetails.vendorId);
+                    setVendorData(data);
+                    setSelectVendorAlert(false);
+                } catch (err) {
+                    console.error('Error getting vendor data', err);
+                } finally {
+                    setShowLoader(false);
+                }
             }
-        }
-        vendorInfo();
-    }, [vendorDetails]);
+        };
+        fetchVendorData();
+    }, [vendorDetails.vendorId]);
 
     const generateEmailContent = (item) => {
         let emailContent = "Please see the list of medicines below:\n\n";
         emailContent += "Pharmacological Name       Brand Name       Dose       Form       Quantity\n";
-        item?.medicines?.forEach((row) => {
-            emailContent += `${row.pharmacologicalName.padEnd(45)}${row.brandName.padEnd(20)}${row.dose.padEnd(10)}${row.form.padEnd(10)}${row.quantity}\n`;
+        item?.medicines?.forEach(({ pharmacologicalName, brandName, dose, form, quantity }) => {
+            emailContent += `${pharmacologicalName.padEnd(45)}${brandName.padEnd(20)}${dose.padEnd(10)}${form.padEnd(10)}${quantity}\n`;
         });
         return emailContent;
     };
@@ -101,36 +96,23 @@ export const RequisitionList = () => {
     };
 
     return (
-        <Box sx={{
-            padding: 2,
-        }}>
+        <Box sx={{ padding: 2 }}>
             <Container>
-                <Container>
-                    <VendorSelection
-                        onSelectVendor={handleVendorSelection}
-                        onSelectDate={handelDateSelection}
-                    />
-                </Container>
+                <VendorSelection onSelectVendor={handleVendorSelection} onSelectDate={handleDateSelection} />
                 <Link to="/landing/purchase/requisition">
-                    <Button variant="contained" >Create New Requisition</Button>
+                    <Button variant="contained">Create New Requisition</Button>
                 </Link>
             </Container>
             <Box sx={{ marginTop: 8 }}>
-                {rows?.length > 0 && <CollapsibleTable
-                    data={rows}
-                    vendorData={vendorData}
-                />}
-
+                {rows.length > 0 && <CollapsibleTable data={rows} vendorData={vendorData} />}
             </Box>
-            {noDataAvailable && <AlertMessage
-                type="info"
-                title="Info"
-                message="No data availablefor this vendor" />}
-            {selectVendorAlert && <AlertMessage
-                type="info"
-                title="Info"
-                message="Please select vendor to see purchage requisitions history" />}
+            {noDataAvailable && (
+                <AlertMessage type="info" title="Info" message="No data available for this vendor" />
+            )}
+            {selectVendorAlert && (
+                <AlertMessage type="info" title="Info" message="Please select a vendor to see purchase requisitions history" />
+            )}
             <Loader open={showLoader} />
         </Box>
-    )
-}
+    );
+};
