@@ -25,7 +25,7 @@ export const PharmacyInventory = () => {
             'accessor': 'batchNo',
         },
         {
-            'Header': 'Expity',
+            'Header': 'Expiry',
             'accessor': 'expiry',
         },
         {

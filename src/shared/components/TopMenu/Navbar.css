@@ -167,8 +167,11 @@
     display: flex;
     align-items: center;
     height: 40px;
+    border-top: none;
+    border-right: none;
+    border-left: none;
     /* border: solid 1px #0d1b2a; */
-    border-bottom: none;
+    border-bottom: solid 1px #CDD1C4;
     white-space: nowrap;
 }
 
@@ -191,13 +194,13 @@
     color: #181818;
 }
 
-.arrow {
+/* .arrow {
     margin-left: auto;
     padding-right: 10px;
-}
+} */
 
 .active {
     border-bottom: 4px solid #4a2495;
     color: #4a2495 !important;
-    font-weight: 800;
+    /* font-weight: 800; */
 }

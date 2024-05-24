@@ -197,7 +197,8 @@ export const Sales = () => {
     const patient_details_style = {
         display: "flex",
         justifyContent: "space-between",
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
+        height:'80px'
     };
 
     const btn_styles = { display: "flex", gap: "20px 20px", justifyContent: "end" };

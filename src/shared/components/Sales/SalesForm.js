@@ -110,9 +110,8 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
             />
           )}
         />
-
-        {errors.pharmacologicalName && <p>{errors.pharmacologicalName.message}</p>}
       </div>
+      {errors.pharmacologicalName && <p>{errors.pharmacologicalName.message}</p>}
 
       <div>
         <label>{FORM_LABELS.BRAND_NAME}</label>
@@ -155,7 +154,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
 
       {errors['brandName'] && <span className='red-text'>{errors['brandName'][`message`]}</span>}
       <div>
-        <label>{FORM_LABELS.BATCH_NO}</label>
+        <label> <span style={{color:'red'}} >*</span>  {FORM_LABELS.BATCH_NO}</label>
         <input
           {...register("batchNo", {
             required: true,
@@ -171,7 +170,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
 
 
       <div>
-        <label>{FORM_LABELS.HSN_CODE}</label>
+        <label> <span style={{color:'red'}} >*</span>  {FORM_LABELS.HSN_CODE}</label>
         <input
           {...register("hsnCode", {
             required: true, pattern: {
@@ -186,10 +185,10 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
       </div>
 
       <div>
-        <label>{FORM_LABELS.PRICE}</label>
+        <label> <span style={{color:'red'}} >*</span>  {FORM_LABELS.PRICE}</label>
         <input
           {...register("pricePerUnit", {
-            required: "Price is required",
+            required: true,
             pattern: {
               value: /^[0-9]*\.?[0-9]+$/,
               message: "Invalid price format"
@@ -204,7 +203,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
 
 
       <div>
-        <label>{FORM_LABELS.QUANTITY}</label>
+        <label> <span style={{color:'red'}} >*</span>  {FORM_LABELS.QUANTITY}</label>
         <input
           {...register("quantity", {
             required: true, pattern: {
@@ -230,7 +229,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
         {errors['total'] && <span className='red-text'>{errors['total'][`message`]}</span>}
       </div>
       <div>
-        <label>{FORM_LABELS.DISCOUNT}</label>
+        <label> <span style={{color:'red'}} >*</span>  {FORM_LABELS.DISCOUNT}</label>
         <input
           placeholder="0"
           {...register("discount", {

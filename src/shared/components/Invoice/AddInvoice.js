@@ -133,10 +133,6 @@ export const AddInvoice = () => {
                 type: 'autoComplete',
                 name: 'vendorId',
                 options: [
-                    {
-                        value: "none",
-                        name: "None",
-                    },
                     ...vendorDetails.map(vendor => ({
                         value: vendor.id,
                         label: vendor.name,

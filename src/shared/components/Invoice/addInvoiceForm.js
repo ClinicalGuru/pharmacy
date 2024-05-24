@@ -206,13 +206,13 @@ export const AddInvoiceForm = ({
 
                 {errors['brandName'] && <span className='red-text'>{errors['brandName'][`message`]}</span>}
                 <div>
-                    <label>{FORM_LABELS.BATCH_NO}</label>
+                    <label> <span style={{color:'red'}} >*</span>  {FORM_LABELS.BATCH_NO}</label>
                     <input {...register("batchNo", { required: true })} type="text" />
                     {errors['batchNo'] && <span className='red-text'>{errors['batchNo'][`message`]}</span>}
                 </div>
 
                 <div>
-                    <label>{FORM_LABELS.HSN_CODE}</label>
+                    <label> <span style={{color:'red'}} >*</span>  {FORM_LABELS.HSN_CODE}</label>
                     <input {...register("hsnCode", { required: true })} type="text" />
                     {errors['hsnCode'] && <span className='red-text'>{errors['hsnCode'][`message`]}</span>}
                 </div>
@@ -253,40 +253,40 @@ export const AddInvoiceForm = ({
                 </div>
 
                 <div>
-                    <label>{FORM_LABELS.QUANTITY}</label>
+                    <label> <span style={{color:'red'}} >*</span>  {FORM_LABELS.QUANTITY}</label>
                     <input {...register("quantity", { required: true })} type="text" />
                     {errors['quantity'] && <span className='red-text'>{errors['quantity'][`message`]}</span>}
                 </div>
 
                 <div>
-                    <label>{FORM_LABELS.NO_OF_STRIPS}</label>
+                    <label> <span style={{color:'red'}} >*</span>  {FORM_LABELS.NO_OF_STRIPS}</label>
                     <input {...register("noOfStrips", { required: true })} type="number" />
                     {errors['noOfStrips'] && <span className='red-text'>{errors['noOfStrips'][`message`]}</span>}
                 </div>
 
                 <div>
-                    <label>{FORM_LABELS.FREE_STRIPS}</label>
+                    <label> <span style={{color:'red'}} >*</span>  {FORM_LABELS.FREE_STRIPS}</label>
                     <input {...register("freeStrips")} type="number" />
                     {errors['freeStrips'] && <span className='red-text'>{errors['freeStrips'][`message`]}</span>}
                 </div>
 
                 <div style={{ minWidth: '150px' }}>
-                    <label>{FORM_LABELS.MRP_PER_STRIP}</label>
+                    <label> <span style={{color:'red'}} >*</span>  {FORM_LABELS.MRP_PER_STRIP}</label>
                     <input onBlur={() => onBlur(mrpPerStripHandler())} {...register("mrpPerStrip", { required: true })} type="number" step={"any"} />
                     {errors['mrpPerStrip'] && <span className='red-text'>{errors['mrpPerStrip'][`message`]}</span>}
                 </div>
                 <div style={{ minWidth: '150px' }}>
-                    <label>{FORM_LABELS.PRICE_PER_STRIP}</label>
+                    <label> <span style={{color:'red'}} >*</span>  {FORM_LABELS.PRICE_PER_STRIP}</label>
                     <input onBlur={() => onBlur(pricePerStripHandler())} {...register("pricePerStrip", { required: true })} type="number" step={"any"} />
                     {errors['pricePerStrip'] && <span className='red-text'>{errors['pricePerStrip'][`message`]}</span>}
                 </div>
                 <div style={{ minWidth: '150px' }}>
-                    <label>{FORM_LABELS.DISCOUNT}</label>
+                    <label> <span style={{color:'red'}} >*</span>  {FORM_LABELS.DISCOUNT}</label>
                     <input {...register("discount", { required: true })} type="number" step=".01" />
                     {errors['discount'] && <span className='red-text'>{errors['discount'][`message`]}</span>}
                 </div>
                 <div style={{ minWidth: '100px' }}>
-                    <label>{FORM_LABELS.GST}</label>
+                    <label> <span style={{color:'red'}} >*</span>  {FORM_LABELS.GST}</label>
                     <select {...register("gst")}>
                     <option value="0">0%</option>
                     <option value="5">5%</option>
