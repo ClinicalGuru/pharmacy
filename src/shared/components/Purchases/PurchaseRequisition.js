@@ -99,6 +99,7 @@ export const PurchaseRequisition = () => {
     const medicine_details_template = {
         title: '',
         submitButttonText: '+ Add',
+        clearFormBtnText: 'Clear',
         formStyles: {
             backgroundColor: "#FFFFFF",
         },
@@ -159,8 +160,12 @@ export const PurchaseRequisition = () => {
             {
                 btn_text: "+ Add",
             },
+            {
+                btn_text: "Clear",
+            },
         ],
         buttonStyles: {
+            height:'70px',
             display: 'flex',
             alignItems: 'center'
         }
