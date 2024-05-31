@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
@@ -13,12 +13,20 @@ import { Container } from "./AllBills.styles";
 import PrintOutlinedIcon from '@mui/icons-material/PrintOutlined';
 import RotateLeftOutlinedIcon from '@mui/icons-material/RotateLeftOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-// import DateRangePicker from '@wojtekmaj/react-daterange-picker';
-// import '@wojtekmaj/react-daterange-picker/dist/DateRangePicker.css';
-// import 'react-calendar/dist/Calendar.css';
+import { SaleReturnModal } from '../SaleReturnModal'
+import salesService from '../../../services/sales.service';
+import { Loader } from "../../Loader/index";
+import { getTodayDate } from "../../../../utils/helper";
+import { PdfFile } from "../../Pdf/index";
 
 export const AllBills = () => {
+    const [showLoader, setShowLoader] = useState(false);
     const [rows, updateRows] = useState([]);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [selectedBill, setSelectedBill] = useState({});
+    const [returnAmount, setReturnAmount] = useState({});
+    const [fromDate, setFromDate] = useState('');
+    const [toDate, setToDate] = useState('');
     const [totals, setTotals] = useState({
         totalBillAmount: 0,
         totalCashBillAmount: 0,
@@ -29,8 +37,9 @@ export const AllBills = () => {
         from: new Date(),
         to: new Date()
     });
-
+    
     const fetchBillsForDate = async () => {
+        setShowLoader(true);
         try {
             const startDate = new Date(dateFilter?.from).setHours(0, 0, 0, 0).valueOf();
             const endDate = new Date(dateFilter?.to).setHours(23, 59, 59, 999).valueOf();
@@ -38,20 +47,18 @@ export const AllBills = () => {
             const bills = allBillsQuerySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             console.log(bills, 'bills')
             updateRows(bills);
-            calculateTotals(bills)
-            // calculateTotalBillAmount(allBills);
-            // totalBillAmountCollectedByCash(allBills);
-            // totalBillAmountCollectedByCard(allBills);
-            // totalBillAmountCollectedByUpi(allBills);
+            calculateTotals(bills);
+            setShowLoader(false);
         } catch (error) {
             console.error('Error fetching bills:', error);
+            setShowLoader(false);
         }
     };
     const calculateTotals = (bills) => {
-        const totalBill = bills.reduce((sum, bill) => sum + bill.billAmount, 0);
-        const cashBills = bills.filter(bill => bill.paymentMode === 'cash').reduce((sum, bill) => sum + bill.billAmount, 0);
-        const cardBills = bills.filter(bill => bill.paymentMode === 'card').reduce((sum, bill) => sum + bill.billAmount, 0);
-        const upiBills = bills.filter(bill => bill.paymentMode === 'upi').reduce((sum, bill) => sum + bill.billAmount, 0);
+        const totalBill = bills.reduce((sum, bill) => sum + parseFloat(bill.billAmount), 0).toFixed(2);
+        const cashBills = bills.filter(bill => bill.paymentMode === 'cash').reduce((sum, bill) => sum + parseFloat(bill.billAmount), 0).toFixed(2);
+        const cardBills = bills.filter(bill => bill.paymentMode === 'card').reduce((sum, bill) => sum + parseFloat(bill.billAmount), 0).toFixed(2);
+        const upiBills = bills.filter(bill => bill.paymentMode === 'upi').reduce((sum, bill) => sum + parseFloat(bill.billAmount), 0).toFixed(2);
         setTotals({
             totalBillAmount: totalBill,
             totalCashBillAmount: cashBills,
@@ -61,32 +68,73 @@ export const AllBills = () => {
     }
 
 
+
     useEffect(() => {
         fetchBillsForDate();
+    }, [dateFilter]);
+
+    useEffect(() => {
+        setFromDate(getTodayDate());
+        setToDate(getTodayDate());
     }, []);
 
     const dateHandler = (e, type) => {
-        // const timeStamp = new Date(e.target.value).valueOf();
+        if (type === "from") setFromDate(e.target.value);
+        else setToDate(e.target.value);
+
         setDateFilter(prevState => ({
             ...prevState,
             [type]: e.target.value
         }));
     }
 
+    const saleReturn = (row) => {
+        setModalOpen(true);
+        setSelectedBill(row);
+    }
+
+    const updatedQuantity = (returnQuantities) => {
+        let medicineDetails = selectedBill.medicineDetails;
+        selectedBill['billReturnDate'] = new Date();
+        selectedBill['amountReturned'] = returnAmount;
+        let returnBillDetails = {};
+        for (let key in returnQuantities) {
+            let filteredItems = selectedBill.medicineDetails = medicineDetails?.filter((bill) => {
+                if (bill.brandName === key && returnQuantities[key] > 0) {
+                    bill['returnQuantity'] = returnQuantities[key];
+                    return true
+                }
+                return true;
+            });
+            if (filteredItems && filteredItems.length > 0) returnBillDetails[key] = filteredItems;
+        };
+        selectedBill.medicineDetails = medicineDetails?.filter((bill) => Object.values(returnBillDetails).flat().includes(bill));
+        salesService.addReturnBill(selectedBill);
+    }
+
+    const returnAmountHandler = (amount) => {
+        setReturnAmount(amount);
+    }
+
+    const pdfHandler = (bill) => {
+        let patientDetails = {
+            name: "",
+            phone: ""
+        }
+        return (<PdfFile data={bill?.medicineDetails}  vendorDetails={patientDetails} />)
+    }
     return (
         <Box sx={{ padding: 2 }}>
             <Container>
                 <Box sx={{ width: '300px', display: 'flex' }}>
                     <Box sx={{ marginRight: '10px' }}>
                         <label>From: </label>
-                        <input type='date' onChange={(e) => { dateHandler(e, 'from') }} />
+                        <input value={fromDate} type='date' onChange={(e) => { dateHandler(e, 'from') }} />
                     </Box>
                     <Box>
                         <label>To: </label>
-                        <input type='date' onChange={(e) => { dateHandler(e, 'to') }} />
+                        <input value={toDate} type='date' onChange={(e) => { dateHandler(e, 'to') }} />
                     </Box>
-
-
                 </Box>
                 <Box sx={{
                     display: 'flex',
@@ -120,16 +168,16 @@ export const AllBills = () => {
                             {rows.map((row, index) => (
                                 <StyledTableRow key={index}>
                                     <StyledTableCell>{index + 1}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.orderId}</StyledTableCell>
+                                    <StyledTableCell align="center">{row?.billNumber}</StyledTableCell>
                                     {/* <StyledTableCell align="center">{row.name}</StyledTableCell> */}
-                                    <StyledTableCell align="center">{row.billAmount}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.paidAmount}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.balance}</StyledTableCell>
+                                    <StyledTableCell align="center">{row?.billAmount}</StyledTableCell>
+                                    <StyledTableCell align="center">{row?.paidAmount}</StyledTableCell>
+                                    <StyledTableCell align="center">{row?.balance}</StyledTableCell>
                                     <StyledTableCell align="center">
-                                        <PrintOutlinedIcon color="primary" fontSize="small" />
+                                        <PrintOutlinedIcon onClick={() => pdfHandler(row)} color="primary" fontSize="small" />
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        <RotateLeftOutlinedIcon fontSize="small" sx={{ color: 'grey' }} />
+                                        <RotateLeftOutlinedIcon onClick={() => saleReturn(row)} fontSize="small" sx={{ color: 'grey' }} />
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         <DeleteOutlineOutlinedIcon fontSize="small" sx={{ color: 'red' }} />
@@ -140,6 +188,15 @@ export const AllBills = () => {
                     </Table>
                 </TableContainer>
             </Box>
+            {modalOpen && <SaleReturnModal
+                data={selectedBill}
+                showModal={modalOpen}
+                action={() => setModalOpen(!modalOpen)}
+                updatedQuantity={updatedQuantity}
+                returnAmount={returnAmountHandler}
+            />}
+            <Loader open={showLoader} />
         </Box>
+
     );
 };

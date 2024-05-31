@@ -41,7 +41,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
         const totalPrice = pricePerUnit * quantity;
         const discountedValue = totalPrice - (totalPrice * discount) / 100;
         setValue('total', totalPrice?.toFixed(2));
-        setValue('amount', discountedValue);
+        setValue('amount', +discountedValue.toFixed(2));
         // console.log(discountedValue, 'amount');
       }
     });

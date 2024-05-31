@@ -2,13 +2,12 @@ import { initializeApp } from "firebase/app";
 import {getFirestore} from "@firebase/firestore"
  
 const firebaseConfig = {
-  apiKey: "AIzaSyAwYwqnguc2ceukeOUBxZt0KTInoHHnDXM",
-  authDomain: "clinios-dev-257e9.firebaseapp.com",
-  projectId: "clinios-dev-257e9",
-  storageBucket: "clinios-dev-257e9.appspot.com",
-  messagingSenderId: "906627808913",
-  appId: "1:906627808913:web:f1d8776f84bd87187b4930",
-  measurementId: "G-H3E7DQS7NK"
+  apiKey: "AIzaSyCNp3Qf0bA-je0fqwESO2uwQhQR6NWBQuA",
+  authDomain: "cliniosqa-7f2c0.firebaseapp.com",
+  projectId: "cliniosqa-7f2c0",
+  storageBucket: "cliniosqa-7f2c0.appspot.com",
+  messagingSenderId: "498980221279",
+  appId: "1:498980221279:web:193be9b8e5d589f748c6ea"
 };
  
 const app = initializeApp(firebaseConfig);

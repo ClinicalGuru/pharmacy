@@ -217,11 +217,11 @@ export const Sales = () => {
         const isDuplicate = rows.some(row =>
             Object.keys(transformedObject).every(key => row[key] === transformedObject[key])
         );
-        
+
         if (isDuplicate) {
             alert('Duplicate data cannot be added.');
             setShowLoader(false);
-            setEditngIndex(-1); 
+            setEditngIndex(-1);
             setEditngRow({});
             return;
         }
@@ -244,7 +244,7 @@ export const Sales = () => {
             return accumulator + currentRow.amount;
         }, 0);
         setNetprice(totalNetPrice);
-    }, [rows]); 
+    }, [rows]);
 
     useEffect(() => {
         const getInventory = async () => {
@@ -254,13 +254,14 @@ export const Sales = () => {
                 result.forEach(item => {
                     item['unitsInStock'] = (item?.quantity * (Number(item?.noOfStrips) + Number(item?.freeStrips)));
                 });
+                console.log(result, 'inventory')
                 readInventory(result);
             } catch (err) {
                 console.log(err, 'error getting inventory in sales');
             }
-        }
+        };
         getInventory();
-    }, [])
+    }, []);
 
     const alertState = () => {
         setNotification(!notification);
@@ -272,7 +273,7 @@ export const Sales = () => {
             const patientId = await SalesService.addPatient(patientDetails);
             const billDetails = {
                 billDate: new Date().valueOf(),
-                billNumber: uuidv4(),
+                billNumber: Math.floor(100000 + Math.random() * 900000),
                 patientId: patientId,
                 medicineDetails: rows,
                 ...data
@@ -391,12 +392,12 @@ export const Sales = () => {
                         marginTop: '4px',
                         flex: 1
                     }}>
-                        <BillingSummaryForm 
-                        netPrice={netPrice} 
-                        onSubmitBillingForm={handleSubmitBillingForm} 
-                        patientDetails={patientDetails} 
-                        medicineDetails={rows} 
-                        resetTrigger={resetBillingForm} />
+                        <BillingSummaryForm
+                            netPrice={netPrice}
+                            onSubmitBillingForm={handleSubmitBillingForm}
+                            patientDetails={patientDetails}
+                            medicineDetails={rows}
+                            resetTrigger={resetBillingForm} />
                     </Box>
                 </Grid>
             </Grid>
