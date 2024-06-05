@@ -32,13 +32,13 @@ const vendorDetailsTemplate = {
     watchFields: ['invoiceDate', 'invoiceNumber', 'poNumber', 'vendorName', 'invoicedueDate'],
     fields: [
         {
-            title: 'Invoice Number', type: 'autoComplete', name: 'invoiceNumber',
-            options: [{ value: "none", name: "None" }],
+            title: 'Invoice Number', type: 'text', name: 'invoiceNumber',
+            // options: [{ value: "none", name: "None" }],
             validationProps: { required: "Invoice num is required" }, style: { width: '194px' }
         },
         {
-            title: 'PO Number', type: 'autoComplete', name: 'poNumber',
-            options: [{ value: "none", name: "None" }],
+            title: 'PO Number', type: 'text', name: 'poNumber',
+            // options: [{ value: "none", name: "None" }],
             validationProps: { required: "PO Num is required" }, style: { width: "194px" }
         },
         {
@@ -57,7 +57,7 @@ const vendorDetailsTemplate = {
     ],
 };
 
-const vendorDetailsStyle = { display: "flex", gap: "28px 30px" };
+const vendorDetailsStyle = { display: "flex", gap: "28px 30px", minHeight: "70px",maxHeight: "70px",height: "70px", };
 const btnStyles = { display: "flex", justifyContent: "end" };
 
 export const AddInvoice = () => {

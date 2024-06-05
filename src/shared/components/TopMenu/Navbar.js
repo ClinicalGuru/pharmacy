@@ -9,7 +9,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 export const Navbar = (props) => {
     const { navLinksData } = props;
     const [showSubMenu, setShowSubMenu] = useState([]);
-    const [activeId, setActiveId] = useState(13);
+    const [activeId, setActiveId] = useState(21);
     const navigate = useNavigate();
     const variants = {
         open: { opacity: 1, x: 0 },

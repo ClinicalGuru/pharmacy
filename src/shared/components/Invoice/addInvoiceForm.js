@@ -217,7 +217,7 @@ export const AddInvoiceForm = ({
                     {errors['hsnCode'] && <span className='red-text'>{errors['hsnCode'][`message`]}</span>}
                 </div>
 
-                <div>
+                <div style={{width:'100px'}}>
                     <label>{FORM_LABELS.EXPIRY}</label>
                    
       <Modal
@@ -270,17 +270,17 @@ export const AddInvoiceForm = ({
                     {errors['freeStrips'] && <span className='red-text'>{errors['freeStrips'][`message`]}</span>}
                 </div>
 
-                <div style={{ minWidth: '150px' }}>
+                <div style={{ minWidth: '100px' }}>
                     <label>{FORM_LABELS.MRP_PER_STRIP}</label>
                     <input onBlur={() => onBlur(mrpPerStripHandler())} {...register("mrpPerStrip", { required: true })} type="number" step={"any"} />
                     {errors['mrpPerStrip'] && <span className='red-text'>{errors['mrpPerStrip'][`message`]}</span>}
                 </div>
-                <div style={{ minWidth: '150px' }}>
+                <div style={{ minWidth: '100px' }}>
                     <label>{FORM_LABELS.PRICE_PER_STRIP}</label>
                     <input onBlur={() => onBlur(pricePerStripHandler())} {...register("pricePerStrip", { required: true })} type="number" step={"any"} />
                     {errors['pricePerStrip'] && <span className='red-text'>{errors['pricePerStrip'][`message`]}</span>}
                 </div>
-                <div style={{ minWidth: '150px' }}>
+                <div style={{ minWidth: '100px' }}>
                     <label>{FORM_LABELS.DISCOUNT}</label>
                     <input {...register("discount", { required: true })} type="number" step=".01" />
                     {errors['discount'] && <span className='red-text'>{errors['discount'][`message`]}</span>}
@@ -307,7 +307,7 @@ export const AddInvoiceForm = ({
                     {errors['netPrice'] && <span className='red-text'>{errors['netPrice'][`message`]}</span>}
                 </div>
                 <div>
-                    <div style={{ display: 'flex', marginLeft: '100px' }}>
+                    <div style={{ display: 'flex', marginLeft: '30px' }}>
 
                         <div style={{ position: 'absolute' }}>
                         <input style={{ color: 'white' }} type="submit" id="styled-submit-button" value={"+ Add"} />
