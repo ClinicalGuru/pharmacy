@@ -59,7 +59,7 @@ export const List = ({ showModal, action, requisitions, getRequisitionId }) => {
                                             <tr>
                                                 <th scope="row">{i + 1}</th>
                                                 <td>{item?.vendorName}</td>
-                                                <td>{item?.requesitionCreatedDate}</td>
+                                                <td>{item?.date}</td>
                                                 <td>{item?.status}</td>
                                                 <td><a onClick={() => requisitionHandler(item?.requesitionId)}>Get Details</a></td>
                                             </tr>
