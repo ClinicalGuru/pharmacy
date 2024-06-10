@@ -27,3 +27,19 @@ export const getTodayDate = () => {
 
     return `${year}-${month}-${day}`;
 };
+export const filterData = (data, criteria) => {
+    return data.filter(item => {
+        return Object.keys(criteria).every(key => {
+            // If the criteria value is empty string, skip the check
+            if (criteria[key] === '') return true;
+            // Ensure the item has the key and the value matches the criteria
+            return item[key] === criteria[key];
+        });
+    });
+};
+
+export const hasAllRequiredKeysInList = (data, requiredKeys) => {
+    return data.every(item => 
+      requiredKeys.every(key => item.hasOwnProperty(key))
+    );
+  };

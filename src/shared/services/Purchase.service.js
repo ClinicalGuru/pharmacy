@@ -1,5 +1,5 @@
 import { firestore } from "../../context/firebase";
-import { addDoc, getDocs, getDoc, collection, orderBy, limit, doc, query, onSnapshot, writeBatch, where } from "firebase/firestore";
+import { addDoc, getDocs, getDoc, collection, orderBy, limit, doc, query, updateDoc, writeBatch, where } from "firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
 
 const vendorCollectionRef = collection(firestore, "vendors");
@@ -76,8 +76,9 @@ class PurchaseService {
         return filteredData;
     }
 
-    savingPurchageRequesition = async (data) => {
-
+    updatingInventory = async (data) => {
+        const docRef = doc(requisitionCollectionRef, data.id);
+        return await updateDoc(docRef, data);
     }
 
     saveQuotation = async (data) => {

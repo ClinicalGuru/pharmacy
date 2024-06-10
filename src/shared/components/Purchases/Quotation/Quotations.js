@@ -14,12 +14,17 @@ import { List } from "./List";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import { hasAllRequiredKeysInList } from '../../../../utils/helper'
 
 export const Quotations = () => {
     const [showLoader, setShowLoader] = useState(false);
     const [vendorDetails, setVendorDetails] = useState([]);
     const [rows, setRows] = useState([]);
     const [reqisition, setRequisition] = useState();
+    const [notificationMsg, setNotificationMsg] = useState({
+        message: '',
+        severity: ''
+    });
     const [notification, setNotification] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [requesitionId, setRequesitionId] = useState('');
@@ -287,6 +292,17 @@ export const Quotations = () => {
     };
 
     const onSaveQuotation = async () => {
+        const requiredKeys = ['mrp', 'ptr', 'pts', 'gst', 'discount'];
+        if (!hasAllRequiredKeysInList(rows, requiredKeys)) {
+            setNotification(true)
+            setNotificationMsg(
+                {
+                    severity: 'error',
+                    message: 'Please all the fields before saving'
+                }
+            )
+            return
+        };
         setShowLoader(true);
         let quotationDetails = {
             vendorId: reqisition[0]?.vendorId,
@@ -294,13 +310,15 @@ export const Quotations = () => {
             quotationId: uuidv4()
         };
         const data = rows.map((item) => ({ ...item, ...quotationDetails }));
+        let selectedRequisition = reqisition.find((item) => item?.requesitionId === requesitionId);
+        selectedRequisition.status = 'completed';
         try {
             await PurchaseService.saveQuotation(data).then((res) => {
                 console.log(res, 'Quotation data saved successfully');
+                PurchaseService.updatingInventory(selectedRequisition);
                 setShowLoader(false);
                 alertState();
                 setRows([]);
-                
             });
         } catch (err) {
             console.log(err, 'err while adding quotation data');
@@ -334,6 +352,7 @@ export const Quotations = () => {
         console.log(rslt, 'rslt')
         setRows([...rslt?.medicines]);
     }
+
     return (
         <Box sx={{
             padding: 1,
@@ -381,7 +400,7 @@ export const Quotations = () => {
             </div>
             <Loader open={showLoader} />
             {<List showModal={modalOpen} requisitions={reqisition} action={() => setModalOpen(!modalOpen)} getRequisitionId={getRequisitionId} />}
-            {notification && <Notification notificationState={notification} type="success" message="Quotation saved successfully" action={alertState} />}
+            {notification && <Notification notificationState={notification} severity={notificationMsg.severity} message={notificationMsg.message} action={alertState} />}
         </Box>
     )
 }
