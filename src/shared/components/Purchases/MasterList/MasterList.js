@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Box } from "@mui/material";
 import { Container } from "./MasterList.styles";
@@ -164,7 +163,6 @@ export const MasterList = () => {
     }, []);
 
     const joinQuotationsWithVendors = () => {
-        setShowLoader(true);
         let vendorMap = new Map();
         for (const vendor of vendorDetails) {
             vendorMap.set(vendor.id, vendor.name)
@@ -188,7 +186,6 @@ export const MasterList = () => {
         };
         const flatArray = Object.values(groupedByBrandName).flat();
         setOriginalData(flatArray);
-        setShowLoader(false);
     }
 
     const getAllQuotationsData = async () => {
@@ -220,8 +217,7 @@ export const MasterList = () => {
     };
 
     const handleList = (e) => {
-        const { value } = e.target;
-        setPricingOrder(value);
+        setPricingOrder(e.target.value);
     };
 
     const onCreatePurchageOrder = () => {
@@ -253,18 +249,12 @@ export const MasterList = () => {
 
     useEffect(() => {
         const filteredRows = originalData.filter((item) => {
-            if (vendorId && pMed && pricingOrder) {
-                return item.vendorId === vendorId && item.medicineId === pMed && item.pricingOrder === pricingOrder;
-            } else if (vendorId) {
-                return item.vendorId === vendorId;
-            } else if (pMed) {
-                return item.medicineId === pMed;
-            } else if(pricingOrder){
-                return item.pricingOrder === pricingOrder; 
-            }
-            return true;
-        });
-    
+            return (
+                (vendorId === '' || item.vendorId === vendorId) &&
+                (pMed === '' || item.medicineId === pMed) &&
+                (pricingOrder === '' || item.pricingOrder === pricingOrder)
+            );
+        });    
         setRows(filteredRows);
     }, [vendorId, pMed, pricingOrder]);
 

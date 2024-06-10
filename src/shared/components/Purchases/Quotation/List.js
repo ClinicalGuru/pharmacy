@@ -7,12 +7,12 @@ import CloseIcon from '@mui/icons-material/Close';
 import Dialog from '@mui/material/Dialog';
 
 export const List = ({ showModal, action, requisitions, getRequisitionId }) => {
-    console.log(requisitions, 'requisitions./')
+    // console.log(requisitions, 'requisitions./')
     const handleClose = () => {
         action(!showModal);
     };
     const requisitionHandler = (id) => {
-        console.log(id, 'id')
+        // console.log(id, 'id')
         getRequisitionId(id);
         action(!showModal);
     }
@@ -54,7 +54,7 @@ export const List = ({ showModal, action, requisitions, getRequisitionId }) => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {requisitions?.map((item, i) => {
+                                    {requisitions?.length > 0 && requisitions?.filter(item => item.status === "created").map((item, i) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{i + 1}</th>
