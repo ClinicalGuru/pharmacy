@@ -141,7 +141,12 @@ export const Quotations = () => {
                 options: [...brandNames],
             },
             {
-                title: FORM_LABELS.DOSE,
+                title: (
+                    <span>
+                    {FORM_LABELS.DOSE}
+                    <span style={{color:'red'}}>*</span>
+                    </span>
+                    ),
                 type: 'text',
                 name: 'dose',
                 validationProps: {
@@ -152,9 +157,44 @@ export const Quotations = () => {
                 }
             },
             {
-                title: FORM_LABELS.FORM,
-                type: 'text',
+                title: (
+                    <span>
+                    {FORM_LABELS.FORM}
+                    <span style={{color:'red'}}>*</span>
+                    </span>
+                    ),
+                type: 'select',
                 name: 'form',
+                options: [
+                    {
+                        value: "Tablets",
+                        name: "Tablets"
+                    },
+                    {
+                        value: "Injections",
+                        name: "Injections"
+                    },
+                    {
+                        value: "Inhalers",
+                        name: "Inhalers"
+                    },
+                    {
+                        value: "Capsules",
+                        name: "Capsules"
+                    },
+                    {
+                        value: "Syrup",
+                        name: "Syrup"
+                    },
+                    {
+                        value: "Drops",
+                        name: "Drops"
+                    },
+                    {
+                        value: "Ointment",
+                        name: "Ointment"
+                    },
+                ],
                 validationProps: {
                     required: `${FORM_LABELS.FORM} is required`
                 },
@@ -163,7 +203,12 @@ export const Quotations = () => {
                 }
             },
             {
-                title: FORM_LABELS.QUANTITY,
+                title: (
+                    <span>
+                    {FORM_LABELS.QUANTITY}
+                    <span style={{color:'red'}}>*</span>
+                    </span>
+                    ),
                 type: 'number',
                 name: 'quantity',
                 validationProps: {
@@ -174,7 +219,12 @@ export const Quotations = () => {
                 }
             },
             {
-                title: FORM_LABELS.MRP,
+                title: (
+                    <span>
+                    {FORM_LABELS.MRP}
+                    <span style={{color:'red'}}>*</span>
+                    </span>
+                    ),
                 type: 'number',
                 name: 'mrp',
                 validationProps: {
@@ -185,7 +235,12 @@ export const Quotations = () => {
                 }
             },
             {
-                title: FORM_LABELS.PTR,
+                title: (
+                    <span>
+                    {FORM_LABELS.PTR}
+                    <span style={{color:'red'}}>*</span>
+                    </span>
+                    ),
                 type: 'number',
                 name: 'ptr',
                 validationProps: {
@@ -196,7 +251,12 @@ export const Quotations = () => {
                 }
             },
             {
-                title: FORM_LABELS.PTS,
+                title: (
+                    <span>
+                    {FORM_LABELS.PTS}
+                    <span style={{color:'red'}}>*</span>
+                    </span>
+                    ),
                 type: 'number',
                 name: 'pts',
                 validationProps: {
@@ -208,14 +268,21 @@ export const Quotations = () => {
             },
             {
                 title: FORM_LABELS.GST,
-                type: 'text',
+                type: 'select',
                 name: 'gst',
                 validationProps: {
                     required: `${FORM_LABELS.GST} is required`
                 },
                 style: {
                     width: "60px"
-                }
+                },
+                options: [
+                    { name: '0%', value: '0%' },
+                    { name: '5%', value: '5%' },
+                    { name: '12%', value: '12%' },
+                    { name: '18%', value: '18%' },
+                    { name: '28%', value: '28%' }
+                ]
             },
             {
                 title: FORM_LABELS.DISCOUNT,

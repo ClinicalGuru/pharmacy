@@ -196,6 +196,7 @@ export const Sales = () => {
         ],
     };
     const patient_details_style = {
+        height:"80px",
         display: "flex",
         justifyContent: "space-between",
         flexWrap: 'wrap'

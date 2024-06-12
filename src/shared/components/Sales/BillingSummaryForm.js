@@ -117,12 +117,13 @@ export const BillingSummaryForm = ({
 
                 <div>
                     <label>{FORM_LABELS.GST}</label>
-                    <input {...register("gst", {
-                        pattern: {
-                            value: /^[0-9]*$/,
-                            message: ""
-                        }
-                    })} type="number" />
+                    <select {...register("gst")}>
+                        <option value="0%">0%</option>
+                        <option value="5%">5%</option>
+                        <option value="12%">12%</option>
+                        <option value="18%">18%</option>
+                        <option value="28%">28%</option>
+                    </select>
                     {errors['gst'] && <span className='red-text'>{errors['gst'][`message`]}</span>}
                 </div>
                 <div>
@@ -162,6 +163,26 @@ export const BillingSummaryForm = ({
                     </select>
                     {errors['paymentMode'] && <span className='red-text'>{errors['paymentMode'][`message`]}</span>}
                 </div>
+                <div>
+                    <label>{FORM_LABELS.PAID_AMOUNT}</label>
+                    <input {...register("paidAmount", {
+                        pattern: {
+                            value: /^[0-9]*$/,
+                            message: ""
+                        }
+                    })} type="number" />
+                    {errors['paidAmount'] && <span className='red-text'>{errors['paidAmount'][`message`]}</span>}
+                </div>
+                {/* <div>
+                    <label>{FORM_LABELS.BALANCE}</label>
+                    <input {...register("balance", {
+                        pattern: {
+                            value: /^[0-9]*$/,
+                            message: ""
+                        }
+                    })} type="number" />
+                    {errors['balance'] && <span className='red-text'>{errors['balance'][`message`]}</span>}
+                </div> */}
 
                 <div style={{ minWidth: '150px', display: 'flex', alignItems: 'center' }}>
                     <label>{FORM_LABELS.ADD_REMARKS}</label>

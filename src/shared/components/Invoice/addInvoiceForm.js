@@ -206,19 +206,19 @@ export const AddInvoiceForm = ({
 
                 {errors['brandName'] && <span className='red-text'>{errors['brandName'][`message`]}</span>}
                 <div>
-                    <label>{FORM_LABELS.BATCH_NO}</label>
+                    <label>{FORM_LABELS.BATCH_NO} <span className="red-asterisk">*</span></label>
                     <input {...register("batchNo", { required: true })} type="text" />
                     {errors['batchNo'] && <span className='red-text'>{errors['batchNo'][`message`]}</span>}
                 </div>
 
                 <div>
-                    <label>{FORM_LABELS.HSN_CODE}</label>
+                    <label>{FORM_LABELS.HSN_CODE} <span className="red-asterisk">*</span></label>
                     <input {...register("hsnCode", { required: true })} type="text" />
                     {errors['hsnCode'] && <span className='red-text'>{errors['hsnCode'][`message`]}</span>}
                 </div>
 
                 <div style={{width:'100px'}}>
-                    <label>{FORM_LABELS.EXPIRY}</label>
+                    <label>{FORM_LABELS.EXPIRY} <span className="red-asterisk">*</span></label>
                    
       <Modal
         isOpen={modalIsOpen}
@@ -253,30 +253,30 @@ export const AddInvoiceForm = ({
                 </div>
 
                 <div>
-                    <label>{FORM_LABELS.QUANTITY}</label>
+                    <label>{FORM_LABELS.QUANTITY} <span className="red-asterisk">*</span></label>
                     <input {...register("quantity", { required: true })} type="text" />
                     {errors['quantity'] && <span className='red-text'>{errors['quantity'][`message`]}</span>}
                 </div>
 
                 <div>
-                    <label>{FORM_LABELS.NO_OF_STRIPS}</label>
+                    <label>{FORM_LABELS.NO_OF_STRIPS} <span className="red-asterisk">*</span></label>
                     <input {...register("noOfStrips", { required: true })} type="number" />
                     {errors['noOfStrips'] && <span className='red-text'>{errors['noOfStrips'][`message`]}</span>}
                 </div>
 
                 <div>
-                    <label>{FORM_LABELS.FREE_STRIPS}</label>
+                    <label>{FORM_LABELS.FREE_STRIPS} <span className="red-asterisk">*</span></label>
                     <input {...register("freeStrips")} type="number" />
                     {errors['freeStrips'] && <span className='red-text'>{errors['freeStrips'][`message`]}</span>}
                 </div>
 
                 <div style={{ minWidth: '100px' }}>
-                    <label>{FORM_LABELS.MRP_PER_STRIP}</label>
+                    <label>{FORM_LABELS.MRP_PER_STRIP} <span className="red-asterisk">*</span></label>
                     <input onBlur={() => onBlur(mrpPerStripHandler())} {...register("mrpPerStrip", { required: true })} type="number" step={"any"} />
                     {errors['mrpPerStrip'] && <span className='red-text'>{errors['mrpPerStrip'][`message`]}</span>}
                 </div>
                 <div style={{ minWidth: '100px' }}>
-                    <label>{FORM_LABELS.PRICE_PER_STRIP}</label>
+                    <label>{FORM_LABELS.PRICE_PER_STRIP} <span className="red-asterisk">*</span></label>
                     <input onBlur={() => onBlur(pricePerStripHandler())} {...register("pricePerStrip", { required: true })} type="number" step={"any"} />
                     {errors['pricePerStrip'] && <span className='red-text'>{errors['pricePerStrip'][`message`]}</span>}
                 </div>
@@ -310,10 +310,10 @@ export const AddInvoiceForm = ({
                     <div style={{ display: 'flex', marginLeft: '30px' }}>
 
                         <div style={{ position: 'absolute' }}>
-                        <input style={{ color: 'white' }} type="submit" id="styled-submit-button" value={"+ Add"} />
+                        <input style={{ color: 'white',marginTop:'5px' }} type="submit" id="styled-submit-button" value={"+ Add"} />
                         </div>
                         <div style={{ position: 'absolute', marginLeft: '70px' }}>
-                            <input style={{ color: 'white' }} type="reset" id="styled-reset-button"  value={"Clear"} />
+                            <input style={{ color: 'white',marginTop:'5px' }} type="reset" id="styled-reset-button"  value={"Clear"} />
                         </div>
 
                         {/* <div style={{ position: 'absolute' }}>
