@@ -116,9 +116,8 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) 
             />
           )}
         />
-
-        {errors.pharmacologicalName && <p>{errors.pharmacologicalName.message}</p>}
       </div>
+      {errors.pharmacologicalName && <p>{errors.pharmacologicalName.message}</p>}
 
       <div>
         <label>{FORM_LABELS.BRAND_NAME}</label>
@@ -195,7 +194,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) 
         <label>{FORM_LABELS.PRICE}</label>
         <input
           {...register("pricePerUnit", {
-            required: "Price is required",
+            required: true,
             pattern: {
               value: /^[0-9]*\.?[0-9]+$/,
               message: "Invalid price format"
