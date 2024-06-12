@@ -6,7 +6,7 @@ import { FORM_LABELS } from "../../Constants/index";
 import { Notification } from '../Notification/index';
 import isEmpty from 'lodash/isEmpty';
 
-export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
+export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) => {
   const [notification, setNotification] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState({
     message: '',
@@ -47,6 +47,12 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
     });
     return () => subscription.unsubscribe();
   }, [watchFields]);
+
+  useEffect(() => {
+    if (resetTrigger) {
+        reset();
+    }
+}, [resetTrigger, reset]);
 
 
   const alertState = () => {
