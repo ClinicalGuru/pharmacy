@@ -132,7 +132,12 @@ export const PurchaseRequisition = () => {
                 options: [...brandNames]
             },
             {
-                title: FORM_LABELS.DOSE,
+                title: (
+                    <span>
+                    {FORM_LABELS.DOSE}
+                    <span style={{color:'red'}}>*</span>
+                    </span>
+                    ),
                 type: 'text',
                 name: 'dose',
                 validationProps: {
@@ -140,15 +145,55 @@ export const PurchaseRequisition = () => {
                 },
             },
             {
-                title: FORM_LABELS.FORM,
-                type: 'text',
+                title: (
+                    <span>
+                    {FORM_LABELS.FORM}
+                    <span style={{color:'red'}}>*</span>
+                    </span>
+                    ),
+                type: 'select',
                 name: 'form',
+                options: [
+                    {
+                        value: "Tablets",
+                        name: "Tablets"
+                    },
+                    {
+                        value: "Injections",
+                        name: "Injections"
+                    },
+                    {
+                        value: "Inhalers",
+                        name: "Inhalers"
+                    },
+                    {
+                        value: "Capsules",
+                        name: "Capsules"
+                    },
+                    {
+                        value: "Syrup",
+                        name: "Syrup"
+                    },
+                    {
+                        value: "Drops",
+                        name: "Drops"
+                    },
+                    {
+                        value: "Ointment",
+                        name: "Ointment"
+                    },
+                ],
                 validationProps: {
                     required: `${FORM_LABELS.FORM} is required`
                 },
             },
             {
-                title: FORM_LABELS.QUANTITY,
+                title: (
+                    <span>
+                    {FORM_LABELS.QUANTITY}
+                    <span style={{color:'red'}}>*</span>
+                    </span>
+                    ),
                 type: 'number',
                 name: 'quantity',
                 validationProps: {

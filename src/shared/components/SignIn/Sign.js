@@ -72,7 +72,7 @@ export const SignIn = () => {
         try {
             let data = await SigninService.validateUser(userName);
             setLoader(false);
-            if (data[0]?.pin === password) navigate('/landing');
+            if (data[0]?.pin === password) navigate('/landing/sales/billing');
             else setNotification(true);
         } catch (err) {
             setLoader(false);

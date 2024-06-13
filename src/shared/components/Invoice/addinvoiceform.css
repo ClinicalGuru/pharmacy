@@ -40,3 +40,7 @@
 .addInvoiceForm >div > input {
     width: 100px!important;
 }
+
+.red-asterisk{
+  color: red;
+}

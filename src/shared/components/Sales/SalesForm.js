@@ -6,7 +6,7 @@ import { FORM_LABELS } from "../../Constants/index";
 import { Notification } from '../Notification/index';
 import isEmpty from 'lodash/isEmpty';
 
-export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
+export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) => {
   const [notification, setNotification] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState({
     message: '',
@@ -45,6 +45,12 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
     });
     return () => subscription.unsubscribe();
   }, [watchFields]);
+
+  useEffect(() => {
+    if (resetTrigger) {
+        reset();
+    }
+}, [resetTrigger, reset]);
 
 
   const alertState = () => {
@@ -109,9 +115,8 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
             />
           )}
         />
-
-        {errors.pharmacologicalName && <p>{errors.pharmacologicalName.message}</p>}
       </div>
+      {errors.pharmacologicalName && <p>{errors.pharmacologicalName.message}</p>}
 
       <div>
         <label>{FORM_LABELS.BRAND_NAME}</label>
@@ -155,7 +160,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
 
       {errors['brandName'] && <span className='red-text'>{errors['brandName'][`message`]}</span>}
       <div>
-        <label>{FORM_LABELS.BATCH_NO}</label>
+        <label>{FORM_LABELS.BATCH_NO} <span style={{color:'red'}}>*</span> </label>
         <input
           {...register("batchNo", {
             required: true,
@@ -171,7 +176,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
 
 
       <div>
-        <label>{FORM_LABELS.HSN_CODE}</label>
+        <label>{FORM_LABELS.HSN_CODE} <span style={{color:'red'}}>*</span> </label>
         <input
           {...register("hsnCode", {
             required: true, pattern: {
@@ -186,10 +191,10 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
       </div>
 
       <div>
-        <label>{FORM_LABELS.PRICE}</label>
+        <label>{FORM_LABELS.PRICE} <span style={{color:'red'}}>*</span> </label>
         <input
           {...register("pricePerUnit", {
-            required: "Price is required",
+            required: true,
             pattern: {
               value: /^[0-9]*\.?[0-9]+$/,
               message: "Invalid price format"
@@ -204,7 +209,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
 
 
       <div>
-        <label>{FORM_LABELS.QUANTITY}</label>
+        <label>{FORM_LABELS.QUANTITY} <span style={{color:'red'}}>*</span> </label>
         <input
           {...register("quantity", {
             required: true, pattern: {
@@ -219,7 +224,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
       </div>
 
       <div>
-        <label>{FORM_LABELS.TOTAL}</label>
+        <label>{FORM_LABELS.TOTAL} </label>
         <input
           disabled {...register("total")}
           type="number"

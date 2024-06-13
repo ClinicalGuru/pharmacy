@@ -12,7 +12,7 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
     });
     const [showLoader, setShowLoader] = useState(false);
     const [vendors, setVendors] = useState([]);
-    const [selectedVendor, setSelectedVendor] = useState({});
+    const [selectedVendor, setSelectedVendor] = useState(null);
     // const [defaultDate, setDefaultDate] = useState(getTodayDate());
 
     const getVendors = async () => {
@@ -20,7 +20,7 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
         try {
             let data = await PurchaseService.getAllVendors();
             const result = data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }));
-            result.unshift({ id: undefined, name: '--Select--' })
+            // result.unshift({ id: undefined, name: '--Select--' })
             setVendors(result.map((item) => ({ value: item?.id, label: item?.name })));
             setShowLoader(false);
         } catch (err) {
@@ -66,8 +66,13 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
                                 options={vendors}
                                 {...field}
                                 label="Text field"
-                                onChange={(selectedOption) => handleVendorChange(selectedOption)}
-                                value={vendors.find((vendor) => vendor?.id === selectedVendor?.value)}
+                                placeholder='Select'
+                                onChange={(selectedOption) => {
+                                    field.onChange(selectedOption);
+                                    handleVendorChange(selectedOption);
+                                }}
+                                value={selectedVendor}
+                                // value={vendors.find((vendor) => vendor?.id === selectedVendor?.value)}
                                 styles={{
                                     container: (provided) => ({
                                         ...provided,

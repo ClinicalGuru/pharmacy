@@ -37,6 +37,7 @@ export const Sales = () => {
     const [editingIndex, setEditngIndex] = useState(-1);
     const [showPrint, SetShowPrint] = useState(false);
     const [resetPatientForm, setResetPatientForm] = useState(false);
+    const [resetSalesForm, setResetSalesForm] = useState(false);
     const [resetBillingForm, setResetBillingForm] = useState(false);
     const [notificationMsg, setNotificationMsg] = useState({
         message: '',
@@ -195,6 +196,7 @@ export const Sales = () => {
         ],
     };
     const patient_details_style = {
+        height:"80px",
         display: "flex",
         justifyContent: "space-between",
         flexWrap: 'wrap'
@@ -345,6 +347,7 @@ export const Sales = () => {
         };
         addPatient(patientDetails, data);
         setResetPatientForm(true);
+        setResetSalesForm(true);
         setResetBillingForm(true);
     }
 
@@ -382,6 +385,7 @@ export const Sales = () => {
                             onSubmitForm={handleSubmitForm}
                             inventory={inventory}
                             data={editingRow}
+                            resetTrigger={resetSalesForm}
                         />
                     </Container>
                     <Box sx={{ marginTop: 2 }}>
