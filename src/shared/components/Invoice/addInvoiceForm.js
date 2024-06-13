@@ -72,7 +72,6 @@ export const AddInvoiceForm = ({
     }, [watchFields]);
 
     useEffect(() => {
-        setValue("expiry", "MM/YY")
         if (resetForm) reset();
     }, [onSubmit]);
 
@@ -96,36 +95,6 @@ export const AddInvoiceForm = ({
     const pricePerStripHandler = (e) => {
         console.log(e, 'price er strip')
     }
-    const [expiryDate, setExpiryDate] = useState("");
-
-
-    const [modalIsOpen, setIsOpen] = useState(false);
-
-    function openModal() {
-        setIsOpen(true);
-    }
-
-
-
-    function closeModal() {
-        setIsOpen(false);
-    }
-    const customStyles = {
-        content: {
-            top: '50%',
-            left: '50%',
-            right: 'auto',
-            bottom: 'auto',
-            marginRight: '-50%',
-            transform: 'translate(-50%, -50%)',
-        },
-    };
-    let [MMYY, setMMYY] = useState("MM/YY")
-    const handleSelect = (month, year) => {
-        console.log(`Selected Month: ${month}, Selected Year: ${year}`);
-        setIsOpen(false);
-        setValue("expiry", `${month}/${year}`)
-    };
 
     useEffect(() => {
         if (resetTrigger) {

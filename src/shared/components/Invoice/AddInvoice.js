@@ -25,38 +25,6 @@ const columns = [
     { Header: "Actions", id: "actions" },
 ];
 
-const vendorDetailsTemplate = {
-    title: '',
-    submitButttonText: 'Log in',
-    // formStyles: { backgroundColor: "#eee" },
-    watchFields: ['invoiceDate', 'invoiceNumber', 'poNumber', 'vendorName', 'invoicedueDate'],
-    fields: [
-        {
-            title: 'Invoice Number', type: 'text', name: 'invoiceNumber',
-            // options: [{ value: "none", name: "None" }],
-            validationProps: { required: "Invoice num is required" }, style: { width: '194px' }
-        },
-        {
-            title: 'PO Number', type: 'text', name: 'poNumber',
-            // options: [{ value: "none", name: "None" }],
-            validationProps: { required: "PO Num is required" }, style: { width: "194px" }
-        },
-        {
-            title: 'Vendor Name', type: 'autoComplete', name: 'vendorId',
-            options: [{ value: "none", name: "None" }],
-            validationProps: { required: "Vendor name is required" }, style: { width: "194px" }
-        },
-        {
-            title: 'Invoice Date', type: 'date', name: 'invoiceDate',
-            validationProps: { required: "Date is required" }, style: { width: "194px" }
-        },
-        {
-            title: 'Invoice Due Date', type: 'date', name: 'invoiceDueDate',
-            validationProps: { required: "Date is required" }, style: { width: "194px" }
-        },
-    ],
-};
-
 const vendorDetailsStyle = { display: "flex", gap: "28px 30px", minHeight: "70px",maxHeight: "70px",height: "70px", };
 const btnStyles = { display: "flex", justifyContent: "end" };
 
@@ -73,7 +41,39 @@ export const AddInvoice = () => {
     const [brandNames, setBrandNames] = useState([]);
     const [editingRow, setEditingRow] = useState({});
     const [editingIndex, setEditingIndex] = useState(-1);
-
+    const vendorDetailsTemplate = {
+        title: '',
+        submitButttonText: 'Log in',
+        // formStyles: { backgroundColor: "#eee" },
+        watchFields: ['invoiceDate', 'invoiceNumber', 'poNumber', 'vendorName', 'invoicedueDate'],
+        fields: [
+            {
+                title: 'Invoice Number', type: 'text', name: 'invoiceNumber',
+                // options: [{ value: "none", name: "None" }],
+                validationProps: { required: "Invoice num is required" }, style: { width: '194px' }
+            },
+            {
+                title: 'PO Number', type: 'text', name: 'poNumber',
+                // options: [{ value: "none", name: "None" }],
+                validationProps: { required: "PO Num is required" }, style: { width: "194px" }
+            },
+            {
+                title: 'Vendor Name', type: 'autoComplete', name: 'vendorId',
+                options: [{ value: "none", name: "None" },
+                    ...vendorDetails
+                ],
+                validationProps: { required: "Vendor name is required" }, style: { width: "194px" }
+            },
+            {
+                title: 'Invoice Date', type: 'date', name: 'invoiceDate',
+                validationProps: { required: "Date is required" }, style: { width: "194px" }
+            },
+            {
+                title: 'Invoice Due Date', type: 'date', name: 'invoiceDueDate',
+                validationProps: { required: "Date is required" }, style: { width: "194px" }
+            },
+        ],
+    };
     useEffect(() => {
         const fetchData = async () => {
             setLoader(true);
@@ -88,7 +88,7 @@ export const AddInvoice = () => {
 
                 setPharmacologicalNames(medicines.map(item => ({ value: item.id, name: item.pharmacologicalName })));
                 setBrandNames(medicines.map(item => ({ value: item.id, name: item.brandName })));
-                setVendorDetails(vendors);
+                setVendorDetails(vendors.map(item => ({ value: item.id, name: item.name })));
                 setLoader(false);
             } catch (error) {
                 setLoader(false);
@@ -105,9 +105,9 @@ export const AddInvoice = () => {
     const validate = (watchValues) => {
         setInvoiceDetails({
             invoiceDate: watchValues?.invoiceDate,
-            poNumber: watchValues?.poNumber?.value,
+            poNumber: watchValues?.poNumber,
             vendorId: watchValues?.vendorId?.value,
-            invoiceNumber: watchValues?.invoiceNumber?.value,
+            invoiceNumber: watchValues?.invoiceNumber,
         });
     };
 
@@ -144,13 +144,13 @@ export const AddInvoice = () => {
     const invoiceHandler = (formData) => {
         console.log(formData)
         setLoader(true);
-        const { brandName, pharmacologicalName, qunatity } = formData;
+        const { brandName, pharmacologicalName, quantity } = formData;
         const transformedObject = {
             ...formData,
             brandName: brandName?.label,
             pharmacologicalName: pharmacologicalName?.label,
             medicineId: brandName?.value,
-            deadStockQuantityCheck: qunatity,
+            deadStockQuantityCheck: quantity,
             stockEnteredDate: new Date().valueOf()
         };
 
