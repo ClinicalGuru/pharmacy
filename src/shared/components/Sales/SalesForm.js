@@ -35,14 +35,12 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
     const subscription = watch((value, { name, type }) => {
       // console.log(name, 'dcxsbgcbsdhucbhdsbchusbhb');
       if (name === "pricePerUnit" || name === "quantity" || name === "discount") {
-
         const { pricePerUnit, quantity, discount } = value;
         console.log(pricePerUnit, quantity, discount, 'pricePerUnit, quantity, discount');
         const totalPrice = pricePerUnit * quantity;
         const discountedValue = totalPrice - (totalPrice * discount) / 100;
         setValue('total', totalPrice?.toFixed(2));
         setValue('amount', +discountedValue.toFixed(2));
-        // console.log(discountedValue, 'amount');
       }
     });
     return () => subscription.unsubscribe();
@@ -82,7 +80,8 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
               value: /^[a-zA-Z0-9\s]*$/,
               message: "Please enter only letters, numbers, or spaces"
             }
-          })}
+          })
+          }
           name="pharmacologicalName"
           control={control}
           defaultValue=""
@@ -129,7 +128,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
           render={({ field }) => (
             <Select
               {...field}
-              options={inventory?.map(option => ({ value: option?.medicineId, label: option?.brandName }))}
+              options={inventory?.map(option => ({ value: option?.medicineId, label: `${option?.brandName} ${option.quantity <= 0 ? `-- Zero Stock`: ''}`, quantity: option?.quantity }))}
               onChange={(newValue, actionMeta) => {
                 brandNameHandler(newValue)
                 field.onChange(newValue);
@@ -148,6 +147,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data }) => {
                   width: 150,
                 })
               }}
+              isOptionDisabled={(option) => option.quantity <= 0}
             />
           )}
         />

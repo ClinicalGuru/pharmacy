@@ -33,10 +33,13 @@ module.exports = ({ mode } = { mode: "production" }) => {
                     loader: "babel-loader"
                 },
                 {
-                    test: /\.(sa|sc|c)ss$/,
-                    exclude: /node_modules/,
-                    use: ["style-loader", "css-loader", "sass-loader"]
-                }
+                    test: /\.css$/,
+                    use: ['style-loader', 'css-loader'],
+                },
+                {
+                    test: /\.scss$/,
+                    use: ['style-loader', 'css-loader', 'sass-loader'],
+                },
             ]
         },
         plugins: [

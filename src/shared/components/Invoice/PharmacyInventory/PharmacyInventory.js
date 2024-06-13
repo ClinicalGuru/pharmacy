@@ -81,29 +81,47 @@ export const PharmacyInventory = () => {
     }, []);
 
     useEffect(() => {
-        console.log('name')
         let input = medicineName;
-
         const filteredList = originalList?.filter(item =>
             item.brandName.toLowerCase().includes(input.toLowerCase())
         );
         setRows(filteredList);
-
     }, [medicineName]);
 
     const medicineNameHandler = (e) => {
         setMedicineName(e.target.value)
     }
+
     const inventoryFilterHandler = (e) => {
         const value = e.target.value;
-
+        let filteredList = [];
+        if (value === "zeroStocks") {
+            filteredList = originalList?.filter((medicine) => Number(medicine.quantity) === Number(0));
+        } else if (value === "deadStocks") {
+            const referenceDate = new Date();
+            const referenceTimestamp = referenceDate.valueOf();
+            const sixMonthsInMillis = 6 * 30 * 24 * 60 * 60 * 1000;
+            filteredList = originalList.filter(medicine => {
+                return medicine.stockEnteredDate && (referenceTimestamp - medicine.stockEnteredDate) >= sixMonthsInMillis;
+            });
+        }
+        else {
+            filteredList = originalList;
+        }
+        setRows(filteredList);
     }
+
     return (
         <Box sx={{
             padding: 2,
         }}>
             <Container>
-                <form>
+                <Box
+                    component="form"
+                    sx={{
+                        display: 'flex'
+                    }}
+                >
                     <input
                         placeholder='Medicine Name'
                         onChange={(e) => medicineNameHandler(e)}
@@ -114,8 +132,9 @@ export const PharmacyInventory = () => {
                         <option value="zeroStocks">Zero stocks</option>
                         <option value="nearExpiryStocks">Near Expiry Stocks</option>
                         <option value="lowStocks">Low Stocks</option>
+                        <option value="deadStocks">Dead Stocks</option>
                     </select>
-                </form>
+                </Box>
                 <div>
                     <Button variant="contained">Minimal Quantity</Button>
                 </div>

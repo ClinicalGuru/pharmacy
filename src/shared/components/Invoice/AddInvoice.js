@@ -89,10 +89,10 @@ export const AddInvoice = () => {
                 setPharmacologicalNames(medicines.map(item => ({ value: item.id, name: item.pharmacologicalName })));
                 setBrandNames(medicines.map(item => ({ value: item.id, name: item.brandName })));
                 setVendorDetails(vendors);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            } finally {
                 setLoader(false);
+            } catch (error) {
+                setLoader(false);
+                console.error('Error fetching data:', error);
             }
         };
         fetchData();
@@ -132,23 +132,26 @@ export const AddInvoice = () => {
             setResetVendorForm(true);
             setResetInvoiceForm(true);
             setEditingIndex(-1); // Reset the editing index here
+            setLoader(false);
         } catch (error) {
             setNotificationMsg({ message: 'Something went wrong', severity: 'error' });
             console.error('Error saving invoice data:', error);
-        } finally {
             setLoader(false);
             setNotification(true);
         }
     };
 
     const invoiceHandler = (formData) => {
+        console.log(formData)
         setLoader(true);
-        const { brandName, pharmacologicalName } = formData;
+        const { brandName, pharmacologicalName, qunatity } = formData;
         const transformedObject = {
             ...formData,
             brandName: brandName?.label,
             pharmacologicalName: pharmacologicalName?.label,
-            medicineId: brandName?.value
+            medicineId: brandName?.value,
+            deadStockQuantityCheck: qunatity,
+            stockEnteredDate: new Date().valueOf()
         };
 
         if (+transformedObject.pricePerStrip > +transformedObject.mrpPerStrip) {
@@ -221,7 +224,7 @@ export const AddInvoice = () => {
                     pData={pharmacologicalNames}
                     bData={brandNames}
                     data={editingRow}
-                    
+
                 />
             </Container>
             <Box sx={{ marginTop: 3 }}>
@@ -231,16 +234,16 @@ export const AddInvoice = () => {
                     setData={setRows}
                     dataCallback={dataCallback}
                     deleteRow={deleteRow}
-                    />
-                </Box>
-                {rows.length > 0 && (
-                    <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px' }}>
-                        <Button disabled={editingIndex >= 0} variant="contained" onClick={saveInvoice}>Save</Button>
-                    </Box>
-                )}
-                <Loader open={loader} />
-                {notification && <Notification severity={notificationMsg.severity} message={notificationMsg.message} action={alertState} />}
+                />
             </Box>
-        );
-    };
-    
+            {rows.length > 0 && (
+                <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '10px' }}>
+                    <Button disabled={editingIndex >= 0} variant="contained" onClick={saveInvoice}>Save</Button>
+                </Box>
+            )}
+            <Loader open={loader} />
+            {notification && <Notification severity={notificationMsg.severity} message={notificationMsg.message} action={alertState} />}
+        </Box>
+    );
+};
+

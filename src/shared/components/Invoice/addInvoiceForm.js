@@ -72,18 +72,18 @@ export const AddInvoiceForm = ({
     }, [watchFields]);
 
     useEffect(() => {
-        setValue("expiry","MM/YY")
+        setValue("expiry", "MM/YY")
         if (resetForm) reset();
     }, [onSubmit]);
-    
+
 
     useEffect(() => {
         if (!isEmpty(data)) {
             for (let key in data) {
                 setValue(key, data[key]);
             }
-            setValue('pharmacologicalName',{value:data?.medicineId, label: data?.pharmacologicalName});
-            setValue('brandName', {value:data?.medicineId, label: data?.brandName});
+            setValue('pharmacologicalName', { value: data?.medicineId, label: data?.pharmacologicalName });
+            setValue('brandName', { value: data?.medicineId, label: data?.brandName });
         }
     }, [data]);
 
@@ -98,36 +98,36 @@ export const AddInvoiceForm = ({
     }
     const [expiryDate, setExpiryDate] = useState("");
 
-     
-      const [modalIsOpen, setIsOpen] = useState(false);
 
-      function openModal() {
+    const [modalIsOpen, setIsOpen] = useState(false);
+
+    function openModal() {
         setIsOpen(true);
-      }
-    
-     
-    
-      function closeModal() {
+    }
+
+
+
+    function closeModal() {
         setIsOpen(false);
-      }
-      const customStyles = {
+    }
+    const customStyles = {
         content: {
-          top: '50%',
-          left: '50%',
-          right: 'auto',
-          bottom: 'auto',
-          marginRight: '-50%',
-          transform: 'translate(-50%, -50%)',
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
         },
-      };
-      let [MMYY,setMMYY] = useState("MM/YY")
-      const handleSelect = (month, year) => {
+    };
+    let [MMYY, setMMYY] = useState("MM/YY")
+    const handleSelect = (month, year) => {
         console.log(`Selected Month: ${month}, Selected Year: ${year}`);
         setIsOpen(false);
-        setValue("expiry",`${month}/${year}`)
-      };
+        setValue("expiry", `${month}/${year}`)
+    };
 
-      useEffect(() => {
+    useEffect(() => {
         if (resetTrigger) {
             reset();
         }
@@ -219,34 +219,12 @@ export const AddInvoiceForm = ({
 
                 <div>
                     <label>{FORM_LABELS.EXPIRY}</label>
-                   
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        style={customStyles}
-        contentLabel="Example Modal"
-        className="month-year-Modal"
-        overlayClassName="Overlay"
-      >
-       <div>
-       <CloseIcon onClick={closeModal} style={{float:'right',margin:'5px'}} />
-       </div>
-       <div style={{clear:'both'}}></div>
-        <MonthYearCalendarPopup onSelect={handleSelect} />
-      </Modal>
-      <div style={{ position: 'relative' }}>
-      <input
-        {...register("expiry", { required: true })}
-        placeholder="MM/YY"
-        
-        style={{ paddingLeft: '30px' }}
-        type="text"
-        min={currentDate}
-      />
-      <div style={{ position: 'absolute', left: '8px', top: '50%', transform: 'translateY(-50%)' }}>
-        <CalendarMonthIcon onClick={openModal} style={{ color: '#888', fontSize: '1.2em' }} />
-      </div>
-    </div> 
+                    <div >
+                        <input
+                            {...register("expiry", { required: true })}
+                            type="date"
+                        />
+                    </div>
                     {/* <input {...register("expiry", { required: true })} placeholder="MM/YY"
                      onClick={openModal} style={{paddingLeft:'30px'}} type="text" min={currentDate} /> */}
                     {errors['expiry'] && <span className='red-text'>{errors['expiry'][`message`]}</span>}
@@ -288,11 +266,11 @@ export const AddInvoiceForm = ({
                 <div style={{ minWidth: '100px' }}>
                     <label>{FORM_LABELS.GST}</label>
                     <select {...register("gst")}>
-                    <option value="0">0%</option>
-                    <option value="5">5%</option>
-                    <option value="12">12%</option>
-                    <option value="18">18%</option>
-                    <option value="28">28%</option>
+                        <option value="0">0%</option>
+                        <option value="5">5%</option>
+                        <option value="12">12%</option>
+                        <option value="18">18%</option>
+                        <option value="28">28%</option>
                     </select>
                     {errors['gst'] && <span className='red-text'>{errors['gst'][`message`]}</span>}
                 </div>
@@ -310,10 +288,10 @@ export const AddInvoiceForm = ({
                     <div style={{ display: 'flex', marginLeft: '100px' }}>
 
                         <div style={{ position: 'absolute' }}>
-                        <input style={{ color: 'white' }} type="submit" id="styled-submit-button" value={"+ Add"} />
+                            <input style={{ color: 'white' }} type="submit" id="styled-submit-button" value={"+ Add"} />
                         </div>
                         <div style={{ position: 'absolute', marginLeft: '70px' }}>
-                            <input style={{ color: 'white' }} type="reset" id="styled-reset-button"  value={"Clear"} />
+                            <input style={{ color: 'white' }} type="reset" id="styled-reset-button" value={"Clear"} />
                         </div>
 
                         {/* <div style={{ position: 'absolute' }}>
