@@ -160,7 +160,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) 
 
       {errors['brandName'] && <span className='red-text'>{errors['brandName'][`message`]}</span>}
       <div>
-        <label>{FORM_LABELS.BATCH_NO}</label>
+        <label>{FORM_LABELS.BATCH_NO} <span style={{color:'red'}}>*</span> </label>
         <input
           {...register("batchNo", {
             required: true,
@@ -176,7 +176,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) 
 
 
       <div>
-        <label>{FORM_LABELS.HSN_CODE}</label>
+        <label>{FORM_LABELS.HSN_CODE} <span style={{color:'red'}}>*</span> </label>
         <input
           {...register("hsnCode", {
             required: true, pattern: {
@@ -191,7 +191,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) 
       </div>
 
       <div>
-        <label>{FORM_LABELS.PRICE}</label>
+        <label>{FORM_LABELS.PRICE} <span style={{color:'red'}}>*</span> </label>
         <input
           {...register("pricePerUnit", {
             required: true,
@@ -209,7 +209,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) 
 
 
       <div>
-        <label>{FORM_LABELS.QUANTITY}</label>
+        <label>{FORM_LABELS.QUANTITY} <span style={{color:'red'}}>*</span> </label>
         <input
           {...register("quantity", {
             required: true, pattern: {
@@ -224,7 +224,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) 
       </div>
 
       <div>
-        <label>{FORM_LABELS.TOTAL}</label>
+        <label>{FORM_LABELS.TOTAL} </label>
         <input
           disabled {...register("total")}
           type="number"

@@ -28,7 +28,7 @@ const columns = [
 const vendorDetailsTemplate = {
     title: '',
     submitButttonText: 'Log in',
-    formStyles: { backgroundColor: "#eee" },
+    // formStyles: { backgroundColor: "#eee" },
     watchFields: ['invoiceDate', 'invoiceNumber', 'poNumber', 'vendorName', 'invoicedueDate'],
     fields: [
         {

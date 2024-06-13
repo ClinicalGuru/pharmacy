@@ -33,7 +33,7 @@ export const Container = styled.div`
 
 export const BillingForm = styled.form`
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
     flex-wrap: wrap;
     gap: 10px;
     && input[type=number], [type=select] {
