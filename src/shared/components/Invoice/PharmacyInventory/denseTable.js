@@ -40,14 +40,14 @@ export const InventoryTable = ({ headArray, gridArray }) => {
                 <td>{row?.mrpPerStrip}</td>
                 <td>{row?.discount}</td>
                 <td>{row?.pricePerStrip}</td>
-                <td>{row?.quantity}</td>
+                <td>{row?.unitsOrStrips}</td>
                 <td>{row?.pricePerUnit}</td>
                 <td>{row?.unitsInStock}</td>
                 <td>{row?.gst}</td>
-                {<td >{
+                {/* {<td >{
                   checkForExpiry(row?.expiry) > 6 ? <ArrowTooltips title={`In stock`}><DoneSharpIcon color="success"/></ArrowTooltips> :
                     <ArrowTooltips title={`Expires in ${checkForExpiry(row?.expiry)} months`}><EventBusySharpIcon color="error" /></ArrowTooltips>}
-                </td>}
+                </td>} */}
               </tr>
             )
           })}

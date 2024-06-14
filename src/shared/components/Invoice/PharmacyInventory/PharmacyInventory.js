@@ -5,7 +5,9 @@ import { Box, } from "@mui/material";
 import Button from '@mui/material/Button';
 import { Container } from "./PharmacyInventory.styles";
 import InventoryService from '../../../services/inventory.service';
-import { InventoryTable } from './denseTable'
+import { InventoryTable } from './denseTable';
+import { filterInventoryByExpiry } from "../../../../utils/helper";
+import {DownloadExcel} from "./DownloadAsExcel";
 
 export const PharmacyInventory = () => {
     const [originalList, setOriginalList] = useState([]);
@@ -16,10 +18,6 @@ export const PharmacyInventory = () => {
             'Header': 'Medicine Name',
             'accessor': 'brandName',
         },
-        // {
-        //     'Header': 'Invoice Number',
-        //     'accessor': 'invoiceNumber',
-        // },
         {
             'Header': 'Batch Number',
             'accessor': 'batchNo',
@@ -55,10 +53,6 @@ export const PharmacyInventory = () => {
         {
             'Header': 'GST %',
             'accessor': 'gst',
-        },
-        {
-            'Header': 'Stock Alert',
-            'accessor': 'stockAlert',
         }
     ];
 
@@ -67,10 +61,6 @@ export const PharmacyInventory = () => {
             try {
                 let data = await InventoryService.getInventory();
                 const result = data?.docs?.map((doc) => ({ ...doc?.data(), id: doc?.id }));
-                result.forEach(item => {
-                    item['unitsInStock'] = (item?.quantity * (Number(item?.noOfStrips) + Number(item?.freeStrips)));
-                })
-                console.log(result, 'inventory');
                 setRows(result);
                 setOriginalList(result);
             } catch (err) {
@@ -96,7 +86,7 @@ export const PharmacyInventory = () => {
         const value = e.target.value;
         let filteredList = [];
         if (value === "zeroStocks") {
-            filteredList = originalList?.filter((medicine) => Number(medicine.quantity) === Number(0));
+            filteredList = originalList?.filter((medicine) => Number(medicine.unitsInStock) === Number(0));
         } else if (value === "deadStocks") {
             const referenceDate = new Date();
             const referenceTimestamp = referenceDate.valueOf();
@@ -104,6 +94,8 @@ export const PharmacyInventory = () => {
             filteredList = originalList.filter(medicine => {
                 return medicine.stockEnteredDate && (referenceTimestamp - medicine.stockEnteredDate) >= sixMonthsInMillis;
             });
+        } else if (value === "nearExpiryStocks") {
+            filteredList = filterInventoryByExpiry(originalList)
         }
         else {
             filteredList = originalList;
@@ -135,8 +127,17 @@ export const PharmacyInventory = () => {
                         <option value="deadStocks">Dead Stocks</option>
                     </select>
                 </Box>
-                <div>
-                    <Button variant="contained">Minimal Quantity</Button>
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+
+                }}>
+                    <DownloadExcel sx={{
+                        marginRight: '10px',
+                        cursor: 'pointer'
+                    }}
+                        data={rows} />
+                    {/* <Button variant="contained">Minimal Quantity</Button> */}
                 </div>
             </Container>
             <Box sx={{ marginTop: 3 }}>
@@ -146,6 +147,6 @@ export const PharmacyInventory = () => {
                     setData={setRows}
                 />
             </Box>
-        </Box>
+        </Box >
     )
 }

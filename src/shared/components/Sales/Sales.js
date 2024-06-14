@@ -196,7 +196,7 @@ export const Sales = () => {
         ],
     };
     const patient_details_style = {
-        height:"80px",
+        height: "80px",
         display: "flex",
         justifyContent: "space-between",
         flexWrap: 'wrap'
@@ -263,9 +263,9 @@ export const Sales = () => {
             try {
                 let data = await InventoryService.getInventory();
                 const result = data?.docs?.map((doc) => ({ ...doc?.data(), id: doc?.id }));
-                result.forEach(item => {
-                    item['unitsInStock'] = (item?.quantity * (Number(item?.noOfStrips) + Number(item?.freeStrips)));
-                });
+                // result.forEach(item => {
+                //     item['unitsInStock'] = (item?.quantity * (Number(item?.noOfStrips) + Number(item?.freeStrips)));
+                // });
                 console.log(result, 'inventory')
                 readInventory(result);
             } catch (err) {
@@ -303,19 +303,21 @@ export const Sales = () => {
 
     const quantityUpdate = async () => {
         let medicineIds = rows.map((item) => item?.medicineId);
-        console.log(medicineIds, 'medIds');
         const querySnapshot = await InventoryService.queryInventoryWithMedicineIds(medicineIds)
         querySnapshot.forEach((doc) => {
             const inventory = [];
             inventory.push({ inventoryId: doc.id, ...doc.data() });
+            console.log(medicineIds, 'medIds', "rows =>", rows, "inv =>", inventory);
             const updatedInventoryDetails = inventory.map((inv) => {
                 const matchMed = rows.find((row) => row?.medicineId === inv?.medicineId);
                 if (matchMed) {
-                    const updatedQuantity = +inv?.quantity - +matchMed?.quantity;
+                    const updatedQuantity = Number(inv?.unitsInStock) - Number(matchMed?.quantity);
                     return {
                         ...inv,
-                        quantity: updatedQuantity,
+                        unitsInStock: updatedQuantity,
                     }
+                } else {
+                    return inv;
                 }
             });
             updatingInventory(updatedInventoryDetails);

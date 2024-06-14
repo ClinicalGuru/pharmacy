@@ -45,7 +45,7 @@ export const AddInvoiceForm = ({
             batchNo: '',
             hsnCode: '',
             expiry: '',
-            quantity: '',
+            unitsOrStrips: '',
             noOfStrips: '',
             freeStrips: '',
             mrpPerStrip: '',
@@ -59,11 +59,11 @@ export const AddInvoiceForm = ({
     const watchFields = watch(["noOfStrips", "pricePerStrip", "gst", "discount", "mrpPerStrip"]);
     useEffect(() => {
         const subscription = watch((value, { name, type }) => {
-            if (name === "noOfStrips" || name === "pricePerStrip" || name === "gst" || name === "discount" || name === "mrpPerStrip" || name === "quantity") {
-                const { noOfStrips, pricePerStrip, gst, discount, mrpPerStrip, quantity } = value;
+            if (name === "noOfStrips" || name === "pricePerStrip" || name === "gst" || name === "discount" || name === "mrpPerStrip" || name === "unitsOrStrips") {
+                const { noOfStrips, pricePerStrip, gst, discount, mrpPerStrip, unitsOrStrips } = value;
                 const discountedValue = (noOfStrips * pricePerStrip) - ((noOfStrips * pricePerStrip * discount) / 100);
                 const netPrice = discountedValue + ((gst * discountedValue) / 100);
-                const pricePerUnit = mrpPerStrip / quantity;
+                const pricePerUnit = mrpPerStrip / unitsOrStrips;
                 setValue('netPrice', netPrice?.toFixed(2));
                 setValue('pricePerUnit', pricePerUnit?.toFixed(2));
             }
@@ -200,9 +200,9 @@ export const AddInvoiceForm = ({
                 </div>
 
                 <div>
-                    <label>{FORM_LABELS.QUANTITY} <span className="red-asterisk">*</span></label>
-                    <input {...register("quantity", { required: true })} type="text" />
-                    {errors['quantity'] && <span className='red-text'>{errors['quantity'][`message`]}</span>}
+                    <label>{FORM_LABELS.UNITS_STRIPS} <span className="red-asterisk">*</span></label>
+                    <input {...register("unitsOrStrips", { required: true })} type="text" />
+                    {errors['unitsOrStrips'] && <span className='red-text'>{errors['unitsOrStrips'][`message`]}</span>}
                 </div>
 
                 <div>

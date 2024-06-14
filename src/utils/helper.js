@@ -39,7 +39,24 @@ export const filterData = (data, criteria) => {
 };
 
 export const hasAllRequiredKeysInList = (data, requiredKeys) => {
-    return data.every(item => 
-      requiredKeys.every(key => item.hasOwnProperty(key))
+    return data.every(item =>
+        requiredKeys.every(key => item.hasOwnProperty(key))
     );
-  };
+};
+
+
+const parseDate = (dateString) => {
+    const [year, month, day] = dateString.split('-').map(Number);
+    return new Date(year, month - 1, day); // Month is 0-indexed
+};
+
+export const filterInventoryByExpiry = (inventory) => {
+    const currentDate = new Date();
+    const threeMonthsFromNow = new Date();
+    threeMonthsFromNow.setMonth(currentDate.getMonth() + 3);
+
+    return inventory.filter((inv) => {
+        const expiryDate = parseDate(inv.expiry);
+        return expiryDate > currentDate && expiryDate <= threeMonthsFromNow;
+    });
+};

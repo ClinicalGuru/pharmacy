@@ -15,7 +15,7 @@ const columns = [
     { Header: 'Batch No', accessor: 'batchNo' },
     { Header: 'HSN Code', accessor: 'hsnCode' },
     { Header: 'Expiry', accessor: 'expiry' },
-    { Header: 'Units / Strips', accessor: 'quantity' },
+    { Header: 'Units / Strips', accessor: 'unitsOrStrips' },
     { Header: 'Total Strips', accessor: 'noOfStrips' },
     { Header: 'MRP per Strip', accessor: 'mrpPerStrip' },
     { Header: 'Price per Strip', accessor: 'pricePerStrip' },
@@ -25,7 +25,7 @@ const columns = [
     { Header: "Actions", id: "actions" },
 ];
 
-const vendorDetailsStyle = { display: "flex", gap: "28px 30px", minHeight: "70px",maxHeight: "70px",height: "70px", };
+const vendorDetailsStyle = { display: "flex", gap: "28px 30px", minHeight: "70px", maxHeight: "70px", height: "70px", };
 const btnStyles = { display: "flex", justifyContent: "end" };
 
 export const AddInvoice = () => {
@@ -60,7 +60,7 @@ export const AddInvoice = () => {
             {
                 title: 'Vendor Name', type: 'autoComplete', name: 'vendorId',
                 options: [{ value: "none", name: "None" },
-                    ...vendorDetails
+                ...vendorDetails
                 ],
                 validationProps: { required: "Vendor name is required" }, style: { width: "194px" }
             },
@@ -144,14 +144,15 @@ export const AddInvoice = () => {
     const invoiceHandler = (formData) => {
         console.log(formData)
         setLoader(true);
-        const { brandName, pharmacologicalName, quantity } = formData;
+        const { brandName, pharmacologicalName, unitsOrStrips, noOfStrips, freeStrips } = formData;
         const transformedObject = {
             ...formData,
             brandName: brandName?.label,
             pharmacologicalName: pharmacologicalName?.label,
             medicineId: brandName?.value,
-            deadStockQuantityCheck: quantity,
-            stockEnteredDate: new Date().valueOf()
+            deadStockQuantityCheck: unitsOrStrips,
+            stockEnteredDate: new Date().valueOf(),
+            unitsInStock: (unitsOrStrips * (Number(noOfStrips) + Number(freeStrips)))
         };
 
         if (+transformedObject.pricePerStrip > +transformedObject.mrpPerStrip) {
@@ -241,7 +242,7 @@ export const AddInvoice = () => {
                     <Button disabled={editingIndex >= 0} variant="contained" onClick={saveInvoice}>Save</Button>
                 </Box>
             )}
-            <Loader open={loader} />
+            {/* <Loader open={loader} /> */}
             {notification && <Notification severity={notificationMsg.severity} message={notificationMsg.message} action={alertState} />}
         </Box>
     );
