@@ -105,7 +105,12 @@ export const Sales = () => {
         watchFields: ['patientName', 'gender', 'age', 'phone', 'email', 'referredDoctor', 'otc'],
         fields: [
             {
-                title: 'Patient Name',
+                title: (
+                    <span>
+                    Patient Name
+                    <span style={{color:'red'}}>  *</span>
+                    </span>
+                    ),
                 type: 'text',
                 name: 'patientName',
                 validationProps: {
@@ -147,7 +152,12 @@ export const Sales = () => {
                 }
             },
             {
-                title: 'Phone',
+                title: (
+                    <span>
+                    Phone
+                    <span style={{color:'red'}}>  *</span>
+                    </span>
+                    ),
                 type: 'number',
                 name: 'phone',
                 validationProps: {

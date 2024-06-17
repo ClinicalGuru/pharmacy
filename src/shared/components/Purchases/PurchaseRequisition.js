@@ -107,7 +107,12 @@ export const PurchaseRequisition = () => {
         watchFields: [],
         fields: [
             {
-                title: FORM_LABELS.PHARMACOLOGICAL_NAME,
+                title: (
+                    <span>
+                    {FORM_LABELS.PHARMACOLOGICAL_NAME}
+                    <span style={{color:'red'}}>  *</span>
+                    </span>
+                    ),
                 type: 'autoComplete',
                 name: 'pharmacologicalName',
                 validationProps: {
@@ -118,9 +123,12 @@ export const PurchaseRequisition = () => {
                 },
                 options: [...pharmacologicalNames]
             },
-            {
-
-                title: FORM_LABELS.BRAND_NAME,
+            {title: (
+                <span>
+                {FORM_LABELS.BRAND_NAME}
+                <span style={{color:'red'}}>  *</span>
+                </span>
+                ),
                 type: 'autoComplete',
                 name: 'brandName',
                 validationProps: {
@@ -135,7 +143,7 @@ export const PurchaseRequisition = () => {
                 title: (
                     <span>
                     {FORM_LABELS.DOSE}
-                    <span style={{color:'red'}}>*</span>
+                    <span style={{color:'red'}}>  *</span>
                     </span>
                     ),
                 type: 'text',
@@ -148,7 +156,7 @@ export const PurchaseRequisition = () => {
                 title: (
                     <span>
                     {FORM_LABELS.FORM}
-                    <span style={{color:'red'}}>*</span>
+                    <span style={{color:'red'}}> *</span>
                     </span>
                     ),
                 type: 'select',
@@ -191,7 +199,7 @@ export const PurchaseRequisition = () => {
                 title: (
                     <span>
                     {FORM_LABELS.QUANTITY}
-                    <span style={{color:'red'}}>*</span>
+                    <span style={{color:'red'}}> *</span>
                     </span>
                     ),
                 type: 'number',

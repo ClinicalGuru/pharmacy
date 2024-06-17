@@ -117,7 +117,7 @@ export const BillingSummaryForm = ({
                     {errors['discount'] && <span className='red-text'>{errors['discount'][`message`]}</span>}
                 </div>
 
-                <div>
+                <div style={{minWidth:'80px'}}>
                     <label>{FORM_LABELS.GST}</label>
                     <select {...register("gst")}>
                         <option value="0%">0%</option>
@@ -175,20 +175,14 @@ export const BillingSummaryForm = ({
                     })} type="number" />
                     {errors['paidAmount'] && <span className='red-text'>{errors['paidAmount'][`message`]}</span>}
                 </div>
-                {/* <div>
+                <div>
                     <label>{FORM_LABELS.BALANCE}</label>
-                    <input {...register("balance", {
-                        pattern: {
-                            value: /^[0-9]*$/,
-                            message: ""
-                        }
-                    })} type="number" />
+                    <input disabled {...register("billAmount", { required: true })} type="number" />
                     {errors['balance'] && <span className='red-text'>{errors['balance'][`message`]}</span>}
-                </div> */}
-
+                </div>
                 <div style={{ minWidth: '150px', display: 'flex', alignItems: 'center' }}>
-                    <label>{FORM_LABELS.ADD_REMARKS}</label>
-                    <textarea {...register("remarks")}></textarea>
+                    {/* <label>{FORM_LABELS.ADD_REMARKS}</label> */}
+                    <textarea {...register("remarks")} style={{marginLeft:'5px'}} placeholder="Input text"></textarea>
                     {errors['remarks'] && <span className='red-text'>{errors['remarks'][`message`]}</span>}
                 </div>
                 <FooterSection>

@@ -26,6 +26,7 @@ export const FORM_LABELS = {
     ROUND_OFF: "Round Off",
     BILL_AMOUNT: "Bill Amount",
     PAID_AMOUNT: "Paid Amount",
+    BALANCE:"Balance",
     VENDOR_NAME: "Vendor Name",
     DOSE: "Dose",
     FORM: "Form",

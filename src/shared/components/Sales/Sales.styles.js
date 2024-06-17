@@ -24,7 +24,7 @@ padding: 10px;
 // margin-top: 5px;
 align-items: end;
 flex-wrap: wrap;
-justify-content: space-between;
+// justify-content: space-between;
 `;
 
 export const Container = styled.div`
@@ -35,9 +35,9 @@ export const BillingForm = styled.form`
     display: flex;
     // justify-content: space-between;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 25px;
     && input[type=number], [type=select] {
-        width: 100px;
+        width: 80px;
     }
 `;
 

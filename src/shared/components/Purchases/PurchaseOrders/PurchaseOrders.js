@@ -261,7 +261,7 @@ export const PurchaseOrders = () => {
             <Container>
                 {<form >
                     <div className="form-group">
-                        <label className="form-label" for="vendorId">Select Vendor</label>
+                        <label className="form-label" for="vendorId">Select Vendor <span style={{color:'red'}}> *</span></label>
                         <CreatableSelect
                             options={vendorDetails?.map(vendor => ({ value: vendor?.id, label: vendor?.name }))}
                             onChange={(e) => vendorHandler(e)}

@@ -106,7 +106,7 @@ export const AddInvoiceForm = ({
         <FormContainer onSubmit={handleSubmit(onSubmit)}>
             <div className={"addInvoiceForm"}>
                 <div>
-                    <label>{FORM_LABELS.PHARMACOLOGICAL_NAME}</label>
+                    <label>{FORM_LABELS.PHARMACOLOGICAL_NAME} <span style={{color:'red'}}> *</span></label>
                     <Controller
                         {...register("pharmacologicalName", { required: true })}
 
@@ -141,7 +141,7 @@ export const AddInvoiceForm = ({
                 </div>
 
                 <div>
-                    <label>{FORM_LABELS.BRAND_NAME}</label>
+                    <label>{FORM_LABELS.BRAND_NAME} <span style={{color:'red'}}> *</span></label>
                     <Controller
                         name='brandName'
                         control={control}
@@ -175,19 +175,19 @@ export const AddInvoiceForm = ({
 
                 {errors['brandName'] && <span className='red-text'>{errors['brandName'][`message`]}</span>}
                 <div>
-                    <label>{FORM_LABELS.BATCH_NO} <span className="red-asterisk">*</span></label>
+                    <label>{FORM_LABELS.BATCH_NO} <span className="red-asterisk"> *</span></label>
                     <input {...register("batchNo", { required: true })} type="text" />
                     {errors['batchNo'] && <span className='red-text'>{errors['batchNo'][`message`]}</span>}
                 </div>
 
                 <div>
-                    <label>{FORM_LABELS.HSN_CODE} <span className="red-asterisk">*</span></label>
+                    <label>{FORM_LABELS.HSN_CODE} <span className="red-asterisk"> *</span></label>
                     <input {...register("hsnCode", { required: true })} type="text" />
                     {errors['hsnCode'] && <span className='red-text'>{errors['hsnCode'][`message`]}</span>}
                 </div>
 
                 <div>
-                    <label>{FORM_LABELS.EXPIRY}</label>
+                    <label>{FORM_LABELS.EXPIRY} <span style={{color:'red'}}> *</span></label>
                     <div >
                         <input
                             {...register("expiry", { required: true })}
@@ -200,30 +200,30 @@ export const AddInvoiceForm = ({
                 </div>
 
                 <div>
-                    <label>{FORM_LABELS.UNITS_STRIPS} <span className="red-asterisk">*</span></label>
+                    <label>{FORM_LABELS.UNITS_STRIPS} <span className="red-asterisk"> *</span></label>
                     <input {...register("unitsOrStrips", { required: true })} type="text" />
                     {errors['unitsOrStrips'] && <span className='red-text'>{errors['unitsOrStrips'][`message`]}</span>}
                 </div>
 
                 <div>
-                    <label>{FORM_LABELS.NO_OF_STRIPS} <span className="red-asterisk">*</span></label>
+                    <label>{FORM_LABELS.NO_OF_STRIPS} <span className="red-asterisk"> *</span></label>
                     <input {...register("noOfStrips", { required: true })} type="number" />
                     {errors['noOfStrips'] && <span className='red-text'>{errors['noOfStrips'][`message`]}</span>}
                 </div>
 
                 <div>
-                    <label>{FORM_LABELS.FREE_STRIPS} <span className="red-asterisk">*</span></label>
+                    <label>{FORM_LABELS.FREE_STRIPS} <span className="red-asterisk"> *</span></label>
                     <input {...register("freeStrips")} type="number" />
                     {errors['freeStrips'] && <span className='red-text'>{errors['freeStrips'][`message`]}</span>}
                 </div>
 
                 <div style={{ minWidth: '100px' }}>
-                    <label>{FORM_LABELS.MRP_PER_STRIP} <span className="red-asterisk">*</span></label>
+                    <label>{FORM_LABELS.MRP_PER_STRIP} <span className="red-asterisk"> *</span></label>
                     <input onBlur={() => onBlur(mrpPerStripHandler())} {...register("mrpPerStrip", { required: true })} type="number" step={"any"} />
                     {errors['mrpPerStrip'] && <span className='red-text'>{errors['mrpPerStrip'][`message`]}</span>}
                 </div>
                 <div style={{ minWidth: '100px' }}>
-                    <label>{FORM_LABELS.PRICE_PER_STRIP} <span className="red-asterisk">*</span></label>
+                    <label>{FORM_LABELS.PRICE_PER_STRIP} <span className="red-asterisk"> *</span></label>
                     <input onBlur={() => onBlur(pricePerStripHandler())} {...register("pricePerStrip", { required: true })} type="number" step={"any"} />
                     {errors['pricePerStrip'] && <span className='red-text'>{errors['pricePerStrip'][`message`]}</span>}
                 </div>
@@ -233,7 +233,7 @@ export const AddInvoiceForm = ({
                     {errors['discount'] && <span className='red-text'>{errors['discount'][`message`]}</span>}
                 </div>
                 <div style={{ minWidth: '100px' }}>
-                    <label>{FORM_LABELS.GST}</label>
+                    <label>{FORM_LABELS.GST} <span style={{color:'red'}}> *</span></label>
                     <select {...register("gst")}>
                         <option value="0">0%</option>
                         <option value="5">5%</option>
@@ -254,7 +254,7 @@ export const AddInvoiceForm = ({
                     {errors['netPrice'] && <span className='red-text'>{errors['netPrice'][`message`]}</span>}
                 </div>
                 <div>
-                    <div style={{ display: 'flex', marginLeft: '30px' }}>
+                    <div style={{ display: 'flex', marginLeft: '600px' }}>
 
                         <div style={{ position: 'absolute' }}>
                             <input style={{ color: 'white' }} type="submit" id="styled-submit-button" value={"+ Add"} />

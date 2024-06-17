@@ -56,7 +56,7 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
         <form>
             <div style={{ display: 'flex' }}>
                 <span>
-                    <label>Select Vendor</label>
+                    <label>Select Vendor <span style={{color:'red'}}> *</span></label>
                     <Controller
                         name="vendorId"
                         control={control}
@@ -88,7 +88,7 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
                     </small>
                 </span>
                 <span>
-                    <label>Date</label>
+                    <label>Date <span style={{color:'red'}}> *</span></label>
                     <Controller
                         name="date"
                         control={control}

@@ -6,8 +6,15 @@ import CloseIcon from '@mui/icons-material/Close';
 import PaymentDetails from "../Purchases/PaymentDetails/PaymentDetails";
 import { VendorList } from "../Reports/PurchaseReports/VendorList";
 export const EditableTable = ({ columns, data, setData, handleButtonClick, hideColumns = [], selectedRows = () => { } }) => {
-  // console.log(data, 'editable table.js')
   const [selectedRowIdsState, setSelectedRowIdsState] = useState({});
+
+  const gstOptions = [
+    { name: '0%', value: '0%' },
+    { name: '5%', value: '5%' },
+    { name: '12%', value: '12%' },
+    { name: '18%', value: '18%' },
+    { name: '28%', value: '28%' }
+  ];
 
   const IndeterminateCheckbox = forwardRef(
     ({ indeterminate, ...rest }, ref) => {
@@ -26,8 +33,6 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick, hideC
     }
   )
 
-
-  // console.log(hideColumns, 'hideColumns = []')
   const {
     getTableProps,
     getTableBodyProps,
@@ -35,15 +40,14 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick, hideC
     rows,
     prepareRow,
     state: { selectedRowIds },
-    toggleAllRowsSelected, // Function to toggle all row selections
-
+    toggleAllRowsSelected,
   } = useTable(
     {
       columns,
       data,
-      initialState: { selectedRowIds: {}, hiddenColumns: hideColumns }, // Initial state for row selection
+      initialState: { selectedRowIds: {}, hiddenColumns: hideColumns },
     },
-    useRowSelect, // Adding useRowSelect hook
+    useRowSelect,
     hooks => {
       hooks.visibleColumns.push(columns => [
         // Let's make a column for selection
@@ -68,10 +72,10 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick, hideC
       ])
     }
   );
+
   const [isOpen, setIsOpen] = useState(false);
 
   const openModal = () => {
-    // console.log("popup init")
     setIsOpen(true);
   };
 
@@ -80,14 +84,22 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick, hideC
   };
 
   function cellEvent(e, data) {
-    // console.log("data => ", selectedRowIds)
     if (data.column.popup == 'popup') {
       openModal()
     }
   }
 
-  // console.log("data from editable table rows => ", rows, columns)
   const handleInputChange = (event, row, columnId) => {
+    const newData = data.map((rowData) => {
+      if (rowData.medicineId === row.original.medicineId) {
+        return { ...rowData, [columnId]: event.target.value };
+      }
+      return rowData;
+    });
+    setData(newData);
+  };
+
+  const handleSelectChange = (event, row, columnId) => {
     const newData = data.map((rowData) => {
       if (rowData.medicineId === row.original.medicineId) {
         return { ...rowData, [columnId]: event.target.value };
@@ -99,30 +111,27 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick, hideC
 
   useEffect(() => {
     selectedRows(selectedRowIds);
-    // console.log(selectedRowIds, 'selectedRowIds')
   }, [selectedRowIds]);
+
   return (
     <div>
-      <div>
-        <Modal
-          isOpen={isOpen}
-          onRequestClose={closeModal}
-          contentLabel="Example Modal"
-          className="Modal"
-          overlayClassName="Overlay"
-        >
-          <div>
-            <div className="popup-heading-x">
-              <div className="popup-heading">Payment Details</div>
-              <div className="popup-x"><CloseIcon onClick={closeModal}/></div>
-            </div>
-            <div>
-              <PaymentDetails />
-
-            </div>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={closeModal}
+        contentLabel="Example Modal"
+        className="Modal"
+        overlayClassName="Overlay"
+      >
+        <div>
+          <div className="popup-heading-x">
+            <div className="popup-heading">Payment Details</div>
+            <div className="popup-x"><CloseIcon onClick={closeModal} /></div>
           </div>
-        </Modal>
-      </div>
+          <div>
+            <PaymentDetails />
+          </div>
+        </div>
+      </Modal>
       <table {...getTableProps()} style={{
         overflow: 'hidden',
         tableLayout: 'fixed',
@@ -136,13 +145,6 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick, hideC
       }}>
         <thead>
           <tr>
-            {/* <th>
-            <input
-              type="checkbox"
-              checked={Object?.keys(selectedRowIds)?.length === rows?.length}
-              onChange={toggleSelectAll}
-            />
-          </th> */}
             {headerGroups.map((headerGroup) => (
               <React.Fragment key={headerGroup.id}>
                 {headerGroup.headers.map((column) => (
@@ -167,13 +169,6 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick, hideC
             prepareRow(row);
             return (
               <tr {...row.getRowProps()}>
-                {/* <td>
-                <input
-                  type="checkbox"
-                  {...row.getToggleRowSelectedProps()}
-                  checked={selectedRowIds[row.id]}
-                />
-              </td> */}
                 {row.cells.map((cell) => {
                   return (
                     <td
@@ -182,18 +177,26 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick, hideC
                       style={{
                         padding: "10px",
                         textAlign: "center"
-                        // border: "solid 1px gray",
-                        // background: "papayawhip",
                       }}
                     >
                       {cell.column.editEnable ? (
                         row.original.isEditing ? (
-                          <input
-
-                            type="text"
-                            defaultValue={cell.value}
-                            onChange={(e) => handleInputChange(e, row, cell.column.id)}
-                          />
+                          cell.column.id === 'gst' ? (
+                            <select
+                              value={cell.value}
+                              onChange={(e) => handleSelectChange(e, row, cell.column.id)}
+                            >
+                              {gstOptions.map(option => (
+                                <option key={option.value} value={option.value}>{option.name}</option>
+                              ))}
+                            </select>
+                          ) : (
+                            <input
+                              type="text"
+                              defaultValue={cell.value}
+                              onChange={(e) => handleInputChange(e, row, cell.column.id)}
+                            />
+                          )
                         ) : (
                           cell.render("Cell")
                         )
