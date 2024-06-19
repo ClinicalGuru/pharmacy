@@ -4,10 +4,10 @@ import { addDoc, getDocs, getDoc, collection, orderBy, deleteDoc, doc, query, on
 const employeesCollectionRef = collection(firestore, "employees");
 
 class SigninService {
-    validateUser = async (name) => {
-        const queryRef = query(employeesCollectionRef, where("firstName", "==", name));
+    validateUser = async (name, pharmacyId) => {
+        const queryRef = query(employeesCollectionRef, where("pharmacyId", "==", pharmacyId), where("firstName", "==", name));
         const querySnapshot = await getDocs(queryRef);
-        const filterData = querySnapshot.docs.map((doc) => ({ ...doc.data()}));
+        const filterData = querySnapshot.docs.map((doc) => ({ ...doc.data() }));
         return filterData;
     }
 }
