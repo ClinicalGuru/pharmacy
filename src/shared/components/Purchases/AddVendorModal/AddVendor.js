@@ -14,9 +14,10 @@ import { Loader } from "../../../components/Loader";
 import { RefreshVendorsDetailsContext } from "../../../../context/RefreshVendorDetailsContext";
 import { CButton } from '../../Button/index';
 import TextField from '@mui/material/TextField';
-
+import useLocalStorage from "../../../../hooks/UseLocalstorage";
 
 export const AddVendor = ({ showModal, action }) => {
+    const [pharmacyId] = useLocalStorage('pharmacyId');
     const { setRefreshVDetails } = useContext(RefreshVendorsDetailsContext);
     const [open, setOpen] = useState(false);
     const {
@@ -38,7 +39,7 @@ export const AddVendor = ({ showModal, action }) => {
         setOpen(true);
         try {
             setOpen(false);
-            await PurchaseService.addVendor(data);
+            await PurchaseService.addVendor({ ...data, pharmacyId: pharmacyId });
             action(!showModal);
             reset();
             setRefreshVDetails(true);

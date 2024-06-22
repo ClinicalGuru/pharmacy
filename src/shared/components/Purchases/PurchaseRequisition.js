@@ -18,10 +18,10 @@ import { useNavigate } from 'react-router-dom';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
-import { useQueryParams } from "../../../context/ReadPharmacyIdContext";
+import useLocalStorage from "../../../hooks/UseLocalstorage";
 
 export const PurchaseRequisition = () => {
-    console.log(useQueryParams, 'useQueryParams')
+    const [pharmacyId] = useLocalStorage('pharmacyId');
     const navigate = useNavigate();
     const [showLoader, setShowLoader] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
@@ -236,7 +236,7 @@ export const PurchaseRequisition = () => {
     const addMedicine = async (formData, e) => {
         try {
             const docRef = await PurchaseService.addMedicine(formData);
-            const updatedRows = [...rows, { ...formData, "medicineId": docRef }];
+            const updatedRows = [...rows, { ...formData, "medicineId": docRef, pharmacyId: pharmacyId }];
             setRows(updatedRows);
             e.target.reset();
             setShowLoader(false);
@@ -298,7 +298,7 @@ export const PurchaseRequisition = () => {
             requesitionId: uuidv4(),
             medicines: rows,
             status: 'created',
-            pharmacyId: ""
+            pharmacyId: pharmacyId
         };
         for (const key in reqDetails) {
             if (reqDetails[key] === undefined || reqDetails[key] === 'undefined') undefindedValues.push(key)

@@ -20,6 +20,7 @@ import { Loader } from "../../components/Loader";
 import SigninService from '../../services/Signin.service';
 import { Notification } from '../Notification/index';
 import { useParams } from 'react-router-dom';
+import useLocalStorage from "../../../hooks/UseLocalstorage";
 
 let template = {
     title: '',
@@ -64,6 +65,7 @@ const btn_styles = {
 }
 
 export const SignIn = () => {
+    const [pharmacyId, setPharmacyId] = useLocalStorage('pharmacyId', '');
     const [notification, setNotification] = useState(false);
     const { id } = useParams();
 
@@ -76,7 +78,10 @@ export const SignIn = () => {
             let data = await SigninService.validateUser(userName, id);
             const { pin } = data.find((emp) => emp?.firstName === userName && emp?.pin === password);
             setLoader(false);
-            if (pin === password) navigate('/landing/sales/billing');
+            if (pin === password) {
+                navigate('/landing/sales/billing');
+                setPharmacyId(id);
+            }
             else setNotification(true);
         } catch (err) {
             setLoader(false);

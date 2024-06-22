@@ -9,6 +9,7 @@ import { Container } from './AddInvoice.styles';
 import { getUndefinded } from '../../../utils/helper';
 import { Loader } from "../Loader/index";
 import { Table } from '../Table/index';
+import useLocalStorage from "../../../hooks/UseLocalstorage";
 
 const columns = [
     { Header: 'Medicine Details', accessor: 'brandName' },
@@ -29,6 +30,7 @@ const vendorDetailsStyle = { display: "flex", gap: "28px 30px", minHeight: "70px
 const btnStyles = { display: "flex", justifyContent: "end" };
 
 export const AddInvoice = () => {
+    const [pharmacyId] = useLocalStorage('pharmacyId');
     const [loader, setLoader] = useState(false);
     const [vendorDetails, setVendorDetails] = useState([]);
     const [rows, setRows] = useState([]);
@@ -122,10 +124,11 @@ export const AddInvoice = () => {
             return;
         }
 
-        const data = { ...invoiceDetails, medicines: rows };
+        const data = { ...invoiceDetails, medicines: rows, pharmacyId: pharmacyId };
         setLoader(true);
         try {
             await InventoryService.addInvoice(data);
+            rows.forEach((item) => item["pharmacyId"] = pharmacyId);
             await InventoryService.addInventory(rows);
             setNotificationMsg({ message: 'Invoice and medicines added successfully', severity: 'success' });
             setRows([]);
