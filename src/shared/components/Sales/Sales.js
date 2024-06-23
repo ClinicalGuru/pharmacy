@@ -15,6 +15,7 @@ import { Container } from './Sales.styles';
 import SalesService from '../../services/sales.service';
 import InventoryService from '../../services/inventory.service';
 import Grid from '@mui/material/Grid';
+import useLocalStorage from "../../../hooks/UseLocalstorage";
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -25,6 +26,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export const Sales = () => {
+    const [pharmacyId] = useLocalStorage('pharmacyId');
     const [billingDetails, setBillingDetails] = useState({});
     const [showLoader, setShowLoader] = useState(false);
     const [reset, setRestForm] = useState(false);
@@ -288,6 +290,7 @@ export const Sales = () => {
                 billNumber: Math.floor(100000 + Math.random() * 900000),
                 patientId: patientId,
                 medicineDetails: rows,
+                pharmacyId: pharmacyId,
                 ...data
             };
             await SalesService.addPharmacyBilling(billDetails).then(() => {
@@ -337,7 +340,6 @@ export const Sales = () => {
     }
 
     const handleSubmitBillingForm = (data) => {
-        console.log(data, 'billDta');
         setBillingDetails(data);
         if (patientDetails?.patientName === '') {
             setNotification(true);

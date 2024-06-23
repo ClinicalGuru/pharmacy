@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 import CreatableSelect from 'react-select/creatable';
 import { Notification } from '../../Notification/index';
 import { CButton } from "../../Button/index";
-import isEmpty from 'lodash/isEmpty';
 
 export const MasterList = () => {
     const [showLoader, setShowLoader] = useState(false);

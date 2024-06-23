@@ -23,12 +23,11 @@ import { QuotationList } from "./shared/components/Reports/PurchaseReports/Quota
 import { ReturnList } from './shared/components/Reports/PurchaseReports/ReturnList/ReturnsList';
 import { InvoiceList } from './shared/components/Reports/PurchaseReports/InvoiceList/InvoiceList';
 import { PaymentsList } from './shared/components/Reports/PurchaseReports/PaymentsList';
-import { RefreshVendorsDetailsContext } from './context/RefreshVendorDetailsContext';
 import { VendorList } from './shared/components/Reports/PurchaseReports/VendorList';
 import ErrorBoundary from "./shared/components/ErrorBoundary";
 const Router = createBrowserRouter([
     {
-        path: "/",
+        path: "//:id",
         element: <SignIn />
     },
     {

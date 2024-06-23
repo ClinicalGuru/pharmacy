@@ -15,8 +15,10 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import { hasAllRequiredKeysInList } from '../../../../utils/helper'
+import useLocalStorage from "../../../../hooks/UseLocalstorage";
 
 export const Quotations = () => {
+    const [pharmacyId] = useLocalStorage('pharmacyId');
     const [showLoader, setShowLoader] = useState(false);
     const [vendorDetails, setVendorDetails] = useState([]);
     const [rows, setRows] = useState([]);
@@ -376,6 +378,7 @@ export const Quotations = () => {
         };
         setShowLoader(true);
         let quotationDetails = {
+            pharmacyId: pharmacyId,
             vendorId: reqisition[0]?.vendorId,
             requesitionId: reqisition[0]?.requesitionId,
             quotationId: uuidv4()

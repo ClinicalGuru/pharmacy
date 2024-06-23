@@ -14,8 +14,10 @@ import isEmpty from 'lodash/isEmpty';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import useLocalStorage from "../../../../hooks/UseLocalstorage";
 
 export const PurchaseOrders = () => {
+    const [pharmacyId] = useLocalStorage('pharmacyId');
     const [rowIds, selectedRows] = useState({});
     const [vendorDetails, SetVendorDetails] = useState([]);
     const [vendorId, setVendorId] = useState('');
@@ -145,6 +147,7 @@ export const PurchaseOrders = () => {
         setShowLoader(true);
         const rowIdKeys = Object.keys(rowIds);
         const filtredRows = rowIdKeys?.map(id => rows[parseInt(id)]);
+        filtredRows.forEach((item) => item["pharmacyId"] = pharmacyId);
         try {
             await PurchaseService.savePO(filtredRows);
             pdfUsableData(filtredRows);

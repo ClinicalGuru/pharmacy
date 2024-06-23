@@ -19,67 +19,73 @@ import {
 import { Loader } from "../../components/Loader";
 import SigninService from '../../services/Signin.service';
 import { Notification } from '../Notification/index';
+import { useParams } from 'react-router-dom';
+import useLocalStorage from "../../../hooks/UseLocalstorage";
+
+let template = {
+    title: '',
+    formStyles: {
+        backgroundColor: "#eee",
+    },
+    fields: [
+        {
+            title: 'User name',
+            type: 'text',
+            name: 'userName',
+            validationProps: {
+                required: "Email is required"
+            }
+        },
+        {
+            title: 'Password',
+            type: 'password',
+            name: 'password',
+            validationProps: {
+                required: "Password is required"
+            }
+        }
+    ],
+    btns: [
+        {
+            btn_text: "Log In",
+            styles: {
+                width: "100%",
+                color: "#FFFFFF",
+                fontSize: "16px",
+                padding: "0.5rem",
+                margin: "2rem 0"
+            }
+        }
+    ]
+}
+const btn_styles = {
+    margin: "2rem 0",
+    color: "white",
+    fontSize: "16px"
+}
 
 export const SignIn = () => {
+    const [pharmacyId, setPharmacyId] = useLocalStorage('pharmacyId', '');
     const [notification, setNotification] = useState(false);
-    let template = {
-        title: '',
-        formStyles: {
-            backgroundColor: "#eee",
-        },
-        fields: [
-            {
-                title: 'User name',
-                type: 'text',
-                name: 'userName',
-                validationProps: {
-                    required: "Email is required"
-                }
-            },
-            {
-                title: 'Password',
-                type: 'password',
-                name: 'password',
-                validationProps: {
-                    required: "Password is required"
-                }
-            }
-        ],
-        btns: [
-            {
-                btn_text: "Log In",
-                styles: {
-                    width: "100%",
-                    color: "#FFFFFF",
-                    fontSize: "16px",
-                    padding: "0.5rem",
-                    margin: "2rem 0"
-                }
-            }
-        ]
-    }
-    const btn_styles = {
-        margin: "2rem 0",
-        color: "white",
-        fontSize: "16px"
-    }
+    const { id } = useParams();
+
     const [open, setLoader] = useState(false);
     const navigate = useNavigate();
     const onSubmit = async (form) => {
         const { userName, password } = form;
         setLoader(true);
-        // console.log(form);
         try {
-            let data = await SigninService.validateUser(userName);
+            let data = await SigninService.validateUser(userName, id);
+            const { pin } = data.find((emp) => emp?.firstName === userName && emp?.pin === password);
             setLoader(false);
-            if (data[0]?.pin === password) navigate('/landing/sales/billing');
+            if (pin === password) {
+                navigate('/landing/sales/billing');
+                setPharmacyId(id);
+            }
             else setNotification(true);
         } catch (err) {
             setLoader(false);
         }
-        // setLoader(true);
-        // navigate('/landing');
-        // setLoader(false);
     };
     const validate = (watchValues, errorMethods) => {
 

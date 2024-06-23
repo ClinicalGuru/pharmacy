@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 // import { menuItems } from '../../services/menuItems';
 // import MenuItems from './MenuItems';
 import { motion } from "framer-motion";
