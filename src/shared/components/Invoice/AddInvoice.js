@@ -47,7 +47,7 @@ export const AddInvoice = () => {
         title: '',
         submitButttonText: 'Log in',
         // formStyles: { backgroundColor: "#eee" },
-        watchFields: ['invoiceDate', 'invoiceNumber', 'poNumber', 'vendorName', 'invoicedueDate'],
+        watchFields: ['stockEnteredDate', 'invoiceNumber', 'poNumber', 'vendorName', 'invoicedueDate'],
         fields: [
             {
                 title: 'Invoice Number', type: 'text', name: 'invoiceNumber',
@@ -67,7 +67,7 @@ export const AddInvoice = () => {
                 validationProps: { required: "Vendor name is required" }, style: { width: "194px" }
             },
             {
-                title: 'Invoice Date', type: 'date', name: 'invoiceDate',
+                title: 'Invoice Date', type: 'date', name: 'stockEnteredDate',
                 validationProps: { required: "Date is required" }, style: { width: "194px" }
             },
             {
@@ -106,7 +106,7 @@ export const AddInvoice = () => {
 
     const validate = (watchValues) => {
         setInvoiceDetails({
-            invoiceDate: watchValues?.invoiceDate,
+            stockEnteredDate: watchValues?.stockEnteredDate,
             poNumber: watchValues?.poNumber,
             vendorId: watchValues?.vendorId?.value,
             invoiceNumber: watchValues?.invoiceNumber,
@@ -123,7 +123,7 @@ export const AddInvoice = () => {
             setNotification(true);
             return;
         }
-
+        rows?.forEach((item) => item["stockEnteredDate"] = new Date(invoiceDetails?.stockEnteredDate).valueOf());
         const data = { ...invoiceDetails, medicines: rows, pharmacyId: pharmacyId };
         setLoader(true);
         try {
@@ -154,7 +154,7 @@ export const AddInvoice = () => {
             pharmacologicalName: pharmacologicalName?.label,
             medicineId: brandName?.value,
             deadStockQuantityCheck: unitsOrStrips,
-            stockEnteredDate: new Date().valueOf(),
+
             unitsInStock: (unitsOrStrips * (Number(noOfStrips) + Number(freeStrips)))
         };
 

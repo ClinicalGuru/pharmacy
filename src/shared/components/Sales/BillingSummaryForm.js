@@ -47,8 +47,8 @@ export const BillingSummaryForm = ({
         const subscription = watch((value, { name, type }) => {
             if (name === "discount" || name === "gst") {
                 const { discount, gst, } = value;
-                const discountAmount = (netPrice * (discount / 100));
-                const gstAmount = (netPrice * (gst / 100));
+                const discountAmount = (netPrice * (Number(discount) / 100));
+                const gstAmount = (netPrice * (Number(gst) / 100));
                 const totalDiscountedPrice = netPrice - discountAmount;
                 const totalAmountAfterGST = totalDiscountedPrice + gstAmount;
                 const roundOffAmount = Math.round(totalAmountAfterGST) - totalAmountAfterGST;
@@ -120,11 +120,11 @@ export const BillingSummaryForm = ({
                 <div>
                     <label>{FORM_LABELS.GST}</label>
                     <select {...register("gst")}>
-                        <option value="0%">0%</option>
-                        <option value="5%">5%</option>
-                        <option value="12%">12%</option>
-                        <option value="18%">18%</option>
-                        <option value="28%">28%</option>
+                        <option value="0">0%</option>
+                        <option value="5">5%</option>
+                        <option value="12">12%</option>
+                        <option value="18">18%</option>
+                        <option value="28">28%</option>
                     </select>
                     {errors['gst'] && <span className='red-text'>{errors['gst'][`message`]}</span>}
                 </div>

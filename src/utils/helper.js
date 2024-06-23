@@ -60,3 +60,15 @@ export const filterInventoryByExpiry = (inventory) => {
         return expiryDate > currentDate && expiryDate <= threeMonthsFromNow;
     });
 };
+
+export const isLessThanTwentyPercent = (givenQuantity, totalQuantity) => {
+    const twentyPercent = totalQuantity * 0.2;
+    return givenQuantity < twentyPercent;
+}
+
+export const filterItemsOlderThanSixMonths = (stockEnteredDate) => {
+    const currentDate = new Date();
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(currentDate.getMonth() - 6);
+    return stockEnteredDate < sixMonthsAgo.valueOf();
+}

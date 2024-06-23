@@ -212,16 +212,6 @@ export const Sales = () => {
 
     const handleSubmitForm = (formData) => {
         const { pharmacologicalName, brandName, batchNo, quantity } = formData;
-        console.log(pharmacologicalName, 'formData', formData)
-        const quantityCheck = inventory.find((item) => item?.batchNo === batchNo && item?.brandName === brandName.label.trim());
-        if ((quantityCheck?.quantity - quantity) < 0) {
-            setNotification(true);
-            setNotificationMsg({
-                message: `Low stock. You can add only maximum units of ${quantityCheck?.quantity}`,
-                severity: "warning"
-            });
-            return;
-        }
         const transformedObject = {
             ...formData,
             pharmacologicalName: pharmacologicalName?.label,
@@ -233,10 +223,24 @@ export const Sales = () => {
         );
 
         if (isDuplicate) {
-            alert('Duplicate data cannot be added.');
+            setNotification(true);
+            setNotificationMsg({
+                message: `Duplicate medicine.`,
+                severity: "warning"
+            });
             setShowLoader(false);
             setEditngIndex(-1);
             setEditngRow({});
+            return;
+        }
+        console.log(pharmacologicalName, 'formData', formData)
+        const quantityCheck = inventory.find((item) => item?.batchNo === batchNo && item?.brandName === brandName.label.trim());
+        if ((quantityCheck?.unitsInStock - quantity) < 0) {
+            setNotification(true);
+            setNotificationMsg({
+                message: `Low stock. You can add only maximum units of ${quantityCheck?.unitsInStock}`,
+                severity: "warning"
+            });
             return;
         }
         if (editingIndex !== -1) {
@@ -312,6 +316,7 @@ export const Sales = () => {
             inventory.push({ inventoryId: doc.id, ...doc.data() });
             console.log(medicineIds, 'medIds', "rows =>", rows, "inv =>", inventory);
             const updatedInventoryDetails = inventory.map((inv) => {
+                debugger
                 const matchMed = rows.find((row) => row?.medicineId === inv?.medicineId);
                 if (matchMed) {
                     const updatedQuantity = Number(inv?.unitsInStock) - Number(matchMed?.quantity);

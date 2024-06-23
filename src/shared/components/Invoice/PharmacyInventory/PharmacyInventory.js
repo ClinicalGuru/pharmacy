@@ -6,8 +6,8 @@ import Button from '@mui/material/Button';
 import { Container } from "./PharmacyInventory.styles";
 import InventoryService from '../../../services/inventory.service';
 import { InventoryTable } from './denseTable';
-import { filterInventoryByExpiry } from "../../../../utils/helper";
-import {DownloadExcel} from "./DownloadAsExcel";
+import { filterInventoryByExpiry, isLessThanTwentyPercent, filterItemsOlderThanSixMonths } from "../../../../utils/helper";
+import { DownloadExcel } from "./DownloadAsExcel";
 
 export const PharmacyInventory = () => {
     const [originalList, setOriginalList] = useState([]);
@@ -94,8 +94,10 @@ export const PharmacyInventory = () => {
             filteredList = originalList.filter(medicine => {
                 return medicine.stockEnteredDate && (referenceTimestamp - medicine.stockEnteredDate) >= sixMonthsInMillis;
             });
-        } else if (value === "nearExpiryStocks") {
-            filteredList = filterInventoryByExpiry(originalList)
+        } else if (value === "lowStocks") {
+            filteredList = originalList.filter((medicine) => isLessThanTwentyPercent(medicine.quantity, medicine.deadStockQuantityCheck))
+        } else if (value === "nonMovingStock") {
+            filteredList = originalList.filter((medicine) => filterItemsOlderThanSixMonths(medicine?.stockEnteredDate));
         }
         else {
             filteredList = originalList;
@@ -125,6 +127,7 @@ export const PharmacyInventory = () => {
                         <option value="nearExpiryStocks">Near Expiry Stocks</option>
                         <option value="lowStocks">Low Stocks</option>
                         <option value="deadStocks">Dead Stocks</option>
+                        <option value="nonMovingStock">Non moving stocks</option>
                     </select>
                 </Box>
                 <div style={{
