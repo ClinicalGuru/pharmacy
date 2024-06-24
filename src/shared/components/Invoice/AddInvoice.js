@@ -153,8 +153,7 @@ export const AddInvoice = () => {
             brandName: brandName?.label,
             pharmacologicalName: pharmacologicalName?.label,
             medicineId: brandName?.value,
-            deadStockQuantityCheck: unitsOrStrips,
-
+            deadStockQuantityCheck: (unitsOrStrips * (Number(noOfStrips) + Number(freeStrips))),
             unitsInStock: (unitsOrStrips * (Number(noOfStrips) + Number(freeStrips)))
         };
 

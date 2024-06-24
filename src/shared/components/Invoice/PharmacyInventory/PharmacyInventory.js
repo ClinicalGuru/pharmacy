@@ -92,12 +92,14 @@ export const PharmacyInventory = () => {
             const referenceTimestamp = referenceDate.valueOf();
             const sixMonthsInMillis = 6 * 30 * 24 * 60 * 60 * 1000;
             filteredList = originalList.filter(medicine => {
-                return medicine.stockEnteredDate && (referenceTimestamp - medicine.stockEnteredDate) >= sixMonthsInMillis;
+                return medicine.stockEnteredDate && (referenceTimestamp - medicine.stockEnteredDate) >= sixMonthsInMillis && Number(medicine.unitsInStock) === Number(medicine?.deadStockQuantityCheck);
             });
         } else if (value === "lowStocks") {
-            filteredList = originalList.filter((medicine) => isLessThanTwentyPercent(medicine.quantity, medicine.deadStockQuantityCheck))
+            filteredList = originalList.filter((medicine) => isLessThanTwentyPercent(medicine.unitsInStock, medicine.deadStockQuantityCheck));
         } else if (value === "nonMovingStock") {
-            filteredList = originalList.filter((medicine) => filterItemsOlderThanSixMonths(medicine?.stockEnteredDate));
+            filteredList = originalList.filter((medicine) => filterItemsOlderThanSixMonths(medicine));
+        } else if (value === "nearExpiryStocks") {
+            filteredList = filterInventoryByExpiry(originalList);
         }
         else {
             filteredList = originalList;
@@ -113,7 +115,8 @@ export const PharmacyInventory = () => {
                 <Box
                     component="form"
                     sx={{
-                        display: 'flex'
+                        display: 'flex',
+                        gap: "10px"
                     }}
                 >
                     <input

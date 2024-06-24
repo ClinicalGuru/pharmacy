@@ -63,12 +63,14 @@ export const filterInventoryByExpiry = (inventory) => {
 
 export const isLessThanTwentyPercent = (givenQuantity, totalQuantity) => {
     const twentyPercent = totalQuantity * 0.2;
-    return givenQuantity < twentyPercent;
+    return Number(givenQuantity) <= twentyPercent;
 }
 
-export const filterItemsOlderThanSixMonths = (stockEnteredDate) => {
+export const filterItemsOlderThanSixMonths = (medicine) => {
+    const { stockEnteredDate, unitsInStock, deadStockQuantityCheck } = medicine;
+    const salePercentage = ((deadStockQuantityCheck - unitsInStock) % deadStockQuantityCheck) * 100;
     const currentDate = new Date();
     const sixMonthsAgo = new Date();
     sixMonthsAgo.setMonth(currentDate.getMonth() - 6);
-    return stockEnteredDate < sixMonthsAgo.valueOf();
+    return stockEnteredDate < sixMonthsAgo.valueOf() && ( 1 <= salePercentage && salePercentage < 20);
 }

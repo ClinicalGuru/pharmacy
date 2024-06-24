@@ -16,6 +16,7 @@ import SalesService from '../../services/sales.service';
 import InventoryService from '../../services/inventory.service';
 import Grid from '@mui/material/Grid';
 import useLocalStorage from "../../../hooks/UseLocalstorage";
+import { StyledSpan } from "../../../globalStyles"
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -107,7 +108,10 @@ export const Sales = () => {
         watchFields: ['patientName', 'gender', 'age', 'phone', 'email', 'referredDoctor', 'otc'],
         fields: [
             {
-                title: 'Patient Name',
+                title: <span>
+                    Patient Name
+                    <StyledSpan>*</StyledSpan>
+                </span>,
                 type: 'text',
                 name: 'patientName',
                 validationProps: {
