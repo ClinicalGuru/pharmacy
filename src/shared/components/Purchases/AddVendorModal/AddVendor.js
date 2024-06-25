@@ -13,6 +13,7 @@ import PurchaseService from "../../../services/Purchase.service";
 import { Loader } from "../../../components/Loader";
 import { RefreshVendorsDetailsContext } from "../../../../context/RefreshVendorDetailsContext";
 import { CButton } from '../../Button/index';
+import { StyledSpan } from '../../../../globalStyles';
 import TextField from '@mui/material/TextField';
 import useLocalStorage from "../../../../hooks/UseLocalstorage";
 
@@ -78,15 +79,15 @@ export const AddVendor = ({ showModal, action }) => {
                         <Box sx={{ display: 'flex', marginBottom: '1rem' }}>
                             <div style={{ marginRight: '1rem' }}>
                                 <div style={{ marginBottom: '10px' }}>
-                                    <label>Vendor Name</label>
+                                    <label>Vendor Name<StyledSpan> *</StyledSpan></label>
                                     <Input error={vendorDetailsErrors.vendorName?.type === "required"} id="outlined-basic"  {...vendorDetails("name", { required: true })} label={FORM_LABELS.VENDOR_NAME} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
                                 </div>
                                 <div style={{ marginBottom: '10px' }}>
-                                    <label>GST</label>
+                                    <label>GST<StyledSpan> *</StyledSpan></label>
                                     <Input error={vendorDetailsErrors.gst?.type === "required"} id="outlined-basic"  {...vendorDetails("gst", { required: true })} label={FORM_LABELS.GST} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
                                 </div>
                                 <div>
-                                    <label>Mobile Number</label>
+                                    <label>Mobile Number<StyledSpan> *</StyledSpan></label>
                                     <Input type='number' error={vendorDetailsErrors.phone?.type === "required"} id="outlined-basic"
                                         {...vendorDetails("phone", { required: true, maxLength: 10 })} label={FORM_LABELS.PHONE} variant="outlined"
                                         size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
@@ -94,11 +95,11 @@ export const AddVendor = ({ showModal, action }) => {
                             </div>
                             <div>
                                 <div style={{ marginBottom: '10px' }}>
-                                    <label>Email</label>
+                                    <label>Email<StyledSpan> *</StyledSpan></label>
                                     <Input error={vendorDetailsErrors.vendorName?.type === "required"} id="outlined-basic"  {...vendorDetails("email", { required: true })} label={FORM_LABELS.EMAIL} variant="outlined" size="small" sx={{ backgroundColor: '#FFFFFFFF', mb: '15px' }} />
                                 </div>
                                 <div >
-                                    <label>Address</label> <br />
+                                    <label>Address<StyledSpan> *</StyledSpan></label> <br />
                                     <TextField error={vendorDetailsErrors.address?.type === "required"} {...vendorDetails("address", { required: true })}
                                         id="outlined-multiline-static"
                                         // label={FORM_LABELS.ADDRESS}

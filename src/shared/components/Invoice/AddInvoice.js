@@ -9,6 +9,7 @@ import { Container } from './AddInvoice.styles';
 import { getUndefinded } from '../../../utils/helper';
 import { Loader } from "../Loader/index";
 import { Table } from '../Table/index';
+import { StyledSpan } from '../../../globalStyles';
 import useLocalStorage from "../../../hooks/UseLocalstorage";
 
 const columns = [
@@ -20,7 +21,7 @@ const columns = [
     { Header: 'Total Strips', accessor: 'noOfStrips' },
     { Header: 'MRP per Strip', accessor: 'mrpPerStrip' },
     { Header: 'Price per Strip', accessor: 'pricePerStrip' },
-    { Header: 'GST', accessor: 'gst' },
+    { Header: 'GST %', accessor: 'gst' },
     { Header: 'Tax in', accessor: '' },
     { Header: 'Total Price', accessor: 'netPrice' },
     { Header: "Actions", id: "actions" },
@@ -50,29 +51,29 @@ export const AddInvoice = () => {
         watchFields: ['stockEnteredDate', 'invoiceNumber', 'poNumber', 'vendorName', 'invoicedueDate'],
         fields: [
             {
-                title: 'Invoice Number', type: 'text', name: 'invoiceNumber',
+                title: <span>Invoice Number<StyledSpan> *</StyledSpan></span>, type: 'text', name: 'invoiceNumber',
                 // options: [{ value: "none", name: "None" }],
                 validationProps: { required: "Invoice num is required" }, style: { width: '194px' }
             },
             {
-                title: 'PO Number', type: 'text', name: 'poNumber',
+                title: <span>PO Number<StyledSpan> *</StyledSpan></span>, type: 'text', name: 'poNumber',
                 // options: [{ value: "none", name: "None" }],
                 validationProps: { required: "PO Num is required" }, style: { width: "194px" }
             },
             {
-                title: 'Vendor Name', type: 'autoComplete', name: 'vendorId',
+                title: <span>Vendor Name<StyledSpan> *</StyledSpan></span>, type: 'autoComplete', name: 'vendorId',
                 options: [{ value: "none", name: "None" },
                 ...vendorDetails
                 ],
                 validationProps: { required: "Vendor name is required" }, style: { width: "194px" }
             },
             {
-                title: 'Invoice Date', type: 'date', name: 'stockEnteredDate',
-                validationProps: { required: "Date is required" }, style: { width: "194px" }
+                title: <span>Invoice Date<StyledSpan> *</StyledSpan></span>, type: 'date', name: 'stockEnteredDate',
+                validationProps: { required: "Date is required" }, style: { width: "150px" }
             },
             {
-                title: 'Invoice Due Date', type: 'date', name: 'invoiceDueDate',
-                validationProps: { required: "Date is required" }, style: { width: "194px" }
+                title: <span>Invoice Due Date<StyledSpan> *</StyledSpan></span>, type: 'date', name: 'invoiceDueDate',
+                validationProps: { required: "Date is required" }, style: { width: "150px" }
             },
         ],
     };

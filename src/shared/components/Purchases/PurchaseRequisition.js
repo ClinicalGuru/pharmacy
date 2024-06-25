@@ -15,6 +15,7 @@ import { Notification } from '../Notification/index';
 import { Loader } from "../Loader/index";
 import { DownloadOptionsModal } from "../DownloadOptionsModal/DownloadOptionsModal"
 import { useNavigate } from 'react-router-dom';
+import { StyledSpan } from '../../../globalStyles';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
@@ -109,7 +110,7 @@ export const PurchaseRequisition = () => {
         watchFields: [],
         fields: [
             {
-                title: FORM_LABELS.PHARMACOLOGICAL_NAME,
+                title:<span>{FORM_LABELS.PHARMACOLOGICAL_NAME}<StyledSpan> *</StyledSpan></span> ,
                 type: 'autoComplete',
                 name: 'pharmacologicalName',
                 validationProps: {
@@ -122,7 +123,7 @@ export const PurchaseRequisition = () => {
             },
             {
 
-                title: FORM_LABELS.BRAND_NAME,
+                title: <span>{FORM_LABELS.BRAND_NAME}<StyledSpan> *</StyledSpan></span>,
                 type: 'autoComplete',
                 name: 'brandName',
                 validationProps: {
@@ -150,7 +151,7 @@ export const PurchaseRequisition = () => {
                 title: (
                     <span>
                         {FORM_LABELS.FORM}
-                        <span style={{ color: 'red' }}>*</span>
+                        <StyledSpan> *</StyledSpan>
                     </span>
                 ),
                 type: 'select',
@@ -193,7 +194,7 @@ export const PurchaseRequisition = () => {
                 title: (
                     <span>
                         {FORM_LABELS.QUANTITY}
-                        <span style={{ color: 'red' }}>*</span>
+                        <StyledSpan> *</StyledSpan>
                     </span>
                 ),
                 type: 'number',

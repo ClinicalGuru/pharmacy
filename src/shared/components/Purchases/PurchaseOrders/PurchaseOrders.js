@@ -10,6 +10,7 @@ import { Notification } from '../../Notification/index';
 import { Loader } from "../../Loader/index";
 import { useSearchParams } from 'react-router-dom';
 import { CButton } from "../../Button/index";
+import { StyledSpan } from '../../../../globalStyles';
 import isEmpty from 'lodash/isEmpty';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
@@ -264,7 +265,7 @@ export const PurchaseOrders = () => {
             <Container>
                 {<form >
                     <div className="form-group">
-                        <label className="form-label" for="vendorId">Select Vendor</label>
+                        <label className="form-label" for="vendorId">Select Vendor<StyledSpan> *</StyledSpan></label>
                         <CreatableSelect
                             options={vendorDetails?.map(vendor => ({ value: vendor?.id, label: vendor?.name }))}
                             onChange={(e) => vendorHandler(e)}
