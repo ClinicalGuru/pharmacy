@@ -207,9 +207,11 @@ export const PurchaseRequisition = () => {
         btns: [
             {
                 btn_text: "+ Add",
+                type: 'submit'
             },
             {
                 btn_text: "Clear",
+                type: 'reset'
             },
         ],
         buttonStyles: {

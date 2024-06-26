@@ -13,7 +13,7 @@ import { StyledSpan } from '../../../globalStyles';
 import useLocalStorage from "../../../hooks/UseLocalstorage";
 
 const columns = [
-    { Header: 'Medicine Details', accessor: 'brandName' },
+    { Header: 'Brand Name', accessor: 'brandName' },
     { Header: 'Batch No', accessor: 'batchNo' },
     { Header: 'HSN Code', accessor: 'hsnCode' },
     { Header: 'Expiry', accessor: 'expiry' },
@@ -117,11 +117,11 @@ export const AddInvoice = () => {
     const saveInvoice = async () => {
         const missingFields = getUndefinded(invoiceDetails);
         if (missingFields?.length > 0) {
+            setNotification(true);
             setNotificationMsg({
                 message: `Please fill mandatory fields: ${missingFields.join(', ')}`,
                 severity: "error"
             });
-            setNotification(true);
             return;
         }
         rows?.forEach((item) => item["stockEnteredDate"] = new Date(invoiceDetails?.stockEnteredDate).valueOf());
@@ -131,6 +131,7 @@ export const AddInvoice = () => {
             await InventoryService.addInvoice(data);
             rows.forEach((item) => item["pharmacyId"] = pharmacyId);
             await InventoryService.addInventory(rows);
+            setNotification(true);
             setNotificationMsg({ message: 'Invoice and medicines added successfully', severity: 'success' });
             setRows([]);
             setResetVendorForm(true);
@@ -138,6 +139,7 @@ export const AddInvoice = () => {
             setEditingIndex(-1); // Reset the editing index here
             setLoader(false);
         } catch (error) {
+            setNotification(true);
             setNotificationMsg({ message: 'Something went wrong', severity: 'error' });
             console.error('Error saving invoice data:', error);
             setLoader(false);
@@ -146,7 +148,6 @@ export const AddInvoice = () => {
     };
 
     const invoiceHandler = (formData) => {
-        console.log(formData)
         setLoader(true);
         const { brandName, pharmacologicalName, unitsOrStrips, noOfStrips, freeStrips } = formData;
         const transformedObject = {

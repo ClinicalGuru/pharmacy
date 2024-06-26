@@ -151,20 +151,15 @@ export const Form = ({
                                         options={options?.map(option => ({ value: option?.value, label: option?.name }))}
                                         onChange={(newValue, actionMeta) => {
                                             field.onChange(newValue);
-
-                                            // If the clear action is triggered, set the field value to null
                                             if (actionMeta.action === 'clear') {
                                                 field.onChange(null);
                                             }
-
-                                            // Optionally, trigger validation
                                             field.onBlur();
                                         }}
                                         styles={{
                                             container: (provided) => ({
                                                 ...provided,
                                                 width: 200,
-                                                // marginRight: 10
                                             })
                                         }}
                                     />

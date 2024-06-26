@@ -15,12 +15,16 @@ export const PharmacyInventory = () => {
     let [medicineName, setMedicineName] = useState('');
     const columns = [
         {
-            'Header': 'Medicine Name',
+            'Header': 'Brand Name',
             'accessor': 'brandName',
         },
         {
             'Header': 'Batch Number',
             'accessor': 'batchNo',
+        },
+        {
+            'Header': 'HSN code',
+            'accessor': 'hsnCode',
         },
         {
             'Header': 'Expiry',
@@ -31,7 +35,7 @@ export const PharmacyInventory = () => {
             'accessor': 'mrpPerStrip',
         },
         {
-            'Header': 'Discount',
+            'Header': 'Discount%',
             'accessor': 'discount',
         },
         {
@@ -62,7 +66,8 @@ export const PharmacyInventory = () => {
                 let data = await InventoryService.getInventory();
                 const result = data?.docs?.map((doc) => ({ ...doc?.data(), id: doc?.id }));
                 setRows(result);
-                setOriginalList(result);
+        console.log(result, 'filteredList');
+        setOriginalList(result);
             } catch (err) {
 
             }

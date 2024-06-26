@@ -157,7 +157,6 @@ export const BillingSummaryForm = ({
                 </div>
                 <div>
                     <label>{FORM_LABELS.PAYMENT_MODE}</label>
-                    {/* <input {...register("paymentMode")} type="number" /> */}
                     <select {...register("paymentMode")}>
                         <option value="upi"> UPI </option>
                         <option value="card"> Card </option>
@@ -171,20 +170,11 @@ export const BillingSummaryForm = ({
                         pattern: {
                             value: /^[0-9]*$/,
                             message: ""
-                        }
+                        },
+                        required: true,
                     })} type="number" />
                     {errors['paidAmount'] && <span className='red-text'>{errors['paidAmount'][`message`]}</span>}
                 </div>
-                {/* <div>
-                    <label>{FORM_LABELS.BALANCE}</label>
-                    <input {...register("balance", {
-                        pattern: {
-                            value: /^[0-9]*$/,
-                            message: ""
-                        }
-                    })} type="number" />
-                    {errors['balance'] && <span className='red-text'>{errors['balance'][`message`]}</span>}
-                </div> */}
 
                 <div style={{ minWidth: '150px', display: 'flex', alignItems: 'center' }}>
                     <label>{FORM_LABELS.ADD_REMARKS}</label>
@@ -193,7 +183,7 @@ export const BillingSummaryForm = ({
                 </div>
                 <FooterSection>
                     <input type="submit" value=" Save" style={{ marginRight: '10px' }} disabled={netPriceValue === 0} />
-                    <input type="submit" value=" Save & Print" disabled={netPriceValue === 0} />
+                    {/* <input type="submit" value=" Save & Print" disabled={netPriceValue === 0} /> */}
                 </FooterSection>
             </BillingForm>
             {notification && <Notification notificationState={notification} severity={notificationMsg?.severity} message={notificationMsg?.message} action={alertState} />}

@@ -68,9 +68,9 @@ export const isLessThanTwentyPercent = (givenQuantity, totalQuantity) => {
 
 export const filterItemsOlderThanSixMonths = (medicine) => {
     const { stockEnteredDate, unitsInStock, deadStockQuantityCheck } = medicine;
-    const salePercentage = ((deadStockQuantityCheck - unitsInStock) % deadStockQuantityCheck) * 100;
+    const salePercentage = ((deadStockQuantityCheck - unitsInStock) / deadStockQuantityCheck) * 100;
     const currentDate = new Date();
     const sixMonthsAgo = new Date();
     sixMonthsAgo.setMonth(currentDate.getMonth() - 6);
-    return stockEnteredDate < sixMonthsAgo.valueOf() && ( 1 <= salePercentage && salePercentage < 20);
+    return stockEnteredDate < sixMonthsAgo.valueOf() && ( 1 <= salePercentage && salePercentage <= 20);
 }
