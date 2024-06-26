@@ -12,6 +12,7 @@ import MonthYearCalendarPopup from "../Calendar/MonthYearCalendarPopup";
 import Modal from 'react-modal';
 
 import CloseIcon from '@mui/icons-material/Close';
+import { StyledSpan } from "../../../globalStyles";
 
 import isEmpty from 'lodash/isEmpty';
 
@@ -106,7 +107,7 @@ export const AddInvoiceForm = ({
         <FormContainer onSubmit={handleSubmit(onSubmit)}>
             <div className={"addInvoiceForm"}>
                 <div>
-                    <label>{FORM_LABELS.PHARMACOLOGICAL_NAME}</label>
+                    <label>{FORM_LABELS.PHARMACOLOGICAL_NAME}<StyledSpan> *</StyledSpan></label>
                     <Controller
                         {...register("pharmacologicalName", { required: true })}
 
@@ -141,7 +142,7 @@ export const AddInvoiceForm = ({
                 </div>
 
                 <div>
-                    <label>{FORM_LABELS.BRAND_NAME}</label>
+                    <label>{FORM_LABELS.BRAND_NAME}<StyledSpan> *</StyledSpan></label>
                     <Controller
                         name='brandName'
                         control={control}
@@ -187,7 +188,7 @@ export const AddInvoiceForm = ({
                 </div>
 
                 <div>
-                    <label>{FORM_LABELS.EXPIRY}</label>
+                    <label>{FORM_LABELS.EXPIRY}<StyledSpan> *</StyledSpan></label>
                     <div >
                         <input
                             {...register("expiry", { required: true })}
@@ -212,7 +213,7 @@ export const AddInvoiceForm = ({
                 </div>
 
                 <div>
-                    <label>{FORM_LABELS.FREE_STRIPS} <span className="red-asterisk">*</span></label>
+                    <label>{FORM_LABELS.FREE_STRIPS}</label>
                     <input {...register("freeStrips")} type="number" />
                     {errors['freeStrips'] && <span className='red-text'>{errors['freeStrips'][`message`]}</span>}
                 </div>
@@ -233,7 +234,7 @@ export const AddInvoiceForm = ({
                     {errors['discount'] && <span className='red-text'>{errors['discount'][`message`]}</span>}
                 </div>
                 <div style={{ minWidth: '100px' }}>
-                    <label>{FORM_LABELS.GST}</label>
+                    <label>{FORM_LABELS.GST}<StyledSpan> *</StyledSpan></label>
                     <select {...register("gst")}>
                         <option value="0">0%</option>
                         <option value="5">5%</option>
