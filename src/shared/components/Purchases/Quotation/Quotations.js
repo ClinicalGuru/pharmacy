@@ -127,10 +127,10 @@ export const Quotations = () => {
             {
                 title: (
                     <span>
-                    {FORM_LABELS.PHARMACOLOGICAL_NAME}
-                    <StyledSpan> *</StyledSpan>
+                        {FORM_LABELS.PHARMACOLOGICAL_NAME}
+                        <StyledSpan> *</StyledSpan>
                     </span>
-                    ),
+                ),
                 type: 'autoComplete',
                 name: 'pharmacologicalName',
                 validationProps: {
@@ -170,8 +170,8 @@ export const Quotations = () => {
             {
                 title: (
                     <span>
-                    {FORM_LABELS.FORM}
-                    <StyledSpan> *</StyledSpan>
+                        {FORM_LABELS.FORM}
+                        <StyledSpan> *</StyledSpan>
                     </span>
                 ),
                 type: 'select',
@@ -216,8 +216,8 @@ export const Quotations = () => {
             {
                 title: (
                     <span>
-                    {FORM_LABELS.QUANTITY}
-                    <StyledSpan> *</StyledSpan>
+                        {FORM_LABELS.QUANTITY}
+                        <StyledSpan> *</StyledSpan>
                     </span>
                 ),
                 type: 'number',
@@ -230,10 +230,10 @@ export const Quotations = () => {
                 }
             },
             {
-                title: 
+                title:
                     <span>
-                    {FORM_LABELS.MRP}
-                    <StyledSpan> *</StyledSpan>
+                        {FORM_LABELS.MRP}
+                        <StyledSpan> *</StyledSpan>
                     </span>
                 ,
                 type: 'number',
@@ -248,8 +248,8 @@ export const Quotations = () => {
             {
                 title: (
                     <span>
-                    {FORM_LABELS.PTR}
-                    <StyledSpan> *</StyledSpan>
+                        {FORM_LABELS.PTR}
+                        <StyledSpan> *</StyledSpan>
                     </span>
                 ),
                 type: 'number',
@@ -264,8 +264,8 @@ export const Quotations = () => {
             {
                 title: (
                     <span>
-                    {FORM_LABELS.PTS}
-                    <StyledSpan> *</StyledSpan>
+                        {FORM_LABELS.PTS}
+                        <StyledSpan> *</StyledSpan>
                     </span>
                 ),
                 type: 'number',
@@ -322,7 +322,7 @@ export const Quotations = () => {
         }
     };
     const medicine_details_style = {
-        height:"80px",
+        height: "80px",
         display: "flex",
         // flexWrap: 'wrap',
         gap: "0px 17px",
