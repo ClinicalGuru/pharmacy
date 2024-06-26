@@ -12,7 +12,8 @@ import EmailIcon from '@mui/icons-material/Email';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { blue } from '@mui/material/colors';
 
-export const DownloadOptionsModal = ({ onClose, selectedValue, open, rows, vendorDetails, pdfTitle }) => {
+export const DownloadOptionsModal = ({ onClose, selectedValue, open, rows, vendorDetails, pdfTitle, columns }) => {
+
     const handleClose = () => {
         onClose(selectedValue);
     };
@@ -44,7 +45,7 @@ export const DownloadOptionsModal = ({ onClose, selectedValue, open, rows, vendo
                                 <PictureAsPdfIcon />
                             </Avatar>
                         </ListItemAvatar>
-                        <PdfFile data={rows} vendorDetails={vendorDetails} pdfTitle={pdfTitle}/>
+                        <PdfFile data={rows} vendorDetails={vendorDetails} pdfTitle={pdfTitle} columns={columns} />
                     </ListItemButton>
                 </ListItem>
             </List>

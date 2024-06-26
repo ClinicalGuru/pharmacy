@@ -74,19 +74,44 @@ export const PurchaseOrders = () => {
             Cell: ({ row, column, cell }) =>
                 row.original.isEditing ? (
                     <>
-                    <div style={{display:'grid', gridTemplateColumns:'50% 50%'}}>
-                        <div><DoneOutlinedIcon style={{ color: 'blue' }} onClick={() => handleButtonClick("save", row.original)} sx={{ marginRight: '10px' }} /></div>
-                        <div><CancelOutlinedIcon style={{ color: 'red' }} onClick={() => handleButtonClick("cancel", row.original)} /></div>
-                    </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '50% 50%' }}>
+                            <div><DoneOutlinedIcon style={{ color: 'blue' }} onClick={() => handleButtonClick("save", row.original)} sx={{ marginRight: '10px' }} /></div>
+                            <div><CancelOutlinedIcon style={{ color: 'red' }} onClick={() => handleButtonClick("cancel", row.original)} /></div>
+                        </div>
                         {/* <DoneOutlinedIcon style={{ color: 'blue' }} onClick={() => handleButtonClick("save", row.original)} sx={{marginRight: '10px'}}/>
                         <CancelOutlinedIcon style={{ color: 'red' }} onClick={() => handleButtonClick("cancel", row.original)}/> */}
                     </>
                 ) : (
-                   <EditOutlinedIcon disabled={dataFetched} onClick={() => handleButtonClick("edit", row.original)}/>
+                    <EditOutlinedIcon disabled={dataFetched} onClick={() => handleButtonClick("edit", row.original)} />
                 ),
         },
     ];
+    const pdfColumns = [
+        {
+            'Header': 'Pharmacological Name',
+            'accessor': 'pharmacologicalName',
 
+        },
+        {
+            'Header': 'Brand Name',
+            'accessor': 'brandName',
+
+        },
+        {
+            'Header': 'Dose',
+            'accessor': 'dose',
+
+        },
+        {
+            'Header': 'Form',
+            'accessor': 'form',
+
+        },
+        {
+            'Header': 'Qantity / Strips',
+            'accessor': 'quantity',
+        },
+    ]
     const handleButtonClick = (action, row) => {
         const newData = rows.map((rowData) => {
             if (rowData.id === row.id) {
@@ -105,8 +130,8 @@ export const PurchaseOrders = () => {
     };
     let location = useLocation();
     useEffect(() => {
+        console.log(location?.state?.data, 'loc')
         setRows(location?.state?.data);
-
     }, [location]);
 
     const getVendors = async () => {
@@ -123,9 +148,9 @@ export const PurchaseOrders = () => {
         getVendors();
     }, []);
 
-    useEffect(() => {
-        getAllMedicines();
-    }, [vendorDetails]);
+    // useEffect(() => {
+    //     getAllMedicines();
+    // }, [vendorDetails]);
 
     const onSavePO = async () => {
         if (vendorId === '' && selectedVendor.value === '') {
@@ -278,34 +303,6 @@ export const PurchaseOrders = () => {
                             defaultValue={selectedVendor}
                         />
                     </div>
-                    {/* <div className="form-group">
-                        <label for="vendorId">Select Pharmacological Name</label>
-                        <CreatableSelect
-                            options={pharmacologicalNames?.map(med => ({ value: med?.id, label: med?.pharmacologicalName }))}
-                            onChange={(e) => pNameHandler(e)}
-                            styles={{
-                                container: (provided) => ({
-                                    ...provided,
-                                    width: 300,
-                                    marginRight: 50
-                                })
-                            }}
-                        />
-                    </div> */}
-                    {/* <div className="form-group">
-                        <label for="priceOrder">Price Order</label>
-                        <select style={{ marginRight: '2rem' }} className="form-control" onChange={(e) => handleList(e)} name="list">
-                            <option value="">--All--</option>
-                            <option value="L1">L1</option>
-                            <option value="L2">L2</option>
-                            <option value="L3">L3</option>
-                            <option value="L4">L4</option>
-                            <option value="L5">L5</option>
-                        </select>
-                    </div> */}
-                    {/* <div className="form-control">
-                        <button>Clear filters</button>
-                    </div> */}
                 </form>}
                 <Box sx={{ display: "flex", }}>
                     < CButton
@@ -328,9 +325,6 @@ export const PurchaseOrders = () => {
                         text="Re-Order"
                         disabled={true}
                     />
-                    {/* <Button disabled sx={{ marginRight: "10px" }} variant="contained">PO List</Button>
-                    <Button sx={{ marginRight: "10px" }} variant="contained" onClick={getAllMedicines}>L1 List</Button>
-                    <Button disabled variant="contained">Re-Order</Button> */}
                 </Box>
             </Container>
             <Box sx={{ marginTop: 2 }}>
@@ -351,11 +345,10 @@ export const PurchaseOrders = () => {
                             buttonHandler={onSavePO}
                             text="Create purchase order"
                         />
-                        {/* <Button variant="contained" onClick={onSavePO}>Save purchage order</Button> */}
                     </Box>
                 )}
             </div>
-            <DownloadOptionsModal open={downloadModal} onClose={handleClose} rows={pdfData} vendorDetails={selectedVendorDtls} pdfTitle="PURCHASE ORDER" />
+            <DownloadOptionsModal open={downloadModal} onClose={handleClose} rows={pdfData} vendorDetails={selectedVendorDtls} pdfTitle="PURCHASE ORDER" columns={pdfColumns} />
             {notification && <Notification notificationState={notification} severity={notificationMsg?.severity} message={notificationMsg?.message} action={alertState} />}
             <Loader open={showLoader} />
         </Box>

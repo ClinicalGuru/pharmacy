@@ -99,7 +99,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) 
                 field.onChange(newValue);
 
                 // If the clear action is triggered, set the field value to null
-                if (actionMeta.action === 'clear') {
+                if (actionMeta.action === 'Clear') {
                   field.onChange(null);
                 }
 
@@ -139,7 +139,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) 
                 field.onChange(newValue);
 
                 // If the clear action is triggered, set the field value to null
-                if (actionMeta.action === 'clear') {
+                if (actionMeta.action === 'Clear') {
                   field.onChange(null);
                 }
 

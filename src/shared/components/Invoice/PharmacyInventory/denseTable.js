@@ -36,6 +36,7 @@ export const InventoryTable = ({ headArray, gridArray }) => {
                 </td>
                 {/* <td>{row?.invoiceNumber}</td> */}
                 <td>{row?.batchNo}</td>
+                <td>{row?.hsnCode}</td>
                 <td>{row?.expiry}</td>
                 <td>{row?.mrpPerStrip}</td>
                 <td>{row?.discount}</td>

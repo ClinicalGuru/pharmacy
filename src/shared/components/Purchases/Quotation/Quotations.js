@@ -22,7 +22,7 @@ export const Quotations = () => {
     const [showLoader, setShowLoader] = useState(false);
     const [vendorDetails, setVendorDetails] = useState([]);
     const [rows, setRows] = useState([]);
-    const [reqisition, setRequisition] = useState();
+    const [reqisition, setRequisition] = useState([]);
     const [notificationMsg, setNotificationMsg] = useState({
         message: '',
         severity: ''
@@ -85,10 +85,10 @@ export const Quotations = () => {
             Cell: ({ row, column, cell }) =>
                 row.original.isEditing ? (
                     <>
-                    <div style={{display:'grid', gridTemplateColumns:'50% 50%'}}>
-                        <div><DoneOutlinedIcon style={{ color: 'blue' }} onClick={() => handleButtonClick("save", row.original)} sx={{ marginRight: '10px' }} /></div>
-                        <div><CancelOutlinedIcon style={{ color: 'red' }} onClick={() => handleButtonClick("cancel", row.original)} /></div>
-                    </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '50% 50%' }}>
+                            <div><DoneOutlinedIcon style={{ color: 'blue' }} onClick={() => handleButtonClick("save", row.original)} sx={{ marginRight: '10px' }} /></div>
+                            <div><CancelOutlinedIcon style={{ color: 'red' }} onClick={() => handleButtonClick("cancel", row.original)} /></div>
+                        </div>
                         {/* <DoneOutlinedIcon style={{ color: 'blue' }} onClick={() => handleButtonClick("save", row.original)} sx={{ marginRight: '10px' }} />
                         <CancelOutlinedIcon style={{ color: 'red' }} onClick={() => handleButtonClick("cancel", row.original)} /> */}
                     </>
@@ -145,10 +145,10 @@ export const Quotations = () => {
             {
                 title: (
                     <span>
-                    {FORM_LABELS.DOSE}
-                    <span style={{color:'red'}}>*</span>
+                        {FORM_LABELS.DOSE}
+                        <span style={{ color: 'red' }}>*</span>
                     </span>
-                    ),
+                ),
                 type: 'text',
                 name: 'dose',
                 validationProps: {
@@ -161,10 +161,10 @@ export const Quotations = () => {
             {
                 title: (
                     <span>
-                    {FORM_LABELS.FORM}
-                    <span style={{color:'red'}}>*</span>
+                        {FORM_LABELS.FORM}
+                        <span style={{ color: 'red' }}>*</span>
                     </span>
-                    ),
+                ),
                 type: 'select',
                 name: 'form',
                 options: [
@@ -207,10 +207,10 @@ export const Quotations = () => {
             {
                 title: (
                     <span>
-                    {FORM_LABELS.QUANTITY}
-                    <span style={{color:'red'}}>*</span>
+                        {FORM_LABELS.QUANTITY}
+                        <span style={{ color: 'red' }}>*</span>
                     </span>
-                    ),
+                ),
                 type: 'number',
                 name: 'quantity',
                 validationProps: {
@@ -223,10 +223,10 @@ export const Quotations = () => {
             {
                 title: (
                     <span>
-                    {FORM_LABELS.MRP}
-                    <span style={{color:'red'}}>*</span>
+                        {FORM_LABELS.MRP}
+                        <span style={{ color: 'red' }}>*</span>
                     </span>
-                    ),
+                ),
                 type: 'number',
                 name: 'mrp',
                 validationProps: {
@@ -239,10 +239,10 @@ export const Quotations = () => {
             {
                 title: (
                     <span>
-                    {FORM_LABELS.PTR}
-                    <span style={{color:'red'}}>*</span>
+                        {FORM_LABELS.PTR}
+                        <span style={{ color: 'red' }}>*</span>
                     </span>
-                    ),
+                ),
                 type: 'number',
                 name: 'ptr',
                 validationProps: {
@@ -255,10 +255,10 @@ export const Quotations = () => {
             {
                 title: (
                     <span>
-                    {FORM_LABELS.PTS}
-                    <span style={{color:'red'}}>*</span>
+                        {FORM_LABELS.PTS}
+                        <span style={{ color: 'red' }}>*</span>
                     </span>
-                    ),
+                ),
                 type: 'number',
                 name: 'pts',
                 validationProps: {
@@ -371,7 +371,7 @@ export const Quotations = () => {
             setNotificationMsg(
                 {
                     severity: 'error',
-                    message: 'Please all the fields before saving'
+                    message: 'Please fill all the mandatory fields before saving.'
                 }
             )
             return
@@ -390,6 +390,13 @@ export const Quotations = () => {
             await PurchaseService.saveQuotation(data).then((res) => {
                 console.log(res, 'Quotation data saved successfully');
                 PurchaseService.updatingInventory(selectedRequisition);
+                setNotification(true)
+                setNotificationMsg(
+                    {
+                        severity: 'success',
+                        message: 'Quotation saved successfully'
+                    }
+                )
                 setShowLoader(false);
                 alertState();
                 setRows([]);

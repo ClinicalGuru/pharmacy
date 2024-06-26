@@ -115,8 +115,8 @@ export const AddVendor = ({ showModal, action }) => {
                     </DialogContent>
                     <DialogActions>
                         <Box sx={{ display: 'flex' }}>
-                            < CButton type="submit" variant='contained' style={{ marginRight: '10px' }} text="+ Add" />
-                            < CButton type="reset" variant='outlined' text="Close" />
+                            <CButton type="submit" variant='contained' style={{ marginRight: '10px' }} text="+ Add" />
+                            <CButton type="reset" variant='outlined' text="Close" />
                             {/* <input type="submit" value={`+ Add`} style={{ marginRight: '15px' }} /> */}
                         </Box>
                     </DialogActions>
