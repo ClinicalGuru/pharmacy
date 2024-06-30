@@ -11,6 +11,7 @@ import { Notification } from "../../Notification/index";
 import { Loader } from "../../Loader/index";
 import { v4 as uuidv4 } from 'uuid';
 import { List } from "./List";
+import { StyledSpan } from '../../../../globalStyles';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
@@ -124,7 +125,12 @@ export const Quotations = () => {
         isBlockLevelBtns: false,
         fields: [
             {
-                title: FORM_LABELS.PHARMACOLOGICAL_NAME,
+                title: (
+                    <span>
+                        {FORM_LABELS.PHARMACOLOGICAL_NAME}
+                        <StyledSpan> *</StyledSpan>
+                    </span>
+                ),
                 type: 'autoComplete',
                 name: 'pharmacologicalName',
                 validationProps: {
@@ -134,7 +140,10 @@ export const Quotations = () => {
             },
             {
 
-                title: FORM_LABELS.BRAND_NAME,
+                title: <span>
+                    {FORM_LABELS.BRAND_NAME}
+                    <StyledSpan> *</StyledSpan>
+                </span>,
                 type: 'autoComplete',
                 name: 'brandName',
                 validationProps: {
@@ -152,7 +161,7 @@ export const Quotations = () => {
                 type: 'text',
                 name: 'dose',
                 validationProps: {
-                    required: ` ${FORM_LABELS.DOSE} is required`
+                    required: true,
                 },
                 style: {
                     width: "60px"
@@ -162,7 +171,7 @@ export const Quotations = () => {
                 title: (
                     <span>
                         {FORM_LABELS.FORM}
-                        <span style={{ color: 'red' }}>*</span>
+                        <StyledSpan> *</StyledSpan>
                     </span>
                 ),
                 type: 'select',
@@ -198,7 +207,7 @@ export const Quotations = () => {
                     },
                 ],
                 validationProps: {
-                    required: `${FORM_LABELS.FORM} is required`
+                    required: true,
                 },
                 style: {
                     width: "80px"
@@ -208,29 +217,29 @@ export const Quotations = () => {
                 title: (
                     <span>
                         {FORM_LABELS.QUANTITY}
-                        <span style={{ color: 'red' }}>*</span>
+                        <StyledSpan> *</StyledSpan>
                     </span>
                 ),
                 type: 'number',
                 name: 'quantity',
                 validationProps: {
-                    required: `${FORM_LABELS.QUANTITY} is required`
+                    required: true,
                 },
                 style: {
                     width: "100px"
                 }
             },
             {
-                title: (
+                title:
                     <span>
                         {FORM_LABELS.MRP}
-                        <span style={{ color: 'red' }}>*</span>
+                        <StyledSpan> *</StyledSpan>
                     </span>
-                ),
+                ,
                 type: 'number',
                 name: 'mrp',
                 validationProps: {
-                    required: ` ${FORM_LABELS.MRP} is required`
+                    required: true,
                 },
                 style: {
                     width: "60px"
@@ -240,13 +249,13 @@ export const Quotations = () => {
                 title: (
                     <span>
                         {FORM_LABELS.PTR}
-                        <span style={{ color: 'red' }}>*</span>
+                        <StyledSpan> *</StyledSpan>
                     </span>
                 ),
                 type: 'number',
                 name: 'ptr',
                 validationProps: {
-                    required: `${FORM_LABELS.PTR} is required`
+                    required: true,
                 },
                 style: {
                     width: "60px"
@@ -256,34 +265,34 @@ export const Quotations = () => {
                 title: (
                     <span>
                         {FORM_LABELS.PTS}
-                        <span style={{ color: 'red' }}>*</span>
+                        <StyledSpan> *</StyledSpan>
                     </span>
                 ),
                 type: 'number',
                 name: 'pts',
                 validationProps: {
-                    required: `${FORM_LABELS.PTS} is required`
+                    required: true,
                 },
                 style: {
                     width: "60px"
                 }
             },
             {
-                title: FORM_LABELS.GST,
+                title: <span>{FORM_LABELS.GST}<StyledSpan> *</StyledSpan></span>,
                 type: 'select',
                 name: 'gst',
                 validationProps: {
-                    required: `${FORM_LABELS.GST} is required`
+                    required: true,
                 },
                 style: {
                     width: "60px"
                 },
                 options: [
-                    { name: '0%', value: '0%' },
-                    { name: '5%', value: '5%' },
-                    { name: '12%', value: '12%' },
-                    { name: '18%', value: '18%' },
-                    { name: '28%', value: '28%' }
+                    { name: '0%', value: '0' },
+                    { name: '5%', value: '5' },
+                    { name: '12%', value: '12' },
+                    { name: '18%', value: '18' },
+                    { name: '28%', value: '28' }
                 ]
             },
             {
@@ -291,7 +300,7 @@ export const Quotations = () => {
                 type: 'number',
                 name: 'discount',
                 validationProps: {
-                    required: `${FORM_LABELS.DISCOUNT} is required`
+                    required: true,
                 },
                 style: {
                     width: "60px"
@@ -307,15 +316,16 @@ export const Quotations = () => {
             }
         ],
         buttonStyles: {
+            height: '70px',
             display: 'flex',
-            justifyContent: 'end',
-            width: '100%'
+            alignItems: 'center',
         }
     };
     const medicine_details_style = {
+        height: "80px",
         display: "flex",
-        flexWrap: 'wrap',
-        gap: "0px 25px",
+        // flexWrap: 'wrap',
+        gap: "0px 17px",
         justifyContent: 'space-between'
     };
     const btn_styles = { display: "flex", justifyContent: "end" };
