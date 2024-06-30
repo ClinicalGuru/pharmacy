@@ -27,7 +27,7 @@ import { VendorList } from './shared/components/Reports/PurchaseReports/VendorLi
 import ErrorBoundary from "./shared/components/ErrorBoundary";
 const Router = createBrowserRouter([
     {
-        path: "//:id",
+        path: "/:id",
         element: <SignIn />
     },
     {

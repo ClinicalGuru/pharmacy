@@ -1,7 +1,7 @@
 export const getUndefinded = (data) => {
     let undefindedValues = [];
     for (const key in data) {
-        if (data[key] === undefined || data[key] === 'undefined') undefindedValues.push(key)
+        if (data[key] === undefined || data[key] === 'undefined' || data[key] === '') undefindedValues.push(key)
     }
     return undefindedValues;
 }

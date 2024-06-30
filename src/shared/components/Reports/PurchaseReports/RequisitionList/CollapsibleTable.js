@@ -15,34 +15,38 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { PdfFile } from '../../../Pdf';
 
+const pdfColumns = [
+  {
+    'Header': 'Pharmacological Name',
+    'accessor': 'pharmacologicalName',
 
+  },
+  {
+    'Header': 'Brand Name',
+    'accessor': 'brandName',
 
+  },
+  {
+    'Header': 'Dose',
+    'accessor': 'dose',
 
-// Row.propTypes = {
-//   row: PropTypes.shape({
-//     calories: PropTypes.number.isRequired,
-//     carbs: PropTypes.number.isRequired,
-//     fat: PropTypes.number.isRequired,
-//     history: PropTypes.arrayOf(
-//       PropTypes.shape({
-//         amount: PropTypes.number.isRequired,
-//         customerId: PropTypes.string.isRequired,
-//         date: PropTypes.string.isRequired,
-//       })
-//     ).isRequired,
-//     name: PropTypes.string.isRequired,
-//     price: PropTypes.number.isRequired,
-//     protein: PropTypes.number.isRequired,
-//   }).isRequired,
-// };
+  },
+  {
+    'Header': 'Form',
+    'accessor': 'form',
 
-
+  },
+  {
+    'Header': 'Qantity / Strips',
+    'accessor': 'quantity',
+  },
+]
 
 export const CollapsibleTable = ({ data, vendorData }) => {
   const Row = (props) => {
     const { row } = props;
     const [open, setOpen] = useState(false);
-  
+
     return (
       <Fragment>
         <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
@@ -63,7 +67,7 @@ export const CollapsibleTable = ({ data, vendorData }) => {
           <TableCell align="right">{row?.medicines?.length}</TableCell>
           <TableCell>
             <Typography sx={{ marginLeft: '30px', display: 'flex', alignItems: 'center' }}>
-              <a href='#'>{row && <PdfFile vendorDetails={vendorData} data={row?.medicines} pdfTitle="PURCHASE REQUISITION" />}</a> &nbsp;&nbsp;&nbsp;
+              <a href='#'>{row && <PdfFile columns={pdfColumns} vendorDetails={vendorData} data={row?.medicines} pdfTitle="PURCHASE REQUISITION" />}</a> &nbsp;&nbsp;&nbsp;
               {/* <span><a href='#' onClick={() => openDefaultMailClient(item)}>Email</a></span> */}
             </Typography>
           </TableCell>
@@ -97,7 +101,7 @@ export const CollapsibleTable = ({ data, vendorData }) => {
                         <TableCell align="right">{medicine?.dose}</TableCell>
                         <TableCell align="right">{medicine?.form}</TableCell>
                         <TableCell align="right">{medicine?.quantity}</TableCell>
-  
+
                       </TableRow>
                     ))}
                   </TableBody>
