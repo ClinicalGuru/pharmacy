@@ -4,6 +4,7 @@ import PurchaseService from "../../../services/Purchase.service";
 import Select from 'react-select';
 import { RefreshVendorsDetailsContext } from "../../../../context/RefreshVendorDetailsContext";
 import { Loader } from "../../Loader/index";
+import { StyledSpan } from "../../../../globalStyles";
 
 export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
     const { refreshVDetails } = useContext(RefreshVendorsDetailsContext);
@@ -56,7 +57,7 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
         <form>
             <div style={{ display: 'flex' }}>
                 <span>
-                    <label>Select Vendor</label>
+                    <label>Select Vendor <StyledSpan> *</StyledSpan></label>
                     <Controller
                         name="vendorId"
                         control={control}
@@ -88,7 +89,7 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
                     </small>
                 </span>
                 <span>
-                    <label>Date</label>
+                    <label>Date <StyledSpan> *</StyledSpan></label>
                     <Controller
                         name="date"
                         control={control}

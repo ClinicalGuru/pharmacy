@@ -153,7 +153,9 @@ export const Sales = () => {
                 }
             },
             {
-                title: 'Phone',
+                title: <span>Phone
+                    <StyledSpan> *</StyledSpan>
+                </span>,
                 type: 'number',
                 name: 'phone',
                 validationProps: {
