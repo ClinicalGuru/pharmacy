@@ -49,13 +49,8 @@ export const Sales = () => {
     const [inventory, readInventory] = useState();
     const columns = [
         {
-            'Header': 'Pharmacological Name',
-            'accessor': 'pharmacologicalName',
-            editEnable: true,
-        },
-        {
-            'Header': 'Brand Name',
-            'accessor': 'brandName',
+            'Header': 'Medicine Name',
+            'accessor': 'medicineName',
             editEnable: true,
         },
         {
@@ -220,6 +215,11 @@ export const Sales = () => {
         const { pharmacologicalName, brandName, batchNo, quantity } = formData;
         const transformedObject = {
             ...formData,
+            medicineName: (
+                <span>
+                    {brandName?.label} <br/> <i style={{fontSize:"small"}}>{`${pharmacologicalName?.label}`}</i>
+                </span>
+            ),
             pharmacologicalName: pharmacologicalName?.label,
             brandName: brandName?.label,
             medicineId: brandName?.value
@@ -356,6 +356,14 @@ export const Sales = () => {
             setNotification(true);
             setNotificationMsg({
                 message: `Please fill Patient name`,
+                severity: "error"
+            });
+            return;
+        };
+        if (patientDetails?.phone === '') {
+            setNotification(true);
+            setNotificationMsg({
+                message: `Please fill Patient phone number`,
                 severity: "error"
             });
             return;

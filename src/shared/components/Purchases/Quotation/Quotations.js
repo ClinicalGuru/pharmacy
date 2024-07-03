@@ -17,6 +17,7 @@ import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import { hasAllRequiredKeysInList } from '../../../../utils/helper'
 import useLocalStorage from "../../../../hooks/UseLocalstorage";
+import { constant } from 'lodash';
 
 export const Quotations = () => {
     const [pharmacyId] = useLocalStorage('pharmacyId');
@@ -33,6 +34,7 @@ export const Quotations = () => {
     const [requesitionId, setRequesitionId] = useState('');
     const [pharmacologicalNames, setPharmacologicalNames] = useState([]);
     const [brandNames, setBrandNames] = useState([]);
+    const [vendorName, setVendorName] = useState('');
     const columns = [
         {
             'Header': 'Pharmacological Name',
@@ -338,7 +340,7 @@ export const Quotations = () => {
             brandName: brandName?.label,
             medicineId: brandName?.value,
         };
-        const updatedRows = [...rows, transformedObject]
+        const updatedRows = [...rows, transformedObject];
         setRows(updatedRows);
         e.target.reset();
     };
@@ -354,6 +356,7 @@ export const Quotations = () => {
             let data = await PurchaseService.getRequesitionData(vendorId);
             console.log(data, 'quotation')
             setRequisition(data);
+            setVendorName(data?.[0]?.vendorName); 
             // setRows([...data]);
             setShowLoader(false);
             setModalOpen(true);
@@ -490,7 +493,7 @@ export const Quotations = () => {
 
             </div>
             <Loader open={showLoader} />
-            {<List showModal={modalOpen} requisitions={reqisition} action={() => setModalOpen(!modalOpen)} getRequisitionId={getRequisitionId} />}
+            {<List showModal={modalOpen} requisitions={reqisition} action={() => setModalOpen(!modalOpen)} getRequisitionId={getRequisitionId} vendorName={vendorName} />}
             {notification && <Notification notificationState={notification} severity={notificationMsg.severity} message={notificationMsg.message} action={alertState} />}
         </Box>
     )
