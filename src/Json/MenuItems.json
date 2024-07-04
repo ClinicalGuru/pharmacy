@@ -14,8 +14,8 @@
                 "id": 15
             },
             {
-                "name": "MasterList",
-                "url": "purchase/masterList",
+                "name": "Pricing Order",
+                "url": "purchase/pricingOrder",
                 "id": 16
             },
             {

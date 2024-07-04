@@ -13,8 +13,8 @@ export const menuItems = [
                 url: 'purchase/quotation',
             },
             {
-                title: 'MasterList',
-                url: 'purchase/masterList',
+                title: 'Pricing Order',
+                url: 'purchase/pricingOrder',
             },
             {
                 title: 'Purchase Order',
