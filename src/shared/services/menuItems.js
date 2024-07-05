@@ -126,6 +126,12 @@ export const menuItems = [
             {
                 title: 'Sales report',
                 url: 'reports/sales',
+                submenu: [
+                    {
+                        title: 'Sales Return',
+                        url: 'reports/sales/salesReturn',
+                    },
+                ]
             },
             {
                 title: 'Important report',

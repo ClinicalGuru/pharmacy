@@ -8,8 +8,10 @@ import Dialog from '@mui/material/Dialog';
 import { Box } from "@mui/material";
 import { CButton } from "../Button/index"
 import { Notification } from '../Notification/index';
+import { useNavigate } from 'react-router-dom'; 
 
 export const SaleReturnModal = ({ showModal, action, data, updatedQuantity }) => {
+    const navigate = useNavigate();
     const {
         billNumber,
         medicineDetails
@@ -69,6 +71,7 @@ export const SaleReturnModal = ({ showModal, action, data, updatedQuantity }) =>
     const handleConfirm = () => {
         action(!showModal);
         updatedQuantity(returnQuantities);
+        navigate('/landing/reports/sales/salesReturn', { state: { returnQuantities, totalReturnAmount, billNumber, medicineDetails } });
     }
     return (
         <Box>

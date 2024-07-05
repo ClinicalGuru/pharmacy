@@ -116,12 +116,19 @@
             {
                 "name": "Sales report",
                 "url": "reports/sales",
-                "id": 48
+                "id": 48,
+                "children": [
+                    {
+                        "name": "Sales Return",
+                        "url": "reports/sales/salesReturn",
+                        "id": 49
+                    }
+                ]
             },
             {
                 "name": "Important report",
                 "url": "reports/important",
-                "id": 49
+                "id": 50
             }
         ]
     }
