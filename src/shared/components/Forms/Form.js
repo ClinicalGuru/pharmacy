@@ -162,6 +162,7 @@ export const Form = ({
                                                 width: 200,
                                             })
                                         }}
+                                        formatCreateLabel={(inputValue) => `Add "${inputValue}"`}
                                     />
                                 )}
                             />

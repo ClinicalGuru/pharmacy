@@ -37,7 +37,7 @@ export const AllBills = () => {
         from: new Date(),
         to: new Date()
     });
-    
+
     const fetchBillsForDate = async () => {
         setShowLoader(true);
         try {
@@ -121,7 +121,7 @@ export const AllBills = () => {
             name: "",
             phone: ""
         }
-        return (<PdfFile data={bill?.medicineDetails}  vendorDetails={patientDetails} />)
+        return (<PdfFile data={bill?.medicineDetails} vendorDetails={patientDetails} />)
     }
     return (
         <Box sx={{ padding: 2 }}>
@@ -155,7 +155,7 @@ export const AllBills = () => {
                             <TableRow>
                                 <StyledTableCell>S No</StyledTableCell>
                                 <StyledTableCell align="center">Bill No</StyledTableCell>
-                                {/* <StyledTableCell align="center">Customer Name</StyledTableCell> */}
+                                <StyledTableCell align="center">Customer Name</StyledTableCell>
                                 <StyledTableCell align="center">Total Amount</StyledTableCell>
                                 <StyledTableCell align="center">Paid Amount</StyledTableCell>
                                 <StyledTableCell align="center">Balance</StyledTableCell>
@@ -169,7 +169,7 @@ export const AllBills = () => {
                                 <StyledTableRow key={index}>
                                     <StyledTableCell>{index + 1}</StyledTableCell>
                                     <StyledTableCell align="center">{row?.billNumber}</StyledTableCell>
-                                    {/* <StyledTableCell align="center">{row.name}</StyledTableCell> */}
+                                    <StyledTableCell align="center">{row.name}</StyledTableCell>
                                     <StyledTableCell align="center">{row?.billAmount}</StyledTableCell>
                                     <StyledTableCell align="center">{row?.paidAmount}</StyledTableCell>
                                     <StyledTableCell align="center">{row?.balance}</StyledTableCell>

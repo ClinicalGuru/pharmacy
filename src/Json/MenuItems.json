@@ -14,8 +14,8 @@
                 "id": 15
             },
             {
-                "name": "Pricing Order",
-                "url": "purchase/pricingOrder",
+                "name": "Best Price Order",
+                "url": "purchase/bestPriceOrder",
                 "id": 16
             },
             {

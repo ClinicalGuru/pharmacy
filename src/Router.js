@@ -79,7 +79,7 @@ const Router = createBrowserRouter([
                         element: <ErrorBoundary><Payments /></ErrorBoundary>
                     },
                     {
-                        path: "pricingOrder",
+                        path: "bestPriceOrder",
                         element:<ErrorBoundary><MasterList /></ErrorBoundary> 
                     }
                 ]

@@ -27,6 +27,20 @@ export const RequisitionList = () => {
         setExpanded(isExpanded ? panel : false);
     };
 
+    const fetchRequisitionDataByDate = async (date) => {
+        setShowLoader(true);
+        try {
+            const data = await PurchaseService.getRequisitionDataByDate(date);
+            setSelectVendorAlert(false);
+            processRequisitionData(data);
+        } catch (err) {
+            console.error('Error getting requisition data', err);
+            setNoDataAvailable(false);
+        } finally {
+            setShowLoader(false);
+        }
+    };
+
     const fetchRequisitionData = async (vendorId, date) => {
         setShowLoader(true);
         try {
@@ -52,6 +66,16 @@ export const RequisitionList = () => {
         }
     };
 
+    const processRequisitionData = (data) => {
+        const updatedData = data?.map(item => ({
+            ...item,
+            medicines: item.medicines.map(({ medicineId, ...rest }) => rest)
+        }));
+        
+        setRows(updatedData || []);
+        setNoDataAvailable(updatedData?.length === 0);
+    };
+
     const handleVendorSelection = (vendorDetails) => {
         setVendorDetails({ vendorId: vendorDetails.value, date: '' });
         fetchRequisitionData(vendorDetails.value);
@@ -60,6 +84,7 @@ export const RequisitionList = () => {
     const handleDateSelection = (date) => {
         setVendorDetails(prevDetails => ({ ...prevDetails, date }));
         fetchRequisitionData(vendorDetails.vendorId, date);
+        fetchRequisitionDataByDate(date);
     };
 
     useEffect(() => {

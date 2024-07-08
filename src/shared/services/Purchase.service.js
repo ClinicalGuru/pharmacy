@@ -76,6 +76,13 @@ class PurchaseService {
         return filteredData;
     }
 
+    getRequisitionDataByDate = async (date) => {
+        const queryRef = query(requisitionCollectionRef, where("date", "==", date));
+        const querySnapshot = await getDocs(queryRef);
+        const filteredData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+        return filteredData;
+    };
+
     updatingInventory = async (data) => {
         const docRef = doc(requisitionCollectionRef, data.id);
         return await updateDoc(docRef, data);
