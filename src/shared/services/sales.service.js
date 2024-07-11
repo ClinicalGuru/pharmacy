@@ -30,6 +30,11 @@ class SalesService {
     addReturnBill = (returnBill) => {
         return addDoc(returnBillsRef, returnBill);
     }
+    getReturnBills = async () => {
+        const q = query(returnBillsRef);
+        const querySnapshot = await getDocs(q);
+        return querySnapshot.docs.map(doc => ({ returnBillDocId: doc.id, ...doc.data() }));
+    }
 
     getBillsByTimestamp = async (startDate, endDate) => {
         const q = query(pharmacyBillingRef, where('billDate', '>=', startDate), where('billDate', '<=', endDate));

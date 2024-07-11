@@ -215,14 +215,6 @@ export const InventoryReport = () => {
                     btn_styles={btn_styles}
                     
                 />
-
-                < CButton
-                    type="input"
-                    variant='contained'
-                    style={{marginRight:'370px'}}
-                    buttonHandler={() => setModalOpen(true)}
-                    text="Go"
-                 />
                 
                 <CButton 
                 type="button"

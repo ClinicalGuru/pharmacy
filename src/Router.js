@@ -25,6 +25,7 @@ import { InvoiceList } from './shared/components/Reports/PurchaseReports/Invoice
 import { PaymentsList } from './shared/components/Reports/PurchaseReports/PaymentsList';
 import { VendorList } from './shared/components/Reports/PurchaseReports/VendorList';
 import ErrorBoundary from "./shared/components/ErrorBoundary";
+import { SalesReturn } from './shared/components/Reports/SalesReports/SalesReturn';
 const Router = createBrowserRouter([
     {
         path: "/:id",
@@ -144,7 +145,13 @@ const Router = createBrowserRouter([
                     },
                     {
                         path: "sales",
-                        element:<ErrorBoundary><SalesReports /></ErrorBoundary> 
+                        element:"",
+                        children: [
+                            {
+                                path: "salesReturn",
+                                element:<ErrorBoundary><SalesReturn /></ErrorBoundary> ,
+                            },
+                        ]
                     },
                     {
                         path: "Important",
