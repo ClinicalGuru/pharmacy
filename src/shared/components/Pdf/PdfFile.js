@@ -4,8 +4,9 @@ import 'jspdf-autotable';
 import moment from 'moment'
 import ListItemText from '@mui/material/ListItemText';
 
-export const PdfFile = ({ data, vendorDetails, pdfTitle, columns }) => {
-  const { address = '', email ='', gst = '', name = '', phone = '' } = vendorDetails || {};
+export const PdfFile = ({ data = [], vendorDetails = {}, pdfTitle = "", columns = [] }) => {
+  console.log(data, 'pdf content');
+  const { address = '', email = '', gst = '', name = '', phone = '' } = vendorDetails || {};
   const time = new Date().getTime()
   const handleDownload = () => {
     const doc = new jsPDF();

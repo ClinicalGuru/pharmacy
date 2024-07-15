@@ -16,7 +16,8 @@ import SalesService from '../../services/sales.service';
 import InventoryService from '../../services/inventory.service';
 import Grid from '@mui/material/Grid';
 import useLocalStorage from "../../../hooks/UseLocalstorage";
-import { StyledSpan } from "../../../globalStyles"
+import { StyledSpan } from "../../../globalStyles";
+import { PdfFile } from "../Pdf/index";
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -39,6 +40,8 @@ export const Sales = () => {
     const [editingRow, setEditngRow] = useState({});
     const [editingIndex, setEditngIndex] = useState(-1);
     const [showPrint, SetShowPrint] = useState(false);
+    const [pdf, setPdf] = useState(false);
+    const [pdfGenerated, setPdfGenerated] = useState(false); // New state to track PDF generation
     const [resetPatientForm, setResetPatientForm] = useState(false);
     const [resetSalesForm, setResetSalesForm] = useState(false);
     const [resetBillingForm, setResetBillingForm] = useState(false);
@@ -47,6 +50,42 @@ export const Sales = () => {
         severity: ''
     });
     const [inventory, readInventory] = useState();
+
+    const pdfTitle = "Bill Summary";
+    const pdfTableHeader = [
+        {
+            'Header': 'Medicine Name',
+            'accessor': 'medicineName',
+        },
+        {
+            'Header': 'Batch No',
+            'accessor': 'batchNo',
+        },
+        {
+            'Header': 'HSN Code',
+            'accessor': 'hsnCode',
+        },
+        {
+            'Header': 'Price',
+            'accessor': 'pricePerUnit',
+        },
+        {
+            'Header': 'Qty',
+            'accessor': 'quantity',
+        },
+        {
+            'Header': 'Total',
+            'accessor': 'total',
+        },
+        {
+            'Header': 'Discount %',
+            'accessor': 'discount',
+        },
+        {
+            'Header': 'Amount',
+            'accessor': 'amount',
+        },
+    ]
     const columns = [
         {
             'Header': 'Medicine Name',
@@ -215,11 +254,7 @@ export const Sales = () => {
         const { pharmacologicalName, brandName, batchNo, quantity } = formData;
         const transformedObject = {
             ...formData,
-            medicineName: (
-                <span>
-                    {brandName?.label} <br/> <i style={{fontSize:"small"}}>{`${pharmacologicalName?.label}`}</i>
-                </span>
-            ),
+            medicineName: brandName?.label,
             pharmacologicalName: pharmacologicalName?.label,
             brandName: brandName?.label,
             medicineId: brandName?.value
@@ -275,9 +310,6 @@ export const Sales = () => {
             try {
                 let data = await InventoryService.getInventory();
                 const result = data?.docs?.map((doc) => ({ ...doc?.data(), id: doc?.id }));
-                // result.forEach(item => {
-                //     item['unitsInStock'] = (item?.quantity * (Number(item?.noOfStrips) + Number(item?.freeStrips)));
-                // });
                 console.log(result, 'inventory')
                 readInventory(result);
             } catch (err) {
@@ -305,6 +337,8 @@ export const Sales = () => {
             };
             await SalesService.addPharmacyBilling(billDetails).then(() => {
                 console.log('success saving');
+                // setPdf(true);
+                // setPdfGenerated(true); // Set PDF generated to true
                 quantityUpdate();
             });
         }
@@ -322,7 +356,6 @@ export const Sales = () => {
             inventory.push({ inventoryId: doc.id, ...doc.data() });
             console.log(medicineIds, 'medIds', "rows =>", rows, "inv =>", inventory);
             const updatedInventoryDetails = inventory.map((inv) => {
-                debugger
                 const matchMed = rows.find((row) => row?.medicineId === inv?.medicineId);
                 if (matchMed) {
                     const updatedQuantity = Number(inv?.unitsInStock) - Number(matchMed?.quantity);
@@ -344,6 +377,7 @@ export const Sales = () => {
         await InventoryService.updatingInventory(data).then(() => {
             console.log("Inventory updated successfully");
             setRestForm(true);
+            setPdf(true);
             SetShowPrint(true);
             setRows([]);
             setShowLoader(false);
@@ -388,6 +422,10 @@ export const Sales = () => {
         setRows(updatedRows);
         setPrintData(updatedRows);
     }
+
+    useEffect(() => {
+
+    })
 
     return (
         <Box sx={{ flexGrow: 1, padding: '1rem' }}>
@@ -441,6 +479,7 @@ export const Sales = () => {
             <Loader open={showLoader} />
             {notification && <Notification severity={notificationMsg?.severity} message={notificationMsg?.message} action={alertState} />}
             {showPrint && <PrintBill billDetails={billingDetails} medicineDetails={printData} patientDetails={patientDetails} />}
+            {pdf && <PdfFile data={rows} vendorDetails={patientDetails} pdfTitle={pdfTitle} columns={pdfTableHeader} />}
         </Box>
     )
 }
