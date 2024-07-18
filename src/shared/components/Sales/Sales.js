@@ -423,7 +423,7 @@ export const Sales = () => {
                 </Grid>
                 <Grid item xs={3}>
                     <Box sx={{
-                        backgroundColor: '#eef0f3',
+                        backgroundColor: '#B4B4B4',
                         borderRadius: '4px',
                         padding: 2,
                         marginTop: '4px',

@@ -151,7 +151,7 @@ export const AllBills = () => {
             <Box sx={{ marginTop: 2 }}>
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 500 }} aria-label="customized table">
-                        <TableHead>
+                        <TableHead sx={{backgroundColor: '#B4B4B4'}}>
                             <TableRow>
                                 <StyledTableCell>S No</StyledTableCell>
                                 <StyledTableCell align="center">Bill No</StyledTableCell>

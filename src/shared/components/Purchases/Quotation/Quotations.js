@@ -356,7 +356,7 @@ export const Quotations = () => {
             let data = await PurchaseService.getRequesitionData(vendorId);
             console.log(data, 'quotation')
             setRequisition(data);
-            setVendorName(data?.[0]?.vendorName); 
+            setVendorName(data?.[0]?.vendorName);
             // setRows([...data]);
             setShowLoader(false);
             setModalOpen(true);
@@ -463,7 +463,8 @@ export const Quotations = () => {
                     backgroundColor: '#DEE1E6FF',
                     borderRadius: '4px',
                     padding: 1,
-                    marginTop: '15px'
+                    marginTop: '15px',
+                    backgroundColor: '#B4B4B4'
                 }}
             >
                 <Form
@@ -486,8 +487,13 @@ export const Quotations = () => {
             </Box>
             <div>
                 {rows.length > 0 && (
-                    <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '15px' }}>
-                        <Button variant="contained" onClick={onSaveQuotation}>Save</Button>
+                    <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '15px', }}>
+                        <Button sx={{
+                            backgroundColor: 'rgb(255, 185, 29)',
+                            '&:hover': {
+                                backgroundColor: 'rgb(255, 185, 29)',
+                            },
+                        }} variant="contained" onClick={onSaveQuotation}>Save</Button>
                     </Box>
                 )}
 

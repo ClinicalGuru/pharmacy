@@ -22,7 +22,7 @@ export const List = ({ showModal, action, requisitions, getRequisitionId, vendor
                 onClose={handleClose}
                 aria-labelledby="customized-dialog-title"
                 open={showModal}
-                maxWidth="lg" // Adjust the maximum width of the dialog
+                maxWidth="md" // Adjust the maximum width of the dialog
                 sx={{ '& .MuiDialog-paper': { width: '100%', maxHeight: 'none' } }} // Custom styles for the dialog paper
             >
                 <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">

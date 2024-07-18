@@ -233,7 +233,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) 
           type="number"
           step="0.001"
           readOnly
-          style={{ width: "60px" }}
+          style={{ width: "60px",  backgroundColor: 'white' }}
         />
         {errors['total'] && <span className='red-text'>{errors['total'][`message`]}</span>}
       </div>
@@ -248,7 +248,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) 
             }
           })}
           type="number"
-          style={{ width: "60px" }}
+          style={{ width: "60px", }}
         />
         {errors['discount'] && <span className='red-text'>{errors['discount'][`message`]}</span>}
       </div>
@@ -259,7 +259,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) 
           {...register("amount")}
           type="number"
           step="0.001"
-          style={{ width: "60px" }}
+          style={{ width: "60px",  backgroundColor: 'white' }}
         />
         {errors['amount'] && <span className='red-text'>{errors['amount'][`message`]}</span>}
       </div>

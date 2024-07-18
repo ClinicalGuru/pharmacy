@@ -299,6 +299,10 @@ export const PurchaseOrders = () => {
                                     ...provided,
                                     width: 300,
                                     marginRight: 50
+                                }),
+                                control: (provided) => ({
+                                    ...provided,
+                                    backgroundColor: '#B4B4B4' // Change this to your desired background color
                                 })
                             }}
                             defaultValue={selectedVendor}
