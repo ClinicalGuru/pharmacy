@@ -4,6 +4,7 @@ import Select from 'react-select';
 import { FormContainer } from './Sales.styles'
 import { FORM_LABELS } from "../../Constants/index";
 import { Notification } from '../Notification/index';
+import { StyledSpan } from "../../../globalStyles";
 import isEmpty from 'lodash/isEmpty';
 
 export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) => {
@@ -78,7 +79,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) 
   return (
     <FormContainer onSubmit={handleSubmit(onSubmit)}>
       <div>
-        <label>{FORM_LABELS.PHARMACOLOGICAL_NAME}</label>
+        <label>{FORM_LABELS.PHARMACOLOGICAL_NAME}<StyledSpan> *</StyledSpan></label>
         <Controller
           {...register("pharmacologicalName", {
             required: true,
@@ -115,11 +116,12 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) 
             />
           )}
         />
+        {errors['pharmalogicalName'] && <span className='red-text'>{errors['pharmalogicalName'][`message`]}</span>}
       </div>
-      {errors.pharmacologicalName && <p>{errors.pharmacologicalName.message}</p>}
+      
 
       <div>
-        <label>{FORM_LABELS.BRAND_NAME}</label>
+        <label>{FORM_LABELS.BRAND_NAME}<StyledSpan> *</StyledSpan></label>
         <Controller
           {...register("brandName", {
             required: true, pattern: {
@@ -156,11 +158,12 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) 
             />
           )}
         />
+        {errors['brandName'] && <span className='red-text'>{errors['brandName'][`message`]}</span>}
       </div>
 
-      {errors['brandName'] && <span className='red-text'>{errors['brandName'][`message`]}</span>}
+      
       <div>
-        <label>{FORM_LABELS.BATCH_NO} <span style={{color:'red'}}>*</span> </label>
+        <label>{FORM_LABELS.BATCH_NO} </label>
         <input
           {...register("batchNo", {
             required: true,
@@ -176,7 +179,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) 
 
 
       <div>
-        <label>{FORM_LABELS.HSN_CODE} <span style={{color:'red'}}>*</span> </label>
+        <label>{FORM_LABELS.HSN_CODE}</label>
         <input
           {...register("hsnCode", {
             required: true, pattern: {
@@ -185,13 +188,13 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) 
             }
           })}
           type="number"
-          style={{ width: "100px" }}
+          style={{ width: "80px" }}
         />
         {errors['hsnCode'] && <span className='red-text'>{errors['hsnCode'][`message`]}</span>}
       </div>
 
       <div>
-        <label>{FORM_LABELS.PRICE} <span style={{color:'red'}}>*</span> </label>
+        <label>{FORM_LABELS.PRICE}  </label>
         <input
           {...register("pricePerUnit", {
             required: true,
@@ -200,7 +203,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) 
               message: "Invalid price format"
             }
           })}
-          style={{ width: "60px" }}
+          style={{ width: "70px" }}
           type="number"
           step="0.01"
         />
@@ -209,7 +212,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) 
 
 
       <div>
-        <label>{FORM_LABELS.QUANTITY} <span style={{color:'red'}}>*</span> </label>
+        <label>{FORM_LABELS.QUANTITY} </label>
         <input
           {...register("quantity", {
             required: true, pattern: {
@@ -218,7 +221,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) 
             }
           })}
           type="number"
-          style={{ width: "85px" }}
+          style={{ width: "70px" }}
         />
         {errors['quantity'] && <span className='red-text'>{errors['quantity'][`message`]}</span>}
       </div>
@@ -230,7 +233,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) 
           type="number"
           step="0.001"
           readOnly
-          style={{ width: "60px" }}
+          style={{ width: "60px",  backgroundColor: 'white' }}
         />
         {errors['total'] && <span className='red-text'>{errors['total'][`message`]}</span>}
       </div>
@@ -245,7 +248,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) 
             }
           })}
           type="number"
-          style={{ width: "85px" }}
+          style={{ width: "60px", }}
         />
         {errors['discount'] && <span className='red-text'>{errors['discount'][`message`]}</span>}
       </div>
@@ -256,7 +259,7 @@ export const SalesForm = ({ inventory = [], onSubmitForm, data, resetTrigger }) 
           {...register("amount")}
           type="number"
           step="0.001"
-          style={{ width: "60px" }}
+          style={{ width: "60px",  backgroundColor: 'white' }}
         />
         {errors['amount'] && <span className='red-text'>{errors['amount'][`message`]}</span>}
       </div>

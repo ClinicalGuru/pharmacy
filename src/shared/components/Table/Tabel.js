@@ -20,9 +20,9 @@ export const Table = ({ headArray, gridArray, dataCallback = () => { }, deleteRo
         <thead>
 
           <tr>
-            <th>S.No</th>
+            <th style={{ backgroundColor: '#B4B4B4' }}>S.No</th>
             {
-              headArray && headArray.map(item => <th className="expand">{item?.Header || item?.head}</th>)
+              headArray && headArray.map(item => <th className="expand" style={{ backgroundColor: '#B4B4B4' }}>{item?.Header || item?.head}</th>)
             }
           </tr>
         </thead>

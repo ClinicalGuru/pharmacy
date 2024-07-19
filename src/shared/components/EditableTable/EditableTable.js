@@ -152,7 +152,7 @@ export const EditableTable = ({ columns, data, setData, handleButtonClick, hideC
                       padding: "0.5rem",
                       color: "black",
                       fontWeight: "bold",
-                      backgroundColor: "#DEE1E6FF",
+                      backgroundColor: "#B4B4B4",
                     }}
                   >
                     {column.render("Header")}

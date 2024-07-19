@@ -81,7 +81,7 @@ export const AddInvoice = () => {
         name: "invoiceNumber",
         // options: [{ value: "none", name: "None" }],
         validationProps: { required: "Invoice num is required" },
-        style: { width: "194px" },
+        style: { width: "194px", backgroundColor: '#B4B4B4' },
       },
       {
         title: (
@@ -93,9 +93,9 @@ export const AddInvoice = () => {
         name: "poNumber",
         // options: [{ value: "none", name: "None" }],
         validationProps: { required: "PO Num is required" },
-        style: { width: "194px" },
+        style: { width: "194px", backgroundColor: '#B4B4B4' },
       },
-      {
+     {
         title: (
           <span>
             Vendor Name<StyledSpan> *</StyledSpan>
@@ -105,7 +105,7 @@ export const AddInvoice = () => {
         name: "vendorId",
         options: [{ value: "none", name: "None" }, ...vendorDetails],
         validationProps: { required: "Vendor name is required" },
-        style: { width: "194px" },
+        style: { width: "194px", backgroundColor: "#B4B4B4" },
       },
       {
         title: (
@@ -200,9 +200,9 @@ export const AddInvoice = () => {
     }
     rows?.forEach(
       (item) =>
-        (item["stockEnteredDate"] = new Date(
-          invoiceDetails?.stockEnteredDate
-        ).valueOf())
+      (item["stockEnteredDate"] = new Date(
+        invoiceDetails?.stockEnteredDate
+      ).valueOf())
     );
     const data = { ...invoiceDetails, medicines: rows, pharmacyId: pharmacyId };
     setLoader(true);
@@ -314,7 +314,7 @@ export const AddInvoice = () => {
       invoiceDetails
     );
     console.log(rows, "rows");
-    if(rows?.length === 0) return ;
+    if (rows?.length === 0) return;
     let grossAmount = rows.reduce(
       (accumulator, item) => accumulator + Number(item?.mrpPerStrip),
       0
@@ -361,6 +361,7 @@ export const AddInvoice = () => {
       <Box
         sx={{
           display: "flex",
+          backgroundColor: '#B4B4B4'
         }}
       >
         <AddInvoiceForm
@@ -391,7 +392,12 @@ export const AddInvoice = () => {
       </Box>
       {rows.length > 0 && (
         <Box sx={{ display: "flex", justifyContent: "end", marginTop: "10px" }}>
-          <Button
+          <Button sx={{
+            backgroundColor: 'rgb(255, 185, 29)',
+            '&:hover': {
+              backgroundColor: 'rgb(255, 185, 29)',
+            },
+          }}
             disabled={editingIndex >= 0}
             variant="contained"
             onClick={saveInvoice}

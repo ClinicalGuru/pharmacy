@@ -67,8 +67,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    color: #181818;
-    font-size: 14px;
+    color: #ffffff;
+    font-size: 16px;
 }
 
 .header-nav-options:last-child .header-nav-ul {
@@ -200,7 +200,7 @@
 } */
 
 .active {
-    border-bottom: 4px solid #4a2495;
-    color: #4a2495 !important;
+    border-bottom: 4px solid #ffffff;
+    color: #ffffff !important;
     /* font-weight: 800; */
 }

@@ -11,11 +11,13 @@ import { Notification } from "../../Notification/index";
 import { Loader } from "../../Loader/index";
 import { v4 as uuidv4 } from 'uuid';
 import { List } from "./List";
+import { StyledSpan } from '../../../../globalStyles';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import { hasAllRequiredKeysInList } from '../../../../utils/helper'
 import useLocalStorage from "../../../../hooks/UseLocalstorage";
+import { constant } from 'lodash';
 
 export const Quotations = () => {
     const [pharmacyId] = useLocalStorage('pharmacyId');
@@ -32,6 +34,7 @@ export const Quotations = () => {
     const [requesitionId, setRequesitionId] = useState('');
     const [pharmacologicalNames, setPharmacologicalNames] = useState([]);
     const [brandNames, setBrandNames] = useState([]);
+    const [vendorName, setVendorName] = useState('');
     const columns = [
         {
             'Header': 'Pharmacological Name',
@@ -124,7 +127,12 @@ export const Quotations = () => {
         isBlockLevelBtns: false,
         fields: [
             {
-                title: FORM_LABELS.PHARMACOLOGICAL_NAME,
+                title: (
+                    <span>
+                        {FORM_LABELS.PHARMACOLOGICAL_NAME}
+                        <StyledSpan> *</StyledSpan>
+                    </span>
+                ),
                 type: 'autoComplete',
                 name: 'pharmacologicalName',
                 validationProps: {
@@ -134,7 +142,10 @@ export const Quotations = () => {
             },
             {
 
-                title: FORM_LABELS.BRAND_NAME,
+                title: <span>
+                    {FORM_LABELS.BRAND_NAME}
+                    <StyledSpan> *</StyledSpan>
+                </span>,
                 type: 'autoComplete',
                 name: 'brandName',
                 validationProps: {
@@ -152,7 +163,7 @@ export const Quotations = () => {
                 type: 'text',
                 name: 'dose',
                 validationProps: {
-                    required: ` ${FORM_LABELS.DOSE} is required`
+                    required: true,
                 },
                 style: {
                     width: "60px"
@@ -162,7 +173,7 @@ export const Quotations = () => {
                 title: (
                     <span>
                         {FORM_LABELS.FORM}
-                        <span style={{ color: 'red' }}>*</span>
+                        <StyledSpan> *</StyledSpan>
                     </span>
                 ),
                 type: 'select',
@@ -198,7 +209,7 @@ export const Quotations = () => {
                     },
                 ],
                 validationProps: {
-                    required: `${FORM_LABELS.FORM} is required`
+                    required: true,
                 },
                 style: {
                     width: "80px"
@@ -208,29 +219,29 @@ export const Quotations = () => {
                 title: (
                     <span>
                         {FORM_LABELS.QUANTITY}
-                        <span style={{ color: 'red' }}>*</span>
+                        <StyledSpan> *</StyledSpan>
                     </span>
                 ),
                 type: 'number',
                 name: 'quantity',
                 validationProps: {
-                    required: `${FORM_LABELS.QUANTITY} is required`
+                    required: true,
                 },
                 style: {
                     width: "100px"
                 }
             },
             {
-                title: (
+                title:
                     <span>
                         {FORM_LABELS.MRP}
-                        <span style={{ color: 'red' }}>*</span>
+                        <StyledSpan> *</StyledSpan>
                     </span>
-                ),
+                ,
                 type: 'number',
                 name: 'mrp',
                 validationProps: {
-                    required: ` ${FORM_LABELS.MRP} is required`
+                    required: true,
                 },
                 style: {
                     width: "60px"
@@ -240,13 +251,13 @@ export const Quotations = () => {
                 title: (
                     <span>
                         {FORM_LABELS.PTR}
-                        <span style={{ color: 'red' }}>*</span>
+                        <StyledSpan> *</StyledSpan>
                     </span>
                 ),
                 type: 'number',
                 name: 'ptr',
                 validationProps: {
-                    required: `${FORM_LABELS.PTR} is required`
+                    required: true,
                 },
                 style: {
                     width: "60px"
@@ -256,34 +267,34 @@ export const Quotations = () => {
                 title: (
                     <span>
                         {FORM_LABELS.PTS}
-                        <span style={{ color: 'red' }}>*</span>
+                        <StyledSpan> *</StyledSpan>
                     </span>
                 ),
                 type: 'number',
                 name: 'pts',
                 validationProps: {
-                    required: `${FORM_LABELS.PTS} is required`
+                    required: true,
                 },
                 style: {
                     width: "60px"
                 }
             },
             {
-                title: FORM_LABELS.GST,
+                title: <span>{FORM_LABELS.GST}<StyledSpan> *</StyledSpan></span>,
                 type: 'select',
                 name: 'gst',
                 validationProps: {
-                    required: `${FORM_LABELS.GST} is required`
+                    required: true,
                 },
                 style: {
                     width: "60px"
                 },
                 options: [
-                    { name: '0%', value: '0%' },
-                    { name: '5%', value: '5%' },
-                    { name: '12%', value: '12%' },
-                    { name: '18%', value: '18%' },
-                    { name: '28%', value: '28%' }
+                    { name: '0%', value: '0' },
+                    { name: '5%', value: '5' },
+                    { name: '12%', value: '12' },
+                    { name: '18%', value: '18' },
+                    { name: '28%', value: '28' }
                 ]
             },
             {
@@ -291,7 +302,7 @@ export const Quotations = () => {
                 type: 'number',
                 name: 'discount',
                 validationProps: {
-                    required: `${FORM_LABELS.DISCOUNT} is required`
+                    required: true,
                 },
                 style: {
                     width: "60px"
@@ -307,15 +318,16 @@ export const Quotations = () => {
             }
         ],
         buttonStyles: {
+            height: '70px',
             display: 'flex',
-            justifyContent: 'end',
-            width: '100%'
+            alignItems: 'center',
         }
     };
     const medicine_details_style = {
+        height: "80px",
         display: "flex",
-        flexWrap: 'wrap',
-        gap: "0px 25px",
+        // flexWrap: 'wrap',
+        gap: "0px 17px",
         justifyContent: 'space-between'
     };
     const btn_styles = { display: "flex", justifyContent: "end" };
@@ -328,7 +340,7 @@ export const Quotations = () => {
             brandName: brandName?.label,
             medicineId: brandName?.value,
         };
-        const updatedRows = [...rows, transformedObject]
+        const updatedRows = [...rows, transformedObject];
         setRows(updatedRows);
         e.target.reset();
     };
@@ -344,6 +356,7 @@ export const Quotations = () => {
             let data = await PurchaseService.getRequesitionData(vendorId);
             console.log(data, 'quotation')
             setRequisition(data);
+            setVendorName(data?.[0]?.vendorName);
             // setRows([...data]);
             setShowLoader(false);
             setModalOpen(true);
@@ -450,7 +463,8 @@ export const Quotations = () => {
                     backgroundColor: '#DEE1E6FF',
                     borderRadius: '4px',
                     padding: 1,
-                    marginTop: '15px'
+                    marginTop: '15px',
+                    backgroundColor: '#B4B4B4'
                 }}
             >
                 <Form
@@ -473,14 +487,19 @@ export const Quotations = () => {
             </Box>
             <div>
                 {rows.length > 0 && (
-                    <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '15px' }}>
-                        <Button variant="contained" onClick={onSaveQuotation}>Save</Button>
+                    <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '15px', }}>
+                        <Button sx={{
+                            backgroundColor: 'rgb(255, 185, 29)',
+                            '&:hover': {
+                                backgroundColor: 'rgb(255, 185, 29)',
+                            },
+                        }} variant="contained" onClick={onSaveQuotation}>Save</Button>
                     </Box>
                 )}
 
             </div>
             <Loader open={showLoader} />
-            {<List showModal={modalOpen} requisitions={reqisition} action={() => setModalOpen(!modalOpen)} getRequisitionId={getRequisitionId} />}
+            {<List showModal={modalOpen} requisitions={reqisition} action={() => setModalOpen(!modalOpen)} getRequisitionId={getRequisitionId} vendorName={vendorName} />}
             {notification && <Notification notificationState={notification} severity={notificationMsg.severity} message={notificationMsg.message} action={alertState} />}
         </Box>
     )

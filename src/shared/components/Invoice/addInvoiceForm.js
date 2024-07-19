@@ -192,7 +192,7 @@ export const AddInvoiceForm = ({
                     <div >
                         <input
                             {...register("expiry", { required: true })}
-                            type="date"
+                            type="date" style={{backgroundColor: 'white'}}
                         />
                     </div>
                     {/* <input {...register("expiry", { required: true })} placeholder="MM/YY"
@@ -235,7 +235,7 @@ export const AddInvoiceForm = ({
                 </div>
                 <div style={{ minWidth: '100px' }}>
                     <label>{FORM_LABELS.GST}<StyledSpan> *</StyledSpan></label>
-                    <select {...register("gst")}>
+                    <select {...register("gst")} style={{backgroundColor: 'white'}}> 
                         <option value="0">0%</option>
                         <option value="5">5%</option>
                         <option value="12">12%</option>
@@ -251,7 +251,7 @@ export const AddInvoiceForm = ({
                 </div> */}
                 <div style={{ minWidth: '150px' }}>
                     <label>{FORM_LABELS.NET_PRICE}</label>
-                    <input disabled {...register("netPrice", { required: true })} type="number" />
+                    <input disabled {...register("netPrice", { required: true })} type="number" style={{backgroundColor: 'white'}}/>
                     {errors['netPrice'] && <span className='red-text'>{errors['netPrice'][`message`]}</span>}
                 </div>
                 <div>

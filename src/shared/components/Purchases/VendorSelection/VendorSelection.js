@@ -4,23 +4,22 @@ import PurchaseService from "../../../services/Purchase.service";
 import Select from 'react-select';
 import { RefreshVendorsDetailsContext } from "../../../../context/RefreshVendorDetailsContext";
 import { Loader } from "../../Loader/index";
+import { StyledSpan } from "../../../../globalStyles";
 
 export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
     const { refreshVDetails } = useContext(RefreshVendorsDetailsContext);
-    const { control, formState: { errors }, setValue, watch } = useForm({
+    const { control, formState: { errors }, setValue } = useForm({
         mode: "onChange"
     });
     const [showLoader, setShowLoader] = useState(false);
     const [vendors, setVendors] = useState([]);
     const [selectedVendor, setSelectedVendor] = useState(null);
-    // const [defaultDate, setDefaultDate] = useState(getTodayDate());
 
     const getVendors = async () => {
         setShowLoader(true);
         try {
             let data = await PurchaseService.getAllVendors();
             const result = data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }));
-            // result.unshift({ id: undefined, name: '--Select--' })
             setVendors(result.map((item) => ({ value: item?.id, label: item?.name })));
             setShowLoader(false);
         } catch (err) {
@@ -36,15 +35,15 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
     const handleVendorChange = (selectedOption) => {
         setValue("vendorId", selectedOption);
         onSelectVendor(selectedOption); // Callback to update parent state
-        setSelectedVendor(selectedOption)
+        setSelectedVendor(selectedOption);
     };
 
     // Assuming there's a date input
     const handleDateChange = (selectedDate) => {
         setValue("date", selectedDate);
         onSelectDate(selectedDate); // Callback to update parent state
-        // setDefaultDate(selectedDate)
     };
+
     function getTodayDate() {
         const today = new Date();
         const year = today.getFullYear();
@@ -52,11 +51,12 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
         const day = String(today.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
     }
+
     return (
         <form>
             <div style={{ display: 'flex' }}>
                 <span>
-                    <label>Select Vendor</label>
+                    <label>Select Vendor <StyledSpan> *</StyledSpan></label>
                     <Controller
                         name="vendorId"
                         control={control}
@@ -72,12 +72,15 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
                                     handleVendorChange(selectedOption);
                                 }}
                                 value={selectedVendor}
-                                // value={vendors.find((vendor) => vendor?.id === selectedVendor?.value)}
                                 styles={{
                                     container: (provided) => ({
                                         ...provided,
                                         width: 300,
                                         marginRight: 50
+                                    }),
+                                    control: (provided) => ({
+                                        ...provided,
+                                        backgroundColor: '#B4B4B4' // Change this to your desired background color
                                     })
                                 }}
                             />
@@ -88,13 +91,12 @@ export const VendorSelection = ({ onSelectVendor, onSelectDate }) => {
                     </small>
                 </span>
                 <span>
-                    <label>Date</label>
+                    <label>Date <StyledSpan> *</StyledSpan></label>
                     <Controller
                         name="date"
                         control={control}
                         render={({ field }) => (
                             <input type="date"
-                                // defaultValue={defaultDate}
                                 {...field}
                                 onChange={(e) => handleDateChange(e.target.value)}
                             />

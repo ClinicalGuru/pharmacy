@@ -17,8 +17,8 @@ export const InvalidInput = styled.input`
 
 export const FormContainer = styled.form`
 display: flex;
-gap: 15px;
-background-color: #eef0f3;
+gap: 12px;
+background-color: #B4B4B4;
 border-radius: 4px;
 padding: 10px;
 // margin-top: 5px;
@@ -28,16 +28,16 @@ justify-content: space-between;
 `;
 
 export const Container = styled.div`
-
+background-color: #B4B4B4;
 `;
 
 export const BillingForm = styled.form`
     display: flex;
     // justify-content: space-between;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 25px;
     && input[type=number], [type=select] {
-        width: 100px;
+        width: 80px;
     }
 `;
 

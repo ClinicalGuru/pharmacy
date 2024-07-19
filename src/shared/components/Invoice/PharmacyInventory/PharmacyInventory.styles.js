@@ -33,6 +33,14 @@ export const SearchIconWrapper = styled('div')(({ theme }) => ({
     justifyContent: 'center',
 }));
 
+export const CustomInput = styled.input`
+  background-color: #B4B4B4;
+  &::placeholder {
+    color: black; /* Change this to your desired color */
+    opacity: 1;
+  }
+`;
+
 // export const StyledInputBase = styled(InputBase)(({ theme }) => ({
 //     color: 'inherit',
 //     '& .MuiInputBase-input': {

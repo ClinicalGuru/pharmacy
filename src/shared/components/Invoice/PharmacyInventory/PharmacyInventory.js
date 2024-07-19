@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, } from "@mui/material";
 import Button from '@mui/material/Button';
-import { Container } from "./PharmacyInventory.styles";
+import { Container, CustomInput } from "./PharmacyInventory.styles";
 import InventoryService from '../../../services/inventory.service';
 import { InventoryTable } from './denseTable';
 import { filterInventoryByExpiry, isLessThanTwentyPercent, filterItemsOlderThanSixMonths } from "../../../../utils/helper";
@@ -124,10 +124,11 @@ export const PharmacyInventory = () => {
                         gap: "10px"
                     }}
                 >
-                    <input
+                    <CustomInput
                         placeholder='Medicine Name'
                         onChange={(e) => medicineNameHandler(e)}
                         value={medicineName}
+                        style={{backgroundColor: '#B4B4B4'}}
                     />
                     <select onChange={(e) => inventoryFilterHandler(e)}>
                         <option value="all">All</option>

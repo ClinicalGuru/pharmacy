@@ -11,14 +11,14 @@ select {
   height: 38px;
   border-radius: 4px;
   border: none;
-  /* background-color: #eee; */
+  background-color: #B4B4B4;
   display: block;
   width: 100%;
   box-sizing: border-box;
   /* min-height: 20px; */
   font-size: 14px;
   padding: 0.5rem;
-  border: 1px solid #d7d4d4;
+  border: 1px solid #B4B4B4;
 }
 
 input {
@@ -48,7 +48,7 @@ input[type=submit], [type=reset] {
   align-items: center;
   justify-content: center;
   color:white;
-  background: #1976d2;
+  background: rgb(255, 185, 29);
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -100,4 +100,5 @@ input[type=date] {
   width: 100%;
   box-sizing: border-box;
   font-size: 14px;
+  background-color: #B4B4B4;
 }

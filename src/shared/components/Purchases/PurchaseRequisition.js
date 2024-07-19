@@ -20,6 +20,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import useLocalStorage from "../../../hooks/UseLocalstorage";
+import { color } from 'framer-motion';
 
 export const PurchaseRequisition = () => {
     const [pharmacyId] = useLocalStorage('pharmacyId');
@@ -34,7 +35,7 @@ export const PurchaseRequisition = () => {
     const [selectedDate, setSelectedDate] = useState();
     const [notification, setNotification] = useState(false);
     const [refreshVDetails, setRefreshVDetails] = useState(false);
-    const btn_styles = { display: "flex", justifyContent: "end" };
+    const btn_styles = { display: "flex", justifyContent: "end", color: 'rgb(255, 185, 29)' };
     const [downloadModal, setDownloadModal] = useState(false);
     const [pharmacologicalNames, setPharmacologicalNames] = useState([]);
     const [brandNames, setBrandNames] = useState([]);
@@ -381,7 +382,7 @@ export const PurchaseRequisition = () => {
             <Box
                 sx={{
                     height: '70px',
-                    backgroundColor: '#DEE1E6FF',
+                    backgroundColor: '#B4B4B4',
                     borderRadius: '4px',
                     padding: 1,
                     marginTop: '15px'
