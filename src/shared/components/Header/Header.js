@@ -13,7 +13,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { FixedHeader, Profile } from "./Header.styles";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-
+import useLocalStorage from "../../../hooks/UseLocalstorage";
 import {
   SearchIconWrapper,
   Search,
@@ -27,6 +27,7 @@ const pages = ["Purchases", "Inventory", "Sales", "Reports"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 export const Header = () => {
+  const [username] = useLocalStorage("username");
   const navigate = useNavigate();
   const [isSticky, setIsSticky] = React.useState(true);
 
@@ -192,7 +193,7 @@ export const Header = () => {
                   fontSize="large"
                   style={{ color: "#4a2495" }}
                 />
-                <Profile onClick={handleOpenUserMenu}>Laxmi Kanth</Profile>
+                <Profile onClick={handleOpenUserMenu}>{username}</Profile>
               </Box>
               <Menu
                 sx={{ mt: "45px" }}
