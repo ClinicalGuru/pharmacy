@@ -280,7 +280,11 @@ export const MasterList = () => {
                                 container: (provided) => ({
                                     ...provided,
                                     width: 300,
-                                    marginRight: 50
+                                    marginRight: 50,
+                                }),
+                                control: (provided) => ({
+                                    ...provided,
+                                    backgroundColor: '#B4B4B4' // Change this to your desired background color
                                 })
                             }}
                         />
@@ -295,7 +299,11 @@ export const MasterList = () => {
                                     ...provided,
                                     width: 300,
                                     marginRight: 50
-                                })
+                                }),
+                                control: (provided) => ({
+                                    ...provided,
+                                    backgroundColor: '#B4B4B4' // Change this to your desired background color
+                                }) 
                             }}
                         />
                     </div>

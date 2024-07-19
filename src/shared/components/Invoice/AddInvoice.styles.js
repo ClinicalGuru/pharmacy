@@ -17,7 +17,7 @@ export const Container = styled.div``;
 export const FormContainer = styled.form`
   display: flex;
   gap: 28px 30px;
-  background-color: #eef0f3;
+  background-color: #B4B4B4;
   border-radius: 4px;
   padding: 16px;
   margin-top: 15px;
@@ -30,7 +30,7 @@ export const InvoiceAmountDetails = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  margin-top: 15px;
+  // margin-top: 15px;
   border-radius: 4px;
   &&
   div {

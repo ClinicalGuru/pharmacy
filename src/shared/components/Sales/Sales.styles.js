@@ -18,7 +18,7 @@ export const InvalidInput = styled.input`
 export const FormContainer = styled.form`
 display: flex;
 gap: 12px;
-background-color: #eef0f3;
+background-color: #B4B4B4;
 border-radius: 4px;
 padding: 10px;
 // margin-top: 5px;
@@ -28,7 +28,7 @@ justify-content: space-between;
 `;
 
 export const Container = styled.div`
-
+background-color: #B4B4B4;
 `;
 
 export const BillingForm = styled.form`

@@ -119,7 +119,7 @@ export const BillingSummaryForm = ({
 
                 <div>
                     <label>{FORM_LABELS.GST}</label>
-                    <select {...register("gst")}>
+                    <select {...register("gst")} style={{backgroundColor: 'white'}}>
                         <option value="0">0%</option>
                         <option value="5">5%</option>
                         <option value="12">12%</option>
@@ -130,7 +130,7 @@ export const BillingSummaryForm = ({
                 </div>
                 <div>
                     <label>{FORM_LABELS.NET_PRICE}</label>
-                    <input disabled {...register("netPrice", { required: true })} type="number" />
+                    <input disabled {...register("netPrice", { required: true })} type="number"  style={{backgroundColor: 'white'}}/>
                     {errors['netPrice'] && <span className='red-text'>{errors['netPrice'][`message`]}</span>}
                 </div>
                 <div>
@@ -152,12 +152,12 @@ export const BillingSummaryForm = ({
                 </div>
                 <div>
                     <label>{FORM_LABELS.BILL_AMOUNT}</label>
-                    <input disabled {...register("billAmount", { required: true })} type="number" />
+                    <input disabled {...register("billAmount", { required: true })} type="number" style={{backgroundColor: 'white'}} />
                     {errors['billAmount'] && <span className='red-text'>{errors['billAmount'][`message`]}</span>}
                 </div>
                 <div>
                     <label>{FORM_LABELS.PAYMENT_MODE}</label>
-                    <select {...register("paymentMode")}>
+                    <select {...register("paymentMode")} style={{backgroundColor: 'white'}}>
                         <option value="upi"> UPI </option>
                         <option value="card"> Card </option>
                         <option value="cash"> Cash </option>

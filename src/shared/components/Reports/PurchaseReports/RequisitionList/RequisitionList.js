@@ -100,7 +100,13 @@ export const RequisitionList = () => {
             <Container>
                 <VendorSelection onSelectVendor={handleVendorSelection} onSelectDate={handleDateSelection} />
                 <Link to="/landing/purchase/requisition">
-                    <Button variant="contained">Create New Requisition</Button>
+                    <Button sx={{
+                            backgroundColor: 'rgb(255, 185, 29)',
+                            '&:hover': {
+                                backgroundColor: 'rgb(255, 185, 29)',
+                            },
+                        }} 
+                         variant="contained">Create New Requisition</Button>
                 </Link>
             </Container>
             <Box sx={{ marginTop: 8 }}>

@@ -16,7 +16,7 @@ export const FixedHeader = styled('div')`
     top: 0,
     width: 100%,
     z-index: 1000,
-    background-color: #DEE1E6B5; /* Your desired background color for the sticky header */
+    background-color: #104A62; /* Your desired background color for the sticky header */
 
 `
 
@@ -72,7 +72,7 @@ export const Search = styled('div')(({ theme }) => ({
 }));
 
 export const Profile = styled('div')`
-    color: #4a2495;
+    color: #ffffff;
     text-decoration: underline;
     margin-left: 15px;
     cursor: pointer;

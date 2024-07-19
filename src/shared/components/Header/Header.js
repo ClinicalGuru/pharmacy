@@ -71,7 +71,7 @@ export const Header = () => {
 
   return (
     <FixedHeader className={isSticky ? "sticky" : ""}>
-      <AppBar position="static" sx={{ backgroundColor: "#DEE1E6B5" }}>
+      <AppBar position="static" sx={{ backgroundColor: "#104A62" }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <img
@@ -120,7 +120,7 @@ export const Header = () => {
                         display: { xs: "none", md: "flex" },
                         fontWeight: 700,
                         letterSpacing: ".3rem",
-                        color: "#565D6DFF",
+                        color: "#ffffff",
                         textDecoration: "none",
                         textTransformation: "capitalize",
                         fontFamily: "'Mukta', sans-serif",
@@ -164,7 +164,7 @@ export const Header = () => {
               <Navbar navLinksData={navLinksData} />
             </Box>
             <Box>
-              <NotificationsIcon style={{ color: "#4a2495" }} />
+              <NotificationsIcon style={{ color: "#ffffff" }} />
             </Box>
             <Box sx={{ marginRight: 4 }}>
               <Search>
@@ -190,7 +190,7 @@ export const Header = () => {
               >
                 <AccountCircleIcon
                   fontSize="large"
-                  style={{ color: "#4a2495" }}
+                  style={{ color: "#ffffff" }}
                 />
                 <Profile onClick={handleOpenUserMenu}>Laxmi Kanth</Profile>
               </Box>

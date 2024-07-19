@@ -13,7 +13,7 @@ export default function Breadcrumbs() {
         fontSize: '18px',
         lineHeight: '26px', 
         fontWeight: '400',
-        color:' #9095A1FF'
+        color:' black'
     };
 
     const displayPathnames = pathnames.slice(-2);
@@ -28,7 +28,7 @@ export default function Breadcrumbs() {
                 return (
                     <span key={name} style={{ display: 'flex', alignItems: 'center' }}>
                         {isSecondToLast && <span>{displayName}&nbsp; /</span>}
-                        {isLast && <span style={{ marginLeft: '0.5rem', color: '#4a2495' }}>{displayName}</span>}
+                        {isLast && <span style={{ marginLeft: '0.5rem', color: 'black' }}>{displayName}</span>}
                         {isLast && <span style={{ marginLeft: '0.5rem', marginRight: '1px' }}>&nbsp;&nbsp;</span>}
                     </span>
                 );
