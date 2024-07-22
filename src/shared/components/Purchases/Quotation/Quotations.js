@@ -35,6 +35,8 @@ export const Quotations = () => {
     const [pharmacologicalNames, setPharmacologicalNames] = useState([]);
     const [brandNames, setBrandNames] = useState([]);
     const [vendorName, setVendorName] = useState('');
+    const [resetForm, setResetForm] = useState(null);
+
     const columns = [
         {
             'Header': 'Pharmacological Name',
@@ -302,7 +304,7 @@ export const Quotations = () => {
                 type: 'number',
                 name: 'discount',
                 validationProps: {
-                    required: true,
+                    required: false,
                 },
                 style: {
                     width: "60px"
@@ -475,6 +477,7 @@ export const Quotations = () => {
                     showClearFormButton={true}
                     form_styles={medicine_details_style}
                     btn_styles={btn_styles}
+                    resetTrigger={resetForm}
                 />
             </Box>
             <Box sx={{ marginTop: 2 }}>
