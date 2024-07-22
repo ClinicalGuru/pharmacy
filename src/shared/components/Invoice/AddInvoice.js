@@ -95,7 +95,7 @@ export const AddInvoice = () => {
         validationProps: { required: "PO Num is required" },
         style: { width: "194px", backgroundColor: '#B4B4B4' },
       },
-     {
+      {
         title: (
           <span>
             Vendor Name<StyledSpan> *</StyledSpan>
@@ -316,25 +316,26 @@ export const AddInvoice = () => {
     console.log(rows, "rows");
     if (rows?.length === 0) return;
     let grossAmount = rows.reduce(
-      (accumulator, item) => accumulator + Number(item?.mrpPerStrip),
+      (accumulator, item) => accumulator + Number(item?.pricePerStrip * item?.noOfStrips),
       0
     );
     let totalDiscountAmount = rows.reduce(
       (accumulator, item) => accumulator + (item.noOfStrips * item.pricePerStrip * item.discount) / 100,
       0
     );
-    let totalTaxAmount = rows.reduce(
-      (accumulator, item) => accumulator + Number(item?.gst),
-      0
-    );
-    let roundoff = rows.reduce(
-      (accumulator, item) => accumulator + Number(item?.gst),
-      0
-    );
+    let totalTaxAmount = rows.reduce((accumulator, item) => {
+      let discountedAmount = item.pricePerStrip * item.noOfStrips * (1 - item.discount / 100);
+      return accumulator + discountedAmount * (item.gst / 100);
+    }, 0);
     let totalAmount = rows.reduce(
       (accumulator, item) => accumulator + Number(item?.netPrice),
       0
     );
+    let roundoff = 0;
+    if (totalAmount % 1 !== 0) {
+      roundoff = Math.round(totalAmount) - totalAmount;
+      totalAmount = Math.round(totalAmount);
+    }
 
     setInvoiceDetails({
       grossAmount: grossAmount,

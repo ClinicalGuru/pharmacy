@@ -389,16 +389,14 @@ export const PurchaseRequisition = () => {
                 }}
             >
                 <Form
-                    // ref={formRef}
                     template={medicine_details_template}
                     onSubmit={onAddMedicine}
-                    onResetForm
                     onValidate={validate}
                     showSubmitButton={true}
                     showClearFormButton={true}
                     form_styles={medicine_details_style}
                     btn_styles={btn_styles}
-                    resetForm={setResetForm}
+                    resetTrigger={resetForm}
                 />
             </Box>
             <Box sx={{ marginTop: 2 }}>
